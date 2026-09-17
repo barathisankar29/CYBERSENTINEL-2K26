@@ -10,8 +10,7 @@
   margin: 0;
   font-family: var(--font-display);
   font-size: clamp(1.6rem, 6vw, 3.4rem);
-  /* letter-spacing is owned by .identity-fade-tracking (IdentityLayer.css) —
-     it animates from tight to this design's tracked-out value on reveal. */
+  /* letter-spacing is set inline per-frame from scroll progress — see IdentityLayer.tsx. */
   text-transform: uppercase;
   color: var(--city-violet-soft);
   text-shadow:
@@ -30,7 +29,6 @@
   font-size: clamp(0.8rem, 1.8vw, 1rem);
   letter-spacing: 0.08em;
   color: var(--city-violet-soft);
-  opacity: 0.85;
   text-align: center;
 }
 
@@ -47,5 +45,4 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--city-cyan);
-  opacity: 0.8;
 }

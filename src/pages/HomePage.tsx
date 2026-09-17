@@ -1,12 +1,13 @@
-import { IntroSequence } from '@/components/intro/IntroSequence'
+import { CityScene } from '@/components/city/CityScene'
 
-// Landing/main experience: cinematic boot sequence (src/components/intro)
-// establishing into the persistent city (src/components/city). Navigation
-// buildings/camera-to-aerial transition land in a later pass.
+// Landing/main experience: the scroll-driven cinematic city reveal
+// (src/components/city) carries both the environment and the college/
+// symposium identity. Navigation buildings/camera-to-aerial transition
+// land in a later pass.
 export function HomePage() {
   return (
     <main data-page="home">
-      <IntroSequence />
+      <CityScene />
     </main>
   )
 }

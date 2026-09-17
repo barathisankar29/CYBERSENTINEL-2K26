@@ -8,7 +8,6 @@
   padding: 0 1.5rem;
   text-align: center;
   pointer-events: none;
-  will-change: transform, opacity;
 }
 
 .identity-layer > * {
@@ -16,63 +15,16 @@
 }
 
 /*
- * Shared entrance transitions used by CollegeIdentity + SymposiumIdentity.
- * Durations are intentionally long (1.7-2.1s) with an ease-out curve and no
- * overshoot, so each piece of identity feels like it's slowly resolving out
- * of the scene rather than sliding/popping in. The logo (fade-scale) is the
- * slowest of the three, per the brief.
+ * No transitions here on purpose: opacity/transform are recomputed from
+ * scroll progress on every frame (see IdentityLayer.tsx), so a CSS
+ * transition would fight the scroll and introduce lag. Reduced-motion users
+ * get progress pinned to 1 by CityScene, which renders these fully visible
+ * and static without needing a separate code path here.
  */
-.identity-fade-up,
-.identity-fade-scale,
-.identity-fade-tracking {
-  opacity: 0;
-  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.identity-fade-up {
-  transform: translateY(10px);
-  transition-property: opacity, transform;
-  transition-duration: 1.8s;
-}
-
-.identity-fade-scale {
-  transform: scale(0.96);
-  transition-property: opacity, transform;
-  transition-duration: 2.1s;
-}
-
-/* Used only by the symposium title: fades in while its letter-spacing
-   relaxes from tight to fully tracked-out, instead of moving position. */
-.identity-fade-tracking {
-  letter-spacing: 0.02em;
-  transition-property: opacity, letter-spacing;
-  transition-duration: 1.9s;
-}
-
-.identity-fade-up.is-visible,
-.identity-fade-scale.is-visible,
-.identity-fade-tracking.is-visible {
-  opacity: 1;
-}
-
-.identity-fade-up.is-visible,
-.identity-fade-scale.is-visible {
-  transform: none;
-}
-
-.identity-fade-tracking.is-visible {
-  letter-spacing: 0.14em;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .identity-fade-up,
-  .identity-fade-scale,
-  .identity-fade-tracking {
-    transition: opacity 0.3s linear;
-    transform: none !important;
-  }
-
-  .identity-fade-tracking {
-    letter-spacing: 0.14em !important;
-  }
+.college-identity__mark,
+.college-identity__name,
+.symposium-identity__name,
+.symposium-identity__tagline,
+.symposium-identity__info {
+  will-change: transform, opacity;
 }
