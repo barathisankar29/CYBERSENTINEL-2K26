@@ -20,7 +20,11 @@ export function BrandingStrip({ style }: BrandingStripProps) {
   return (
     <div className="branding-strip" style={style}>
       {brandingStripLogos.map((logo) => (
-        <span key={logo.id} className={logo.blend === 'multiply' ? 'branding-strip__chip' : 'branding-strip__mark'}>
+        <span
+          key={logo.id}
+          data-logo-id={logo.id}
+          className={logo.blend === 'multiply' ? 'branding-strip__chip' : 'branding-strip__mark'}
+        >
           <img
             src={logo.src}
             alt={logo.alt}

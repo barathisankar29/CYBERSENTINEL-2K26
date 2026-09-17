@@ -80,24 +80,33 @@
 }
 
 /*
- * Matches BREAKPOINTS.mobileMax in src/styles/breakpoints.ts. Sized so all
- * 5 logos fit on one row down to 375px without wrapping — a wrapped logo
- * drops to its own line and reads as an orphaned floating badge, which is
+ * Matches BREAKPOINTS.mobileMax in src/styles/breakpoints.ts — desktop
+ * (>767px) is completely untouched by anything in this block. Sized so all
+ * 5 logos still fit on one row down to 375px without wrapping — a wrapped
+ * logo drops to its own line and reads as an orphaned floating badge,
  * exactly the "individual glowing box" look this section must avoid.
+ * Larger than before (was 27px/0.5rem/0.5rem+0.75rem) — the whole mobile
+ * identity group should read as bigger/closer, not just be squeezed to fit
+ * the desktop proportions.
+ *
+ * Vel Tech's logo is a wide banner (~5.4:1), not a badge like the other
+ * four — at a shared height it alone would eat more than half the row's
+ * width. Only on mobile (where every pixel of row width matters), it gets
+ * a smaller height so the other four logos can be genuinely larger without
+ * forcing a wrap; on desktop it still shares the same height as everything
+ * else, unchanged.
  */
 @media (max-width: 767px) {
   .branding-strip {
     gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem 0.65rem;
   }
 
   .branding-strip__logo {
-    height: 27px;
+    height: 32px;
   }
-}
 
-@media (max-width: 380px) {
-  .branding-strip__logo {
-    height: 22px;
+  [data-logo-id='vel-tech'] .branding-strip__logo {
+    height: 23px;
   }
 }

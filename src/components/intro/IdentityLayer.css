@@ -21,6 +21,14 @@
   padding: 0 1rem;
 }
 
+/* Every horizontal pixel matters for fitting 5 logos on one row at 375px —
+   this wrapper's own side padding was eating into that budget. */
+@media (max-width: 767px) {
+  .identity-layer__top {
+    padding: 0 0.5rem;
+  }
+}
+
 /* Each transient tagline (Stage 2/3) shares this exact centered position —
    overlap during a crossfade is resolved by opacity, not layout. */
 .identity-layer__stage {
@@ -50,6 +58,20 @@
   padding-bottom: 6vh;
   text-align: center;
   gap: 0.5rem;
+}
+
+/*
+ * A tall narrow phone has much more vertical distance between "just below
+ * the top strip" and "exact vertical center" than a wide desktop screen
+ * does, which reads as an oversized empty-sky gap once the branding strip
+ * and CyberSentinel logo are both bigger. Pull the centered block up
+ * further specifically on mobile to close that gap, rather than just
+ * scaling the desktop offset.
+ */
+@media (max-width: 767px) {
+  .identity-layer__center {
+    padding-bottom: 12vh;
+  }
 }
 
 /*
