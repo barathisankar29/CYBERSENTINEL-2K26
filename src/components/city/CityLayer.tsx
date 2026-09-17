@@ -39,7 +39,9 @@ export function CityLayer({ layer, progress, isMobile }: CityLayerProps) {
     opacity,
     objectPosition: layer.objectPosition,
     transform: `translate3d(${translateX}vw, ${translateY}vh, 0) scale(${scale})`,
-    ...(layer.anchor === 'bottom' ? { bottom: 0, left: 0, width: '100%', height: '58%' } : { inset: 0 }),
+    ...(layer.anchor === 'bottom'
+      ? { bottom: 0, left: 0, width: '100%', height: '58%' }
+      : { top: 0, left: 0, width: '100%', height: '100%' }),
   }
 
   return <img src={layer.src} alt="" draggable={false} className="city-layer" style={style} />
