@@ -63,6 +63,11 @@ export interface CityLayerConfig {
  * (the final atmospheric touch). Widening a `from`/`to` gap makes that
  * layer's parallax stronger; shifting a window's `start`/`end` changes when
  * it's active relative to the other layers.
+ *
+ * The desktop `scale` values on skyline/midground/bridges/foreground are a
+ * small (4-8%) zoom-in at full reveal, added so the city stays visually
+ * substantial once the larger identity/branding elements are on screen —
+ * a pure tuning value, not a change to travel distances or timing.
  */
 export const cityLayers: CityLayerConfig[] = [
   {
@@ -87,7 +92,7 @@ export const cityLayers: CityLayerConfig[] = [
     anchor: 'fill',
     objectPosition: 'center bottom',
     // Slow, low-multiplier reveal — a bare hint at scroll 0, resolved fairly early.
-    desktop: { translateY: { from: 9, to: 0 }, opacity: { from: 0.06, to: 1 } },
+    desktop: { translateY: { from: 9, to: 0 }, scale: { from: 1, to: 1.04 }, opacity: { from: 0.06, to: 1 } },
     mobile: { translateY: { from: 12, to: 0 }, scale: { from: 1.05, to: 1.08 }, opacity: { from: 0.06, to: 1 } },
     motionRange: { start: 0, end: 0.55 },
     opacityRange: { start: 0, end: 0.5 },
@@ -99,7 +104,7 @@ export const cityLayers: CityLayerConfig[] = [
     anchor: 'fill',
     objectPosition: 'center bottom',
     // Moderate multiplier, starts a beat after distant-skyline.
-    desktop: { translateY: { from: 20, to: 0 }, opacity: { from: 0.04, to: 1 } },
+    desktop: { translateY: { from: 20, to: 0 }, scale: { from: 1, to: 1.06 }, opacity: { from: 0.04, to: 1 } },
     mobile: { translateY: { from: 24, to: 0 }, scale: { from: 1.06, to: 1.1 }, opacity: { from: 0.04, to: 1 } },
     motionRange: { start: 0.08, end: 0.68 },
     opacityRange: { start: 0.05, end: 0.6 },
@@ -112,7 +117,7 @@ export const cityLayers: CityLayerConfig[] = [
     objectPosition: 'center bottom',
     // Independent diagonal drift (vertical + horizontal together) so it
     // reads as spatial, not just another layer at a slightly different speed.
-    desktop: { translateY: { from: 7, to: 0 }, translateX: { from: 4, to: 0 }, opacity: { from: 0.05, to: 1 } },
+    desktop: { translateY: { from: 7, to: 0 }, translateX: { from: 4, to: 0 }, scale: { from: 1, to: 1.05 }, opacity: { from: 0.05, to: 1 } },
     mobile: { translateY: { from: 8, to: 0 }, translateX: { from: 2, to: 0 }, opacity: { from: 0.05, to: 1 } },
     motionRange: { start: 0.12, end: 0.75 },
     opacityRange: { start: 0.08, end: 0.65 },
@@ -138,7 +143,7 @@ export const cityLayers: CityLayerConfig[] = [
     objectPosition: 'center bottom',
     // Highest multiplier of the structural layers, mostly from the bottom
     // edge, and the latest of the "structure" layers to resolve.
-    desktop: { translateY: { from: 36, to: 0 }, opacity: { from: 0.04, to: 1 } },
+    desktop: { translateY: { from: 36, to: 0 }, scale: { from: 1, to: 1.08 }, opacity: { from: 0.04, to: 1 } },
     mobile: { translateY: { from: 42, to: 0 }, scale: { from: 1.08, to: 1.12 }, opacity: { from: 0.04, to: 1 } },
     motionRange: { start: 0.2, end: 0.85 },
     opacityRange: { start: 0.1, end: 0.75 },
