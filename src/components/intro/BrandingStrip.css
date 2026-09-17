@@ -1,0 +1,75 @@
+/*
+ * The glow/border below is scoped to THIS shared container only — never to
+ * an individual logo (see BrandingStrip.tsx). No gold: pink/magenta with a
+ * restrained violet undertone, matching the city's neon palette.
+ */
+.branding-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(0.55rem, 2.2vw, 1.6rem);
+  padding: 0.45rem clamp(0.85rem, 3vw, 1.4rem);
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--city-pink) 38%, transparent);
+  background: color-mix(in srgb, var(--city-black) 62%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow:
+    0 0 16px color-mix(in srgb, var(--city-pink) 28%, transparent),
+    0 0 34px color-mix(in srgb, var(--city-magenta) 14%, transparent),
+    inset 0 0 18px color-mix(in srgb, var(--city-violet) 10%, transparent);
+  max-width: min(94vw, 58rem);
+  will-change: transform, opacity;
+}
+
+.branding-strip__mark,
+.branding-strip__chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+/* Neutral backing for logos supplied on an opaque white canvas (no border,
+   no glow — just enough matting that the white doesn't read as a stray box). */
+.branding-strip__chip {
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: 6px;
+  padding: 3px 5px;
+}
+
+.branding-strip__logo {
+  display: block;
+  height: 30px;
+  width: auto;
+  object-fit: contain;
+}
+
+.branding-strip__logo--multiply {
+  mix-blend-mode: multiply;
+}
+
+@media (min-width: 1024px) {
+  .branding-strip__logo {
+    height: 34px;
+  }
+}
+
+/* Matches BREAKPOINTS.mobileMax in src/styles/breakpoints.ts. */
+@media (max-width: 767px) {
+  .branding-strip {
+    gap: 0.45rem;
+    padding: 0.35rem 0.7rem;
+  }
+
+  .branding-strip__logo {
+    height: 20px;
+  }
+}
+
+@media (max-width: 380px) {
+  .branding-strip__logo {
+    height: 17px;
+  }
+}

@@ -1,0 +1,9 @@
+/*
+ * Soft, silhouette-hugging shadow (not a rectangular card) so the logo
+ * stays legible against the busy neon city behind it.
+ */
+.cyber-sentinel-logo {
+  filter:
+    drop-shadow(0 8px 22px rgba(0, 0, 0, 0.55))
+    drop-shadow(0 0 48px rgba(0, 0, 0, 0.35));
+}

@@ -11,17 +11,27 @@ export interface RevealWindow {
    * layer.
    */
   depthPx: number
+  /**
+   * Opacity at progress=start, before this window has properly begun
+   * (defaults to 0 — fully hidden). A small nonzero value reads as "barely
+   * visible" at the very top rather than fully invisible, matching how the
+   * city layers themselves start with a faint hint rather than nothing.
+   */
+  opacityFrom?: number
 }
 
 /**
  * When each piece of identity reveals relative to the master scroll
  * progress, and how much it drifts. Mirrors cityLayers.config.ts's
  * motionRange/opacityRange split, tuned so identity reads roughly as:
- * 0% barely there -> ~35% logo readable -> ~55% symposium title rising ->
- * ~85% fully composed. Nudge `start`/`end` to retime a piece; nudge
- * `depthPx` to change how much it moves.
+ * 0% barely there -> ~22% branding strip in -> ~35% college identity
+ * readable -> ~55% CyberSentinel logo rising -> ~85% fully composed. Nudge
+ * `start`/`end` to retime a piece; nudge `depthPx` to change how much it
+ * moves. Depth is deliberately ordered brandingStrip < logo/name <
+ * symposium (CyberSentinel logo) < the city's own foreground layers.
  */
 export const identityReveal = {
+  brandingStrip: { start: 0, end: 0.22, depthPx: 8, opacityFrom: 0.08 } satisfies RevealWindow,
   logo: { start: 0.03, end: 0.32, depthPx: 16 } satisfies RevealWindow,
   name: { start: 0.12, end: 0.4, depthPx: 22 } satisfies RevealWindow,
   symposium: { start: 0.42, end: 0.7, depthPx: 28 } satisfies RevealWindow,

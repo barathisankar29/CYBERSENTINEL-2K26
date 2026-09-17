@@ -6,6 +6,7 @@
   object-fit: contain;
   pointer-events: none;
   user-select: none;
+  will-change: transform, opacity;
 }
 
 /* Matches BREAKPOINTS.mobileMax in src/styles/breakpoints.ts. */
