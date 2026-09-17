@@ -5,15 +5,11 @@ import { CollegeIdentity } from './CollegeIdentity'
 import { SymposiumIdentity } from './SymposiumIdentity'
 import './IdentityLayer.css'
 
-function lerp(from: number, to: number, t: number): number {
-  return from + (to - from) * t
-}
-
 /**
  * `t` is this element's own fade-in fraction (0-1 across its start/end
  * window) — used for opacity and anything else that should resolve exactly
- * when the element finishes revealing (e.g. letter-spacing). `style` uses
- * the FULL scroll progress for translateY, so the element keeps drifting
+ * when the element finishes revealing (e.g. the wordmark's glitch settling).
+ * `style` uses the FULL scroll progress for translateY, so the element keeps drifting
  * gently for the whole scroll even after it's fully faded in — that's the
  * "own subtle depth" the brief asks for, distinct from the fade timing.
  */
@@ -45,15 +41,16 @@ export function IdentityLayer({ zIndex, progress }: IdentityLayerProps) {
   const symposium = computeReveal(progress, identityReveal.symposium)
   const info = computeReveal(progress, identityReveal.info)
 
-  const symposiumNameStyle: CSSProperties = {
-    ...symposium.style,
-    letterSpacing: `${lerp(0.02, 0.14, symposium.t)}em`,
-  }
-
   return (
     <div className="identity-layer" style={{ zIndex }}>
       <CollegeIdentity logoStyle={logo.style} nameStyle={name.style} />
-      <SymposiumIdentity nameStyle={symposiumNameStyle} taglineStyle={symposium.style} infoStyle={info.style} />
+      <SymposiumIdentity
+        nameStyle={symposium.style}
+        nameT={symposium.t}
+        progress={progress}
+        taglineStyle={symposium.style}
+        infoStyle={info.style}
+      />
     </div>
   )
 }

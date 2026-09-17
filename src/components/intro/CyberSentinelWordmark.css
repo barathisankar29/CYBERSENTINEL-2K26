@@ -1,0 +1,102 @@
+/*
+ * No gold anywhere in this file — CyberSentinel branding uses only the
+ * city's neon palette (violet/magenta/cyan/white). Gold is scoped to
+ * CollegeIdentity.css only, per the color rule in src/styles/tokens.css.
+ */
+
+.cyber-wordmark-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 94vw;
+  will-change: transform, opacity;
+}
+
+.cyber-wordmark {
+  position: relative;
+  margin: 0;
+  display: inline-block;
+  max-width: 100%;
+  font-family:
+    'Arial Narrow',
+    'Oswald',
+    'Helvetica Neue',
+    Impact,
+    system-ui,
+    sans-serif;
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  /*
+   * "CYBERSENTINEL" is one unbreakable word (13 letters) — it can't wrap,
+   * so font-size must never let it overflow the viewport even with a wide
+   * fallback font (system-ui/sans-serif is much wider than the condensed
+   * fonts listed above, and is what actually renders on many Android
+   * devices/CI). This clamp is calibrated against the worst-case fallback,
+   * not the best case — measured empirically, not guessed. If you swap in
+   * a real narrow display font, this can likely grow again.
+   */
+  font-size: clamp(1.5rem, 8vw, 5.5rem);
+  line-height: 0.85;
+  letter-spacing: -0.01em;
+  color: #f6f3ff;
+  /* Forward lean + horizontal stretch, and an angular slice top/bottom
+     instead of a plain rectangle — the "aggressive/wide/sharp" feel. */
+  transform: skewX(-11deg) scaleX(1.08);
+  transform-origin: center;
+  clip-path: polygon(1% 16%, 100% 0%, 99% 84%, 0% 100%);
+  text-shadow:
+    0 0 14px var(--city-violet-soft),
+    0 0 34px var(--city-violet),
+    0 0 60px var(--city-glow-violet);
+}
+
+/* Chromatic edge split: a cyan copy offset one way, a magenta copy offset
+   the other, both screen-blended behind/over the solid core — a controlled,
+   readable glitch, not noisy RGB distortion. --glitch-x/--glitch-y are set
+   inline per-frame from scroll progress (see CyberSentinelWordmark.tsx). */
+.cyber-wordmark::before,
+.cyber-wordmark::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  clip-path: inherit;
+  pointer-events: none;
+}
+
+.cyber-wordmark::before {
+  color: var(--city-cyan);
+  mix-blend-mode: screen;
+  opacity: 0.6;
+  transform: translate(calc(2.5px + var(--glitch-x, 0px)), calc(-1.5px + var(--glitch-y, 0px)));
+}
+
+.cyber-wordmark::after {
+  color: var(--city-magenta);
+  mix-blend-mode: screen;
+  opacity: 0.5;
+  transform: translate(calc(-2.5px - var(--glitch-x, 0px)), calc(1.5px - var(--glitch-y, 0px)));
+}
+
+.cyber-wordmark-edition {
+  margin-top: 0.4em;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 0.25em;
+  font-size: clamp(0.85rem, 2.6vw, 1.3rem);
+  color: var(--city-cyan);
+  text-shadow: 0 0 16px var(--city-glow-cyan);
+  transform: skewX(-11deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cyber-wordmark::before,
+  .cyber-wordmark::after {
+    transform: translate(2.5px, -1.5px);
+  }
+
+  .cyber-wordmark::after {
+    transform: translate(-2.5px, 1.5px);
+  }
+}

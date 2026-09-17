@@ -1,28 +1,31 @@
 import type { CSSProperties } from 'react'
 import { symposium } from '@/data/symposium'
+import { CyberSentinelWordmark } from './CyberSentinelWordmark'
 import './SymposiumIdentity.css'
 
 interface SymposiumIdentityProps {
   nameStyle: CSSProperties
+  /** The wordmark's own reveal fraction 0-1 — see CyberSentinelWordmark.tsx. */
+  nameT: number
+  /** Master scroll progress 0-1, for the wordmark's glitch offset. */
+  progress: number
   taglineStyle: CSSProperties
   infoStyle: CSSProperties
 }
 
 /**
- * Symposium identity: the futuristic sub-brand, styled with the city's neon
- * palette (never gold — see CollegeIdentity.tsx for the gold-scoped block).
- * Tagline/supporting info render only when data/symposium.ts actually
- * provides them; nothing here is invented copy. Styles come from
- * IdentityLayer, computed straight from scroll progress.
+ * Symposium identity: the CYBERSENTINEL wordmark (see
+ * CyberSentinelWordmark.tsx) plus tagline/supporting info, styled with the
+ * city's neon palette (never gold — see CollegeIdentity.tsx for the
+ * gold-scoped block). Tagline/supporting info render only when
+ * data/symposium.ts actually provides them; nothing here is invented copy.
  */
-export function SymposiumIdentity({ nameStyle, taglineStyle, infoStyle }: SymposiumIdentityProps) {
+export function SymposiumIdentity({ nameStyle, nameT, progress, taglineStyle, infoStyle }: SymposiumIdentityProps) {
   const supportingInfo = symposium.supportingInfo ?? []
 
   return (
     <div className="symposium-identity">
-      <h1 className="symposium-identity__name" style={nameStyle}>
-        {symposium.name} <span className="symposium-identity__edition">{symposium.edition}</span>
-      </h1>
+      <CyberSentinelWordmark edition={symposium.edition} t={nameT} progress={progress} style={nameStyle} />
       {symposium.tagline && (
         <p className="symposium-identity__tagline" style={taglineStyle}>
           {symposium.tagline}
