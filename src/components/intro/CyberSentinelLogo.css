@@ -4,6 +4,6 @@
  */
 .cyber-sentinel-logo {
   filter:
-    drop-shadow(0 8px 22px rgba(0, 0, 0, 0.55))
-    drop-shadow(0 0 48px rgba(0, 0, 0, 0.35));
+    drop-shadow(0 10px 30px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 64px rgba(0, 0, 0, 0.4));
 }

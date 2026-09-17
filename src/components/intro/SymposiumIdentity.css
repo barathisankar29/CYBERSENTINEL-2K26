@@ -1,4 +1,9 @@
 .symposium-identity {
+  /* Full width (not shrink-to-fit) so the logo's percentage width has a
+     real basis to scale against — otherwise a raster <img> at width:100%
+     inside a shrink-wrapped flex item can never exceed its own intrinsic
+     pixel size, no matter how large max-width allows. */
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;

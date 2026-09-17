@@ -11,29 +11,60 @@ export interface RevealWindow {
    * layer.
    */
   depthPx: number
-  /**
-   * Opacity at progress=start, before this window has properly begun
-   * (defaults to 0 — fully hidden). A small nonzero value reads as "barely
-   * visible" at the very top rather than fully invisible, matching how the
-   * city layers themselves start with a faint hint rather than nothing.
-   */
-  opacityFrom?: number
+}
+
+/** A reveal that fades IN then back OUT — for the transient intro taglines (Stage 2/3). */
+export interface StageRevealWindow {
+  fadeInStart: number
+  fadeInEnd: number
+  fadeOutStart: number
+  fadeOutEnd: number
+  depthPx: number
 }
 
 /**
  * When each piece of identity reveals relative to the master scroll
- * progress, and how much it drifts. Mirrors cityLayers.config.ts's
- * motionRange/opacityRange split, tuned so identity reads roughly as:
- * 0% barely there -> ~22% branding strip in -> ~35% college identity
- * readable -> ~55% CyberSentinel logo rising -> ~85% fully composed. Nudge
+ * progress, and how much it drifts.
+ *
+ * IMPORTANT: none of these have a nonzero opacity floor — every one is
+ * exactly invisible at progress=0 (start > 0 for all), per the brief: the
+ * hero must start from true darkness, not "faintly visible." Compare to
+ * cityLayers.config.ts, where a few background layers DO get a small
+ * baseline opacity — that's intentional atmosphere ("stars, faint sky,
+ * extremely subtle city hints" are allowed to already exist); the identity
+ * elements here are not.
+ *
+ * Staged order: 0-13% dark -> 13-32% tagline 1 -> 28-48% tagline 2 ->
+ * 44-62% college identity -> 56-75% branding strip -> 70-90% CyberSentinel
+ * logo -> 85-98% supporting info. Windows overlap deliberately for a
+ * smooth crossfade between stages rather than a hard cut. Nudge
  * `start`/`end` to retime a piece; nudge `depthPx` to change how much it
- * moves. Depth is deliberately ordered brandingStrip < logo/name <
- * symposium (CyberSentinel logo) < the city's own foreground layers.
+ * moves.
  */
 export const identityReveal = {
-  brandingStrip: { start: 0, end: 0.22, depthPx: 8, opacityFrom: 0.08 } satisfies RevealWindow,
-  logo: { start: 0.03, end: 0.32, depthPx: 16 } satisfies RevealWindow,
-  name: { start: 0.12, end: 0.4, depthPx: 22 } satisfies RevealWindow,
-  symposium: { start: 0.42, end: 0.7, depthPx: 28 } satisfies RevealWindow,
-  info: { start: 0.62, end: 0.88, depthPx: 18 } satisfies RevealWindow,
+  brandingStrip: { start: 0.56, end: 0.75, depthPx: 8 } satisfies RevealWindow,
+  logo: { start: 0.44, end: 0.58, depthPx: 16 } satisfies RevealWindow,
+  name: { start: 0.5, end: 0.62, depthPx: 22 } satisfies RevealWindow,
+  symposium: { start: 0.7, end: 0.9, depthPx: 28 } satisfies RevealWindow,
+  info: { start: 0.85, end: 0.98, depthPx: 18 } satisfies RevealWindow,
 }
+
+/**
+ * The two transient "atmospheric storytelling" taglines (Stage 2/3) — each
+ * fades in, holds, then fades back out before the next one (or before
+ * college identity) takes over. They share the same centered screen
+ * position as everything else, so overlap is handled by their own fade
+ * envelopes rather than layout.
+ */
+export const introTaglines: { id: string; text: string; window: StageRevealWindow }[] = [
+  {
+    id: 'engineering-the-future',
+    text: 'ENGINEERING THE FUTURE',
+    window: { fadeInStart: 0.13, fadeInEnd: 0.2, fadeOutStart: 0.26, fadeOutEnd: 0.32, depthPx: 14 },
+  },
+  {
+    id: 'ideas-become-innovation',
+    text: 'WHERE IDEAS BECOME INNOVATION',
+    window: { fadeInStart: 0.28, fadeInEnd: 0.36, fadeOutStart: 0.42, fadeOutEnd: 0.48, depthPx: 14 },
+  },
+]

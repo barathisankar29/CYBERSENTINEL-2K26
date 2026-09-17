@@ -1,0 +1,16 @@
+.intro-tagline {
+  margin: 0;
+  padding: 0 1.25rem;
+  max-width: min(90vw, 42rem);
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: clamp(1.05rem, 3.4vw, 2rem);
+  color: #f5e9ff;
+  text-align: center;
+  text-shadow:
+    0 0 16px color-mix(in srgb, var(--city-pink) 60%, transparent),
+    0 0 32px color-mix(in srgb, var(--city-magenta) 32%, transparent),
+    0 0 3px color-mix(in srgb, var(--city-cyan) 40%, transparent);
+}
