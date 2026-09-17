@@ -2,7 +2,6 @@ import type { CSSProperties } from 'react'
 import { identityReveal, introTaglines } from './identityReveal.config'
 import type { RevealWindow, StageRevealWindow } from './identityReveal.config'
 import { BrandingStrip } from './BrandingStrip'
-import { CollegeIdentity } from './CollegeIdentity'
 import { IntroTagline } from './IntroTagline'
 import { SymposiumIdentity } from './SymposiumIdentity'
 import './IdentityLayer.css'
@@ -45,22 +44,26 @@ interface IdentityLayerProps {
 }
 
 /**
- * The full staged hero reveal — atmospheric taglines, then college
- * identity, then the top branding strip, then the CyberSentinel logo — all
- * driven by the same master scroll progress as the city layers (see
- * cityLayers.config.ts) but through identityReveal.config.ts's own
- * windows/depths. No timers, no CSS transitions, no independent animation:
- * everything here is a pure function of `progress`. Lives inside
- * CityScene's sticky viewport so it's pinned to the camera. The branding
- * strip is pinned near the top independent of the centered
- * college/CyberSentinel block; the taglines and that centered block share
- * the same screen position as independent full-bleed overlays, so their
- * mutual crossfade is handled by opacity alone, not layout.
+ * The full staged hero reveal — atmospheric taglines, then the top
+ * branding strip, then the CyberSentinel logo — all driven by the same
+ * master scroll progress as the city layers (see cityLayers.config.ts) but
+ * through identityReveal.config.ts's own windows/depths. No timers, no CSS
+ * transitions, no independent animation: everything here is a pure
+ * function of `progress`. Lives inside CityScene's sticky viewport so it's
+ * pinned to the camera. The branding strip is pinned near the top
+ * independent of the centered CyberSentinel block; the taglines and that
+ * centered block share the same screen position as independent full-bleed
+ * overlays, so their mutual crossfade is handled by opacity alone, not
+ * layout.
+ *
+ * The centered college logo/name (CollegeIdentity) has been removed from
+ * this hero position — see .identity-layer__center's padding-bottom in
+ * IdentityLayer.css for the resulting upward nudge into the space it used
+ * to occupy. CollegeIdentity.tsx/.css are left in place, unused, in case
+ * the college identity is placed elsewhere later.
  */
 export function IdentityLayer({ zIndex, progress }: IdentityLayerProps) {
   const brandingStrip = computeReveal(progress, identityReveal.brandingStrip)
-  const logo = computeReveal(progress, identityReveal.logo)
-  const name = computeReveal(progress, identityReveal.name)
   const symposium = computeReveal(progress, identityReveal.symposium)
   const info = computeReveal(progress, identityReveal.info)
 
@@ -75,7 +78,6 @@ export function IdentityLayer({ zIndex, progress }: IdentityLayerProps) {
         </div>
       ))}
       <div className="identity-layer__center">
-        <CollegeIdentity logoStyle={logo.style} nameStyle={name.style} />
         <SymposiumIdentity nameStyle={symposium.style} taglineStyle={symposium.style} infoStyle={info.style} />
       </div>
     </div>

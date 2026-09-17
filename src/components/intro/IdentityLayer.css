@@ -32,6 +32,13 @@
   padding: 0 1.5rem;
 }
 
+/*
+ * padding-bottom nudges the centered content (now just the CyberSentinel
+ * block, since CollegeIdentity was removed from this position) up into the
+ * space the college identity used to occupy — a subtle shift, not a
+ * dramatic reposition. A vh-based value rather than a fixed px offset so
+ * it scales sanely across very short and very tall viewports alike.
+ */
 .identity-layer__center {
   position: absolute;
   inset: 0;
@@ -40,6 +47,7 @@
   align-items: center;
   justify-content: center;
   padding: 0 1.5rem;
+  padding-bottom: 6vh;
   text-align: center;
   gap: 0.5rem;
 }
@@ -53,8 +61,6 @@
  */
 .branding-strip,
 .intro-tagline,
-.college-identity__mark,
-.college-identity__name,
 .symposium-identity__tagline,
 .symposium-identity__info {
   will-change: transform, opacity;
