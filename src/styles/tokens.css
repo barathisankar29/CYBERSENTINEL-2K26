@@ -1,0 +1,38 @@
+/**
+ * Design tokens for CYBERSENTINEL 2K26.
+ *
+ * COLOR RULE (see ARCHITECTURE.md): gold exists ONLY as --identity-gold-*
+ * and must only be referenced by college-identity components
+ * (src/components/intro/CollegeIdentity.tsx and similar). It must never
+ * be used by city, building, navigation, road, bridge, or neon/atmosphere
+ * components — those use the --city-* tokens below instead.
+ */
+
+:root {
+  /* Base environment */
+  --city-black: #05040a;
+  --city-deep-indigo: #0b0a1a;
+  --city-surface: #12102450;
+
+  /* City accent palette — violet / magenta / blue-cyan only */
+  --city-violet: #7c3aed;
+  --city-violet-soft: #a78bfa;
+  --city-magenta: #d926c9;
+  --city-pink: #ff3ea5;
+  --city-blue: #2563eb;
+  --city-cyan: #22d3ee;
+
+  /* Atmosphere */
+  --city-fog: #0b0a1acc;
+  --city-glow-violet: #7c3aed66;
+  --city-glow-cyan: #22d3ee55;
+
+  /* College identity ONLY — do not use outside intro/identity components */
+  --identity-gold: #d4af37;
+  --identity-gold-soft: #f1d98b;
+  --identity-black: #0a0a0a;
+
+  /* Type */
+  --font-display: 'Orbitron', system-ui, sans-serif;
+  --font-body: 'Rajdhani', system-ui, sans-serif;
+}

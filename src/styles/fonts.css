@@ -1,0 +1,12 @@
+/**
+ * @font-face declarations go here once font files are added under
+ * public/fonts/. Reference them with paths like "/fonts/<file>".
+ *
+ * Example:
+ * @font-face {
+ *   font-family: 'Orbitron';
+ *   src: url('/fonts/orbitron-variable.woff2') format('woff2');
+ *   font-weight: 400 900;
+ *   font-display: swap;
+ * }
+ */

@@ -1,0 +1,50 @@
+@import 'tailwindcss';
+@import './tokens.css';
+@import './fonts.css';
+
+@theme {
+  --color-city-black: var(--city-black);
+  --color-city-deep-indigo: var(--city-deep-indigo);
+  --color-city-violet: var(--city-violet);
+  --color-city-violet-soft: var(--city-violet-soft);
+  --color-city-magenta: var(--city-magenta);
+  --color-city-pink: var(--city-pink);
+  --color-city-blue: var(--city-blue);
+  --color-city-cyan: var(--city-cyan);
+  --color-identity-gold: var(--identity-gold);
+  --color-identity-gold-soft: var(--identity-gold-soft);
+  --color-identity-black: var(--identity-black);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--city-black);
+    color: white;
+    font-family: var(--font-body);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

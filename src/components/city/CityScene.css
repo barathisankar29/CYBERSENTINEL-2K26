@@ -1,0 +1,22 @@
+.city-scene {
+  position: relative;
+}
+
+.city-scene__viewport {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--city-black);
+}
+
+.city-layer {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform;
+  backface-visibility: hidden;
+}
