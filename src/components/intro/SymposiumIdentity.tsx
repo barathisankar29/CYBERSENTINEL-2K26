@@ -17,7 +17,7 @@ export function SymposiumIdentity({ symposiumVisible, infoVisible }: SymposiumId
 
   return (
     <div className="symposium-identity">
-      <h1 className={`symposium-identity__name identity-fade-up ${symposiumVisible ? 'is-visible' : ''}`}>
+      <h1 className={`symposium-identity__name identity-fade-tracking ${symposiumVisible ? 'is-visible' : ''}`}>
         {symposium.name} <span className="symposium-identity__edition">{symposium.edition}</span>
       </h1>
       {symposium.tagline && (

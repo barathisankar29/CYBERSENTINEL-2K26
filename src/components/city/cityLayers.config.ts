@@ -55,6 +55,13 @@ export interface CityLayerConfig {
  * 0 — flush/resting). Widen the gap between `from` and `to` for a
  * stronger reveal on that layer, narrow it for a subtler one. `zIndex`
  * controls stacking (back to front), independent of motion.
+ *
+ * `establishDelayMs` is deliberately spread across several seconds (not
+ * clustered) so the layers cascade in slowly and overlap one another —
+ * distant-skyline starts first, foreground-glow last — rather than
+ * everything appearing within the same half-second. `establishDurationMs`
+ * is long per layer (2.8-3.8s) for the same reason: small distance, long
+ * duration reads as "emerging," not "sliding into place."
  */
 export const cityLayers: CityLayerConfig[] = [
   {
@@ -68,7 +75,7 @@ export const cityLayers: CityLayerConfig[] = [
     // It intentionally has no scrollParallax: once established it stays put.
     desktop: { translateY: { from: 0, to: -1.5 }, scale: { from: 1, to: 1.015 } },
     mobile: { translateY: { from: 0, to: -1 }, scale: { from: 1, to: 1.01 } },
-    establishDurationMs: 2200,
+    establishDurationMs: 3000,
     establishDelayMs: 0,
   },
   {
@@ -80,8 +87,8 @@ export const cityLayers: CityLayerConfig[] = [
     // Slow upward reveal from below the frame, settling flush.
     desktop: { translateY: { from: 9, to: 0 } },
     mobile: { translateY: { from: 12, to: 0 }, scale: { from: 1.05, to: 1.08 } },
-    establishDurationMs: 2000,
-    establishDelayMs: 100,
+    establishDurationMs: 3400,
+    establishDelayMs: 0,
     scrollParallax: {
       desktop: { translateY: { from: 0, to: -1.5 } },
       mobile: { translateY: { from: 0, to: -1 } },
@@ -96,8 +103,8 @@ export const cityLayers: CityLayerConfig[] = [
     // Slightly stronger reveal than distant-skyline.
     desktop: { translateY: { from: 20, to: 0 } },
     mobile: { translateY: { from: 24, to: 0 }, scale: { from: 1.06, to: 1.1 } },
-    establishDurationMs: 1800,
-    establishDelayMs: 180,
+    establishDurationMs: 3600,
+    establishDelayMs: 700,
     scrollParallax: {
       desktop: { translateY: { from: 0, to: -3 } },
       mobile: { translateY: { from: 0, to: -2 } },
@@ -113,8 +120,8 @@ export const cityLayers: CityLayerConfig[] = [
     // reads as spatial, not just another layer sliding up.
     desktop: { translateY: { from: 7, to: 0 }, translateX: { from: 4, to: 0 } },
     mobile: { translateY: { from: 8, to: 0 }, translateX: { from: 2, to: 0 } },
-    establishDurationMs: 1500,
-    establishDelayMs: 260,
+    establishDurationMs: 3000,
+    establishDelayMs: 2400,
     scrollParallax: {
       desktop: { translateY: { from: 0, to: -2 }, translateX: { from: 0, to: -1.5 } },
       mobile: { translateY: { from: 0, to: -1.5 }, translateX: { from: 0, to: -1 } },
@@ -130,8 +137,8 @@ export const cityLayers: CityLayerConfig[] = [
     // a light horizontal/diagonal drift alongside the fade.
     desktop: { translateY: { from: 3, to: 0 }, translateX: { from: -6, to: 0 } },
     mobile: { translateY: { from: 3, to: 0 }, translateX: { from: -4, to: 0 } },
-    establishDurationMs: 1400,
-    establishDelayMs: 340,
+    establishDurationMs: 3000,
+    establishDelayMs: 500,
     scrollParallax: {
       desktop: { translateY: { from: 0, to: -1 }, translateX: { from: 0, to: 3 } },
       mobile: { translateY: { from: 0, to: -1 }, translateX: { from: 0, to: 2 } },
@@ -146,8 +153,8 @@ export const cityLayers: CityLayerConfig[] = [
     // Strongest rise of the "structure" layers, mostly from the bottom edge.
     desktop: { translateY: { from: 36, to: 0 } },
     mobile: { translateY: { from: 42, to: 0 }, scale: { from: 1.08, to: 1.12 } },
-    establishDurationMs: 2000,
-    establishDelayMs: 220,
+    establishDurationMs: 3800,
+    establishDelayMs: 2000,
     scrollParallax: {
       desktop: { translateY: { from: 0, to: -4 } },
       mobile: { translateY: { from: 0, to: -3 } },
@@ -163,7 +170,7 @@ export const cityLayers: CityLayerConfig[] = [
     // Final atmospheric touch — establishes last, no continued scroll motion.
     desktop: { translateY: { from: 10, to: 0 } },
     mobile: { translateY: { from: 11, to: 0 } },
-    establishDurationMs: 1600,
-    establishDelayMs: 460,
+    establishDurationMs: 2800,
+    establishDelayMs: 3200,
   },
 ]

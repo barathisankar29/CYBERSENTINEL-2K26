@@ -7,7 +7,7 @@
   align-items: flex-end;
   justify-content: center;
   padding-bottom: 12vh;
-  transition: opacity 0.9s ease;
+  transition: opacity 1.1s ease;
 }
 
 .boot-overlay__status {
@@ -46,7 +46,7 @@
   background: var(--city-cyan);
   transform: scaleX(0);
   transform-origin: left;
-  animation: boot-bar-fill 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: boot-bar-fill 0.95s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes boot-cursor-blink {

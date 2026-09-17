@@ -25,13 +25,13 @@ export type IntroStep =
  * it starts" are different knobs.
  */
 export const introTimeline: { key: IntroStep; at: number }[] = [
-  { key: 'skyVisible', at: 0.8 }, // boot hold before the sky starts fading in
-  { key: 'cityVisible', at: 1.1 }, // city layers begin their establish transition
-  { key: 'logoVisible', at: 1.7 }, // college logo fades/scales in
-  { key: 'nameVisible', at: 2.3 }, // college name fades in
-  { key: 'symposiumVisible', at: 3.15 }, // symposium name fades in
-  { key: 'infoVisible', at: 4.0 }, // supporting info fades in (if any is provided)
-  { key: 'settled', at: 5.6 }, // sequence complete; scroll unlocks
+  { key: 'skyVisible', at: 0.7 }, // boot hold before the sky starts fading in
+  { key: 'cityVisible', at: 1.2 }, // distant lights/skyline begin their (slow) establish transition
+  { key: 'logoVisible', at: 2.0 }, // college logo begins its slow fade+scale
+  { key: 'nameVisible', at: 2.9 }, // college name begins its slow fade — city is still establishing underneath
+  { key: 'symposiumVisible', at: 4.2 }, // symposium title fades in — midground/bridges still settling
+  { key: 'infoVisible', at: 5.8 }, // supporting info fades in last, alongside foreground/glow settling
+  { key: 'settled', at: 7.8 }, // everything has visually resolved + a brief calm hold; scroll unlocks
 ]
 
 /** Fraction of the post-settle scroll range over which the identity fades out. */
