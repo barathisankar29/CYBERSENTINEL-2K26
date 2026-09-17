@@ -7,11 +7,10 @@ import './IdentityLayer.css'
 
 /**
  * `t` is this element's own fade-in fraction (0-1 across its start/end
- * window) — used for opacity and anything else that should resolve exactly
- * when the element finishes revealing (e.g. the wordmark's glitch settling).
- * `style` uses the FULL scroll progress for translateY, so the element keeps drifting
- * gently for the whole scroll even after it's fully faded in — that's the
- * "own subtle depth" the brief asks for, distinct from the fade timing.
+ * window) — used for opacity. `style` uses the FULL scroll progress for
+ * translateY, so the element keeps drifting gently for the whole scroll
+ * even after it's fully faded in — that's the "own subtle depth" the brief
+ * asks for, distinct from the fade timing.
  */
 function computeReveal(progress: number, window: RevealWindow): { t: number; style: CSSProperties } {
   const span = window.end - window.start
@@ -44,13 +43,7 @@ export function IdentityLayer({ zIndex, progress }: IdentityLayerProps) {
   return (
     <div className="identity-layer" style={{ zIndex }}>
       <CollegeIdentity logoStyle={logo.style} nameStyle={name.style} />
-      <SymposiumIdentity
-        nameStyle={symposium.style}
-        nameT={symposium.t}
-        progress={progress}
-        taglineStyle={symposium.style}
-        infoStyle={info.style}
-      />
+      <SymposiumIdentity nameStyle={symposium.style} taglineStyle={symposium.style} infoStyle={info.style} />
     </div>
   )
 }

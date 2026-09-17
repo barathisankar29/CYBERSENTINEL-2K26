@@ -1,0 +1,16 @@
+.brand-logo {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: var(--brand-logo-max-width, 100%);
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Matches BREAKPOINTS.mobileMax in src/styles/breakpoints.ts. */
+@media (max-width: 767px) {
+  .brand-logo {
+    max-width: var(--brand-logo-max-width-mobile, var(--brand-logo-max-width, 100%));
+  }
+}
