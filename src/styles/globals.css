@@ -37,6 +37,13 @@
     font-family: var(--font-body);
   }
 
+  /* Toggled by IntroSequence while the boot sequence hasn't settled yet, so
+     a stray scroll can't desync the sticky city viewport from the boot
+     animation. */
+  body.scroll-locked {
+    overflow: hidden;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

@@ -10,10 +10,16 @@
   background: var(--city-black);
 }
 
-.city-layer {
+.city-layer-establish {
   position: absolute;
-  left: 0;
+  will-change: transform, opacity;
+}
+
+.city-layer-scroll {
+  position: absolute;
+  inset: 0;
   width: 100%;
+  height: 100%;
   object-fit: cover;
   pointer-events: none;
   user-select: none;

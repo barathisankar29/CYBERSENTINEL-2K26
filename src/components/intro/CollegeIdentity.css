@@ -1,0 +1,38 @@
+/*
+ * Gold is scoped to this file ONLY — see the color rule documented in
+ * src/styles/tokens.css. Never import --identity-gold* outside intro/.
+ */
+
+.college-identity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.college-identity__mark {
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--identity-gold);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  color: var(--identity-gold-soft);
+  background: color-mix(in srgb, var(--identity-gold) 6%, transparent);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--identity-gold) 20%, transparent);
+}
+
+.college-identity__name {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: clamp(0.7rem, 1.6vw, 0.95rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--identity-gold-soft);
+  text-align: center;
+  max-width: min(90vw, 34rem);
+}

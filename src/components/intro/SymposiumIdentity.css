@@ -1,0 +1,50 @@
+.symposium-identity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+
+.symposium-identity__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 6vw, 3.4rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--city-violet-soft);
+  text-shadow:
+    0 0 30px var(--city-glow-violet),
+    0 0 60px var(--city-glow-cyan);
+  text-align: center;
+}
+
+.symposium-identity__edition {
+  color: var(--city-cyan);
+}
+
+.symposium-identity__tagline {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: clamp(0.8rem, 1.8vw, 1rem);
+  letter-spacing: 0.08em;
+  color: var(--city-violet-soft);
+  opacity: 0.85;
+  text-align: center;
+}
+
+.symposium-identity__info {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--city-cyan);
+  opacity: 0.8;
+}

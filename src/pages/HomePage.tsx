@@ -1,12 +1,12 @@
-import { CityScene } from '@/components/city/CityScene'
+import { IntroSequence } from '@/components/intro/IntroSequence'
 
-// Landing/main experience: intro sequence (src/components/intro) followed
-// by the city navigation (src/components/city). Intro sequence not yet
-// built — CityScene is the first piece, the cinematic parallax prototype.
+// Landing/main experience: cinematic boot sequence (src/components/intro)
+// establishing into the persistent city (src/components/city). Navigation
+// buildings/camera-to-aerial transition land in a later pass.
 export function HomePage() {
   return (
     <main data-page="home">
-      <CityScene />
+      <IntroSequence />
     </main>
   )
 }

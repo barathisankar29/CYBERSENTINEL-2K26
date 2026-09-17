@@ -1,31 +1,74 @@
 import type { CSSProperties } from 'react'
+import { easing } from '@/animation/timingConfig'
 import type { CityLayerConfig, LayerMotion } from './cityLayers.config'
+
+const ESTABLISH_EASING = `cubic-bezier(${easing.standard.join(', ')})`
 
 function lerp(from: number, to: number, t: number): number {
   return from + (to - from) * t
 }
 
-interface CityLayerProps {
-  layer: CityLayerConfig
-  /** Scroll progress 0-1, already resolved for reduced-motion by the caller. */
-  progress: number
-  isMobile: boolean
+function motionTransform(motion: LayerMotion, t: number): { transform: string; opacity: number } {
+  const translateY = lerp(motion.translateY.from, motion.translateY.to, t)
+  const translateX = motion.translateX ? lerp(motion.translateX.from, motion.translateX.to, t) : 0
+  const scale = motion.scale ? lerp(motion.scale.from, motion.scale.to, t) : 1
+  const opacity = motion.opacity ? lerp(motion.opacity.from, motion.opacity.to, t) : lerp(0, 1, t)
+  return { transform: `translate3d(${translateX}vw, ${translateY}vh, 0) scale(${scale})`, opacity }
 }
 
-/** A single parallax image layer within CityScene, positioned/animated purely via transform. */
-export function CityLayer({ layer, progress, isMobile }: CityLayerProps) {
-  const motion: LayerMotion = isMobile ? layer.mobile : layer.desktop
+interface CityLayerProps {
+  layer: CityLayerConfig
+  /** Whether this layer's one-time boot establish transition has been triggered. */
+  established: boolean
+  /** Post-settle scroll progress 0-1. Ignored (treated as 0) under reduced motion. */
+  scrollProgress: number
+  isMobile: boolean
+  reducedMotion: boolean
+}
 
-  const translateY = lerp(motion.translateY.from, motion.translateY.to, progress)
-  const translateX = motion.translateX ? lerp(motion.translateX.from, motion.translateX.to, progress) : 0
-  const scale = motion.scale ? lerp(motion.scale.from, motion.scale.to, progress) : 1
+/**
+ * A single parallax image layer within CityScene, split into two nodes so
+ * two independent motion sources never fight over the same `transform`:
+ *
+ * - the outer wrapper plays the one-time boot "establish" motion via a CSS
+ *   transition (smooth regardless of how the `established` flag itself
+ *   flips — instant boolean in, eased motion out);
+ * - the inner image plays the continuous, scroll-linked motion with no
+ *   transition, so it tracks the scrollbar 1:1 with no lag.
+ */
+export function CityLayer({ layer, established, scrollProgress, isMobile, reducedMotion }: CityLayerProps) {
+  const motion = isMobile ? layer.mobile : layer.desktop
+  const scrollMotion = isMobile ? layer.scrollParallax?.mobile : layer.scrollParallax?.desktop
 
-  const style: CSSProperties = {
+  const establishT = established ? 1 : 0
+  const { transform: establishTransform, opacity } = motionTransform(motion, establishT)
+
+  const scrollT = reducedMotion ? 0 : scrollProgress
+  const { transform: scrollTransform } = scrollMotion
+    ? motionTransform(scrollMotion, scrollT)
+    : { transform: 'translate3d(0, 0, 0)' }
+
+  const wrapperStyle: CSSProperties = {
     zIndex: layer.zIndex,
-    objectPosition: layer.objectPosition,
-    transform: `translate3d(${translateX}vw, ${translateY}vh, 0) scale(${scale})`,
-    ...(layer.anchor === 'bottom' ? { bottom: 0, height: '58%' } : { top: 0, height: '100%' }),
+    opacity,
+    transform: establishTransform,
+    transitionProperty: reducedMotion ? 'none' : 'transform, opacity',
+    transitionDuration: reducedMotion ? '0s' : `${layer.establishDurationMs}ms`,
+    transitionDelay: reducedMotion ? '0s' : `${layer.establishDelayMs}ms`,
+    transitionTimingFunction: ESTABLISH_EASING,
+    ...(layer.anchor === 'bottom'
+      ? { bottom: 0, left: 0, width: '100%', height: '58%' }
+      : { top: 0, left: 0, width: '100%', height: '100%' }),
   }
 
-  return <img src={layer.src} alt="" draggable={false} className="city-layer" style={style} />
+  const imgStyle: CSSProperties = {
+    transform: scrollTransform,
+    objectPosition: layer.objectPosition,
+  }
+
+  return (
+    <div className="city-layer-establish" style={wrapperStyle}>
+      <img src={layer.src} alt="" draggable={false} className="city-layer-scroll" style={imgStyle} />
+    </div>
+  )
 }

@@ -4,12 +4,14 @@ export interface LayerRange {
 }
 
 export interface LayerMotion {
-  /** Vertical travel in vh, lerped across scroll progress 0 -> 1. Negative moves up. */
+  /** Vertical travel in vh. Negative moves up. */
   translateY: LayerRange
-  /** Horizontal travel in vw, lerped across scroll progress 0 -> 1. Negative moves left. */
+  /** Horizontal travel in vw. Negative moves left. */
   translateX?: LayerRange
-  /** Uniform scale, lerped across scroll progress 0 -> 1. */
+  /** Uniform scale. */
   scale?: LayerRange
+  /** Opacity. Defaults to { from: 0, to: 1 } when omitted. */
+  opacity?: LayerRange
 }
 
 export type LayerAnchor = 'fill' | 'bottom'
@@ -22,19 +24,37 @@ export interface CityLayerConfig {
   /** 'fill' covers the whole scene; 'bottom' hugs the bottom edge (for glow/foreground haze). */
   anchor: LayerAnchor
   objectPosition: string
+  /**
+   * Establish motion: how this layer travels from hidden (`from`) to resting
+   * (`to`, normally 0) during the boot sequence. Driven by a CSS transition
+   * (see CityLayer.tsx), not scroll — triggered once when `established`
+   * flips true.
+   */
   desktop: LayerMotion
   mobile: LayerMotion
+  /** CSS transition duration for the establish motion, in ms. */
+  establishDurationMs: number
+  /** CSS transition delay for the establish motion, in ms — staggers layers relative to each other. */
+  establishDelayMs: number
+  /**
+   * Optional small continued motion once the user starts scrolling *after*
+   * the intro has settled (Category C in the brief). Deliberately modest —
+   * the big reveal already happened during establish; this is just enough
+   * to keep depth alive as the camera begins moving toward the future
+   * aerial view. Omit entirely for layers that should stay still post-intro
+   * (e.g. foreground-glow).
+   */
+  scrollParallax?: { desktop: LayerMotion; mobile: LayerMotion }
 }
 
 /**
  * Per-layer parallax tuning for the cinematic city reveal.
  *
- * `from` is the resting offset at scroll progress 0 (composition mostly
- * sky, city tucked toward the bottom edge); `to` is the offset once fully
- * scrolled through (progress 1). Widen the gap between `from` and `to` for
- * a stronger reveal on that layer, narrow it for a subtler one — that's the
- * main knob for retuning depth/speed per layer without touching component
- * code. `zIndex` controls stacking (back to front), independent of motion.
+ * `from` is the resting offset before establishing (city hidden/tucked
+ * toward the bottom edge); `to` is the offset once established (normally
+ * 0 — flush/resting). Widen the gap between `from` and `to` for a
+ * stronger reveal on that layer, narrow it for a subtler one. `zIndex`
+ * controls stacking (back to front), independent of motion.
  */
 export const cityLayers: CityLayerConfig[] = [
   {
@@ -43,9 +63,13 @@ export const cityLayers: CityLayerConfig[] = [
     zIndex: 1,
     anchor: 'fill',
     objectPosition: 'center top',
-    // Essentially fixed: only a hair of drift/scale so the upper sky reads as stable.
+    // Essentially fixed: only a hair of drift/scale so the upper sky reads as
+    // stable, and — per the brief — this is the ONLY motion sky ever gets.
+    // It intentionally has no scrollParallax: once established it stays put.
     desktop: { translateY: { from: 0, to: -1.5 }, scale: { from: 1, to: 1.015 } },
     mobile: { translateY: { from: 0, to: -1 }, scale: { from: 1, to: 1.01 } },
+    establishDurationMs: 2200,
+    establishDelayMs: 0,
   },
   {
     id: 'distant-skyline',
@@ -53,9 +77,15 @@ export const cityLayers: CityLayerConfig[] = [
     zIndex: 2,
     anchor: 'fill',
     objectPosition: 'center bottom',
-    // Slow upward reveal from below the frame, settling flush at progress 1.
+    // Slow upward reveal from below the frame, settling flush.
     desktop: { translateY: { from: 9, to: 0 } },
     mobile: { translateY: { from: 12, to: 0 }, scale: { from: 1.05, to: 1.08 } },
+    establishDurationMs: 2000,
+    establishDelayMs: 100,
+    scrollParallax: {
+      desktop: { translateY: { from: 0, to: -1.5 } },
+      mobile: { translateY: { from: 0, to: -1 } },
+    },
   },
   {
     id: 'midground',
@@ -63,9 +93,15 @@ export const cityLayers: CityLayerConfig[] = [
     zIndex: 3,
     anchor: 'fill',
     objectPosition: 'center bottom',
-    // Moderate upward reveal, settling flush at progress 1.
+    // Slightly stronger reveal than distant-skyline.
     desktop: { translateY: { from: 20, to: 0 } },
     mobile: { translateY: { from: 24, to: 0 }, scale: { from: 1.06, to: 1.1 } },
+    establishDurationMs: 1800,
+    establishDelayMs: 180,
+    scrollParallax: {
+      desktop: { translateY: { from: 0, to: -3 } },
+      mobile: { translateY: { from: 0, to: -2 } },
+    },
   },
   {
     id: 'bridges',
@@ -73,9 +109,16 @@ export const cityLayers: CityLayerConfig[] = [
     zIndex: 4,
     anchor: 'fill',
     objectPosition: 'center bottom',
-    // Diagonal drift (vertical + horizontal together) so it reads as spatial, not a straight rise.
-    desktop: { translateY: { from: 7, to: 0 }, translateX: { from: 4, to: -3 } },
-    mobile: { translateY: { from: 8, to: 0 }, translateX: { from: 2, to: -2 } },
+    // Independent diagonal drift (vertical + horizontal together) so it
+    // reads as spatial, not just another layer sliding up.
+    desktop: { translateY: { from: 7, to: 0 }, translateX: { from: 4, to: 0 } },
+    mobile: { translateY: { from: 8, to: 0 }, translateX: { from: 2, to: 0 } },
+    establishDurationMs: 1500,
+    establishDelayMs: 260,
+    scrollParallax: {
+      desktop: { translateY: { from: 0, to: -2 }, translateX: { from: 0, to: -1.5 } },
+      mobile: { translateY: { from: 0, to: -1.5 }, translateX: { from: 0, to: -1 } },
+    },
   },
   {
     id: 'light-trails',
@@ -83,9 +126,16 @@ export const cityLayers: CityLayerConfig[] = [
     zIndex: 5,
     anchor: 'fill',
     objectPosition: 'center bottom',
-    // Mostly horizontal/diagonal streaking motion, minimal vertical travel.
-    desktop: { translateY: { from: 3, to: 0 }, translateX: { from: -8, to: 10 } },
-    mobile: { translateY: { from: 3, to: 0 }, translateX: { from: -5, to: 6 } },
+    // Reads mainly as a fade/activate (it's "lights turning on"), with only
+    // a light horizontal/diagonal drift alongside the fade.
+    desktop: { translateY: { from: 3, to: 0 }, translateX: { from: -6, to: 0 } },
+    mobile: { translateY: { from: 3, to: 0 }, translateX: { from: -4, to: 0 } },
+    establishDurationMs: 1400,
+    establishDelayMs: 340,
+    scrollParallax: {
+      desktop: { translateY: { from: 0, to: -1 }, translateX: { from: 0, to: 3 } },
+      mobile: { translateY: { from: 0, to: -1 }, translateX: { from: 0, to: 2 } },
+    },
   },
   {
     id: 'foreground',
@@ -93,10 +143,15 @@ export const cityLayers: CityLayerConfig[] = [
     zIndex: 6,
     anchor: 'fill',
     objectPosition: 'center bottom',
-    // Strongest rise of the "structure" layers, mostly from the bottom edge,
-    // settling flush at progress 1.
+    // Strongest rise of the "structure" layers, mostly from the bottom edge.
     desktop: { translateY: { from: 36, to: 0 } },
     mobile: { translateY: { from: 42, to: 0 }, scale: { from: 1.08, to: 1.12 } },
+    establishDurationMs: 2000,
+    establishDelayMs: 220,
+    scrollParallax: {
+      desktop: { translateY: { from: 0, to: -4 } },
+      mobile: { translateY: { from: 0, to: -3 } },
+    },
   },
   {
     id: 'foreground-glow',
@@ -105,7 +160,10 @@ export const cityLayers: CityLayerConfig[] = [
     // Bottom-anchored so it always hugs the bottom edge regardless of travel.
     anchor: 'bottom',
     objectPosition: 'center bottom',
+    // Final atmospheric touch — establishes last, no continued scroll motion.
     desktop: { translateY: { from: 10, to: 0 } },
     mobile: { translateY: { from: 11, to: 0 } },
+    establishDurationMs: 1600,
+    establishDelayMs: 460,
   },
 ]
