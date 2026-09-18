@@ -83,6 +83,9 @@
  */
 .branding-strip,
 .intro-tagline,
+.presented-by__department,
+.presented-by__association,
+.presented-by__presents,
 .symposium-identity__tagline,
 .symposium-identity__info {
   will-change: transform, opacity;

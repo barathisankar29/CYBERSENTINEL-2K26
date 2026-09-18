@@ -14,6 +14,10 @@ export interface SymposiumIdentity {
   name: string
   edition: string
   logoPath?: string
+  /** e.g. "Department of Computer Science and Engineering" — rendered above the symposium name. */
+  department?: string
+  /** e.g. "In Association with Hackathon Club" — rendered below `department`, above "Presents". */
+  presentedBy?: string
   tagline?: string
   supportingInfo?: string[]
 }

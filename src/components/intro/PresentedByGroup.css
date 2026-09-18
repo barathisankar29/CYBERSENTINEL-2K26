@@ -1,0 +1,50 @@
+/* No gold — cyan/pink cyberpunk treatment only, matching the symposium's neon palette. */
+.presented-by {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 0.85rem;
+}
+
+.presented-by__department {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: clamp(0.85rem, 2.6vw, 1.35rem);
+  color: var(--city-cyan);
+  text-shadow:
+    0 0 12px color-mix(in srgb, var(--city-cyan) 55%, transparent),
+    0 0 22px color-mix(in srgb, var(--city-pink) 28%, transparent);
+  text-align: center;
+  max-width: min(92vw, 34rem);
+}
+
+.presented-by__association {
+  margin: 0;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-size: clamp(0.72rem, 2vw, 1rem);
+  color: var(--city-pink);
+  text-shadow:
+    0 0 10px color-mix(in srgb, var(--city-pink) 45%, transparent),
+    0 0 18px color-mix(in srgb, var(--city-cyan) 20%, transparent);
+  text-align: center;
+  max-width: min(90vw, 30rem);
+}
+
+.presented-by__presents {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  font-size: clamp(0.62rem, 1.5vw, 0.8rem);
+  color: color-mix(in srgb, var(--city-cyan) 65%, var(--city-pink) 35%);
+  text-shadow: 0 0 8px color-mix(in srgb, var(--city-pink) 35%, transparent);
+  text-align: center;
+}

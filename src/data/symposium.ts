@@ -6,5 +6,7 @@ export const symposium: SymposiumIdentity = {
   // TODO: place the real logo under public/assets/branding/symposium-logo
   // and update this path once the asset is generated.
   logoPath: '/assets/branding/symposium-logo/logo.svg',
+  department: 'Department of Computer Science and Engineering',
+  presentedBy: 'In Association with Hackathon Club',
   supportingInfo: [],
 }

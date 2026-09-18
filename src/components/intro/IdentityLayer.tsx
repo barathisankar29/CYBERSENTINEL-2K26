@@ -3,6 +3,7 @@ import { identityReveal, introTaglines } from './identityReveal.config'
 import type { RevealWindow, StageRevealWindow } from './identityReveal.config'
 import { BrandingStrip } from './BrandingStrip'
 import { IntroTagline } from './IntroTagline'
+import { PresentedByGroup } from './PresentedByGroup'
 import { SymposiumIdentity } from './SymposiumIdentity'
 import './IdentityLayer.css'
 
@@ -60,10 +61,16 @@ interface IdentityLayerProps {
  * this hero position — see .identity-layer__center's padding-bottom in
  * IdentityLayer.css for the resulting upward nudge into the space it used
  * to occupy. CollegeIdentity.tsx/.css are left in place, unused, in case
- * the college identity is placed elsewhere later.
+ * the college identity is placed elsewhere later. In its place, the
+ * "presented by" text hierarchy (department -> association -> "Presents")
+ * now reveals directly above the CyberSentinel logo — see
+ * PresentedByGroup.tsx.
  */
 export function IdentityLayer({ zIndex, progress }: IdentityLayerProps) {
   const brandingStrip = computeReveal(progress, identityReveal.brandingStrip)
+  const department = computeReveal(progress, identityReveal.department)
+  const presentedBy = computeReveal(progress, identityReveal.presentedBy)
+  const presents = computeReveal(progress, identityReveal.presents)
   const symposium = computeReveal(progress, identityReveal.symposium)
   const info = computeReveal(progress, identityReveal.info)
 
@@ -78,6 +85,11 @@ export function IdentityLayer({ zIndex, progress }: IdentityLayerProps) {
         </div>
       ))}
       <div className="identity-layer__center">
+        <PresentedByGroup
+          departmentStyle={department.style}
+          associationStyle={presentedBy.style}
+          presentsStyle={presents.style}
+        />
         <SymposiumIdentity nameStyle={symposium.style} taglineStyle={symposium.style} infoStyle={info.style} />
       </div>
     </div>
