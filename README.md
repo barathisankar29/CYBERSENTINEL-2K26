@@ -16,6 +16,6 @@ npm run dev
 - `npm run dev` — start the dev server
 - `npm run build` — type-check and build for production
 - `npm run preview` — preview the production build locally
-- `npm run lint` — run oxlint
+- `npm run lint` — run ESLint
 - `npm run format` — format the repo with Prettier
 - `npm run format:check` — check formatting without writing

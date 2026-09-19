@@ -82,10 +82,10 @@ Font files go in `public/fonts/`. `@font-face` declarations live in `src/styles/
 
 ## 6. Where animation logic lives
 
-`src/animation/` is the single place that owns *how* motion behaves, so timing/positions can be retuned without touching component markup:
+`src/animation/` is the single place that owns _how_ motion behaves, so timing/positions can be retuned without touching component markup:
 
 - `timingConfig.ts` — named durations/easings for the intro sequence (placeholder values, meant to be tuned once the sequence is built).
-- `cameraTransitions.ts` — camera keyframe *data* (`CameraState`: `intro` → `cityRising` → `aerial`), with desktop/mobile positions kept side by side per keyframe.
+- `cameraTransitions.ts` — camera keyframe _data_ (`CameraState`: `intro` → `cityRising` → `aerial`), with desktop/mobile positions kept side by side per keyframe.
 - `scrollController.ts` — the scroll-progress abstraction. It's a stub today (`useScrollProgress` returns a static value) because the backing implementation (Framer Motion's `useScroll`, GSAP `ScrollTrigger`, or a hand-rolled `IntersectionObserver` controller) is a first-screen implementation decision. Components should only ever import from this module, not from whichever library ends up implementing it — that's what lets the library choice change later without a rewrite.
 - `useReducedMotion.ts` — OS-level reduced-motion preference, already wired; `src/styles/globals.css` also has a CSS-level fallback (`prefers-reduced-motion`) for anything that isn't JS-driven.
 
@@ -123,27 +123,27 @@ Nothing here assumes DOM/CSS-only rendering long-term. The structure is meant to
 
 ## Dependencies installed
 
-| Package | Reason |
-|---|---|
-| `react`, `react-dom` | UI runtime. |
-| `react-router-dom` | Section routing (`/`, `/:slug`) — needed for the "building click → navigate to section" flow and direct-link-able sections. |
-| `vite`, `@vitejs/plugin-react` | Build tool + fast HMR; scaffolded project default. |
-| `typescript` | Type safety across data-driven config (`NavigationBuilding`, `SiteSection`, etc.) — matters most here because so much of the app is meant to be config-driven. |
-| `tailwindcss`, `@tailwindcss/vite` | Utility CSS with first-class dark-theme support; v4's CSS-based `@theme` config lets the color tokens in `src/styles/tokens.css` (including the gold-scoping rule) drive Tailwind directly, no separate `tailwind.config.js` needed. |
-| `oxlint` | Fast linter, scaffolded project default; no config changes made. |
-| `prettier` | Consistent formatting (`npm run format`). |
+| Package                                                                                                                                    | Reason                                                                                                                                                                                                                               |
+| ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `react`, `react-dom`                                                                                                                       | UI runtime.                                                                                                                                                                                                                          |
+| `react-router-dom`                                                                                                                         | Section routing (`/`, `/:slug`) — needed for the "building click → navigate to section" flow and direct-link-able sections.                                                                                                          |
+| `vite`, `@vitejs/plugin-react`                                                                                                             | Build tool + fast HMR; scaffolded project default.                                                                                                                                                                                   |
+| `typescript`                                                                                                                               | Type safety across data-driven config (`NavigationBuilding`, `SiteSection`, etc.) — matters most here because so much of the app is meant to be config-driven.                                                                       |
+| `tailwindcss`, `@tailwindcss/vite`                                                                                                         | Utility CSS with first-class dark-theme support; v4's CSS-based `@theme` config lets the color tokens in `src/styles/tokens.css` (including the gold-scoping rule) drive Tailwind directly, no separate `tailwind.config.js` needed. |
+| `eslint`, `typescript-eslint`, `eslint-plugin-react`, `eslint-plugin-react-hooks`, `eslint-plugin-react-refresh`, `eslint-plugin-jsx-a11y` | Linting — flat config (`eslint.config.js`) with TypeScript, React, hooks, Vite Fast Refresh, and accessibility rules.                                                                                                                |
+| `prettier`                                                                                                                                 | Consistent formatting (`npm run format`).                                                                                                                                                                                            |
 
 ## Dependencies recommended, not yet installed
 
 Deliberately left out until the first screen actually needs them, per "don't introduce heavy libraries until they're needed":
 
-| Package | Why it's a likely future need | Why it's deferred |
-|---|---|---|
-| `framer-motion` | Declarative scroll/viewport-driven animation and page-transition orchestration; would back `src/animation/scrollController.ts`. | Choice between this and GSAP affects `scrollController.ts`'s implementation — better decided when building the intro sequence, not before. |
-| `gsap` (+ `ScrollTrigger`) | Alternative for finer-grained, timeline-based scroll choreography (often preferred for cinematic camera-style sequences like the city rise/aerial transition). | Same as above — pick one scroll-animation library when the intro sequence is actually built, not speculatively. |
-| `zustand` | Lightweight global state for things like current camera state, hovered/active building, or intro-sequence phase, once that state needs to be shared across `intro/`, `city/`, and `ui/`. | `src/store/` is empty because it's not yet clear how much state actually needs to be global vs. local — adding this now would be a guess. |
-| `three` + `@react-three/fiber` + `@react-three/drei` | The explicit "future 3D/WebGL integration" path (§9). | Explicitly out of scope until the CSS/SVG-based city proves it needs a 3D upgrade — heaviest dependency on the list. |
-| `clsx` / `tailwind-merge` | Nicer conditional Tailwind class composition than the current hand-rolled `src/lib/cn.ts`. | `cn.ts` covers current needs; upgrade only if class-conflict bugs show up. |
+| Package                                              | Why it's a likely future need                                                                                                                                                            | Why it's deferred                                                                                                                          |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `framer-motion`                                      | Declarative scroll/viewport-driven animation and page-transition orchestration; would back `src/animation/scrollController.ts`.                                                          | Choice between this and GSAP affects `scrollController.ts`'s implementation — better decided when building the intro sequence, not before. |
+| `gsap` (+ `ScrollTrigger`)                           | Alternative for finer-grained, timeline-based scroll choreography (often preferred for cinematic camera-style sequences like the city rise/aerial transition).                           | Same as above — pick one scroll-animation library when the intro sequence is actually built, not speculatively.                            |
+| `zustand`                                            | Lightweight global state for things like current camera state, hovered/active building, or intro-sequence phase, once that state needs to be shared across `intro/`, `city/`, and `ui/`. | `src/store/` is empty because it's not yet clear how much state actually needs to be global vs. local — adding this now would be a guess.  |
+| `three` + `@react-three/fiber` + `@react-three/drei` | The explicit "future 3D/WebGL integration" path (§9).                                                                                                                                    | Explicitly out of scope until the CSS/SVG-based city proves it needs a 3D upgrade — heaviest dependency on the list.                       |
+| `clsx` / `tailwind-merge`                            | Nicer conditional Tailwind class composition than the current hand-rolled `src/lib/cn.ts`.                                                                                               | `cn.ts` covers current needs; upgrade only if class-conflict bugs show up.                                                                 |
 
 ## Dependencies not needed for this project
 
