@@ -1,0 +1,175 @@
+/*
+ * A <button> (not a div) so hover/focus/touch feedback is native — but
+ * reset to look exactly like the plain absolutely-positioned group it
+ * replaced. `pointer-events: auto` (this section only re-enables it;
+ * the buildings container and NavigationCityScene above it stay
+ * `pointer-events: none` so nothing here blocks scroll).
+ */
+.nav-building {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  transform: translateX(-50%);
+  pointer-events: auto;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-building:focus-visible {
+  outline: 2px solid var(--building-accent, var(--city-cyan));
+  outline-offset: 6px;
+  border-radius: 4px;
+}
+
+.nav-building__image {
+  display: block;
+  object-fit: contain;
+  transform-origin: bottom center;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  /* Only `filter` transitions — `transform`/`opacity` are driven per-frame
+     from scroll progress in Building.tsx, so transitioning THOSE here
+     would fight the scroll (see IdentityLayer.css for the same rule). */
+  transition: filter 0.2s ease;
+}
+
+.nav-building:hover .nav-building__image,
+.nav-building:focus-visible .nav-building__image {
+  filter: brightness(1.18);
+}
+
+.nav-building:active .nav-building__image {
+  filter: brightness(1.05);
+}
+
+.nav-building:hover .nav-building__card,
+.nav-building:focus-visible .nav-building__card {
+  border-color: color-mix(in srgb, var(--building-accent, var(--city-cyan)) 70%, transparent);
+}
+
+/*
+ * The floating info card ABOVE each building — a title and one short
+ * line, never a label sitting in a row along the bottom. Dark translucent
+ * glass with a thin gradient border (same double-background trick as
+ * BrandingStrip's badges: a dark fill on the padding-box, a gradient on
+ * the border-box, so the border stays a thin line through the rounded
+ * corners) — compact, never a large UI panel.
+ */
+.nav-building__card {
+  --card-border: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--city-cyan) 55%, transparent),
+    color-mix(in srgb, var(--city-magenta) 45%, transparent)
+  );
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(color-mix(in srgb, var(--city-black) 72%, transparent), color-mix(in srgb, var(--city-deep-indigo) 65%, transparent))
+      padding-box,
+    var(--card-border) border-box;
+  box-shadow: 0 0 10px color-mix(in srgb, var(--building-accent, var(--city-cyan)) 18%, transparent);
+  white-space: nowrap;
+  transition: border-color 0.2s ease;
+}
+
+.nav-building__card-title {
+  font-family: var(--font-display);
+  font-size: clamp(0.58rem, 1.1vw, 0.74rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--building-accent, var(--city-cyan)) 75%, white 25%);
+  text-shadow: 0 0 6px color-mix(in srgb, var(--building-accent, var(--city-cyan)) 45%, transparent);
+}
+
+.nav-building__card-desc {
+  font-family: var(--font-body);
+  font-size: clamp(0.52rem, 0.85vw, 0.62rem);
+  color: color-mix(in srgb, white 70%, var(--building-accent, var(--city-cyan)) 10%);
+  letter-spacing: 0.01em;
+}
+
+/*
+ * The connector between a card and its building — a thin vertical line
+ * ending in a small glowing node right at the building, so the card reads
+ * as spatially attached to it (not just floating nearby).
+ */
+.nav-building__marker {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: 14px;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--building-accent, var(--city-cyan)) 85%, transparent),
+    color-mix(in srgb, var(--building-accent, var(--city-cyan)) 35%, transparent)
+  );
+}
+
+.nav-building__marker::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background: var(--building-accent, var(--city-cyan));
+  box-shadow: 0 0 5px var(--building-accent, var(--city-cyan));
+}
+
+/*
+ * A single soft smear of light at the building's base — NOT a platform:
+ * no border, no fill shape, no defined edge. The heavy blur relative to
+ * the element's own tiny size is what keeps it from ever reading as a
+ * drawn disc/oval — it's meant to disappear into the background, only
+ * keeping the building's bottom edge from looking like a hard PNG cutout.
+ */
+.nav-building__contact-glow {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 55%;
+  height: 10px;
+  transform: translateX(-50%);
+  background: color-mix(in srgb, var(--building-accent, var(--city-cyan)) 28%, transparent);
+  filter: blur(9px);
+  pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .nav-building {
+    gap: 0.2rem;
+  }
+
+  .nav-building__marker {
+    height: 9px;
+  }
+
+  .nav-building__card {
+    padding: 0.22rem 0.5rem;
+    border-radius: 6px;
+  }
+
+  .nav-building__card-title {
+    font-size: 0.54rem;
+    letter-spacing: 0.07em;
+  }
+
+  .nav-building__card-desc {
+    font-size: 0.46rem;
+  }
+}

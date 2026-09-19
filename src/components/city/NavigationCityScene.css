@@ -1,0 +1,18 @@
+/*
+ * `.navigation-city-scene`/`.navigation-city-scene__viewport` (the spacer
+ * + sticky viewport) used to live here — moved to CityJourney.css, which
+ * now owns the single shared sticky viewport for both the hero and the
+ * navigation city (see CityJourney.tsx for why).
+ */
+
+/* The ground plane buildings sit on — fills the shared viewport so each
+   Building's left/bottom percentages resolve against the full scene.
+   Environmental grounding (the "street" the buildings visually stand in)
+   comes entirely from navigation-city-environment.png in
+   navigationCityEnvironment.config.ts — no per-building platform in
+   Building.css. */
+.navigation-city-scene__buildings {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}

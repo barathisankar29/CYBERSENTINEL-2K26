@@ -1,13 +1,12 @@
-import { CityScene } from '@/components/city/CityScene'
+import { CityJourney } from '@/components/city/CityJourney'
 
-// Landing/main experience: the scroll-driven cinematic city reveal
-// (src/components/city) carries both the environment and the college/
-// symposium identity. Navigation buildings/camera-to-aerial transition
-// land in a later pass.
+// Landing/main experience: one continuous scroll-driven camera move —
+// the hero city, then the navigation city — inside a single sticky
+// viewport. See src/components/city/CityJourney.tsx.
 export function HomePage() {
   return (
     <main data-page="home">
-      <CityScene />
+      <CityJourney />
     </main>
   )
 }

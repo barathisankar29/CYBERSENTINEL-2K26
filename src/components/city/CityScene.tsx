@@ -1,5 +1,3 @@
-import { useRef } from 'react'
-import { useScrollProgress } from '@/animation/scrollController'
 import { useReducedMotion } from '@/animation/useReducedMotion'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { IdentityLayer } from '@/components/intro/IdentityLayer'
@@ -8,46 +6,34 @@ import { ParticleField } from './ParticleField'
 import { cityLayers } from './cityLayers.config'
 import './CityScene.css'
 
-/**
- * How much scroll distance (in viewport heights) the opening reveal plays
- * out over — "several viewport heights ... enough to breathe" per the
- * brief. Raise for a slower/longer reveal, lower for a snappier one. This
- * is the single biggest knob for how much scroll control the user has over
- * the parallax.
- */
-const SCROLL_LENGTH_VH = 400
-
 const PARTICLE_Z_INDEX = 8
 const IDENTITY_Z_INDEX = 9
 
+interface CitySceneProps {
+  /** The hero's own 0-1 progress — already resolved for reduced motion by CityJourney. */
+  progress: number
+}
+
 /**
- * The opening cinematic city, entirely scroll-driven: a tall scroll region
- * with a sticky viewport inside it. Every visual change — city layers,
- * identity text, everything — is a pure function of `progress` (0-1 through
- * this section). There is no autoplay: stop scrolling and the scene stops;
- * resume and it picks back up exactly where it was. See
- * cityLayers.config.ts and identityReveal.config.ts for the per-element
- * tuning; this component only wires scroll position to `progress`.
+ * The opening cinematic city's actual content — city layers, particles,
+ * identity reveal. Purely a function of `progress`; owns no scroll
+ * mechanics of its own (see CityJourney.tsx, which computes `progress`
+ * and renders this inside its single shared sticky viewport). Every
+ * visual change here is still a pure function of `progress`, exactly as
+ * before — this component's own content/timing/behavior is unchanged,
+ * only how it receives `progress` and where it's mounted changed.
  */
-export function CityScene() {
-  const spacerRef = useRef<HTMLDivElement>(null)
+export function CityScene({ progress }: CitySceneProps) {
   const isMobile = useIsMobile()
   const reducedMotion = useReducedMotion()
-  const { progress: scrollProgress } = useScrollProgress(spacerRef)
-
-  // Reduced motion: skip the parallax entirely and render the fully
-  // resolved composition, statically, regardless of actual scroll position.
-  const progress = reducedMotion ? 1 : scrollProgress
 
   return (
-    <section ref={spacerRef} className="city-scene" style={{ height: `${SCROLL_LENGTH_VH}vh` }}>
-      <div className="city-scene__viewport">
-        {cityLayers.map((layer) => (
-          <CityLayer key={layer.id} layer={layer} progress={progress} isMobile={isMobile} />
-        ))}
-        <ParticleField zIndex={PARTICLE_Z_INDEX} reducedMotion={reducedMotion} />
-        <IdentityLayer zIndex={IDENTITY_Z_INDEX} progress={progress} />
-      </div>
-    </section>
+    <>
+      {cityLayers.map((layer) => (
+        <CityLayer key={layer.id} layer={layer} progress={progress} isMobile={isMobile} />
+      ))}
+      <ParticleField zIndex={PARTICLE_Z_INDEX} reducedMotion={reducedMotion} />
+      <IdentityLayer zIndex={IDENTITY_Z_INDEX} progress={progress} />
+    </>
   )
 }
