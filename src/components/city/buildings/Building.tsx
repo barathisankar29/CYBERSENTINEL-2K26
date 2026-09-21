@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import { useNavigate } from 'react-router-dom'
 import type { NavigationBuilding } from '@/types/navigation'
 import './Building.css'
 
@@ -100,6 +101,7 @@ interface BuildingProps {
  * ground plane at all.
  */
 export function Building({ building, revealed, isMobile }: BuildingProps) {
+  const navigate = useNavigate()
   const position = isMobile ? building.position.mobile : building.position.desktop
   const scale = position.scale ?? 1
   const aspectRatio = building.assetWidth / building.assetHeight
@@ -149,7 +151,13 @@ export function Building({ building, revealed, isMobile }: BuildingProps) {
     : 'nav-building__card'
 
   return (
-    <button type="button" className="nav-building" style={wrapperStyle} aria-label={building.label}>
+    <button
+      type="button"
+      className="nav-building"
+      style={wrapperStyle}
+      aria-label={building.label}
+      onClick={() => navigate(`/${building.sectionSlug}`)}
+    >
       <div className="nav-building__label-group" style={anchorStyle}>
         <div className={cardClassName} style={{ opacity: revealed ? 1 : 0 }}>
           <span className="nav-building__card-aura" aria-hidden="true" />
