@@ -1,13 +1,39 @@
+import { useState, useCallback } from 'react'
 import { CityScene } from '@/components/city/CityScene'
+import { VideoIntro } from '@/components/intro/VideoIntro'
+import { FuturisticTransition } from '@/components/intro/FuturisticTransition'
+import { AboutSection } from '@/components/about/AboutSection'
 
-// Landing/main experience: the scroll-driven cinematic city reveal
-// (src/components/city) carries both the environment and the college/
-// symposium identity. Navigation buildings/camera-to-aerial transition
-// land in a later pass.
 export function HomePage() {
+  const [introStage, setIntroStage] = useState<'intro' | 'transition' | 'completed'>('intro')
+
+  const handleVideoFinish = useCallback(() => {
+    setIntroStage('transition')
+  }, [])
+
+  const handleTransitionComplete = useCallback(() => {
+    setIntroStage('completed')
+  }, [])
+
   return (
-    <main data-page="home">
-      <CityScene />
+    <main data-page="home" className="relative">
+      {/* 2K Video Intro Entry Screen */}
+      {introStage === 'intro' && (
+        <VideoIntro onFinish={handleVideoFinish} />
+      )}
+
+      {/* Futuristic Blank-to-Aperture Opening Transition */}
+      {introStage === 'transition' && (
+        <FuturisticTransition onComplete={handleTransitionComplete} />
+      )}
+
+      {/* Main City Scene & Experience */}
+      <CityScene introCompleted={introStage === 'completed'} />
+
+      {/* About Section */}
+      <AboutSection />
     </main>
   )
 }
+
+

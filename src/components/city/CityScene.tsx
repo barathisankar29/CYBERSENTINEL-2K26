@@ -3,6 +3,7 @@ import { useScrollProgress } from '@/animation/scrollController'
 import { useReducedMotion } from '@/animation/useReducedMotion'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { IdentityLayer } from '@/components/intro/IdentityLayer'
+import { ScrollIndicator } from '@/components/ui/ScrollIndicator'
 import { CityLayer } from './CityLayer'
 import { ParticleField } from './ParticleField'
 import { cityLayers } from './cityLayers.config'
@@ -20,6 +21,10 @@ const SCROLL_LENGTH_VH = 400
 const PARTICLE_Z_INDEX = 8
 const IDENTITY_Z_INDEX = 9
 
+interface CitySceneProps {
+  introCompleted?: boolean
+}
+
 /**
  * The opening cinematic city, entirely scroll-driven: a tall scroll region
  * with a sticky viewport inside it. Every visual change — city layers,
@@ -29,7 +34,7 @@ const IDENTITY_Z_INDEX = 9
  * cityLayers.config.ts and identityReveal.config.ts for the per-element
  * tuning; this component only wires scroll position to `progress`.
  */
-export function CityScene() {
+export function CityScene({ introCompleted = true }: CitySceneProps) {
   const spacerRef = useRef<HTMLDivElement>(null)
   const isMobile = useIsMobile()
   const reducedMotion = useReducedMotion()
@@ -47,6 +52,9 @@ export function CityScene() {
         ))}
         <ParticleField zIndex={PARTICLE_Z_INDEX} reducedMotion={reducedMotion} />
         <IdentityLayer zIndex={IDENTITY_Z_INDEX} progress={progress} />
+        <ScrollIndicator progress={progress} visible={introCompleted} />
+        {/* Seamless atmospheric bottom gradient blend into About Section */}
+        <div className="city-scene__bottom-blend" aria-hidden="true" />
       </div>
     </section>
   )

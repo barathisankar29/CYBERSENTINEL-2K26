@@ -1,0 +1,1920 @@
+/* ==========================================================================
+   CYBERSENTINEL 2K26 - ABOUT SECTION STYLES
+   Futuristic Cyberpunk / Holographic Theme Matching Website Palette
+   ========================================================================== */
+
+.about-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  margin-top: clamp(-7rem, -12vw, -4.5rem);
+  padding: clamp(6rem, 10vw, 10rem) clamp(1rem, 4vw, 3rem) clamp(4rem, 8vw, 8rem);
+  overflow: hidden;
+  z-index: 12;
+  font-family: var(--font-body, 'Rajdhani', sans-serif);
+  color: #ffffff;
+}
+
+/* Layered backdrop with smooth top dissolution into CityScene */
+.about-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--city-black, #05040a);
+  background-image: 
+    linear-gradient(180deg, rgba(5, 4, 10, 0.25) 0%, rgba(5, 4, 10, 0.78) 90px, rgba(11, 10, 26, 0.88) 220px, rgba(5, 4, 10, 0.95) 100%),
+    url('/assets/city/city-bg-sky.png');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.5) 45px, rgba(0, 0, 0, 0.9) 100px, #000000 160px);
+  mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.5) 45px, rgba(0, 0, 0, 0.9) 100px, #000000 160px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Horizon Cyber Laser Line Seam across transition */
+.about-section__horizon-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(34, 211, 238, 0.15) 15%,
+    rgba(255, 62, 165, 0.85) 50%,
+    rgba(34, 211, 238, 0.15) 85%,
+    transparent 100%
+  );
+  box-shadow: 
+    0 0 14px rgba(255, 62, 165, 0.8),
+    0 0 28px rgba(34, 211, 238, 0.4);
+  pointer-events: none;
+  z-index: 15;
+  animation: horizonPulse 4s ease-in-out infinite alternate;
+}
+
+.about-section__horizon-line::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 4px;
+  background: #ff3ea5;
+  border-radius: 9999px;
+  box-shadow: 0 0 16px #ff3ea5, 0 0 32px #22d3ee;
+}
+
+@keyframes horizonPulse {
+  0% {
+    opacity: 0.75;
+    filter: drop-shadow(0 0 8px rgba(255, 62, 165, 0.7));
+  }
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 18px rgba(34, 211, 238, 0.9));
+  }
+}
+
+/* Atmospheric Horizon Portal Mist Layer */
+.about-section__portal-mist {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1400px;
+  height: 220px;
+  background: radial-gradient(
+    ellipse 75% 55% at 50% 25%,
+    rgba(255, 62, 165, 0.18) 0%,
+    rgba(124, 58, 237, 0.12) 38%,
+    rgba(34, 211, 238, 0.06) 68%,
+    transparent 85%
+  );
+  filter: blur(28px);
+  pointer-events: none;
+  z-index: 14;
+}
+
+/* Atmospheric ambient glow layers */
+.about-section__bg-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  opacity: 0.35;
+  z-index: 0;
+}
+
+.about-section__bg-glow--cyan {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.22) 0%, transparent 70%);
+  top: 5%;
+  left: -10%;
+}
+
+.about-section__bg-glow--violet {
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.24) 0%, transparent 70%);
+  top: 45%;
+  right: -15%;
+}
+
+.about-section__bg-glow--pink {
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, rgba(255, 62, 165, 0.18) 0%, transparent 70%);
+  bottom: 5%;
+  left: 20%;
+}
+
+/* Subtle holographic grid lines */
+.about-section__grid-pattern {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.about-section__container {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3rem, 6vw, 5rem);
+}
+
+/* ==========================================================================
+   Header HUD
+   ========================================================================== */
+
+.about-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.about-header__telemetry {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(11, 10, 26, 0.85);
+  border: 1px solid rgba(255, 62, 165, 0.6);
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: clamp(0.6rem, 1.3vw, 0.8rem);
+  letter-spacing: 0.12em;
+  color: var(--city-pink, #ff3ea5);
+  box-shadow: 0 0 16px rgba(255, 62, 165, 0.25);
+  backdrop-filter: blur(12px);
+  max-width: 95vw;
+}
+
+.about-header__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--city-pink, #ff3ea5);
+  box-shadow: 0 0 8px var(--city-pink, #ff3ea5);
+  animation: aboutLiveDotPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes aboutLiveDotPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.85); }
+}
+
+.about-header__bracket {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.about-header__title {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: clamp(1.4rem, 4.8vw, 3.6rem);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  margin: 0;
+  text-transform: uppercase;
+  word-break: break-word;
+}
+
+.about-header__title-gradient {
+  background: linear-gradient(135deg, #ffffff 30%, #f1f5f9 70%, #cbd5e1 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.about-header__title-neon {
+  background: linear-gradient(135deg, #ffffff 10%, var(--city-pink, #ff3ea5) 60%, var(--city-magenta, #d926c9) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 24px rgba(255, 62, 165, 0.55));
+}
+
+.about-header__subtitle {
+  max-width: 680px;
+  font-size: clamp(0.88rem, 1.8vw, 1.2rem);
+  color: rgba(226, 232, 240, 0.85);
+  line-height: 1.55;
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+/* Filter HUD buttons */
+.about-filter-hud {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: rgba(11, 10, 26, 0.7);
+  border: 1px solid rgba(255, 62, 165, 0.35);
+  padding: 0.4rem;
+  border-radius: 9999px;
+  backdrop-filter: blur(14px);
+  margin-top: 0.5rem;
+}
+
+.about-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: transparent;
+  border: 1px solid transparent;
+  color: rgba(255, 255, 255, 0.75);
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: clamp(0.68rem, 1.3vw, 0.78rem);
+  letter-spacing: 0.12em;
+  padding: 0.45rem 1.1rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.about-filter-btn:hover {
+  color: white;
+  background: rgba(255, 62, 165, 0.12);
+  border-color: rgba(255, 62, 165, 0.4);
+}
+
+.about-filter-btn--active {
+  background: linear-gradient(135deg, rgba(255, 62, 165, 0.22), rgba(217, 38, 201, 0.28));
+  border-color: rgba(255, 62, 165, 0.8);
+  color: var(--city-pink, #ff3ea5);
+  box-shadow: 0 0 16px rgba(255, 62, 165, 0.35);
+}
+
+.about-filter-btn__marker {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.about-header__divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  width: 100%;
+  max-width: 480px;
+  margin-top: 0.5rem;
+}
+
+.about-header__divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 62, 165, 0.6), transparent);
+}
+
+.about-header__divider-gem {
+  width: 8px;
+  height: 8px;
+  transform: rotate(45deg);
+  background: var(--city-pink, #ff3ea5);
+  box-shadow: 0 0 12px var(--city-pink, #ff3ea5);
+}
+
+/* ==========================================================================
+   Cyber Cards (Vel Tech, CyberSentinel, Hackathon Club)
+   ========================================================================== */
+
+.cyber-card {
+  position: relative;
+  background: rgba(11, 10, 26, 0.82);
+  border: 1.5px solid rgba(255, 62, 165, 0.6);
+  border-radius: 18px;
+  padding: clamp(1.75rem, 4vw, 3rem);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow:
+    0 12px 42px rgba(5, 4, 10, 0.8),
+    0 0 24px rgba(255, 62, 165, 0.14);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.cyber-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 46px,
+      rgba(255, 62, 165, 0.02) 46px,
+      rgba(255, 62, 165, 0.02) 48px
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 62, 165, 0.04) 0%,
+      transparent 40%,
+      rgba(255, 62, 165, 0.015) 100%
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cyber-card:hover {
+  border-color: rgba(255, 62, 165, 0.95);
+  box-shadow:
+    0 22px 55px rgba(5, 4, 10, 0.9),
+    0 0 35px rgba(255, 62, 165, 0.35);
+  transform: translateY(-6px);
+}
+
+/* Skyscraper Building Roof Status Lintel */
+.bldg-card__roof {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
+  background: rgba(5, 4, 10, 0.7);
+  border: 1px solid rgba(255, 62, 165, 0.35);
+  border-radius: 8px;
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  color: rgba(226, 232, 240, 0.85);
+  position: relative;
+  z-index: 2;
+}
+
+.bldg-card__roof-beacon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bldg-card__roof-light {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--city-pink, #ff3ea5);
+  box-shadow: 0 0 8px var(--city-pink, #ff3ea5);
+  animation: beaconPulse 2.2s infinite ease-in-out;
+}
+
+.bldg-card__roof-text {
+  color: var(--city-pink, #ff3ea5);
+  font-weight: 700;
+}
+
+.bldg-card__roof-coords {
+  color: rgba(226, 232, 240, 0.65);
+  font-size: 0.65rem;
+}
+
+/* High-tech corner bracket marks */
+.cyber-card__corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.cyber-card__corner--tl {
+  top: 10px;
+  left: 10px;
+  border-top: 2px solid rgba(255, 62, 165, 0.6);
+  border-left: 2px solid rgba(255, 62, 165, 0.6);
+}
+
+.cyber-card__corner--tr {
+  top: 10px;
+  right: 10px;
+  border-top: 2px solid rgba(255, 62, 165, 0.6);
+  border-right: 2px solid rgba(255, 62, 165, 0.6);
+}
+
+.cyber-card__corner--bl {
+  bottom: 10px;
+  left: 10px;
+  border-bottom: 2px solid rgba(255, 62, 165, 0.6);
+  border-left: 2px solid rgba(255, 62, 165, 0.6);
+}
+
+.cyber-card__corner--br {
+  bottom: 10px;
+  right: 10px;
+  border-bottom: 2px solid rgba(255, 62, 165, 0.6);
+  border-right: 2px solid rgba(255, 62, 165, 0.6);
+}
+
+.cyber-card:hover .cyber-card__corner {
+  width: 20px;
+  height: 20px;
+  border-color: #ff3ea5;
+  box-shadow: 0 0 10px rgba(255, 62, 165, 0.8);
+}
+
+/* Card Layout */
+.cyber-card__layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  align-items: center;
+}
+
+.cyber-card--reverse .cyber-card__layout {
+  grid-template-columns: 1fr 280px;
+}
+
+.cyber-card--reverse .cyber-card__layout .cyber-card__visual {
+  order: 2;
+}
+
+.cyber-card--reverse .cyber-card__layout .cyber-card__content {
+  order: 1;
+}
+
+/* Left Visual Emblem Orb */
+.cyber-card__visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+.emblem-orb {
+  position: relative;
+  width: 190px;
+  height: 190px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(17, 15, 38, 0.95) 0%, rgba(11, 10, 26, 0.98) 100%);
+  border: 1.5px solid rgba(255, 62, 165, 0.45);
+  box-shadow:
+    0 0 30px rgba(255, 62, 165, 0.25),
+    inset 0 0 20px rgba(255, 62, 165, 0.15);
+  overflow: hidden;
+}
+
+.emblem-orb--college {
+  border-color: rgba(255, 62, 165, 0.5);
+  box-shadow:
+    0 0 30px rgba(255, 62, 165, 0.3),
+    inset 0 0 20px rgba(255, 62, 165, 0.15);
+}
+
+.emblem-orb--symposium {
+  border-color: rgba(255, 62, 165, 0.5);
+  box-shadow:
+    0 0 30px rgba(255, 62, 165, 0.3),
+    inset 0 0 20px rgba(255, 62, 165, 0.15);
+}
+
+.emblem-orb--club {
+  border-color: rgba(255, 62, 165, 0.5);
+  box-shadow:
+    0 0 30px rgba(255, 62, 165, 0.3),
+    inset 0 0 20px rgba(255, 62, 165, 0.15);
+}
+
+.emblem-orb__scan-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px dashed rgba(255, 62, 165, 0.5);
+  animation: orbRotate 20s linear infinite;
+  pointer-events: none;
+}
+
+.emblem-orb__scan-ring--magenta {
+  border-color: rgba(255, 62, 165, 0.55);
+}
+
+.emblem-orb__scan-ring--violet {
+  border-color: rgba(255, 62, 165, 0.55);
+}
+
+@keyframes orbRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.emblem-orb__pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 62, 165, 0.18) 0%, transparent 70%);
+  animation: orbPulse 2.8s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+.emblem-orb__pulse--magenta {
+  background: radial-gradient(circle, rgba(255, 62, 165, 0.22) 0%, transparent 70%);
+}
+
+.emblem-orb__pulse--violet {
+  background: radial-gradient(circle, rgba(255, 62, 165, 0.22) 0%, transparent 70%);
+}
+
+@keyframes orbPulse {
+  0% { transform: scale(0.9); opacity: 0.5; }
+  100% { transform: scale(1.1); opacity: 0.9; }
+}
+
+.emblem-orb__image {
+  position: relative;
+  width: 145px;
+  height: 145px;
+  object-fit: cover;
+  border-radius: 50%;
+  overflow: hidden;
+  z-index: 1;
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.6));
+  transition: transform 0.35s ease;
+}
+
+.emblem-orb__image--shield {
+  width: 145px;
+  height: 145px;
+  border-radius: 50%;
+  overflow: hidden;
+  object-fit: cover;
+  filter: drop-shadow(0 0 16px rgba(255, 62, 165, 0.45));
+}
+
+.emblem-orb__image--club {
+  width: 145px;
+  height: 145px;
+  border-radius: 50%;
+  overflow: hidden;
+  object-fit: cover;
+  filter: drop-shadow(0 0 16px rgba(255, 62, 165, 0.45));
+}
+
+.cyber-card:hover .emblem-orb__image {
+  transform: scale(1.06);
+}
+
+.cyber-card__label-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(18, 16, 36, 0.9);
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  padding: 0.3rem 0.8rem;
+  border-radius: 9999px;
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  color: white;
+}
+
+.cyber-card__label-tag--magenta {
+  border-color: rgba(255, 62, 165, 0.45);
+}
+
+.cyber-card__label-tag--violet {
+  border-color: rgba(167, 139, 250, 0.45);
+}
+
+.cyber-card__label-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #22d3ee;
+  box-shadow: 0 0 6px #22d3ee;
+}
+
+.cyber-card__label-dot--magenta {
+  background: #ff3ea5;
+  box-shadow: 0 0 6px #ff3ea5;
+}
+
+.cyber-card__label-dot--violet {
+  background: #a78bfa;
+  box-shadow: 0 0 6px #a78bfa;
+}
+
+/* Card Content Right Side */
+.cyber-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.cyber-card__badge-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.cyber-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.28rem 0.75rem;
+  border-radius: 4px;
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cyber-badge--cyan {
+  background: rgba(34, 211, 238, 0.14);
+  border: 1px solid rgba(34, 211, 238, 0.45);
+  color: var(--city-cyan, #22d3ee);
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.18);
+}
+
+.cyber-badge--pink {
+  background: rgba(255, 62, 165, 0.14);
+  border: 1px solid rgba(255, 62, 165, 0.45);
+  color: var(--city-pink, #ff3ea5);
+  box-shadow: 0 0 10px rgba(255, 62, 165, 0.2);
+}
+
+.cyber-badge--violet {
+  background: rgba(124, 58, 237, 0.16);
+  border: 1px solid rgba(167, 139, 250, 0.45);
+  color: var(--city-violet-soft, #a78bfa);
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.2);
+}
+
+.cyber-badge--subtle {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.cyber-card__title {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  margin: 0;
+  color: #ffffff;
+}
+
+.cyber-card__title--gradient {
+  background: linear-gradient(135deg, #ffffff 10%, var(--city-cyan, #22d3ee) 60%, var(--city-pink, #ff3ea5) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 20px rgba(34, 211, 238, 0.3));
+}
+
+.cyber-card__lead {
+  font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  font-weight: 600;
+  color: rgba(226, 232, 240, 0.9);
+  margin: 0;
+  line-height: 1.4;
+  letter-spacing: 0.03em;
+}
+
+.cyber-card__lead--cyan {
+  color: var(--city-cyan, #22d3ee);
+  text-shadow: 0 0 10px rgba(34, 211, 238, 0.35);
+}
+
+.cyber-card__lead--violet {
+  color: var(--city-violet-soft, #a78bfa);
+  text-shadow: 0 0 10px rgba(124, 58, 237, 0.35);
+}
+
+.cyber-card__desc {
+  font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+  color: rgba(203, 213, 225, 0.85);
+  line-height: 1.7;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+/* College stats grid */
+.cyber-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.6rem;
+}
+
+.cyber-stat-item {
+  background: rgba(18, 16, 36, 0.8);
+  border: 1px solid rgba(34, 211, 238, 0.2);
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.25s ease;
+}
+
+.cyber-stat-item:hover {
+  border-color: var(--city-cyan, #22d3ee);
+  background: rgba(34, 211, 238, 0.08);
+  box-shadow: 0 0 14px rgba(34, 211, 238, 0.2);
+  transform: translateY(-2px);
+}
+
+.cyber-stat-item__val {
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--city-cyan, #22d3ee);
+  text-shadow: 0 0 10px rgba(34, 211, 238, 0.4);
+}
+
+.cyber-stat-item__lbl {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.75);
+  margin-top: 0.15rem;
+}
+
+/* Symposium Highlight Chips */
+.cyber-highlights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.6rem;
+}
+
+.cyber-highlight-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(18, 16, 36, 0.85);
+  border: 1px solid rgba(255, 62, 165, 0.25);
+  border-radius: 8px;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  transition: all 0.25s ease;
+}
+
+.cyber-highlight-chip:hover {
+  border-color: var(--city-pink, #ff3ea5);
+  background: rgba(255, 62, 165, 0.1);
+  box-shadow: 0 0 16px rgba(255, 62, 165, 0.22);
+  transform: translateX(3px);
+}
+
+.cyber-highlight-chip__icon {
+  font-size: 1.1rem;
+}
+
+/* ==========================================================================
+   Hackathon Club Executive Council (Building Pod Architecture)
+   ========================================================================== */
+
+.club-operatives {
+  margin-top: clamp(2.5rem, 5vw, 3.75rem);
+  padding-top: clamp(1.75rem, 3.5vw, 2.5rem);
+  border-top: 1px dashed rgba(255, 62, 165, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.club-operatives-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.65rem 1.1rem;
+  background: rgba(5, 4, 10, 0.75);
+  border: 1px solid rgba(255, 62, 165, 0.4);
+  border-radius: 8px;
+  font-family: var(--font-display, 'Orbitron', monospace);
+}
+
+.club-operatives-header__left {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.club-operatives-header__beacon {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--city-pink, #ff3ea5);
+  box-shadow: 0 0 8px var(--city-pink, #ff3ea5);
+  animation: beaconPulse 2s infinite ease-in-out;
+}
+
+.club-operatives-header__title {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--city-pink, #ff3ea5);
+}
+
+.club-operatives-header__count {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: rgba(226, 232, 240, 0.7);
+  background: rgba(255, 62, 165, 0.12);
+  border: 1px solid rgba(255, 62, 165, 0.35);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+}
+
+.club-members-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1rem, 2vw, 1.35rem);
+}
+
+/* Futuristic Building Pod Card */
+.bldg-pod {
+  position: relative;
+  background: rgba(11, 10, 26, 0.88);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 1.1rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.85rem;
+  min-height: 155px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 30px rgba(5, 4, 10, 0.7);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  outline: none;
+}
+
+/* Subtle Building Facade Curtain-Wall Lines */
+.bldg-pod::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 28px,
+      rgba(255, 255, 255, 0.015) 28px,
+      rgba(255, 255, 255, 0.015) 29px
+    ),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, transparent 40%, rgba(255, 255, 255, 0.01) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bldg-pod:hover,
+.bldg-pod:focus-visible {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 16px 40px rgba(5, 4, 10, 0.9);
+  z-index: 5;
+}
+
+/* Pod Rooftop Lintel */
+.bldg-pod__roof {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  position: relative;
+  z-index: 2;
+}
+
+.bldg-pod__beacon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.bldg-pod__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: beaconPulse 2s infinite ease-in-out;
+}
+
+.bldg-pod__id {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 700;
+}
+
+.bldg-pod__lvl {
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.58rem;
+  font-weight: 800;
+  border: 1px solid currentColor;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Structural Corner Brackets */
+.bldg-pod__corner {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+  z-index: 3;
+  transition: all 0.25s ease;
+}
+
+.bldg-pod__corner--tl { top: 6px; left: 6px; border-top: 1.5px solid; border-left: 1.5px solid; }
+.bldg-pod__corner--tr { top: 6px; right: 6px; border-top: 1.5px solid; border-right: 1.5px solid; }
+.bldg-pod__corner--bl { bottom: 6px; left: 6px; border-bottom: 1.5px solid; border-left: 1.5px solid; }
+.bldg-pod__corner--br { bottom: 6px; right: 6px; border-bottom: 1.5px solid; border-right: 1.5px solid; }
+
+.bldg-pod:hover .bldg-pod__corner {
+  width: 13px;
+  height: 13px;
+}
+
+/* Vertical Structural Pillars */
+.bldg-pod__pillar {
+  position: absolute;
+  top: 28px;
+  bottom: 28px;
+  width: 1.5px;
+  opacity: 0.4;
+  z-index: 2;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.bldg-pod__pillar--left { left: 4px; }
+.bldg-pod__pillar--right { right: 4px; }
+
+.bldg-pod:hover .bldg-pod__pillar {
+  opacity: 1;
+}
+
+/* Member Details */
+.club-member-card__details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  position: relative;
+  z-index: 2;
+}
+
+.club-member-card__name {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  margin: 0;
+}
+
+.club-member-card__role-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.22rem 0.65rem;
+  border-radius: 9999px;
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  width: fit-content;
+}
+
+.club-member-card__role {
+  font-size: 0.68rem;
+}
+
+/* Pod Base / Foundation */
+.bldg-pod__base {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding-top: 0.45rem;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.5);
+  position: relative;
+  z-index: 2;
+}
+
+.bldg-pod__base-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.bldg-pod__base-text {
+  font-weight: 700;
+}
+
+/* Member color variations */
+/* Cyan (President) */
+.club-member-card--cyan { border-color: rgba(34, 211, 238, 0.5); }
+.club-member-card--cyan:hover { border-color: #22d3ee; box-shadow: 0 16px 40px rgba(5, 4, 10, 0.9), 0 0 25px rgba(34, 211, 238, 0.35); }
+.bldg-pod__dot--cyan { background: #22d3ee; box-shadow: 0 0 8px #22d3ee; }
+.bldg-pod__lvl--cyan { color: #22d3ee; border-color: rgba(34, 211, 238, 0.6); }
+.bldg-pod__corner--cyan { border-color: #22d3ee; }
+.bldg-pod__pillar--cyan { background: linear-gradient(180deg, transparent, #22d3ee, transparent); }
+.club-member-card__role-pill--cyan { background: rgba(34, 211, 238, 0.12); border: 1px solid rgba(34, 211, 238, 0.5); color: #22d3ee; }
+
+/* Pink (Vice President) */
+.club-member-card--pink { border-color: rgba(255, 62, 165, 0.5); }
+.club-member-card--pink:hover { border-color: #ff3ea5; box-shadow: 0 16px 40px rgba(5, 4, 10, 0.9), 0 0 25px rgba(255, 62, 165, 0.35); }
+.bldg-pod__dot--pink { background: #ff3ea5; box-shadow: 0 0 8px #ff3ea5; }
+.bldg-pod__lvl--pink { color: #ff3ea5; border-color: rgba(255, 62, 165, 0.6); }
+.bldg-pod__corner--pink { border-color: #ff3ea5; }
+.bldg-pod__pillar--pink { background: linear-gradient(180deg, transparent, #ff3ea5, transparent); }
+.club-member-card__role-pill--pink { background: rgba(255, 62, 165, 0.12); border: 1px solid rgba(255, 62, 165, 0.5); color: #ff3ea5; }
+
+/* Green (Secretary) */
+.club-member-card--green { border-color: rgba(16, 185, 129, 0.5); }
+.club-member-card--green:hover { border-color: #10b981; box-shadow: 0 16px 40px rgba(5, 4, 10, 0.9), 0 0 25px rgba(16, 185, 129, 0.35); }
+.bldg-pod__dot--green { background: #10b981; box-shadow: 0 0 8px #10b981; }
+.bldg-pod__lvl--green { color: #10b981; border-color: rgba(16, 185, 129, 0.6); }
+.bldg-pod__corner--green { border-color: #10b981; }
+.bldg-pod__pillar--green { background: linear-gradient(180deg, transparent, #10b981, transparent); }
+.club-member-card__role-pill--green { background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.5); color: #10b981; }
+
+/* Orange (Joint Secretary) */
+.club-member-card--orange { border-color: rgba(245, 158, 11, 0.5); }
+.club-member-card--orange:hover { border-color: #f59e0b; box-shadow: 0 16px 40px rgba(5, 4, 10, 0.9), 0 0 25px rgba(245, 158, 11, 0.35); }
+.bldg-pod__dot--orange { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
+.bldg-pod__lvl--orange { color: #f59e0b; border-color: rgba(245, 158, 11, 0.6); }
+.bldg-pod__corner--orange { border-color: #f59e0b; }
+.bldg-pod__pillar--orange { background: linear-gradient(180deg, transparent, #f59e0b, transparent); }
+.club-member-card__role-pill--orange { background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.5); color: #f59e0b; }
+
+/* Yellow (Treasury) */
+.club-member-card--yellow { border-color: rgba(251, 191, 36, 0.5); }
+.club-member-card--yellow:hover { border-color: #fbbf24; box-shadow: 0 16px 40px rgba(5, 4, 10, 0.9), 0 0 25px rgba(251, 191, 36, 0.35); }
+.bldg-pod__dot--yellow { background: #fbbf24; box-shadow: 0 0 8px #fbbf24; }
+.bldg-pod__lvl--yellow { color: #fbbf24; border-color: rgba(251, 191, 36, 0.6); }
+.bldg-pod__corner--yellow { border-color: #fbbf24; }
+.bldg-pod__pillar--yellow { background: linear-gradient(180deg, transparent, #fbbf24, transparent); }
+.club-member-card__role-pill--yellow { background: rgba(251, 191, 36, 0.12); border: 1px solid rgba(251, 191, 36, 0.5); color: #fbbf24; }
+
+/* Purple (Treasury) */
+.club-member-card--purple { border-color: rgba(168, 85, 247, 0.5); }
+.club-member-card--purple:hover { border-color: #a855f7; box-shadow: 0 16px 40px rgba(5, 4, 10, 0.9), 0 0 25px rgba(168, 85, 247, 0.35); }
+.bldg-pod__dot--purple { background: #a855f7; box-shadow: 0 0 8px #a855f7; }
+.bldg-pod__lvl--purple { color: #a855f7; border-color: rgba(168, 85, 247, 0.6); }
+.bldg-pod__corner--purple { border-color: #a855f7; }
+.bldg-pod__pillar--purple { background: linear-gradient(180deg, transparent, #a855f7, transparent); }
+.club-member-card__role-pill--purple { background: rgba(168, 85, 247, 0.12); border: 1px solid rgba(168, 85, 247, 0.5); color: #a855f7; }
+
+/* ==========================================================================
+   Leadership & Patronage Section
+   ========================================================================== */
+
+.leadership-section {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3rem, 5vw, 4.5rem);
+  margin-top: 1rem;
+}
+
+.leadership-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.leadership-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.leadership-header__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(11, 10, 26, 0.8);
+  border: 1px solid rgba(255, 62, 165, 0.4);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  color: var(--city-pink, #ff3ea5);
+  box-shadow: 0 0 14px rgba(255, 62, 165, 0.18);
+}
+
+.leadership-header__tag--cyan {
+  border-color: rgba(34, 211, 238, 0.4);
+  color: var(--city-cyan, #22d3ee);
+  box-shadow: 0 0 14px rgba(34, 211, 238, 0.18);
+}
+
+.leadership-header__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ff3ea5;
+  box-shadow: 0 0 6px #ff3ea5;
+}
+
+.leadership-header__dot--cyan {
+  background: #22d3ee;
+  box-shadow: 0 0 6px #22d3ee;
+}
+
+.leadership-header__title {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: clamp(1.6rem, 3.2vw, 2.3rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin: 0;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #ffffff 30%, var(--city-pink, #ff3ea5) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 16px rgba(255, 62, 165, 0.35));
+}
+
+.leadership-header__title--cyan {
+  background: linear-gradient(135deg, #ffffff 30%, var(--city-cyan, #22d3ee) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 16px rgba(34, 211, 238, 0.35));
+}
+
+.leadership-header__desc {
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  color: rgba(226, 232, 240, 0.75);
+  max-width: 600px;
+  margin: 0;
+}
+
+/* Patrons Cards Grid */
+.patrons-grid {
+  display: grid;
+  gap: 1.75rem;
+}
+
+.patrons-grid--chief {
+  grid-template-columns: repeat(3, 1fr);
+  align-items: stretch;
+}
+
+.patrons-grid--principal {
+  max-width: 440px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.patron-card {
+  position: relative;
+  border-radius: 16px;
+  outline: none;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), z-index 0.35s ease;
+  z-index: 1;
+}
+
+.patron-card:hover,
+.patron-card:focus-visible {
+  transform: translateY(-10px) scale(1.03);
+  z-index: 10;
+}
+
+.patron-card__frame {
+  position: relative;
+  background: rgba(11, 10, 26, 0.86);
+  border: 1.5px solid rgba(255, 62, 165, 0.6);
+  border-radius: 16px;
+  padding: 1.15rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow:
+    0 12px 35px rgba(5, 4, 10, 0.8),
+    0 0 22px rgba(255, 62, 165, 0.16);
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  overflow: hidden;
+  height: 100%;
+  flex: 1;
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+/* Skyscraper Curtain-Wall Subtle Facade Lines */
+.patron-card__frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 38px,
+      rgba(255, 62, 165, 0.02) 38px,
+      rgba(255, 62, 165, 0.02) 40px
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 62, 165, 0.04) 0%,
+      transparent 35%,
+      rgba(255, 62, 165, 0.015) 100%
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.patron-card--principal .patron-card__frame {
+  border-color: rgba(255, 62, 165, 0.6);
+  box-shadow:
+    0 12px 35px rgba(5, 4, 10, 0.8),
+    0 0 22px rgba(255, 62, 165, 0.16);
+}
+
+.patron-card:hover .patron-card__frame,
+.patron-card:focus-visible .patron-card__frame {
+  border-color: rgba(255, 62, 165, 0.95);
+  box-shadow:
+    0 24px 60px rgba(5, 4, 10, 0.95),
+    0 0 35px rgba(255, 62, 165, 0.45);
+}
+
+.patron-card--principal:hover .patron-card__frame,
+.patron-card--principal:focus-visible .patron-card__frame {
+  border-color: rgba(255, 62, 165, 0.95);
+  box-shadow:
+    0 24px 60px rgba(5, 4, 10, 0.95),
+    0 0 35px rgba(255, 62, 165, 0.45);
+}
+
+/* Skyscraper Rooftop Crown */
+.bldg-tower__roof {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0.75rem;
+  background: rgba(5, 4, 10, 0.85);
+  border: 1px solid rgba(255, 62, 165, 0.4);
+  border-radius: 8px;
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: rgba(226, 232, 240, 0.85);
+  position: relative;
+  z-index: 2;
+}
+
+.bldg-tower__beacon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.bldg-tower__beacon-light {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--city-pink, #ff3ea5);
+  box-shadow: 0 0 8px var(--city-pink, #ff3ea5);
+  animation: beaconPulse 2.2s infinite ease-in-out;
+}
+
+.bldg-tower__beacon-code {
+  color: var(--city-pink, #ff3ea5);
+  font-weight: 700;
+  font-size: 0.65rem;
+}
+
+.bldg-tower__level {
+  background: rgba(255, 62, 165, 0.15);
+  border: 1px solid rgba(255, 62, 165, 0.5);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.62rem;
+  color: var(--city-pink, #ff3ea5);
+  font-weight: 800;
+}
+
+/* Vertical Exoskeleton Structural Pillars */
+.bldg-tower__pillar {
+  position: absolute;
+  top: 48px;
+  bottom: 48px;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, rgba(255, 62, 165, 0.45) 20%, rgba(255, 62, 165, 0.45) 80%, transparent);
+  z-index: 3;
+  pointer-events: none;
+  transition: all 0.35s ease;
+}
+
+.bldg-tower__pillar--left {
+  left: 4px;
+}
+
+.bldg-tower__pillar--right {
+  right: 4px;
+}
+
+.patron-card:hover .bldg-tower__pillar {
+  background: linear-gradient(180deg, transparent, rgba(255, 62, 165, 0.95) 15%, rgba(255, 62, 165, 0.95) 85%, transparent);
+  box-shadow: 0 0 10px rgba(255, 62, 165, 0.8);
+}
+
+/* Corner highlights */
+.patron-card__corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+  z-index: 2;
+  transition: all 0.25s ease;
+}
+
+.patron-card__corner--tl {
+  top: 8px;
+  left: 8px;
+  border-top: 2px solid rgba(255, 62, 165, 0.6);
+  border-left: 2px solid rgba(255, 62, 165, 0.6);
+}
+
+.patron-card__corner--tr {
+  top: 8px;
+  right: 8px;
+  border-top: 2px solid rgba(255, 62, 165, 0.6);
+  border-right: 2px solid rgba(255, 62, 165, 0.6);
+}
+
+.patron-card__corner--bl {
+  bottom: 8px;
+  left: 8px;
+  border-bottom: 2px solid rgba(255, 62, 165, 0.6);
+  border-left: 2px solid rgba(255, 62, 165, 0.6);
+}
+
+.patron-card__corner--br {
+  bottom: 8px;
+  right: 8px;
+  border-bottom: 2px solid rgba(255, 62, 165, 0.6);
+  border-right: 2px solid rgba(255, 62, 165, 0.6);
+}
+
+.patron-card--principal .patron-card__corner {
+  border-color: rgba(255, 62, 165, 0.6);
+}
+
+.patron-card:hover .patron-card__corner {
+  width: 16px;
+  height: 16px;
+  border-color: #ff3ea5;
+  box-shadow: 0 0 10px rgba(255, 62, 165, 0.8);
+}
+
+/* Photo container - clean neutral glass observation bay, NO pink border */
+.patron-card__photo-container {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.patron-card__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 0.4s ease;
+}
+
+.patron-card:hover .patron-card__photo {
+  transform: scale(1.04);
+}
+
+.patron-card__photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    0deg,
+    rgba(11, 10, 26, 0.85) 0%,
+    transparent 50%,
+    rgba(5, 4, 10, 0.2) 100%
+  );
+  pointer-events: none;
+}
+
+/* Info section */
+.patron-card__info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.55rem;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.patron-card__name {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  margin: 0;
+  min-height: 2.85em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.35;
+}
+
+.patron-card__role-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 62, 165, 0.12);
+  border: 1px solid rgba(255, 62, 165, 0.6);
+  padding: 0.22rem 0.65rem;
+  border-radius: 9999px;
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--city-pink, #ff3ea5);
+}
+
+.patron-card__role-chip--cyan {
+  background: rgba(255, 62, 165, 0.12);
+  border-color: rgba(255, 62, 165, 0.6);
+  color: var(--city-pink, #ff3ea5);
+}
+
+.patron-card__role-indicator {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 6px currentColor;
+}
+
+.patron-card__designation {
+  font-size: 0.92rem;
+  color: rgba(226, 232, 240, 0.85);
+  margin: 0;
+  font-weight: 500;
+  min-height: 1.4em;
+}
+
+/* Skyscraper Tower Foundation Podium */
+.bldg-tower__podium {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 0.6rem;
+  border-top: 1px dashed rgba(255, 62, 165, 0.35);
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  color: rgba(255, 62, 165, 0.8);
+  text-transform: uppercase;
+  z-index: 2;
+  position: relative;
+}
+
+.bldg-tower__podium-bar {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 62, 165, 0.25);
+}
+
+.bldg-tower__podium-text {
+  font-weight: 700;
+  font-size: 0.62rem;
+}
+
+@keyframes beaconPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 8px #ff3ea5;
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.85);
+    box-shadow: 0 0 2px #ff3ea5;
+  }
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .cyber-card__layout {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 1.75rem;
+  }
+
+  .cyber-card--reverse .cyber-card__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .cyber-card--reverse .cyber-card__layout .cyber-card__visual {
+    order: 1;
+  }
+
+  .cyber-card--reverse .cyber-card__layout .cyber-card__content {
+    order: 2;
+  }
+
+  .cyber-card__badge-row {
+    justify-content: center;
+  }
+
+  .club-operatives-header {
+    justify-content: center;
+  }
+
+  .cyber-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .patrons-grid--chief {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .about-section {
+    padding: clamp(3.5rem, 8vw, 5rem) clamp(0.75rem, 3vw, 1.25rem) 2.5rem;
+    background-attachment: scroll;
+    margin-top: clamp(-4.5rem, -8vw, -3rem);
+  }
+
+  .about-section__container {
+    gap: 2.25rem;
+  }
+
+  .about-header {
+    gap: 0.85rem;
+  }
+
+  .about-header__telemetry {
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+    padding: 0.28rem 0.7rem;
+    gap: 0.4rem;
+  }
+
+  .about-header__dot {
+    width: 5px;
+    height: 5px;
+  }
+
+  .about-header__title {
+    font-size: clamp(1.25rem, 5.8vw, 1.7rem);
+    letter-spacing: 0.03em;
+    line-height: 1.2;
+  }
+
+  .about-header__subtitle {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    padding: 0 0.5rem;
+  }
+
+  /* Symmetrical 2x2 Filter HUD Grid on Mobile */
+  .about-filter-hud {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.35rem;
+    padding: 0.35rem;
+    width: 100%;
+    max-width: 360px;
+    border-radius: 12px;
+  }
+
+  .about-filter-btn {
+    width: 100%;
+    padding: 0.42rem 0.35rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.05em;
+    justify-content: center;
+    text-align: center;
+    white-space: nowrap;
+    border-radius: 8px;
+  }
+
+  .about-filter-btn__marker {
+    width: 4px;
+    height: 4px;
+  }
+
+  .about-header__divider {
+    max-width: 260px;
+    margin-top: 0.2rem;
+  }
+
+  /* Cyber Cards */
+  .cyber-card {
+    padding: 1.1rem 0.85rem;
+    border-radius: 14px;
+  }
+
+  .bldg-card__roof {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.3rem;
+    padding: 0.4rem 0.6rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .bldg-card__roof-text {
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+  }
+
+  .bldg-card__roof-coords {
+    font-size: 0.58rem;
+  }
+
+  .emblem-orb {
+    width: 125px;
+    height: 125px;
+  }
+
+  .emblem-orb__image {
+    width: 90px;
+    height: 90px;
+  }
+
+  .emblem-orb__image--shield,
+  .emblem-orb__image--club {
+    width: 90px;
+    height: 90px;
+  }
+
+  .cyber-card__label-tag {
+    font-size: 0.62rem;
+    padding: 0.22rem 0.65rem;
+    letter-spacing: 0.08em;
+  }
+
+  .cyber-badge {
+    font-size: 0.62rem;
+    padding: 0.22rem 0.55rem;
+    letter-spacing: 0.08em;
+  }
+
+  .cyber-card__title {
+    font-size: clamp(1.1rem, 4.5vw, 1.35rem);
+    letter-spacing: 0.03em;
+    line-height: 1.25;
+  }
+
+  .cyber-card__lead {
+    font-size: 0.84rem;
+    line-height: 1.4;
+  }
+
+  .cyber-card__desc {
+    font-size: 0.82rem;
+    line-height: 1.55;
+  }
+
+  .cyber-stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .cyber-stat-item {
+    padding: 0.45rem 0.55rem;
+  }
+
+  .cyber-stat-item__value {
+    font-size: 1.2rem;
+  }
+
+  .cyber-stat-item__label {
+    font-size: 0.6rem;
+    letter-spacing: 0.05em;
+  }
+
+  .cyber-highlights {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .cyber-highlight-chip {
+    font-size: 0.78rem;
+    padding: 0.4rem 0.65rem;
+    gap: 0.5rem;
+  }
+
+  /* Club Section */
+  .club-operatives {
+    margin-top: 1.25rem;
+  }
+
+  .club-operatives-header {
+    flex-direction: column;
+    gap: 0.35rem;
+    align-items: center;
+    text-align: center;
+    padding: 0.45rem 0.65rem;
+  }
+
+  .club-operatives-header__title {
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+  }
+
+  .club-operatives-header__count {
+    font-size: 0.58rem;
+  }
+
+  .club-members-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .bldg-pod {
+    padding: 0.8rem 0.75rem 0.6rem;
+    border-radius: 10px;
+  }
+
+  .bldg-pod__id,
+  .bldg-pod__lvl {
+    font-size: 0.58rem;
+  }
+
+  .club-member-card__name {
+    font-size: 0.92rem;
+    letter-spacing: 0.03em;
+  }
+
+  .club-member-card__role-pill {
+    padding: 0.18rem 0.55rem;
+  }
+
+  .club-member-card__role {
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+  }
+
+  .bldg-pod__base-text {
+    font-size: 0.55rem;
+  }
+
+  /* Leadership & Patrons */
+  .leadership-section {
+    gap: 2rem;
+  }
+
+  .leadership-header {
+    gap: 0.6rem;
+  }
+
+  .leadership-header__tag {
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    padding: 0.22rem 0.6rem;
+  }
+
+  .leadership-header__title {
+    font-size: clamp(1.2rem, 4.8vw, 1.5rem);
+    letter-spacing: 0.04em;
+  }
+
+  .leadership-header__desc {
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
+
+  .patrons-grid--chief {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .patron-card__frame {
+    padding: 0.9rem 0.75rem 0.7rem;
+  }
+
+  .bldg-tower__beacon-code,
+  .bldg-tower__level {
+    font-size: 0.56rem;
+  }
+
+  .patron-card__photo-container {
+    height: 190px;
+  }
+
+  .patron-card__name {
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
+    min-height: auto;
+    line-height: 1.3;
+  }
+
+  .patron-card__role-chip {
+    font-size: 0.62rem;
+    padding: 0.18rem 0.5rem;
+  }
+
+  .patron-card__designation {
+    font-size: 0.8rem;
+    min-height: auto;
+  }
+
+  .bldg-tower__podium-text {
+    font-size: 0.55rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .about-header__telemetry {
+    font-size: 0.52rem;
+    letter-spacing: 0.04em;
+    padding: 0.22rem 0.55rem;
+    gap: 0.3rem;
+  }
+
+  .about-header__bracket {
+    display: none;
+  }
+
+  .about-header__title {
+    font-size: 1.2rem;
+    letter-spacing: 0.02em;
+  }
+
+  .about-filter-btn {
+    font-size: 0.56rem;
+    letter-spacing: 0.03em;
+    padding: 0.38rem 0.25rem;
+  }
+}
