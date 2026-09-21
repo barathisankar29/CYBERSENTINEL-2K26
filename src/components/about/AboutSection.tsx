@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
   collegeData,
   cyberSentinelData,
@@ -6,10 +5,11 @@ import {
   chiefPatrons,
   patrons,
 } from '@/data/about'
+import { CyberNeonCard } from './CyberNeonCard'
+import { PatronNeonCard } from './PatronNeonCard'
 import './AboutSection.css'
 
 export function AboutSection() {
-  const [activeTab, setActiveTab] = useState<'all' | 'college' | 'symposium' | 'club'>('all')
 
   return (
     <section id="about" className="about-section" aria-label="About CyberSentinel 2K26">
@@ -41,50 +41,6 @@ export function AboutSection() {
             A convergence of visionary leadership, techno-cultural excellence, and student innovation at Vel Tech High Tech.
           </p>
 
-          {/* Quick Filter Navigation HUD */}
-          <div className="about-filter-hud" role="tablist" aria-label="About Navigation Filter">
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === 'all'}
-              className={`about-filter-btn ${activeTab === 'all' ? 'about-filter-btn--active' : ''}`}
-              onClick={() => setActiveTab('all')}
-            >
-              <span className="about-filter-btn__marker" />
-              <span>ALL INTEL</span>
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === 'college'}
-              className={`about-filter-btn ${activeTab === 'college' ? 'about-filter-btn--active' : ''}`}
-              onClick={() => setActiveTab('college')}
-            >
-              <span className="about-filter-btn__marker" />
-              <span>VEL TECH</span>
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === 'symposium'}
-              className={`about-filter-btn ${activeTab === 'symposium' ? 'about-filter-btn--active' : ''}`}
-              onClick={() => setActiveTab('symposium')}
-            >
-              <span className="about-filter-btn__marker" />
-              <span>CYBERSENTINEL</span>
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === 'club'}
-              className={`about-filter-btn ${activeTab === 'club' ? 'about-filter-btn--active' : ''}`}
-              onClick={() => setActiveTab('club')}
-            >
-              <span className="about-filter-btn__marker" />
-              <span>HACKATHON CLUB</span>
-            </button>
-          </div>
-
           <div className="about-header__divider">
             <span className="about-header__divider-line" />
             <span className="about-header__divider-gem" />
@@ -93,8 +49,12 @@ export function AboutSection() {
         </header>
 
         {/* 1. College Section: Vel Tech High Tech */}
-        {(activeTab === 'all' || activeTab === 'college') && (
-          <article className="cyber-card cyber-card--college bldg-card" data-aos="fade-up">
+        <CyberNeonCard
+          badgeTitle="BORCELLE"
+          badgeTag="VEL TECH"
+          accentColor="purple"
+          className="bldg-card"
+        >
             <div className="bldg-card__roof">
               <div className="bldg-card__roof-beacon">
                 <span className="bldg-card__roof-light" />
@@ -104,11 +64,6 @@ export function AboutSection() {
                 <span>CHENNAI METROPOLIS // BLDG.01</span>
               </div>
             </div>
-
-            <div className="cyber-card__corner cyber-card__corner--tl" />
-            <div className="cyber-card__corner cyber-card__corner--tr" />
-            <div className="cyber-card__corner cyber-card__corner--bl" />
-            <div className="cyber-card__corner cyber-card__corner--br" />
 
             <div className="cyber-card__layout">
               {/* Left Visual: Floating Emblem Showcase */}
@@ -162,12 +117,15 @@ export function AboutSection() {
                 </div>
               </div>
             </div>
-          </article>
-        )}
+          </CyberNeonCard>
 
         {/* 2. Symposium Section: CyberSentinel 2K26 */}
-        {(activeTab === 'all' || activeTab === 'symposium') && (
-          <article className="cyber-card cyber-card--symposium cyber-card--reverse bldg-card" data-aos="fade-up">
+        <CyberNeonCard
+          badgeTitle="BORCELLE"
+          badgeTag="CYBERSENTINEL 2K26"
+          accentColor="purple"
+          className="cyber-card--reverse bldg-card"
+        >
             <div className="bldg-card__roof">
               <div className="bldg-card__roof-beacon">
                 <span className="bldg-card__roof-light" />
@@ -177,11 +135,6 @@ export function AboutSection() {
                 <span>CYBER ARENA // BLDG.02</span>
               </div>
             </div>
-
-            <div className="cyber-card__corner cyber-card__corner--tl" />
-            <div className="cyber-card__corner cyber-card__corner--tr" />
-            <div className="cyber-card__corner cyber-card__corner--bl" />
-            <div className="cyber-card__corner cyber-card__corner--br" />
 
             <div className="cyber-card__layout">
               {/* Left Visual / Shield */}
@@ -245,12 +198,15 @@ export function AboutSection() {
                 </div>
               </div>
             </div>
-          </article>
-        )}
+          </CyberNeonCard>
 
         {/* 3. Hackathon Club Section */}
-        {(activeTab === 'all' || activeTab === 'club') && (
-          <article className="cyber-card cyber-card--club bldg-card" data-aos="fade-up">
+        <CyberNeonCard
+          badgeTitle="BORCELLE"
+          badgeTag="HACKATHON CLUB"
+          accentColor="purple"
+          className="bldg-card"
+        >
             <div className="bldg-card__roof">
               <div className="bldg-card__roof-beacon">
                 <span className="bldg-card__roof-light" />
@@ -260,11 +216,6 @@ export function AboutSection() {
                 <span>R&D POD // BLDG.03</span>
               </div>
             </div>
-
-            <div className="cyber-card__corner cyber-card__corner--tl" />
-            <div className="cyber-card__corner cyber-card__corner--tr" />
-            <div className="cyber-card__corner cyber-card__corner--bl" />
-            <div className="cyber-card__corner cyber-card__corner--br" />
 
             <div className="cyber-card__layout">
               {/* Left Visual: Hackathon Club Official Logo */}
@@ -318,47 +269,29 @@ export function AboutSection() {
                   </div>
 
                   <div className="club-members-grid">
-                    {hackathonClubData.members.map((member, idx) => (
+                    {hackathonClubData.members.map((member) => (
                       <div
                         key={member.name}
                         className={`club-member-card club-member-card--${member.color} bldg-pod`}
                         tabIndex={0}
                       >
-                        {/* Architectural Pod Rooftop Status */}
+                        {/* Heading as their role */}
                         <div className="bldg-pod__roof">
                           <div className="bldg-pod__beacon">
                             <span className={`bldg-pod__dot bldg-pod__dot--${member.color}`} />
-                            <span className="bldg-pod__id">POD-0{idx + 1}</span>
+                            <span className={`bldg-pod__role-heading bldg-pod__role-heading--${member.color}`}>{member.role}</span>
                           </div>
-                          <span className={`bldg-pod__lvl bldg-pod__lvl--${member.color}`}>LVL.26</span>
                         </div>
 
-                        {/* Structural Corner Brackets */}
+                        {/* Structural Corner Reticles */}
                         <div className={`bldg-pod__corner bldg-pod__corner--tl bldg-pod__corner--${member.color}`} />
                         <div className={`bldg-pod__corner bldg-pod__corner--tr bldg-pod__corner--${member.color}`} />
                         <div className={`bldg-pod__corner bldg-pod__corner--bl bldg-pod__corner--${member.color}`} />
                         <div className={`bldg-pod__corner bldg-pod__corner--br bldg-pod__corner--${member.color}`} />
 
-                        {/* Side Structural Guides */}
-                        <div className={`bldg-pod__pillar bldg-pod__pillar--left bldg-pod__pillar--${member.color}`} aria-hidden="true" />
-                        <div className={`bldg-pod__pillar bldg-pod__pillar--right bldg-pod__pillar--${member.color}`} aria-hidden="true" />
-
-                        {/* Operative Details */}
+                        {/* Operative Name */}
                         <div className="club-member-card__details">
                           <h4 className="club-member-card__name">{member.name}</h4>
-                          <div className={`club-member-card__role-pill club-member-card__role-pill--${member.color}`}>
-                            <span className={`club-member-card__dot club-member-card__dot--${member.color}`} />
-                            <span className="club-member-card__role">
-                              {member.role}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Pod Base / Foundation */}
-                        <div className="bldg-pod__base">
-                          <span className="bldg-pod__base-line" />
-                          <span className="bldg-pod__base-text">STATUS: ACTIVE</span>
-                          <span className="bldg-pod__base-line" />
                         </div>
                       </div>
                     ))}
@@ -366,8 +299,7 @@ export function AboutSection() {
                 </div>
               </div>
             </div>
-          </article>
-        )}
+          </CyberNeonCard>
 
         {/* 4. Leadership & Patronage Section */}
         <section className="leadership-section" aria-label="Leadership & Patrons">
@@ -384,62 +316,33 @@ export function AboutSection() {
 
             <div className="patrons-grid patrons-grid--chief">
               {chiefPatrons.map((patron, idx) => (
-                <div key={patron.name} className="patron-card bldg-tower" tabIndex={0}>
-                  <div className="patron-card__frame bldg-tower__frame">
-                    {/* Skyscraper Spire / Apex Crown */}
-                    <div className="bldg-tower__roof">
-                      <div className="bldg-tower__beacon">
-                        <span className="bldg-tower__beacon-light" />
-                        <span className="bldg-tower__beacon-code">
-                          {idx === 0 ? 'TOWER-01 // FOUNDER APEX' : idx === 1 ? 'TOWER-02 // FOUNDRESS APEX' : 'TOWER-03 // EXECUTIVE APEX'}
-                        </span>
-                      </div>
-                      <div className="bldg-tower__level">
-                        <span>LVL.26</span>
-                      </div>
-                    </div>
-
-                    {/* Structural Steel Joint Corner Brackets */}
-                    <div className="patron-card__corner patron-card__corner--tl" />
-                    <div className="patron-card__corner patron-card__corner--tr" />
-                    <div className="patron-card__corner patron-card__corner--bl" />
-                    <div className="patron-card__corner patron-card__corner--br" />
-
-                    {/* Vertical Exoskeleton Structural Pillars */}
-                    <div className="bldg-tower__pillar bldg-tower__pillar--left" aria-hidden="true" />
-                    <div className="bldg-tower__pillar bldg-tower__pillar--right" aria-hidden="true" />
-
-                    {/* Observation Bay (Clean Neutral Glass Viewport) */}
-                    <div className="patron-card__photo-container">
-                      <img
-                        src={patron.image}
-                        alt={patron.name}
-                        className="patron-card__photo"
-                        loading="eager"
-                        decoding="async"
-                        width={280}
-                        height={240}
-                      />
-                      <div className="patron-card__photo-overlay" />
-                    </div>
-
-                    <div className="patron-card__info">
-                      <h4 className="patron-card__name">{patron.name}</h4>
-                      <div className="patron-card__role-chip">
-                        <span className="patron-card__role-indicator" />
-                        <span className="patron-card__role">{patron.role}</span>
-                      </div>
-                      <p className="patron-card__designation">{patron.designation}</p>
-                    </div>
-
-                    {/* Tower Podium Foundation */}
-                    <div className="bldg-tower__podium">
-                      <span className="bldg-tower__podium-bar" />
-                      <span className="bldg-tower__podium-text">MONOLITH // 0x0{idx + 1}</span>
-                      <span className="bldg-tower__podium-bar" />
-                    </div>
+                <PatronNeonCard
+                  key={patron.name}
+                  title={idx === 0 ? 'FOUNDER & CHAIRMAN' : idx === 1 ? 'FOUNDRESS & VICE-CHAIRMAN' : 'EXECUTIVE DIRECTOR'}
+                  className="patron-hud-item"
+                >
+                  <div className="patron-card__photo-container">
+                    <img
+                      src={patron.image}
+                      alt={patron.name}
+                      className="patron-card__photo"
+                      loading="eager"
+                      decoding="async"
+                      width={280}
+                      height={240}
+                    />
+                    <div className="patron-card__photo-overlay" />
                   </div>
-                </div>
+
+                  <div className="patron-card__info">
+                    <h4 className="patron-card__name">{patron.name}</h4>
+                    <div className="patron-card__role-chip">
+                      <span className="patron-card__role-indicator" />
+                      <span className="patron-card__role">{patron.role}</span>
+                    </div>
+                    <p className="patron-card__designation">{patron.designation}</p>
+                  </div>
+                </PatronNeonCard>
               ))}
             </div>
           </div>
@@ -457,58 +360,33 @@ export function AboutSection() {
 
             <div className="patrons-grid patrons-grid--principal">
               {patrons.map((patron) => (
-                <div key={patron.name} className="patron-card patron-card--principal bldg-tower" tabIndex={0}>
-                  <div className="patron-card__frame bldg-tower__frame">
-                    {/* Skyscraper Spire / Apex Crown */}
-                    <div className="bldg-tower__roof">
-                      <div className="bldg-tower__beacon">
-                        <span className="bldg-tower__beacon-light" />
-                        <span className="bldg-tower__beacon-code">TOWER-04 // ACADEMIC APEX</span>
-                      </div>
-                      <div className="bldg-tower__level">
-                        <span>LVL.26</span>
-                      </div>
-                    </div>
-
-                    <div className="patron-card__corner patron-card__corner--tl" />
-                    <div className="patron-card__corner patron-card__corner--tr" />
-                    <div className="patron-card__corner patron-card__corner--bl" />
-                    <div className="patron-card__corner patron-card__corner--br" />
-
-                    <div className="bldg-tower__pillar bldg-tower__pillar--left" aria-hidden="true" />
-                    <div className="bldg-tower__pillar bldg-tower__pillar--right" aria-hidden="true" />
-
-                    {/* Observation Bay (Clean Neutral Glass Viewport) */}
-                    <div className="patron-card__photo-container">
-                      <img
-                        src={patron.image}
-                        alt={patron.name}
-                        className="patron-card__photo"
-                        loading="eager"
-                        decoding="async"
-                        width={280}
-                        height={240}
-                      />
-                      <div className="patron-card__photo-overlay" />
-                    </div>
-
-                    <div className="patron-card__info">
-                      <h4 className="patron-card__name">{patron.name}</h4>
-                      <div className="patron-card__role-chip">
-                        <span className="patron-card__role-indicator" />
-                        <span className="patron-card__role">{patron.role}</span>
-                      </div>
-                      <p className="patron-card__designation">{patron.designation}</p>
-                    </div>
-
-                    {/* Tower Podium Foundation */}
-                    <div className="bldg-tower__podium">
-                      <span className="bldg-tower__podium-bar" />
-                      <span className="bldg-tower__podium-text">MONOLITH // 0x04</span>
-                      <span className="bldg-tower__podium-bar" />
-                    </div>
+                <PatronNeonCard
+                  key={patron.name}
+                  title="PATRON // PRINCIPAL"
+                  className="patron-hud-item patron-hud-item--principal"
+                >
+                  <div className="patron-card__photo-container">
+                    <img
+                      src={patron.image}
+                      alt={patron.name}
+                      className="patron-card__photo"
+                      loading="eager"
+                      decoding="async"
+                      width={280}
+                      height={240}
+                    />
+                    <div className="patron-card__photo-overlay" />
                   </div>
-                </div>
+
+                  <div className="patron-card__info">
+                    <h4 className="patron-card__name">{patron.name}</h4>
+                    <div className="patron-card__role-chip">
+                      <span className="patron-card__role-indicator" />
+                      <span className="patron-card__role">{patron.role}</span>
+                    </div>
+                    <p className="patron-card__designation">{patron.designation}</p>
+                  </div>
+                </PatronNeonCard>
               ))}
             </div>
           </div>
