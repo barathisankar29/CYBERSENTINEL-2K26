@@ -2,34 +2,30 @@ import type { NavigationBuilding } from '@/types/navigation'
 
 /**
  * Navigation buildings for the city, rendered by
- * src/components/city/NavigationCityScene.tsx as part of the combined
- * hero -> navigation journey (see src/components/city/CityJourney.tsx).
- * `position.desktop`/`.mobile` place each building on the ground plane
- * (x = % across, y = % the base sits above the ground line). `scale` is
- * relative to `events` (1 = full size, the primary anchor). `revealWindow`
- * is this building's own 0-1 window within the navigation phase's own
- * progress (`navProgress` in CityJourney.tsx) — see NavigationCityScene.tsx.
+ * src/components/city/NavigationCityScene.tsx as its own page section
+ * (see that file — the buildings all pop in together once, gated by a
+ * single scroll-threshold boolean, not a per-building scroll window).
  *
- * All six buildings sit at roughly the SAME foreground level now — `y`
- * only varies slightly (a few points) for natural spacing, not as a
- * back/front depth device. Horizontal order, left to right: credentials,
- * about (LEFT group), events (CENTER), contact, transport, timeline
- * (RIGHT group — far right, open space beyond timeline preserved for the
- * future metro track).
+ * Every building has its own independent `position` — no shared row,
+ * baseline, grid, or common transform anywhere (see Building.tsx).
+ * Desktop `x`/`y`/`scale` were each measured independently off
+ * `public/assets/city/navigation/ref.png` (2048x768 — a "lineup" style
+ * composition guide, NOT the asset we render; ours are the real building
+ * PNGs) using a cropped pixel-grid overlay per landmark, exactly like the
+ * measurement pass before it, redone against this newer/wider reference
+ * image (old ref.jpeg was 1536x1024 and is stale). `scale` is relative to
+ * `events` (1 = full size, the primary anchor).
  *
- * `revealWindow`s are clustered tightly (all within navProgress 0.35-0.73)
- * so the six buildings rise as ONE coordinated group with only a slight
- * stagger — not spread across the whole transition. Cards reveal on their
- * own later window (see Building.tsx's `cardT`), after each building has
- * mostly finished rising.
+ * Mobile positions are UNCHANGED from the previous pass in this file —
+ * out of scope for this "desktop first" correction.
  *
- * Visual hierarchy (desktop `scale`): events (1.12) is the dominant
- * central anchor; about/timeline/transport (~0.72-0.85) are the major
- * landmark tier; credentials/contact (~0.5) stay clearly smaller without
- * going tiny or touching the ground line (`y` > 0 for every building).
- *
- * Positions/scales/windows are a first pass, tuned by eye against the
- * actual artwork — expect to retune after visual review, not a fixed spec.
+ * Timeline is the one exception to the "simple centered portrait asset"
+ * model: its image is a wide landscape canvas (tower on the left, a long
+ * track extending right), so `position.anchorXPercent` targets the tower
+ * specifically (not the image's midpoint), and it carries its own
+ * `maxWidthVwDesktopOverride`/`maxHeightVhMobileOverride` because the
+ * shared safety caps (tuned for portrait buildings) would otherwise
+ * shrink it to fit a cap sized for a completely different aspect ratio.
  */
 export const navigationBuildings: NavigationBuilding[] = [
   {
@@ -42,30 +38,39 @@ export const navigationBuildings: NavigationBuilding[] = [
     assetHeight: 1254,
     accentColor: 'var(--city-cyan)',
     position: {
-      // Far left, same foreground level as everything else.
-      desktop: { x: 11, y: 4, z: 1, scale: 0.5 },
-      mobile: { x: 14, y: 6, z: 1, scale: 0.62 },
+      // Measured in ref.png: roof ~(185,350)px of 2048x768, base
+      // ~(185,620)px -> x=9%. `y` brought down independently so the base
+      // sits in the wet foreground instead of floating above it. Scale
+      // pulled in and `y` nudged up slightly so it reads at the same
+      // depth as Transport/Timeline rather than sitting closer to the
+      // camera than the rest of the row — base stays on the same ground
+      // plane (this isn't a downward/upward move, just a smaller,
+      // slightly-farther-back read).
+      desktop: { x: 9, y: 7, z: 2, scale: 0.45 },
+      mobile: { x: 18, y: 8, z: 4, scale: 0.7 },
     },
     order: 1,
-    revealWindow: { start: 0.43, end: 0.71 },
+    cardEmphasis: 'compact',
   },
   {
     id: 'about',
     sectionSlug: 'about',
     label: 'About',
-    description: 'About CVTHT',
+    description: 'About VTHT',
     assetPath: '/assets/buildings/about-building.png',
     assetWidth: 941,
     assetHeight: 1672,
     accentColor: 'var(--city-violet)',
     position: {
-      // Left of Events, same foreground level — its height (a tall, thin
-      // spire) is what reads as "landmark", not elevation/depth.
-      desktop: { x: 32, y: 6, z: 2, scale: 0.85 },
-      mobile: { x: 30, y: 8, z: 2, scale: 1.05 },
+      // Measured in ref.png: spire tip ~(775,65)px, base ~(775,560)px ->
+      // x=38%. Tall (rendered height ~89% of Events'). `y` brought down
+      // independently so the base sits in the wet foreground. Scale
+      // pulled in and `y` nudged up slightly for the same
+      // same-depth-as-Transport/Timeline read as the other three.
+      desktop: { x: 38, y: 11, z: 5, scale: 0.84 },
+      mobile: { x: 26, y: 16, z: 2, scale: 1.1 },
     },
     order: 2,
-    revealWindow: { start: 0.37, end: 0.65 },
   },
   {
     id: 'contact',
@@ -77,16 +82,16 @@ export const navigationBuildings: NavigationBuilding[] = [
     assetHeight: 1374,
     accentColor: 'var(--city-magenta)',
     position: {
-      // RIGHT group — nestled between Events and Transport (not the left
-      // cluster), clearly separated from Credentials. `z` set above both
-      // neighbors so it paints cleanly on top where their footprints
-      // overlap. Lifted off the ground line (`y` > 0) so it reads as a
-      // building, not a card pinned to the edge.
-      desktop: { x: 63, y: 4, z: 7, scale: 0.42 },
-      mobile: { x: 60, y: 4, z: 7, scale: 0.58 },
+      // Measured in ref.png: roof ~(505,310)px, base ~(505,600)px ->
+      // x=25%. `y` brought down independently so the base sits in the
+      // wet foreground. Scale pulled in and `y` nudged up slightly for
+      // the same same-depth-as-Transport/Timeline read as the other
+      // three.
+      desktop: { x: 25, y: 8, z: 3, scale: 0.48 },
+      mobile: { x: 38, y: 5, z: 6, scale: 0.52 },
     },
     order: 3,
-    revealWindow: { start: 0.45, end: 0.73 },
+    cardEmphasis: 'compact',
   },
   {
     id: 'events',
@@ -98,13 +103,18 @@ export const navigationBuildings: NavigationBuilding[] = [
     assetHeight: 1665,
     accentColor: 'var(--city-pink)',
     position: {
-      // Dead center — the main hub, largest scale, with open `y` for
-      // breathing room around its base.
-      desktop: { x: 52, y: 8, z: 4, scale: 1.12 },
-      mobile: { x: 54, y: 6, z: 4, scale: 1.65 },
+      // Measured in ref.png: top ~(1055,45)px, base ~(1055,600)px ->
+      // x=52% — the tallest silhouette and scale=1 anchor. `y` brought
+      // down independently so the base sits in the wet foreground. Scale
+      // pulled in and `y` nudged up slightly for the same
+      // same-depth-as-Transport/Timeline read as the other three; `x`
+      // shifted right for breathing room between About and Transport,
+      // still the central landmark.
+      desktop: { x: 57, y: 9, z: 6, scale: 0.95 },
+      mobile: { x: 51, y: 12, z: 3, scale: 1.45 },
     },
     order: 4,
-    revealWindow: { start: 0.35, end: 0.63 },
+    cardEmphasis: 'prominent',
   },
   {
     id: 'transport',
@@ -116,12 +126,18 @@ export const navigationBuildings: NavigationBuilding[] = [
     assetHeight: 1666,
     accentColor: 'var(--city-blue)',
     position: {
-      // Right of Events, a clear secondary landmark, same foreground level.
-      desktop: { x: 72, y: 4, z: 5, scale: 0.72 },
-      mobile: { x: 64, y: 3, z: 5, scale: 0.92 },
+      // Right foreground landmark, base on the SAME low-`y` ground plane
+      // as credentials/about/contact/events. Positioned so only its own
+      // left/upper edge overlaps the FINAL stretch of Timeline's track
+      // (not the station, not most of the track — see Timeline's own
+      // position/anchorXPercent below) — `x` is deliberately close to
+      // the track's own endpoint, not centered under the whole Timeline
+      // asset. `z` is higher than Timeline's, so Transport paints in
+      // front of that small overlap area rather than the reverse.
+      desktop: { x: 93, y: 6, z: 4, scale: 0.85 },
+      mobile: { x: 82, y: 8, z: 5, scale: 0.95 },
     },
     order: 5,
-    revealWindow: { start: 0.39, end: 0.67 },
   },
   {
     id: 'timeline',
@@ -129,16 +145,25 @@ export const navigationBuildings: NavigationBuilding[] = [
     label: 'Timeline',
     description: 'Event Timeline',
     assetPath: '/assets/buildings/timeline-building.png',
-    assetWidth: 1024,
-    assetHeight: 1536,
+    assetWidth: 1215,
+    assetHeight: 1295,
     accentColor: 'var(--city-cyan)',
     position: {
-      // Far right — clear open space beyond it for the future metro
-      // track; nothing else placed further right.
-      desktop: { x: 84, y: 5, z: 6, scale: 0.82 },
-      mobile: { x: 86, y: 5, z: 6, scale: 1.15 },
+      // Upper-right, set back BEHIND the foreground landmarks (moderate
+      // `y`, smaller `scale`) so it reads as occupying an elevated spot
+      // within the city skyline itself — not sitting on the foreground
+      // wet platform, but also not pushed so far back it floats above
+      // the water/horizon in isolation. Its track extends from here
+      // toward the foreground/right, where the large Transport sits (see
+      // Transport's own position) — the track visually disappears
+      // behind/into Transport rather than ending in open space.
+      // `anchorXPercent` targets the tower (roughly the left third of
+      // the canvas), leaving the track free to extend toward Transport.
+      desktop: { x: 81, y: 33, z: 1, scale: 0.42, anchorXPercent: 32 },
+      mobile: { x: 85, y: 31, z: 1, scale: 0.88, anchorXPercent: 32 },
     },
     order: 6,
-    revealWindow: { start: 0.41, end: 0.69 },
+    maxWidthVwDesktopOverride: 85,
+    maxHeightVhMobileOverride: 70,
   },
 ]

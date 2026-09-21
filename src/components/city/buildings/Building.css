@@ -4,14 +4,20 @@
  * replaced. `pointer-events: auto` (this section only re-enables it;
  * the buildings container and NavigationCityScene above it stay
  * `pointer-events: none` so nothing here blocks scroll).
+ *
+ * Shared timing for the single "pop in together" reveal — a fast, snappy,
+ * ease-out entrance triggered once by NavigationCityScene's scroll
+ * threshold (see Building.tsx's `revealed` prop), NOT scroll-scrubbed.
+ * Every opacity/transform below that responds to `revealed` uses these
+ * same two values, so all six buildings (and their cards/grounding)
+ * animate identically and simultaneously.
  */
 .nav-building {
+  --reveal-duration: 380ms;
+  --reveal-ease: cubic-bezier(0.16, 1, 0.3, 1);
   position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.3rem;
-  transform: translateX(-50%);
+  /* `transform` (translateX by the building's own anchorXPercent) is set
+     inline per building — see Building.tsx. */
   pointer-events: auto;
   background: none;
   border: none;
@@ -30,14 +36,27 @@
 
 .nav-building__image {
   display: block;
+  /* Overrides the global img{max-width:100%} reset — without this, a
+     building positioned far from the left edge gets its auto-computed
+     width shrink-to-fit clamped against the (left-offset-reduced)
+     available space of its absolutely-positioned, auto-width parent
+     button, distorting its aspect ratio instead of the intended
+     intrinsic-ratio scaling driven entirely by the height/width formula
+     below. */
+  max-width: none;
+  max-height: none;
   object-fit: contain;
   transform-origin: bottom center;
   will-change: transform, opacity;
   backface-visibility: hidden;
-  /* Only `filter` transitions — `transform`/`opacity` are driven per-frame
-     from scroll progress in Building.tsx, so transitioning THOSE here
-     would fight the scroll (see IdentityLayer.css for the same rule). */
-  transition: filter 0.2s ease;
+  /* `opacity`/`transform` animate a one-time boolean flip (`revealed`,
+     see Building.tsx), not per-frame scroll values, so a real transition
+     is exactly what's wanted here — the fast, snappy, simultaneous
+     pop-in. */
+  transition:
+    filter 0.2s ease,
+    opacity var(--reveal-duration) var(--reveal-ease),
+    transform var(--reveal-duration) var(--reveal-ease);
 }
 
 .nav-building:hover .nav-building__image,
@@ -49,86 +68,393 @@
   filter: brightness(1.05);
 }
 
-.nav-building:hover .nav-building__card,
-.nav-building:focus-visible .nav-building__card {
-  border-color: color-mix(in srgb, var(--building-accent, var(--city-cyan)) 70%, transparent);
-}
-
 /*
- * The floating info card ABOVE each building — a title and one short
- * line, never a label sitting in a row along the bottom. Dark translucent
- * glass with a thin gradient border (same double-background trick as
- * BrandingStrip's badges: a dark fill on the padding-box, a gradient on
- * the border-box, so the border stays a thin line through the rounded
- * corners) — compact, never a large UI panel.
+ * ---------------------------------------------------------------------
+ * The navigation panel: a premium LIQUID GLASS object, not a UI card.
+ *
+ * It is built from real stacked layers rather than one translucent box,
+ * because that's what sells "physical glass" over "dark rectangle":
+ *   1. `__card-aura`    — outer atmospheric bloom, bleeding past the edges
+ *   2. `__card-glass`   — the glass body itself: backdrop blur + saturate,
+ *                         an internal translucent gradient, a top gloss
+ *                         highlight, edge-light insets, and (via its own
+ *                         two pseudo-elements) soft cyan/magenta
+ *                         refraction blobs suspended inside the material
+ *   3. `__card-content` — the type, riding above the glass
+ *   4. `.nav-building__card::before/::after` — tiny luminous corner
+ *                         accents (cyan / magenta) on top of everything
+ *
+ * `.nav-building__card` itself is only the sizing/transform shell: it
+ * holds the padding (so the glass, inset to it, gets the panel's shape)
+ * and the constant slight 3D lean. It deliberately carries NO `filter`
+ * — an ancestor filter creates a new backdrop root and would silently
+ * kill the child's `backdrop-filter`, flattening the glass.
+ * ---------------------------------------------------------------------
  */
 .nav-building__card {
-  --card-border: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--city-cyan) 55%, transparent),
-    color-mix(in srgb, var(--city-magenta) 45%, transparent)
-  );
+  /* Medium rounded, with one deliberately tighter corner — futuristic
+     and asymmetric without becoming a pill or a plain square. */
+  --glass-radius: 14px 14px 14px 5px;
+  --card-tilt: perspective(760px) rotateX(6deg);
   position: relative;
+  /* Deliberately NO `isolation`/`filter`/`opacity < 1` here: each of
+     those forms a backdrop root, which would confine the glass child's
+     `backdrop-filter` to this card's own subtree and flatten it. The
+     `transform` below already provides the stacking context the layers
+     need. */
+  display: block;
+  padding: 0.52rem 1.1rem 0.58rem;
+  white-space: nowrap;
+  transform: var(--card-tilt);
+  transform-origin: bottom center;
+  transition:
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity var(--reveal-duration) var(--reveal-ease);
+}
+
+/* Outer atmospheric bloom — sits behind the glass and bleeds past it, so
+   the panel reads as emitting light into the scene rather than being
+   pasted on top of it. */
+.nav-building__card-aura {
+  position: absolute;
+  inset: -15px -17px -19px;
+  z-index: 0;
+  border-radius: 24px;
+  background: radial-gradient(
+    ellipse 72% 72% at 50% 55%,
+    color-mix(in srgb, var(--building-accent, var(--city-cyan)) 30%, transparent) 0%,
+    color-mix(in srgb, var(--city-violet) 17%, transparent) 45%,
+    transparent 72%
+  );
+  filter: blur(14px);
+  opacity: 0.72;
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    filter 0.2s ease;
+}
+
+/* The glass body. `backdrop-filter` is what makes the city genuinely
+   visible-but-blurred THROUGH the panel (real material, not a tint);
+   the inset shadows are the edge light — a bright top gloss line, a
+   faint full-perimeter ring, and cyan/magenta light catching opposite
+   edges, which is what gives glass its colored refraction fringe. */
+.nav-building__card-glass {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  border-radius: var(--glass-radius);
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, white 24%, transparent);
+  background:
+    linear-gradient(168deg, rgba(255, 255, 255, 0.17) 0%, rgba(255, 255, 255, 0.045) 26%, transparent 54%),
+    linear-gradient(
+      200deg,
+      color-mix(in srgb, var(--city-violet) 26%, transparent) 0%,
+      color-mix(in srgb, var(--city-deep-indigo) 60%, transparent) 48%,
+      color-mix(in srgb, var(--city-black) 68%, transparent) 100%
+    );
+  backdrop-filter: blur(14px) saturate(165%) brightness(1.05);
+  -webkit-backdrop-filter: blur(14px) saturate(165%) brightness(1.05);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 3px 0 13px -7px color-mix(in srgb, var(--city-cyan) 90%, transparent),
+    inset -3px 0 13px -7px color-mix(in srgb, var(--city-magenta) 90%, transparent),
+    inset 0 -15px 20px -17px color-mix(in srgb, var(--city-violet) 90%, transparent),
+    0 14px 26px -14px rgba(2, 1, 8, 0.85),
+    0 0 20px -6px color-mix(in srgb, var(--building-accent, var(--city-cyan)) 28%, transparent);
+  pointer-events: none;
+  transition:
+    filter 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+/* Cyan refraction suspended inside the material (clipped by the glass's
+   own overflow, so it reads as light bending within the panel). */
+.nav-building__card-glass::before {
+  content: '';
+  position: absolute;
+  top: -42%;
+  left: -16%;
+  width: 62%;
+  height: 125%;
+  background: radial-gradient(ellipse at center, color-mix(in srgb, var(--city-cyan) 42%, transparent) 0%, transparent 68%);
+  filter: blur(10px);
+  opacity: 0.55;
+}
+
+/* Magenta refraction, opposite corner — the two together give the
+   material its slight chromatic split rather than a flat tint. */
+.nav-building__card-glass::after {
+  content: '';
+  position: absolute;
+  right: -13%;
+  bottom: -46%;
+  width: 56%;
+  height: 125%;
+  background: radial-gradient(ellipse at center, color-mix(in srgb, var(--city-magenta) 40%, transparent) 0%, transparent 70%);
+  filter: blur(11px);
+  opacity: 0.5;
+}
+
+/* Small luminous corner accents — the "machined edge" detail. Kept tiny
+   and tucked into the padding so they never crowd the type. */
+.nav-building__card::before,
+.nav-building__card::after {
+  content: '';
+  position: absolute;
+  z-index: 3;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+}
+
+.nav-building__card::before {
+  top: 5px;
+  left: 5px;
+  border-top: 1.5px solid color-mix(in srgb, var(--city-cyan) 82%, white 18%);
+  border-left: 1.5px solid color-mix(in srgb, var(--city-cyan) 82%, white 18%);
+  border-top-left-radius: 8px;
+  box-shadow: -1px -1px 7px -2px color-mix(in srgb, var(--city-cyan) 70%, transparent);
+}
+
+.nav-building__card::after {
+  right: 5px;
+  bottom: 5px;
+  border-right: 1.5px solid color-mix(in srgb, var(--city-magenta) 82%, white 18%);
+  border-bottom: 1.5px solid color-mix(in srgb, var(--city-magenta) 82%, white 18%);
+  border-bottom-right-radius: 8px;
+  box-shadow: 1px 1px 7px -2px color-mix(in srgb, var(--city-magenta) 70%, transparent);
+}
+
+.nav-building__card-content {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.1rem;
-  padding: 0.3rem 0.65rem;
-  border-radius: 8px;
-  border: 1px solid transparent;
-  background:
-    linear-gradient(color-mix(in srgb, var(--city-black) 72%, transparent), color-mix(in srgb, var(--city-deep-indigo) 65%, transparent))
-      padding-box,
-    var(--card-border) border-box;
-  box-shadow: 0 0 10px color-mix(in srgb, var(--building-accent, var(--city-cyan)) 18%, transparent);
-  white-space: nowrap;
-  transition: border-color 0.2s ease;
+  gap: 0.02rem;
 }
 
+/*
+ * Type stays restrained on purpose — the GLASS carries the luxury, so
+ * the title is clean bright white with only a whisper of cyan and a soft
+ * (not neon) halo, and the subtitle is dimmer still.
+ */
 .nav-building__card-title {
   font-family: var(--font-display);
-  font-size: clamp(0.58rem, 1.1vw, 0.74rem);
-  letter-spacing: 0.12em;
+  font-size: clamp(0.72rem, 1.25vw, 0.92rem);
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--building-accent, var(--city-cyan)) 75%, white 25%);
-  text-shadow: 0 0 6px color-mix(in srgb, var(--building-accent, var(--city-cyan)) 45%, transparent);
+  color: color-mix(in srgb, white 84%, var(--city-cyan) 16%);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--city-cyan) 28%, transparent);
+}
+
+/* Thin luminous divider — a lit seam in the glass, not a UI <hr>. */
+.nav-building__card-rule {
+  display: block;
+  width: 46%;
+  height: 1px;
+  margin: 0.2rem 0 0.16rem;
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in srgb, white 55%, var(--city-cyan) 45%),
+    transparent
+  );
+  box-shadow: 0 0 6px color-mix(in srgb, var(--city-cyan) 45%, transparent);
 }
 
 .nav-building__card-desc {
   font-family: var(--font-body);
-  font-size: clamp(0.52rem, 0.85vw, 0.62rem);
-  color: color-mix(in srgb, white 70%, var(--building-accent, var(--city-cyan)) 10%);
-  letter-spacing: 0.01em;
+  font-size: clamp(0.58rem, 0.92vw, 0.7rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, white 62%, var(--city-cyan) 12%);
+}
+
+/* Credentials / Contact — smaller secondary landmarks. Same material,
+   less presence. */
+.nav-building__card--compact {
+  --glass-radius: 12px 12px 12px 4px;
+  padding: 0.4rem 0.85rem 0.46rem;
+}
+
+.nav-building__card--compact .nav-building__card-title {
+  font-size: clamp(0.62rem, 1.05vw, 0.78rem);
+  letter-spacing: 0.14em;
+}
+
+.nav-building__card--compact .nav-building__card-desc {
+  font-size: clamp(0.5rem, 0.8vw, 0.6rem);
+}
+
+.nav-building__card--compact .nav-building__card-aura {
+  opacity: 0.58;
+}
+
+/* Events — the main landmark. Thicker glass, deeper bloom, larger type. */
+.nav-building__card--prominent {
+  --glass-radius: 16px 16px 16px 6px;
+  padding: 0.66rem 1.4rem 0.72rem;
+}
+
+.nav-building__card--prominent .nav-building__card-glass {
+  border-color: color-mix(in srgb, white 30%, transparent);
+  backdrop-filter: blur(17px) saturate(175%) brightness(1.07);
+  -webkit-backdrop-filter: blur(17px) saturate(175%) brightness(1.07);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.07),
+    inset 4px 0 16px -8px color-mix(in srgb, var(--city-cyan) 95%, transparent),
+    inset -4px 0 16px -8px color-mix(in srgb, var(--city-magenta) 95%, transparent),
+    inset 0 -18px 24px -18px color-mix(in srgb, var(--city-violet) 95%, transparent),
+    0 18px 32px -16px rgba(2, 1, 8, 0.9),
+    0 0 30px -6px color-mix(in srgb, var(--building-accent, var(--city-cyan)) 36%, transparent);
+}
+
+.nav-building__card--prominent .nav-building__card-aura {
+  opacity: 0.9;
+}
+
+.nav-building__card--prominent .nav-building__card-title {
+  font-size: clamp(0.88rem, 1.5vw, 1.1rem);
+  letter-spacing: 0.18em;
+}
+
+.nav-building__card--prominent .nav-building__card-desc {
+  font-size: clamp(0.64rem, 1vw, 0.78rem);
 }
 
 /*
- * The connector between a card and its building — a thin vertical line
- * ending in a small glowing node right at the building, so the card reads
- * as spatially attached to it (not just floating nearby).
+ * Interaction: the glass brightens, its edge light and bloom come up,
+ * and the whole panel lifts a few pixels. Instant, transition-only —
+ * never a float/bob/pulse loop. `--card-tilt` is redeclared (not
+ * appended) so the transform can't accumulate.
+ */
+.nav-building:hover .nav-building__card,
+.nav-building:focus-visible .nav-building__card {
+  --card-tilt: perspective(760px) rotateX(6deg) translateY(-4px);
+}
+
+.nav-building:hover .nav-building__card-glass,
+.nav-building:focus-visible .nav-building__card-glass {
+  border-color: color-mix(in srgb, white 42%, transparent);
+  filter: brightness(1.14) saturate(1.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.09),
+    inset 4px 0 16px -7px color-mix(in srgb, var(--city-cyan) 100%, transparent),
+    inset -4px 0 16px -7px color-mix(in srgb, var(--city-magenta) 100%, transparent),
+    inset 0 -16px 22px -16px color-mix(in srgb, var(--city-violet) 95%, transparent),
+    0 18px 30px -14px rgba(2, 1, 8, 0.9),
+    0 0 34px -4px color-mix(in srgb, var(--building-accent, var(--city-cyan)) 45%, transparent);
+}
+
+.nav-building:hover .nav-building__card-aura,
+.nav-building:focus-visible .nav-building__card-aura {
+  opacity: 1;
+  filter: blur(16px);
+}
+
+.nav-building:active .nav-building__card {
+  --card-tilt: perspective(760px) rotateX(6deg) translateY(-1px) scale(0.975);
+  transition-duration: 0.09s;
+}
+
+.nav-building:active .nav-building__card-glass {
+  filter: brightness(1.32) saturate(1.2);
+  transition-duration: 0.09s;
+}
+
+/*
+ * Groups the card + connector and positions them ABOVE the image, at the
+ * building's own horizontal anchor point within its box (`left`, set
+ * inline per building — 50% for every ordinary centered asset, Timeline's
+ * own tower position for that one). `bottom: 100%` puts this group's own
+ * bottom edge exactly at the image's top edge, so the connector (last in
+ * the group) sits flush against the building.
+ */
+.nav-building__label-group {
+  position: absolute;
+  bottom: 100%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.18rem;
+}
+
+/*
+ * The connector between a panel and its building — a thin holographic
+ * signal line, not a drawn CSS rule: a bright core that fades in from
+ * nothing at the glass end (mask) with a blurred halo behind it (::before)
+ * and a lit attachment node where it meets the building (::after). This
+ * is what makes glass + signal + building read as ONE landmark.
  */
 .nav-building__marker {
   position: relative;
   display: block;
-  width: 1px;
-  height: 14px;
+  width: 1.5px;
+  height: 20px;
   background: linear-gradient(
     to bottom,
-    color-mix(in srgb, var(--building-accent, var(--city-cyan)) 85%, transparent),
-    color-mix(in srgb, var(--building-accent, var(--city-cyan)) 35%, transparent)
+    color-mix(in srgb, white 85%, var(--city-cyan) 15%) 0%,
+    color-mix(in srgb, var(--city-cyan) 90%, transparent) 42%,
+    var(--building-accent, var(--city-cyan)) 100%
   );
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 26%, black 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 26%, black 100%);
+  transition: opacity var(--reveal-duration) var(--reveal-ease);
+}
+
+.nav-building__marker::before {
+  content: '';
+  position: absolute;
+  inset: -2px -4px;
+  background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--building-accent, var(--city-cyan)) 60%, transparent));
+  filter: blur(4px);
+  opacity: 0.75;
 }
 
 .nav-building__marker::after {
   content: '';
   position: absolute;
-  bottom: -2px;
+  bottom: -3px;
   left: 50%;
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   transform: translateX(-50%);
-  background: var(--building-accent, var(--city-cyan));
-  box-shadow: 0 0 5px var(--building-accent, var(--city-cyan));
+  background: color-mix(in srgb, white 45%, var(--building-accent, var(--city-cyan)));
+  box-shadow:
+    0 0 6px 1px var(--building-accent, var(--city-cyan)),
+    0 0 14px 3px color-mix(in srgb, var(--building-accent, var(--city-cyan)) 55%, transparent);
+}
+
+/*
+ * A soft, dark contact shadow directly under the building's base — the
+ * grounding cue, separate from the colored `contact-glow`/`reflection`
+ * below. A radial gradient (not a filled shape) fading fully to
+ * transparent by its own edge, then blurred further on top of that, so
+ * it has no visible boundary anywhere — reads as the building quietly
+ * darkening the wet ground it stands on, never as a drawn disc/platform.
+ */
+.nav-building__ground-shadow {
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  width: 68%;
+  height: 16px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.18) 45%, transparent 80%);
+  filter: blur(7px);
+  pointer-events: none;
+  transition: opacity var(--reveal-duration) var(--reveal-ease);
 }
 
 /*
@@ -148,28 +474,121 @@
   background: color-mix(in srgb, var(--building-accent, var(--city-cyan)) 28%, transparent);
   filter: blur(9px);
   pointer-events: none;
+  transition: opacity var(--reveal-duration) var(--reveal-ease);
 }
 
+/*
+ * A short, soft wet-ground reflection — a flipped copy of the building's
+ * OWN image (never a separate asset), so its colors always match. It is
+ * NOT a full mirrored duplicate: `mask-image` keeps only a short sliver
+ * near the building's base and fades the rest to nothing, `blur` softens
+ * it further, and low opacity keeps it reading as a puddle glint rather
+ * than a second building. `top: 100%; width/height: 100%` sizes and
+ * positions it against the button's own box, which already exactly
+ * matches the main image's box (the button has no other in-flow content),
+ * so no separate measurement is needed here.
+ */
+.nav-building__reflection {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform-origin: top center;
+  transform: scaleY(-1);
+  filter: blur(2.5px);
+  -webkit-mask-image: linear-gradient(to bottom, color-mix(in srgb, var(--building-accent, var(--city-cyan)) 70%, white 30%), transparent 24%);
+  mask-image: linear-gradient(to bottom, color-mix(in srgb, var(--building-accent, var(--city-cyan)) 70%, white 30%), transparent 24%);
+  pointer-events: none;
+  user-select: none;
+  will-change: transform, opacity;
+  transition: opacity var(--reveal-duration) var(--reveal-ease);
+}
+
+/*
+ * Mobile keeps the full glass material (blur, refraction, edge light,
+ * aura) — only its scale comes down. It must never flatten into a plain
+ * translucent button.
+ */
 @media (max-width: 767px) {
-  .nav-building {
-    gap: 0.2rem;
+  .nav-building__label-group {
+    gap: 0.14rem;
   }
 
   .nav-building__marker {
-    height: 9px;
+    height: 12px;
   }
 
   .nav-building__card {
-    padding: 0.22rem 0.5rem;
-    border-radius: 6px;
+    --glass-radius: 10px 10px 10px 4px;
+    padding: 0.32rem 0.6rem 0.36rem;
+  }
+
+  .nav-building__card-glass {
+    backdrop-filter: blur(10px) saturate(155%) brightness(1.05);
+    -webkit-backdrop-filter: blur(10px) saturate(155%) brightness(1.05);
+  }
+
+  .nav-building__card-aura {
+    inset: -9px -10px -12px;
+    filter: blur(9px);
+  }
+
+  .nav-building__card::before,
+  .nav-building__card::after {
+    width: 7px;
+    height: 7px;
+  }
+
+  .nav-building__card::before {
+    top: 3px;
+    left: 3px;
+    border-top-left-radius: 6px;
+  }
+
+  .nav-building__card::after {
+    right: 3px;
+    bottom: 3px;
+    border-bottom-right-radius: 6px;
   }
 
   .nav-building__card-title {
-    font-size: 0.54rem;
-    letter-spacing: 0.07em;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+  }
+
+  .nav-building__card-rule {
+    margin: 0.12rem 0 0.1rem;
   }
 
   .nav-building__card-desc {
-    font-size: 0.46rem;
+    font-size: 0.5rem;
+  }
+
+  .nav-building__card--compact {
+    --glass-radius: 9px 9px 9px 3px;
+    padding: 0.26rem 0.5rem 0.3rem;
+  }
+
+  .nav-building__card--compact .nav-building__card-title {
+    font-size: 0.52rem;
+  }
+
+  .nav-building__card--compact .nav-building__card-desc {
+    font-size: 0.44rem;
+  }
+
+  .nav-building__card--prominent {
+    --glass-radius: 12px 12px 12px 5px;
+    padding: 0.4rem 0.78rem 0.44rem;
+  }
+
+  .nav-building__card--prominent .nav-building__card-title {
+    font-size: 0.7rem;
+  }
+
+  .nav-building__card--prominent .nav-building__card-desc {
+    font-size: 0.55rem;
   }
 }

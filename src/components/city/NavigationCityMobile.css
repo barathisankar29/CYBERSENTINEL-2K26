@@ -1,0 +1,323 @@
+/*
+ * MOBILE-ONLY navigation presentation. Entirely separate from
+ * Building.css/NavigationCityScene.css's desktop styles — nothing here is
+ * shared with or read by the desktop render path.
+ */
+.mobile-nav-section {
+  position: relative;
+  width: 100%;
+}
+
+/* Normal in-flow section — height is NOT fixed/100vh and nothing here is
+   `overflow: hidden`. `.mobile-nav-scene__bg` below is a plain in-flow
+   block image (`width: 100%; height: auto`), so IT alone determines this
+   element's height; every other layer is `position: absolute; inset: 0`
+   inside this SAME box, so they land exactly on the image's own content —
+   no JS-computed rect, no letterboxing, no cropping, ever. */
+.mobile-nav-scene {
+  position: relative;
+  width: 100%;
+  animation: mobile-nav-reveal 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.mobile-nav-scene__bg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@keyframes mobile-nav-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mobile-nav-scene__connectors {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.mobile-nav-scene__connector-line {
+  stroke: var(--connector-accent, var(--city-cyan));
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 3px var(--connector-accent, var(--city-cyan)));
+  opacity: 0.85;
+  transition:
+    opacity 380ms cubic-bezier(0.16, 1, 0.3, 1),
+    stroke-width 150ms ease,
+    filter 150ms ease;
+}
+
+/* Brightens in lockstep with its card's hover/focus/active state — driven
+   by React state (NavigationCityMobile.tsx's `activeId`), since the line
+   lives in a shared <svg>, not inside the card's own DOM subtree. */
+.mobile-nav-scene__connector-line--active {
+  stroke-width: 2.2;
+  filter: drop-shadow(0 0 6px var(--connector-accent, var(--city-cyan)));
+}
+
+/* Full-scene wrapper per card — keeps the glow dot (positioned at the
+   building's own target%) and the card (positioned at its own anchor%)
+   in the SAME coordinate space, independent of each other's box. */
+.mobile-nav-item {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.mobile-nav-item__glow {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--building-accent, var(--city-cyan)) 55%, transparent) 0%, transparent 72%);
+  filter: blur(6px);
+  opacity: 0;
+  transition: opacity 180ms ease;
+  pointer-events: none;
+}
+
+.mobile-nav-item:has(.mobile-nav-card:hover) .mobile-nav-item__glow,
+.mobile-nav-item:has(.mobile-nav-card:focus-visible) .mobile-nav-item__glow,
+.mobile-nav-item:has(.mobile-nav-card:active) .mobile-nav-item__glow {
+  opacity: 1;
+}
+
+/* ---------------------------------------------------------------------
+ * The card itself — same "real glass" construction as desktop's
+ * .nav-building__card (aura + backdrop-blur glass + refraction + corner
+ * accents), reimplemented independently here under its own class names.
+ * ------------------------------------------------------------------- */
+.mobile-nav-card {
+  position: absolute;
+  pointer-events: auto;
+  max-width: min(50vw, 250px);
+  min-width: 136px;
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0.56rem 1rem 0.62rem;
+  font: inherit;
+  cursor: pointer;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    opacity 380ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 380ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-nav-card:focus-visible {
+  outline: 2px solid var(--building-accent, var(--city-cyan));
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.mobile-nav-card__aura {
+  position: absolute;
+  inset: -12px -14px -16px;
+  z-index: 0;
+  border-radius: 22px;
+  background: radial-gradient(
+    ellipse 72% 72% at 50% 55%,
+    color-mix(in srgb, var(--building-accent, var(--city-cyan)) 32%, transparent) 0%,
+    color-mix(in srgb, var(--city-violet) 16%, transparent) 45%,
+    transparent 72%
+  );
+  filter: blur(11px);
+  opacity: 0.7;
+  pointer-events: none;
+  transition: opacity 150ms ease, filter 150ms ease;
+}
+
+.mobile-nav-card__glass {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  border-radius: 12px 12px 12px 4px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, white 24%, transparent);
+  background:
+    linear-gradient(168deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 26%, transparent 54%),
+    linear-gradient(
+      200deg,
+      color-mix(in srgb, var(--city-violet) 26%, transparent) 0%,
+      color-mix(in srgb, var(--city-deep-indigo) 62%, transparent) 48%,
+      color-mix(in srgb, var(--city-black) 70%, transparent) 100%
+    );
+  backdrop-filter: blur(10px) saturate(160%) brightness(1.05);
+  -webkit-backdrop-filter: blur(10px) saturate(160%) brightness(1.05);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 3px 0 12px -7px color-mix(in srgb, var(--city-cyan) 90%, transparent),
+    inset -3px 0 12px -7px color-mix(in srgb, var(--city-magenta) 90%, transparent),
+    0 12px 22px -12px rgba(2, 1, 8, 0.85),
+    0 0 18px -6px color-mix(in srgb, var(--building-accent, var(--city-cyan)) 30%, transparent);
+  pointer-events: none;
+  transition: filter 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.mobile-nav-card__glass::before {
+  content: '';
+  position: absolute;
+  top: -42%;
+  left: -16%;
+  width: 62%;
+  height: 125%;
+  background: radial-gradient(ellipse at center, color-mix(in srgb, var(--city-cyan) 40%, transparent) 0%, transparent 68%);
+  filter: blur(9px);
+  opacity: 0.5;
+}
+
+.mobile-nav-card__glass::after {
+  content: '';
+  position: absolute;
+  right: -13%;
+  bottom: -46%;
+  width: 56%;
+  height: 125%;
+  background: radial-gradient(ellipse at center, color-mix(in srgb, var(--city-magenta) 38%, transparent) 0%, transparent 70%);
+  filter: blur(10px);
+  opacity: 0.46;
+}
+
+.mobile-nav-card::before,
+.mobile-nav-card::after {
+  content: '';
+  position: absolute;
+  z-index: 3;
+  width: 7px;
+  height: 7px;
+  pointer-events: none;
+}
+
+.mobile-nav-card::before {
+  top: 4px;
+  left: 4px;
+  border-top: 1.5px solid color-mix(in srgb, var(--city-cyan) 82%, white 18%);
+  border-left: 1.5px solid color-mix(in srgb, var(--city-cyan) 82%, white 18%);
+  border-top-left-radius: 6px;
+  box-shadow: -1px -1px 6px -2px color-mix(in srgb, var(--city-cyan) 70%, transparent);
+}
+
+.mobile-nav-card::after {
+  right: 4px;
+  bottom: 4px;
+  border-right: 1.5px solid color-mix(in srgb, var(--city-magenta) 82%, white 18%);
+  border-bottom: 1.5px solid color-mix(in srgb, var(--city-magenta) 82%, white 18%);
+  border-bottom-right-radius: 6px;
+  box-shadow: 1px 1px 6px -2px color-mix(in srgb, var(--city-magenta) 70%, transparent);
+}
+
+.mobile-nav-card__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.02rem;
+}
+
+.mobile-nav-card__title {
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, white 84%, var(--city-cyan) 16%);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--city-cyan) 26%, transparent);
+}
+
+.mobile-nav-card__rule {
+  display: block;
+  width: 44%;
+  height: 1px;
+  margin: 0.18rem 0 0.14rem;
+  background: linear-gradient(to right, transparent, color-mix(in srgb, white 55%, var(--city-cyan) 45%), transparent);
+  box-shadow: 0 0 5px color-mix(in srgb, var(--city-cyan) 42%, transparent);
+}
+
+.mobile-nav-card__desc {
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: color-mix(in srgb, white 62%, var(--city-cyan) 12%);
+}
+
+.mobile-nav-card--compact {
+  padding: 0.4rem 0.7rem 0.44rem;
+}
+
+.mobile-nav-card--compact .mobile-nav-card__title {
+  font-size: 0.6rem;
+}
+
+.mobile-nav-card--compact .mobile-nav-card__desc {
+  font-size: 0.48rem;
+}
+
+.mobile-nav-card--prominent {
+  padding: 0.6rem 1.1rem 0.64rem;
+}
+
+.mobile-nav-card--prominent .mobile-nav-card__glass {
+  border-color: color-mix(in srgb, white 30%, transparent);
+  backdrop-filter: blur(12px) saturate(170%) brightness(1.07);
+  -webkit-backdrop-filter: blur(12px) saturate(170%) brightness(1.07);
+}
+
+.mobile-nav-card--prominent .mobile-nav-card__aura {
+  opacity: 0.85;
+}
+
+.mobile-nav-card--prominent .mobile-nav-card__title {
+  font-size: 0.76rem;
+  letter-spacing: 0.14em;
+}
+
+.mobile-nav-card--prominent .mobile-nav-card__desc {
+  font-size: 0.58rem;
+}
+
+/* Hover-capable devices only — quick, snappy intensify. Never applied on
+   pure-touch devices so a tapped card doesn't get "stuck" highlighted. */
+@media (hover: hover) {
+  .mobile-nav-card:hover .mobile-nav-card__glass {
+    border-color: color-mix(in srgb, white 42%, transparent);
+    filter: brightness(1.14) saturate(1.12);
+  }
+
+  .mobile-nav-card:hover .mobile-nav-card__aura {
+    opacity: 1;
+    filter: blur(13px);
+  }
+}
+
+/* Touch / focus / active — brief, responsive, no cinematic easing. */
+.mobile-nav-card:active .mobile-nav-card__glass,
+.mobile-nav-card:focus-visible .mobile-nav-card__glass {
+  border-color: color-mix(in srgb, white 42%, transparent);
+  filter: brightness(1.22) saturate(1.15);
+  transition-duration: 90ms;
+}
+
+.mobile-nav-card:active .mobile-nav-card__aura,
+.mobile-nav-card:focus-visible .mobile-nav-card__aura {
+  opacity: 1;
+  transition-duration: 90ms;
+}

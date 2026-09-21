@@ -15,12 +15,15 @@ export interface CityPosition {
    * other buildings' scale within the same variant.
    */
   scale?: number
-}
-
-/** A window of the (0-1) navigation-city transition progress a building's rise animation is remapped across. */
-export interface RevealWindow {
-  start: number
-  end: number
+  /**
+   * Horizontal anchor point WITHIN the image itself (0 = image's left
+   * edge, 50 = center, 100 = right edge) that `x` refers to. Defaults to
+   * 50 (center) — every building is centered in its own canvas except
+   * Timeline, whose wide asset has the tower on the left with a long
+   * track extending right, so `x` needs to target the tower, not the
+   * image's midpoint. See Building.tsx.
+   */
+  anchorXPercent?: number
 }
 
 /**
@@ -51,8 +54,23 @@ export interface NavigationBuilding {
   }
   /** Draw/animation order, lower renders first. */
   order?: number
-  /** When this building rises/fades in during the navigation-city transition's own scroll progress. */
-  revealWindow: RevealWindow
+  /**
+   * Visual weight of this building's navigation card, relative to the
+   * default premium card style — 'prominent' for the main/central
+   * landmark (Events), 'compact' for smaller secondary landmarks
+   * (Credentials, Contact). Purely a card-styling hint; never affects the
+   * building's own position/scale. Defaults to the standard size.
+   */
+  cardEmphasis?: 'compact' | 'prominent'
+  /**
+   * Overrides Building.tsx's shared desktop max-width-vw / mobile
+   * max-height-vh safety caps. Those defaults are tuned for the five
+   * portrait building assets; Timeline's wide landscape canvas (tower +
+   * long track) needs a much more generous cap so the shared safety net
+   * doesn't shrink it down to fit a cap designed for a tall narrow tower.
+   */
+  maxWidthVwDesktopOverride?: number
+  maxHeightVhMobileOverride?: number
 }
 
 /**
