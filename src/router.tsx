@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import { HomePage } from '@/pages/HomePage'
 import { SectionPage } from '@/pages/SectionPage'
+import { CredentialsPage } from '@/pages/CredentialsPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 
 /**
@@ -13,6 +14,7 @@ export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/credentials" element={<CredentialsPage />} />
       <Route path="/:slug" element={<SectionPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

@@ -100,12 +100,11 @@
 
 .cyber-neon-card__badge-tag {
   font-family: var(--font-mono, 'JetBrains Mono', monospace);
-  font-size: 0.68rem;
+  font-size: 1.0rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   color: #22d3ee;
-  background: rgba(6, 182, 212, 0.12);
-  border: 1px solid rgba(34, 211, 238, 0.4);
+  
   padding: 0.15rem 0.45rem;
   border-radius: 4px;
 }
@@ -331,33 +330,75 @@
 
 @media (max-width: 640px) {
   .cyber-neon-card-wrapper {
-    margin: 1.75rem 0 2.5rem;
+    margin: 1.5rem 0 2.2rem;
+    width: 100%;
+  }
+
+  .cyber-neon-card__body {
+    padding: 1.25rem 0.95rem 1.4rem;
+    border-radius: 18px;
+    border-width: 2px;
   }
 
   .cyber-neon-card__flank {
-    width: 22px;
+    width: 18px;
   }
 
   .cyber-neon-card__flank--left {
-    left: -14px;
+    left: -8px;
   }
 
   .cyber-neon-card__flank--right {
-    right: -14px;
+    right: -8px;
+  }
+
+  .cyber-neon-card__badge-anchor {
+    top: -14px;
   }
 
   .cyber-neon-card__badge-pill {
-    padding: 0.35rem 1rem;
-    gap: 0.45rem;
+    padding: 0.28rem 0.85rem;
+    gap: 0.4rem;
+    max-width: calc(100vw - 36px);
   }
 
   .cyber-neon-card__badge-title {
-    font-size: 0.68rem;
-    letter-spacing: 0.16em;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+  }
+
+  .cyber-neon-card__badge-tag {
+    font-size: 0.75rem;
+    padding: 0.1rem 0.35rem;
   }
 
   .cyber-neon-card__bottom-chassis {
-    bottom: -18px;
-    height: 32px;
+    bottom: -16px;
+    height: 28px;
+  }
+}
+
+@media (max-width: 440px) {
+  .cyber-neon-card__flank {
+    display: none;
+  }
+
+  .cyber-neon-card__body {
+    padding: 1.1rem 0.75rem 1.25rem;
+    border-radius: 16px;
+  }
+
+  .cyber-neon-card__badge-pill {
+    padding: 0.24rem 0.65rem;
+    gap: 0.35rem;
+  }
+
+  .cyber-neon-card__badge-title {
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+  }
+
+  .cyber-neon-card__badge-tag {
+    font-size: 0.68rem;
   }
 }

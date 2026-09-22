@@ -50,7 +50,7 @@ export function AboutSection() {
 
         {/* 1. College Section: Vel Tech High Tech */}
         <CyberNeonCard
-          badgeTitle="BORCELLE"
+          badgeTitle=""
           badgeTag="VEL TECH"
           accentColor="purple"
           className="bldg-card"
@@ -121,7 +121,7 @@ export function AboutSection() {
 
         {/* 2. Symposium Section: CyberSentinel 2K26 */}
         <CyberNeonCard
-          badgeTitle="BORCELLE"
+          badgeTitle=""
           badgeTag="CYBERSENTINEL 2K26"
           accentColor="purple"
           className="cyber-card--reverse bldg-card"
@@ -202,7 +202,7 @@ export function AboutSection() {
 
         {/* 3. Hackathon Club Section */}
         <CyberNeonCard
-          badgeTitle="BORCELLE"
+          badgeTitle=""
           badgeTag="HACKATHON CLUB"
           accentColor="purple"
           className="bldg-card"
@@ -390,6 +390,7 @@ export function AboutSection() {
               ))}
             </div>
           </div>
+
         </section>
       </div>
     </section>

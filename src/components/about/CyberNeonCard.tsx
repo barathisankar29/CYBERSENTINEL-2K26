@@ -13,7 +13,7 @@ export interface CyberNeonCardProps {
 }
 
 export function CyberNeonCard({
-  badgeTitle = 'BORCELLE',
+  badgeTitle = '',
   badgeTag,
   accentColor = 'purple',
   className = '',
@@ -93,7 +93,7 @@ export function CyberNeonCard({
       <div className="cyber-neon-card__badge-anchor">
         <div className="cyber-neon-card__badge-pill">
           <span className="cyber-neon-card__badge-dot" />
-          <span className="cyber-neon-card__badge-title">{badgeTitle}</span>
+          {badgeTitle ? <span className="cyber-neon-card__badge-title">{badgeTitle}</span> : null}
           {badgeTag && <span className="cyber-neon-card__badge-tag">{badgeTag}</span>}
         </div>
       </div>

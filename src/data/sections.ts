@@ -16,4 +16,11 @@ export const siteSections: SiteSection[] = [
     order: 1,
     summary: 'About Vel Tech High Tech, CyberSentinel 2K26, Hackathon Club, and College Leadership',
   },
+  {
+    slug: 'credentials',
+    title: 'Credentials & Committee',
+    shortLabel: 'Credentials',
+    order: 2,
+    summary: 'Convenors, Co-Convenors, Student Coordinators, Editing Experts, and Designers',
+  },
 ]

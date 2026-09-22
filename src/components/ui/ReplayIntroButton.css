@@ -54,12 +54,12 @@
 
 @media (max-width: 640px) {
   .replay-intro-btn {
-    top: calc(0.85rem + env(safe-area-inset-top, 0px));
-    bottom: auto;
-    right: 0.85rem;
-    padding: 0.4rem 0.75rem;
-    font-size: 0.68rem;
-    min-height: 36px;
+    top: auto;
+    bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    right: 1rem;
+    padding: 0.42rem 0.8rem;
+    font-size: 0.7rem;
+    min-height: 38px;
   }
 }
 

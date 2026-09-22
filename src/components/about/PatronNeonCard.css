@@ -405,3 +405,29 @@
   }
 }
 
+@media (max-width: 440px) {
+  .patron-hud-card__side-bracket {
+    display: none;
+  }
+
+  .patron-hud-card {
+    padding: 1.35rem 0.7rem 1.1rem;
+  }
+
+  .patron-hud-card__header-trapezoid {
+    width: calc(100% - 20px);
+    max-width: 280px;
+    height: 32px;
+    top: -16px;
+  }
+
+  .patron-hud-card__header-text {
+    font-size: 0.5rem;
+    letter-spacing: 0.03em;
+  }
+
+  .patron-hud-card__shoulder {
+    display: none;
+  }
+}
+
