@@ -4,7 +4,7 @@ import { useReducedMotion } from '@/animation/useReducedMotion'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { navigationBuildings } from '@/data/navigation'
 import { CityLayer } from './CityLayer'
-import { navigationCityEnvironmentLayers } from './navigationCityEnvironment.config'
+import { navigationCityEnvironmentLayers, NAVIGATION_REVEAL_PROGRESS } from './navigationCityEnvironment.config'
 import { Building } from './buildings/Building'
 import { NavigationCityMobile } from './NavigationCityMobile'
 import './NavigationCityScene.css'
@@ -26,9 +26,12 @@ const SCROLL_VH = 150
 /**
  * The `progress` threshold (through this section's own dead zone) at
  * which the buildings reveal. Deliberately small — reachable with a
- * single normal scroll gesture, not several.
+ * single normal scroll gesture, not several. Defined once, in
+ * navigationCityEnvironment.config.ts, and imported here so the
+ * background's own motionRange (bounded to the same value) can never
+ * drift out of sync with this threshold.
  */
-const REVEAL_PROGRESS = 0.35
+const REVEAL_PROGRESS = NAVIGATION_REVEAL_PROGRESS
 
 /**
  * The navigation city — a normal page section (its own spacer + sticky
@@ -69,6 +72,12 @@ export function NavigationCityScene() {
         {navigationCityEnvironmentLayers.map((layer) => (
           <CityLayer key={layer.id} layer={layer} progress={progress} isMobile={isMobile} />
         ))}
+        {/* Atmospheric handoff from the hero above: a dark-to-violet-to-
+            transparent haze (plus soft cyan/magenta glow) sitting over the
+            background's own top edge, so the hero's cyberpunk platform
+            reads as blending into this cosmic environment rather than
+            cutting into it. Purely decorative — see NavigationCityScene.css. */}
+        <div className="navigation-city-scene__atmosphere-blend" aria-hidden="true" />
         <div className="navigation-city-scene__buildings" style={{ zIndex: BUILDINGS_Z_INDEX }}>
           {navigationBuildings.map((building) => (
             <Building key={building.id} building={building} revealed={revealed} isMobile={isMobile} />

@@ -19,12 +19,24 @@ export interface ScrollProgress {
  * @param ref Element whose height beyond one viewport defines the
  * scrollable range. Progress is 0 while its top edge is at/below the
  * viewport top, and 1 once its bottom edge reaches the viewport bottom.
+ * @param enabled When false, no listener is attached and no measuring
+ * happens at all — for a consumer that only cares about scroll during part
+ * of its lifecycle (e.g. Timeline's automatic journey, which drives
+ * progress itself and would otherwise pay for a redundant rAF-scheduled
+ * `getBoundingClientRect` read — a forced synchronous layout — on every
+ * `scroll` event its OWN `window.scrollTo` calls generate, fighting the
+ * animation for the same frame budget). Defaults to true so existing
+ * callers are unaffected.
  */
-export function useScrollProgress<T extends HTMLElement>(ref: RefObject<T | null>): ScrollProgress {
+export function useScrollProgress<T extends HTMLElement>(
+  ref: RefObject<T | null>,
+  enabled = true,
+): ScrollProgress {
   const [progress, setProgress] = useState(0)
   const frameRef = useRef<number | null>(null)
 
   useEffect(() => {
+    if (!enabled) return
     const element = ref.current
     if (!element) return
 
@@ -54,7 +66,7 @@ export function useScrollProgress<T extends HTMLElement>(ref: RefObject<T | null
         frameRef.current = null
       }
     }
-  }, [ref])
+  }, [ref, enabled])
 
   return { progress }
 }

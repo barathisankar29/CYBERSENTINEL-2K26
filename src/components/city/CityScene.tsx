@@ -11,8 +11,14 @@ import './CityScene.css'
 const PARTICLE_Z_INDEX = 8
 const IDENTITY_Z_INDEX = 9
 
-/** The hero's own scroll distance, driving its own internal cinematic reveal. */
-const HERO_SCROLL_VH = 400
+/**
+ * The hero's own scroll distance, driving its own internal cinematic reveal.
+ * Sticky-pin math: the actual scroll distance to take progress 0->1 is
+ * (this value - 100vh), since the 100vh sticky viewport stays pinned for
+ * that span before un-sticking. 500vh - 100vh = 400vh = ~4 viewport-height
+ * scrolls of progressive assembly.
+ */
+const HERO_SCROLL_VH = 500
 
 /**
  * The opening hero city — a normal, self-contained page section (its own

@@ -1,0 +1,208 @@
+.futuristic-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+  overflow: hidden;
+  background: transparent;
+}
+
+/* Ensure completely opaque dark background until shutters slide open */
+.futuristic-transition:not(.futuristic-transition--reveal) {
+  background: #05040a;
+}
+
+/* Top and bottom shutters meeting at 50% height */
+.futuristic-transition__shutter {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 50.5%;
+  background: #05040a;
+  overflow: hidden;
+  transition: transform 1.9s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.futuristic-transition__shutter--top {
+  top: 0;
+  transform: translateY(0);
+}
+
+.futuristic-transition__shutter--bottom {
+  bottom: 0;
+  transform: translateY(0);
+}
+
+/* When reveal triggers, top slides up, bottom slides down */
+.futuristic-transition--reveal .futuristic-transition__shutter--top {
+  transform: translateY(-100%);
+}
+
+.futuristic-transition--reveal .futuristic-transition__shutter--bottom {
+  transform: translateY(100%);
+}
+
+/* Cybernetic Grid Texture on Shutters */
+.futuristic-transition__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+
+/* Leading edge glowing neon beams on each shutter */
+.futuristic-transition__beam {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--city-violet, #7c3aed) 20%,
+    var(--city-cyan, #22d3ee) 50%,
+    var(--city-violet, #7c3aed) 80%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 15px var(--city-cyan, #22d3ee),
+    0 0 35px var(--city-violet, #7c3aed);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.futuristic-transition--beam .futuristic-transition__beam,
+.futuristic-transition--reveal .futuristic-transition__beam {
+  opacity: 1;
+}
+
+.futuristic-transition__beam--top {
+  bottom: 0;
+}
+
+.futuristic-transition__beam--bottom {
+  top: 0;
+}
+
+/* Center stage: Laser ignition line and Telemetry text */
+.futuristic-transition__center-stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Initial horizontal laser ignition */
+.futuristic-transition__laser-line {
+  width: 0%;
+  height: 2px;
+  background: white;
+  box-shadow:
+    0 0 20px var(--city-cyan, #22d3ee),
+    0 0 50px var(--city-cyan, #22d3ee),
+    0 0 80px var(--city-violet, #7c3aed);
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+  opacity: 0;
+}
+
+.futuristic-transition--beam .futuristic-transition__laser-line {
+  width: 100%;
+  opacity: 1;
+}
+
+.futuristic-transition--reveal .futuristic-transition__laser-line {
+  width: 100%;
+  opacity: 0;
+}
+
+/* Telemetry Status text */
+.futuristic-transition__telemetry {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.2rem;
+  font-family: var(--font-display, monospace);
+  font-size: clamp(0.72rem, 1.8vw, 0.88rem);
+  letter-spacing: 0.22em;
+  color: white;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.futuristic-transition--beam .futuristic-transition__telemetry {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.futuristic-transition--reveal .futuristic-transition__telemetry {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+.futuristic-transition__status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--city-cyan, #22d3ee);
+  box-shadow: 0 0 8px var(--city-cyan, #22d3ee);
+  animation: dotFlash 0.8s infinite alternate;
+}
+
+@keyframes dotFlash {
+  0% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+.futuristic-transition__status-text {
+  color: var(--city-cyan, #22d3ee);
+  text-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
+  font-weight: 700;
+}
+
+.futuristic-transition__bracket {
+  color: var(--city-violet-soft, #a78bfa);
+}
+
+/* Ambient central glow bloom */
+.futuristic-transition__glow-bloom {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(80vw, 700px);
+  height: 120px;
+  background: radial-gradient(ellipse at center, rgba(34, 211, 238, 0.25) 0%, rgba(124, 58, 237, 0.15) 50%, transparent 80%);
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+}
+
+.futuristic-transition--beam .futuristic-transition__glow-bloom {
+  opacity: 1;
+}
+
+.futuristic-transition--reveal .futuristic-transition__glow-bloom {
+  opacity: 0;
+}
+
+/* Reduced Motion Override */
+.futuristic-transition--reduced .futuristic-transition__shutter {
+  transition: opacity 0.4s ease;
+}
+
+.futuristic-transition--reduced.futuristic-transition--reveal .futuristic-transition__shutter {
+  transform: none;
+  opacity: 0;
+}

@@ -9,12 +9,20 @@
  * ease-out entrance triggered once by NavigationCityScene's scroll
  * threshold (see Building.tsx's `revealed` prop), NOT scroll-scrubbed.
  * Every opacity/transform below that responds to `revealed` uses these
- * same two values, so all six buildings (and their cards/grounding)
+ * same three values, so all six buildings (and their cards/grounding)
  * animate identically and simultaneously.
+ *
+ * `--reveal-delay` is the short cinematic hold between the navigation
+ * background finishing its own settle (see motionRange in
+ * navigationCityEnvironment.config.ts, bounded to this same reveal
+ * threshold) and the buildings actually starting to pop in — a beat of
+ * stillness so the environment visibly finishes before anything else
+ * begins moving, rather than both happening at once.
  */
 .nav-building {
   --reveal-duration: 380ms;
   --reveal-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --reveal-delay: 280ms;
   position: absolute;
   /* `transform` (translateX by the building's own anchorXPercent) is set
      inline per building — see Building.tsx. */
@@ -55,8 +63,8 @@
      pop-in. */
   transition:
     filter 0.2s ease,
-    opacity var(--reveal-duration) var(--reveal-ease),
-    transform var(--reveal-duration) var(--reveal-ease);
+    opacity var(--reveal-duration) var(--reveal-ease) var(--reveal-delay),
+    transform var(--reveal-duration) var(--reveal-ease) var(--reveal-delay);
 }
 
 .nav-building:hover .nav-building__image,
@@ -109,7 +117,7 @@
   transform-origin: bottom center;
   transition:
     transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity var(--reveal-duration) var(--reveal-ease);
+    opacity var(--reveal-duration) var(--reveal-ease) var(--reveal-delay);
 }
 
 /* Outer atmospheric bloom — sits behind the glass and bleeds past it, so
@@ -409,7 +417,7 @@
   );
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 26%, black 100%);
   mask-image: linear-gradient(to bottom, transparent 0%, black 26%, black 100%);
-  transition: opacity var(--reveal-duration) var(--reveal-ease);
+  transition: opacity var(--reveal-duration) var(--reveal-ease) var(--reveal-delay);
 }
 
 .nav-building__marker::before {
@@ -454,7 +462,7 @@
   background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.18) 45%, transparent 80%);
   filter: blur(7px);
   pointer-events: none;
-  transition: opacity var(--reveal-duration) var(--reveal-ease);
+  transition: opacity var(--reveal-duration) var(--reveal-ease) var(--reveal-delay);
 }
 
 /*
@@ -474,7 +482,7 @@
   background: color-mix(in srgb, var(--building-accent, var(--city-cyan)) 28%, transparent);
   filter: blur(9px);
   pointer-events: none;
-  transition: opacity var(--reveal-duration) var(--reveal-ease);
+  transition: opacity var(--reveal-duration) var(--reveal-ease) var(--reveal-delay);
 }
 
 /*
@@ -503,7 +511,7 @@
   pointer-events: none;
   user-select: none;
   will-change: transform, opacity;
-  transition: opacity var(--reveal-duration) var(--reveal-ease);
+  transition: opacity var(--reveal-duration) var(--reveal-ease) var(--reveal-delay);
 }
 
 /*

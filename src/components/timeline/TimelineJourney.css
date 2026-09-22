@@ -1,0 +1,744 @@
+/* ==========================================================================
+   CYBERSENTINEL 2K26 - TIMELINE PAGE
+   Three background frames stitched into one continuous, full-screen
+   horizontal bridge world. A single journey progress value (automatic on
+   selection, then stepped one station at a time by the user's own
+   scroll/swipe/keys — see useJourneyProgress) pans the world and drives
+   the train and the single floating card above it. This is a dedicated,
+   non-scrolling route (see TimelinePage.tsx) — the section is a plain
+   fixed-height viewport, not a tall scroll-linked spacer.
+   ========================================================================== */
+
+.timeline-journey {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: #05040a;
+}
+
+.timeline-viewport {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  background: #05040a;
+  color: #ffffff;
+  font-family: var(--font-body, 'Rajdhani', sans-serif);
+}
+
+.timeline-viewport__vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(5, 4, 10, 0.72) 0%, rgba(5, 4, 10, 0) 20%, rgba(5, 4, 10, 0) 78%, rgba(5, 4, 10, 0.8) 100%);
+}
+
+/* ==========================================================================
+   The stitched world — Frame01 -> Frame02 -> Frame03, one continuous strip
+   at native (1x) scale, panned horizontally via transform only. No CSS
+   transition by default (progress-driven moves are per-frame direct), a
+   short one is enabled only during a day-switch reposition slide.
+   ========================================================================== */
+
+.timeline-world {
+  --tl-rail-top: 46.5%;
+  /* One "world unit" — desktop keeps it identical to a real vh (so the
+     stitched frames render at native scale). Mobile overrides this alone
+     to shrink the whole world (frames + train + points share this
+     container via calc(N * var(--tl-world-vh)), so they all scale down
+     together, never train-vs-bridge drift) — see the mobile media query
+     for why smaller is what fixes the "zoomed in" look. */
+  --tl-world-vh: 1vh;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 0;
+  display: flex;
+  align-items: stretch;
+  height: calc(100 * var(--tl-world-vh));
+  width: max-content;
+  will-change: transform;
+}
+
+.timeline-world.is-repositioning {
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Width/margin-left/mask are set inline per frame (see FRAME_LAYOUT in
+   timelineWorld.ts) — width is an explicit vh value (not intrinsic
+   `auto`) so consecutive frames can overlap via negative margin, and the
+   later frame in each overlapping pair carries a feather mask so it
+   fades in from transparent rather than butting a hard edge against its
+   predecessor. Both are expressed in vh, so the overlap/feather stay
+   proportional at any viewport size with no media query needed. */
+.timeline-world__frame {
+  display: block;
+  height: 100%;
+  max-width: none;
+  flex-shrink: 0;
+  user-select: none;
+  pointer-events: none;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  mask-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
+}
+
+/* Soft atmospheric haze laid over each frame seam — indigo/violet/cyan,
+   blurred, additive (screen) so it can only brighten/tint, never darken
+   into a black stripe — helps mask any residual lighting/geometry
+   mismatch between neighboring frames that the pixel overlap + feather
+   mask alone doesn't fully hide. */
+.timeline-world__haze {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse 55% 60% at 50% 38%, rgba(124, 58, 237, 0.26) 0%, transparent 68%),
+    radial-gradient(ellipse 50% 55% at 50% 64%, rgba(34, 211, 238, 0.16) 0%, transparent 68%),
+    linear-gradient(180deg, rgba(11, 10, 26, 0.12) 0%, rgba(11, 10, 26, 0) 45%, rgba(11, 10, 26, 0) 60%, rgba(11, 10, 26, 0.12) 100%);
+  filter: blur(4vh);
+  mix-blend-mode: screen;
+}
+
+/* ==========================================================================
+   Compact persistent HUD — top-center, present for the whole journey. Both
+   days always stay selectable here; the giant title/telemetry pill from
+   the intro is gone once a day is active, replaced by this subtle strip.
+   ========================================================================== */
+
+.timeline-hud {
+  position: absolute;
+  z-index: 5;
+  top: clamp(0.9rem, 2.6vw, 1.5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.2rem 0.8rem;
+  border-radius: 14px;
+  background: rgba(9, 8, 20, 0.5);
+  border: 1px solid rgba(34, 211, 238, 0.22);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: 0 12px 32px rgba(5, 4, 10, 0.5);
+  max-width: min(480px, 92vw);
+}
+
+.timeline-hud__eyebrow {
+  margin: 0;
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  color: rgba(226, 232, 240, 0.62);
+  text-align: center;
+}
+
+.timeline-hud__days {
+  display: inline-flex;
+  gap: 0.4rem;
+}
+
+.timeline-hud__day {
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 0.32rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(226, 232, 240, 0.65);
+  cursor: pointer;
+  transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.timeline-hud__day:hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.timeline-hud__day--day1.is-active {
+  color: var(--city-cyan, #22d3ee);
+  border-color: rgba(34, 211, 238, 0.85);
+  background: rgba(34, 211, 238, 0.14);
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.3);
+}
+
+.timeline-hud__day--day2.is-active {
+  color: #e9b8ff;
+  border-color: rgba(217, 38, 201, 0.85);
+  background: rgba(217, 38, 201, 0.14);
+  box-shadow: 0 0 18px rgba(217, 38, 201, 0.3);
+}
+
+.timeline-hud__progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+}
+
+.timeline-hud__progress-track {
+  position: relative;
+  width: min(240px, 58vw);
+  height: 3px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.timeline-hud__progress-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(34, 211, 238, 0.9), rgba(124, 58, 237, 0.9));
+}
+
+.timeline-hud__progress--day2 .timeline-hud__progress-fill {
+  background: linear-gradient(90deg, rgba(124, 58, 237, 0.9), rgba(217, 38, 201, 0.9));
+}
+
+.timeline-hud__progress-dot {
+  position: absolute;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.9), 0 0 4px #ffffff;
+  transform: translate(-50%, -50%);
+}
+
+.timeline-hud__event-count {
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  color: rgba(226, 232, 240, 0.68);
+}
+
+/* ==========================================================================
+   Day selection — large cinematic HUD cards, shown center-screen until a
+   day is chosen. No giant heading here — just the eyebrow + headline.
+   ========================================================================== */
+
+.day-select {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 3vw, 1.75rem);
+  padding: 1.5rem;
+  text-align: center;
+  animation: tl-intro-fade 0.6s ease both;
+}
+
+@keyframes tl-intro-fade {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.day-select__eyebrow {
+  margin: 0;
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: clamp(0.62rem, 1.3vw, 0.78rem);
+  letter-spacing: 0.22em;
+  color: rgba(226, 232, 240, 0.7);
+  text-shadow: 0 2px 10px rgba(5, 4, 10, 0.9);
+}
+
+.day-select__headline {
+  margin: 0;
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-weight: 800;
+  font-size: clamp(1.4rem, 4vw, 2.4rem);
+  letter-spacing: 0.08em;
+  background: linear-gradient(135deg, #ffffff 10%, var(--city-cyan, #22d3ee) 55%, #e9b8ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 26px rgba(34, 211, 238, 0.35));
+}
+
+.day-select__cards {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+@property --tl-edge-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.day-card {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  width: clamp(230px, 24vw, 300px);
+  padding: 1.6rem 1.4rem;
+  border-radius: 16px;
+  border: 1px solid rgba(34, 211, 238, 0.4);
+  background: linear-gradient(160deg, rgba(11, 10, 26, 0.92), rgba(6, 8, 20, 0.96));
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  color: #ffffff;
+  cursor: pointer;
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  box-shadow: 0 18px 44px rgba(5, 4, 10, 0.75);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+  pointer-events: auto;
+}
+
+.day-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(from var(--tl-edge-angle), transparent 0%, rgba(34, 211, 238, 0.9) 12%, transparent 30%, transparent 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: tl-edge-spin 3.4s linear infinite;
+}
+
+@keyframes tl-edge-spin {
+  to { --tl-edge-angle: 360deg; }
+}
+
+.day-card--day2::before {
+  background: conic-gradient(from var(--tl-edge-angle), transparent 0%, rgba(217, 38, 201, 0.9) 12%, transparent 30%, transparent 100%);
+}
+
+.day-card:hover,
+.day-card:focus-visible {
+  transform: translateY(-4px);
+  border-color: rgba(34, 211, 238, 0.85);
+  box-shadow: 0 22px 52px rgba(5, 4, 10, 0.8), 0 0 30px rgba(34, 211, 238, 0.35);
+}
+
+.day-card--day2:hover,
+.day-card--day2:focus-visible {
+  border-color: rgba(217, 38, 201, 0.85);
+  box-shadow: 0 22px 52px rgba(5, 4, 10, 0.8), 0 0 30px rgba(217, 38, 201, 0.4);
+}
+
+.day-card__index {
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--city-cyan, #22d3ee);
+  text-shadow: 0 0 18px rgba(34, 211, 238, 0.55);
+}
+
+.day-card--day2 .day-card__index {
+  color: #e9b8ff;
+  text-shadow: 0 0 18px rgba(217, 38, 201, 0.55);
+}
+
+.day-card__label {
+  font-family: var(--font-body, 'Rajdhani', sans-serif);
+  font-size: clamp(0.85rem, 1.6vw, 1rem);
+  font-weight: 600;
+  color: rgba(226, 232, 240, 0.9);
+}
+
+.day-card__cta {
+  margin-top: 0.35rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.75);
+  padding: 0.4rem 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 9999px;
+}
+
+/* ==========================================================================
+   Timeline station markers — the event card itself is a single element
+   that follows the train instead (see "Active card" below), so each
+   marker here is just the small glowing dot on the rail.
+   ========================================================================== */
+
+.timeline-point {
+  position: absolute;
+  top: var(--tl-rail-top);
+  z-index: 3;
+}
+
+/* A soft horizontal glow sitting flush on the rail so the marker reads as
+   built into the track rather than a dot floating in the sky above it. */
+.timeline-point__glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+  width: 46px;
+  height: 14px;
+  border-radius: 9999px;
+  background: radial-gradient(ellipse, rgba(34, 211, 238, 0.35) 0%, transparent 75%);
+  filter: blur(3px);
+  pointer-events: none;
+  transition: background 0.35s ease, opacity 0.35s ease;
+}
+
+/* Marker, stem, and card are each absolutely positioned against
+   `.timeline-point`'s own (0, 0) — its top-left corner IS the point on
+   the rail (top: var(--tl-rail-top) on the parent, no vertical centering
+   here) — rather than being flex-stacked and centered as one tall block,
+   which would drag the marker itself up off the rail. */
+.timeline-point__marker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: rgba(148, 163, 184, 0.4);
+  border: 2px solid rgba(226, 232, 240, 0.6);
+  box-shadow: 0 0 0 3px rgba(5, 4, 10, 0.6);
+  transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.timeline-point__marker.is-active {
+  background: var(--city-cyan, #22d3ee);
+  border-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(5, 4, 10, 0.6), 0 0 18px rgba(34, 211, 238, 0.9), 0 0 34px rgba(34, 211, 238, 0.5);
+  animation: tl-point-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.timeline-point__glow.is-active {
+  background: radial-gradient(ellipse, rgba(34, 211, 238, 0.75) 0%, transparent 75%);
+}
+
+@keyframes tl-point-pop {
+  0% { transform: translate(-50%, -50%) scale(0.6); }
+  60% { transform: translate(-50%, -50%) scale(1.35); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+/* ==========================================================================
+   Active card — a single liquid-glass HUD panel that always floats
+   centered above the train (never pinned to a station's fixed world
+   position), showing whichever station the train is currently at. Only
+   one is ever on screen: moving to a new station crossfades the old
+   content out and the new one in (see the crossfade effect in
+   TimelineJourney.tsx) rather than leaving a trail of past cards behind.
+   ========================================================================== */
+
+/* Positioned via an inline `transform: translate3d(...)` that shares the
+   train's own X (see TimelineJourney.tsx) — no transition here, so it
+   tracks the train every frame with zero lag, exactly like the train's
+   own transform does. */
+.timeline-active-card-anchor {
+  position: absolute;
+  top: var(--tl-rail-top);
+  left: 0;
+  z-index: 4;
+}
+
+.timeline-active-card {
+  position: relative;
+  width: clamp(260px, 22vw, 380px);
+  min-height: 2.5rem;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  column-gap: 0.65rem;
+  border-radius: 10px;
+  padding: 0.6rem 0.95rem;
+  background: linear-gradient(160deg, rgba(14, 18, 38, 0.42), rgba(7, 9, 22, 0.3));
+  border: 1px solid rgba(148, 197, 255, 0.22);
+  box-shadow: 0 18px 40px rgba(2, 3, 10, 0.55);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px) scale(0.96);
+  transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.24, 1.5, 0.4, 1);
+}
+
+.timeline-active-card::before,
+.timeline-active-card::after {
+  content: '';
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  pointer-events: none;
+  opacity: 0.75;
+}
+
+.timeline-active-card::before {
+  top: 6px;
+  left: 6px;
+  border-top: 1.5px solid rgba(34, 211, 238, 0.65);
+  border-left: 1.5px solid rgba(34, 211, 238, 0.65);
+}
+
+.timeline-active-card::after {
+  bottom: 6px;
+  right: 6px;
+  border-bottom: 1.5px solid rgba(34, 211, 238, 0.65);
+  border-right: 1.5px solid rgba(34, 211, 238, 0.65);
+}
+
+/* The liquid-glass blur only costs paint time while the card is actually
+   visible — at opacity: 0 it carries none at all (mobile GPUs feel a
+   standing backdrop-filter a lot more than desktop does). */
+.timeline-active-card.is-shown {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  box-shadow:
+    0 18px 40px rgba(2, 3, 10, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 34px rgba(34, 211, 238, 0.2);
+}
+
+.timeline-card__index {
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: rgba(148, 197, 255, 0.55);
+  letter-spacing: 0.04em;
+}
+
+.timeline-card__divider {
+  width: 1px;
+  align-self: stretch;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.timeline-card__time {
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  color: var(--city-cyan, #22d3ee);
+  text-shadow: 0 0 8px rgba(34, 211, 238, 0.4);
+  white-space: nowrap;
+}
+
+/* Day 2 picks up the same pink accent already used by its train glow and
+   HUD progress bar, so the active card reads as belonging to that day. */
+.timeline-active-card--day2 {
+  border-color: rgba(217, 38, 201, 0.28);
+}
+
+.timeline-active-card--day2::before,
+.timeline-active-card--day2::after {
+  border-color: rgba(217, 38, 201, 0.6);
+}
+
+.timeline-active-card--day2.is-shown {
+  box-shadow:
+    0 18px 40px rgba(2, 3, 10, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 34px rgba(217, 38, 201, 0.22);
+}
+
+.timeline-active-card--day2 .timeline-card__index {
+  color: rgba(233, 184, 255, 0.6);
+}
+
+.timeline-active-card--day2 .timeline-card__time {
+  color: #e9b8ff;
+  text-shadow: 0 0 8px rgba(217, 38, 201, 0.4);
+}
+
+.timeline-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.timeline-card__title {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: clamp(0.76rem, 1.15vw, 0.88rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  margin: 0;
+  color: #f8fafc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.timeline-card__desc {
+  font-size: 0.7rem;
+  line-height: 1.35;
+  color: rgba(203, 213, 225, 0.68);
+  margin: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* ==========================================================================
+   Train — position is driven entirely by an inline `transform:
+   translate3d(...)` (see TimelineJourney.tsx), never `left`, so moving it
+   is a compositor-only operation the GPU can handle without triggering
+   layout — the difference that matters most for staying smooth on mobile.
+   No CSS transition by default (per-frame progress moves are direct), a
+   short one is enabled only during a day-switch reposition.
+   ========================================================================== */
+
+.timeline-train {
+  position: absolute;
+  top: var(--tl-rail-top);
+  left: 0;
+  z-index: 4;
+  width: clamp(220px, 22vw, 380px);
+  will-change: transform;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+.timeline-train.is-repositioning {
+  transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.timeline-train--standby {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.timeline-train__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 10px 26px rgba(5, 4, 10, 0.8)) drop-shadow(0 0 20px rgba(34, 211, 238, 0.35));
+}
+
+.timeline-train--day2 .timeline-train__img {
+  filter: drop-shadow(0 10px 26px rgba(5, 4, 10, 0.8)) drop-shadow(0 0 20px rgba(217, 38, 201, 0.4));
+}
+
+/* ==========================================================================
+   Responsive — same scroll-driven three-frame world at every breakpoint
+   (never squashed into a single frame); HUD chrome and card/train sizing
+   adapt to the smaller viewport instead.
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .timeline-active-card {
+    width: clamp(230px, 44vw, 320px);
+    padding: 0.5rem 0.7rem;
+  }
+
+  .timeline-train {
+    width: clamp(170px, 30vw, 280px);
+  }
+
+  .day-select__cards {
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 767px) {
+  /* At the desktop-native 1vh scale, forcing the frame to fill the FULL
+     viewport HEIGHT on a narrow portrait phone only lets a thin sliver of
+     its WIDTH show at once (visible fraction = viewport width / frame
+     width, and frame width is fixed by the frame's own aspect ratio at
+     that height) — buildings fill the whole screen and it reads as
+     zoomed in, because there's so little width for anything else to give
+     it scale. Shrinking the world unit here shows proportionally more of
+     the frame's width in the same viewport, at the cost of the frame no
+     longer filling the full screen height — `.timeline-world`'s own
+     `top: 50%` + the `translateY(-50%)` in its inline transform (see
+     TimelineJourney.tsx) center the shorter frame vertically instead of
+     leaving it pinned to the top, so the gap reads as a deliberate
+     cinematic letterbox (it sits over the page's own near-black
+     background, already faded further by `.timeline-viewport__vignette`)
+     rather than a layout bug. */
+  .timeline-world {
+    --tl-world-vh: 0.68vh;
+  }
+
+  .timeline-hud {
+    top: 0.75rem;
+    padding: 0.55rem 0.9rem 0.7rem;
+    gap: 0.4rem;
+  }
+
+  .timeline-hud__day {
+    padding: 0.28rem 0.65rem;
+    font-size: 0.6rem;
+  }
+
+  .timeline-hud__progress-track {
+    width: min(180px, 52vw);
+  }
+
+  .day-select {
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .day-select__cards {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .day-card {
+    width: min(320px, 82vw);
+    padding: 1.3rem 1.2rem;
+  }
+
+  .timeline-active-card {
+    width: clamp(190px, 48vw, 230px);
+    grid-template-columns: auto auto 1fr;
+    padding: 0.45rem 0.6rem;
+    column-gap: 0.45rem;
+  }
+
+  .timeline-card__desc {
+    -webkit-line-clamp: 2;
+  }
+
+  /* Mobile GPUs feel a large backdrop-filter blur far more than desktop
+     does. Only ever the one active card pays for it, but lightening the
+     blur/saturate cost further still reads as the same liquid-glass
+     material while costing noticeably less to composite every frame it's
+     on screen. */
+  .timeline-active-card.is-shown {
+    backdrop-filter: blur(10px) saturate(130%);
+    -webkit-backdrop-filter: blur(10px) saturate(130%);
+  }
+
+  /* Tied to the SAME --tl-world-vh unit the frames/bridge use (not a raw
+     vh, and not vw — see the --tl-world-vh override above), so the train
+     scales exactly in step with the bridge it's riding on: shrink the
+     world unit to widen the shot and the train shrinks with it, by the
+     same factor, never drifting out of proportion with the rail under
+     it. The multiplier (55, vs. the ~38 an equivalent desktop-scale
+     figure would use) is deliberately generous — the train is the hero
+     element of the shot, and reads better rendered a bit larger than
+     strict photographic scale, same as it does on desktop. */
+  .timeline-train {
+    width: clamp(170px, calc(55 * var(--tl-world-vh)), 320px);
+  }
+}

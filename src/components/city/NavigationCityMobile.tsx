@@ -39,6 +39,11 @@ export function NavigationCityMobile() {
       <div className="mobile-nav-scene">
         <img src={BG_SRC} alt="" draggable={false} className="mobile-nav-scene__bg" />
 
+        {/* Same atmospheric handoff treatment as desktop (see
+            NavigationCityScene.css) so the hero -> navigation transition
+            reads as one continuous environment on mobile too. */}
+        <div className="mobile-nav-scene__atmosphere-blend" aria-hidden="true" />
+
         <svg
           className="mobile-nav-scene__connectors"
           viewBox="0 0 100 100"

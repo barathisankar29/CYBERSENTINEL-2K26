@@ -2,6 +2,8 @@ import { Route, Routes } from 'react-router-dom'
 import { HomePage } from '@/pages/HomePage'
 import { SectionPage } from '@/pages/SectionPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
+import { AboutSection } from '@/components/about/AboutSection'
+import { TimelinePage } from '@/pages/TimelinePage'
 
 /**
  * Route shape is intentionally data-driven at the section level:
@@ -13,6 +15,8 @@ export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/about" element={<AboutSection />} />
+      <Route path="/timeline" element={<TimelinePage />} />
       <Route path="/:slug" element={<SectionPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

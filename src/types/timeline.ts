@@ -17,3 +17,26 @@ export interface MetroStation {
   /** Normalized position (0-1) along the track, for train stop timing. */
   trackPosition: number
 }
+
+export type DayKey = 'day1' | 'day2'
+
+/**
+ * A single schedule entry on the Timeline page's three-frame bridge world
+ * — the two-day event schedule rendered as a train crossing a continuous
+ * bridge spanning Frame 01 -> 02 -> 03 (see
+ * src/components/timeline/TimelineJourney.tsx and ./timelineWorld.ts).
+ * Distinct from MetroStation above: this drives the day1/day2 journey,
+ * not the metro system.
+ */
+export interface TimelineEvent {
+  id: string
+  day: DayKey
+  /** Normalized position (0-1) across the COMPLETE three-frame world (not
+   * local to a single frame). Day 1 traverses these positions
+   * left-to-right; Day 2 reuses the exact same coordinates right-to-left
+   * — the same physical stations on the same bridge, never a second set. */
+  position: number
+  time: string
+  title: string
+  description: string
+}

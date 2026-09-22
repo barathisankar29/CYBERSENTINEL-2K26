@@ -1,0 +1,500 @@
+.video-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background-color: var(--city-black, #05040a);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+/* Ambient reactive video glow behind the stage */
+.video-intro__bg-blur {
+  position: absolute;
+  inset: -20%;
+  width: 140%;
+  height: 140%;
+  object-fit: cover;
+  filter: blur(60px) brightness(0.4) saturate(1.5);
+  opacity: 0.7;
+  pointer-events: none;
+  transform: scale(1.1);
+  z-index: 1;
+}
+
+/* Stage containing the main video */
+.video-intro__stage {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-intro__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  box-shadow: 0 0 60px rgba(5, 4, 10, 0.9);
+}
+
+/* Cinematic Vignette */
+.video-intro__vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: radial-gradient(circle at center, transparent 50%, rgba(5, 4, 10, 0.6) 80%, rgba(5, 4, 10, 0.94) 100%);
+}
+
+/* Holographic Cyber Scanlines */
+.video-intro__scanlines {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15) 0px,
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  opacity: 0.3;
+}
+
+/* Modern Minimalist HUD */
+.video-intro__hud {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(1rem, 2.5vw, 2rem);
+  padding-top: calc(clamp(1rem, 2.5vw, 2rem) + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(clamp(1rem, 2.5vw, 2rem) + env(safe-area-inset-bottom, 0px));
+  pointer-events: none;
+}
+
+/* Top Header Row: System Tag on left, Audio control on right */
+.video-intro__top-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+}
+
+.video-intro__system-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(11, 10, 26, 0.75);
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  padding: 0.4rem 0.8rem;
+  border-radius: 9999px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: var(--font-display, monospace);
+  font-size: clamp(0.7rem, 1.6vw, 0.82rem);
+  letter-spacing: 0.12em;
+  color: white;
+  box-shadow: 0 0 16px rgba(34, 211, 238, 0.15);
+  pointer-events: auto;
+  margin-top: 4px;
+}
+
+.video-intro__live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22d3ee;
+  box-shadow: 0 0 8px #22d3ee;
+  animation: liveDotPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes liveDotPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.8); }
+}
+
+.video-intro__system-title {
+  font-weight: 700;
+  color: var(--city-cyan, #22d3ee);
+  text-shadow: 0 0 10px rgba(34, 211, 238, 0.4);
+}
+
+/* ==========================================================================
+   Futuristic Cyber Audio Control HUD (Exact Match to User Reference)
+   ========================================================================== */
+.intro-audio-ctrl {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+.intro-audio-ctrl:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.intro-audio-ctrl:active {
+  transform: translateY(0) scale(0.96);
+}
+
+/* Upper Control Box (Square with Cyber Reticle Grid) */
+.intro-audio-ctrl__box {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background-color: #060914;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* AUDIO ON: Neon Cyan Glowing Border */
+.intro-audio-ctrl--on .intro-audio-ctrl__box {
+  border: 2px solid #00f0ff;
+  box-shadow:
+    0 0 14px rgba(0, 240, 255, 0.65),
+    inset 0 0 10px rgba(0, 240, 255, 0.18);
+}
+
+/* AUDIO OFF: Neon Red Glowing Border */
+.intro-audio-ctrl--off .intro-audio-ctrl__box {
+  border: 2px solid #ff3344;
+  box-shadow:
+    0 0 14px rgba(255, 51, 68, 0.65),
+    inset 0 0 10px rgba(255, 51, 68, 0.18);
+}
+
+/* 3x3 Radar Grid lines overlay */
+.intro-audio-ctrl__grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Status Indicator LED (Top Right Corner) */
+.intro-audio-ctrl__led {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  z-index: 3;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Green dot when ON */
+.intro-audio-ctrl--on .intro-audio-ctrl__led {
+  background-color: #00ff66;
+  box-shadow:
+    0 0 8px #00ff66,
+    0 0 2px #ffffff;
+}
+
+/* Red dot when OFF */
+.intro-audio-ctrl--off .intro-audio-ctrl__led {
+  background-color: #ff2233;
+  box-shadow:
+    0 0 8px #ff2233,
+    0 0 2px #ffffff;
+}
+
+/* Center Glowing Cyan Speaker Icon */
+.intro-audio-ctrl__icon {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #00f0ff;
+  filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.9));
+}
+
+.intro-audio-ctrl__svg {
+  display: block;
+}
+
+/* Bottom Status Pill Badge */
+.intro-audio-ctrl__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background-color: #03050c;
+  border: 2px solid #00f0ff;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+  white-space: nowrap;
+}
+
+.intro-audio-ctrl__text {
+  font-family: 'Orbitron', monospace;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+/* Cyan text when ON */
+.intro-audio-ctrl--on .intro-audio-ctrl__text {
+  color: #00f0ff;
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.9);
+}
+
+/* Red text when OFF */
+.intro-audio-ctrl--off .intro-audio-ctrl__text {
+  color: #ff3344;
+  text-shadow: 0 0 8px rgba(255, 51, 68, 0.9);
+}
+
+@media (max-width: 640px) {
+  .intro-audio-ctrl__box {
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+  }
+  .intro-audio-ctrl__led {
+    top: 5px;
+    right: 5px;
+    width: 6px;
+    height: 6px;
+  }
+  .intro-audio-ctrl__badge {
+    padding: 2px 7px;
+  }
+  .intro-audio-ctrl__text {
+    font-size: 8px;
+  }
+}
+
+/* ==========================================================================
+   Futuristic Cyber Skip Control HUD (Matching Audio Button Design)
+   ========================================================================== */
+.intro-skip-ctrl {
+  position: absolute;
+  bottom: calc(clamp(1rem, 2.5vw, 1.8rem) + env(safe-area-inset-bottom, 0px));
+  right: clamp(1rem, 2.5vw, 1.8rem);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+  z-index: 20;
+}
+
+.intro-skip-ctrl:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.intro-skip-ctrl:active {
+  transform: translateY(0) scale(0.96);
+}
+
+/* Upper Control Box (Square with Cyber Reticle Grid) */
+.intro-skip-ctrl__box {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background-color: #060914;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 2px solid #00f0ff;
+  box-shadow:
+    0 0 14px rgba(0, 240, 255, 0.65),
+    inset 0 0 10px rgba(0, 240, 255, 0.18),
+    0 4px 20px rgba(5, 4, 10, 0.95);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.intro-skip-ctrl:hover .intro-skip-ctrl__box {
+  border-color: var(--city-pink, #ff3ea5);
+  box-shadow:
+    0 0 18px rgba(255, 62, 165, 0.75),
+    inset 0 0 12px rgba(255, 62, 165, 0.25),
+    0 4px 20px rgba(5, 4, 10, 0.95);
+}
+
+/* 3x3 Radar Grid lines overlay */
+.intro-skip-ctrl__grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Status Indicator LED (Top Right Corner) */
+.intro-skip-ctrl__led {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  z-index: 3;
+  background-color: #00ff66;
+  box-shadow:
+    0 0 8px #00ff66,
+    0 0 2px #ffffff;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.intro-skip-ctrl:hover .intro-skip-ctrl__led {
+  background-color: #ff3ea5;
+  box-shadow:
+    0 0 8px #ff3ea5,
+    0 0 2px #ffffff;
+}
+
+/* Center Glowing Fast-Forward Skip Icon */
+.intro-skip-ctrl__icon {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #00f0ff;
+  filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.9));
+  transition: color 0.2s ease, filter 0.2s ease;
+}
+
+.intro-skip-ctrl:hover .intro-skip-ctrl__icon {
+  color: #ff3ea5;
+  filter: drop-shadow(0 0 8px rgba(255, 62, 165, 0.9));
+}
+
+.intro-skip-ctrl__svg {
+  display: block;
+}
+
+/* Bottom Status Pill Badge */
+.intro-skip-ctrl__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background-color: #03050c;
+  border: 2px solid #00f0ff;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+  white-space: nowrap;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.intro-skip-ctrl:hover .intro-skip-ctrl__badge {
+  border-color: #ff3ea5;
+  box-shadow: 0 0 10px rgba(255, 62, 165, 0.5);
+}
+
+.intro-skip-ctrl__text {
+  font-family: 'Orbitron', monospace;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  color: #00f0ff;
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.9);
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.intro-skip-ctrl:hover .intro-skip-ctrl__text {
+  color: #ff3ea5;
+  text-shadow: 0 0 8px rgba(255, 62, 165, 0.9);
+}
+
+@media (max-width: 640px) {
+  .intro-skip-ctrl__box {
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+  }
+  .intro-skip-ctrl__led {
+    top: 5px;
+    right: 5px;
+    width: 6px;
+    height: 6px;
+  }
+  .intro-skip-ctrl__badge {
+    padding: 2px 7px;
+  }
+  .intro-skip-ctrl__text {
+    font-size: 8px;
+  }
+}
+
+/* High-tech corner frame marks */
+.video-intro__corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: rgba(34, 211, 238, 0.4);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.video-intro__corner--tl {
+  top: 1rem;
+  left: 1rem;
+  border-top: 2px solid var(--city-cyan, #22d3ee);
+  border-left: 2px solid var(--city-cyan, #22d3ee);
+}
+
+.video-intro__corner--tr {
+  top: 1rem;
+  right: 1rem;
+  border-top: 2px solid var(--city-cyan, #22d3ee);
+  border-right: 2px solid var(--city-cyan, #22d3ee);
+}
+
+.video-intro__corner--bl {
+  bottom: 1rem;
+  left: 1rem;
+  border-bottom: 2px solid var(--city-cyan, #22d3ee);
+  border-left: 2px solid var(--city-cyan, #22d3ee);
+}
+
+.video-intro__corner--br {
+  bottom: 1rem;
+  right: 1rem;
+  border-bottom: 2px solid var(--city-cyan, #22d3ee);
+  border-right: 2px solid var(--city-cyan, #22d3ee);
+}
