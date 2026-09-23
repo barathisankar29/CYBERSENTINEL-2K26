@@ -17,8 +17,9 @@ import { hasSeenIntro, markIntroAsSeen } from '@/utils/introSession'
 // The intro itself runs intro -> transition -> completed: VideoIntro plays,
 // FuturisticTransition bridges immediately to the already-mounted CityScene
 // beneath it, then both overlays unmount leaving CityScene/NavigationCityScene
-// normal. Returning visitors (see utils/introSession.ts) skip straight to
-// the transition stage instead of replaying the full video.
+// normal. Repeat visits within the same browser tab (see
+// utils/introSession.ts) skip straight to the transition stage instead of
+// replaying the full video; a new tab plays the full intro again.
 //
 // The identity/profile access terminal and Register Now CTA live inside
 // NavigationCityScene/NavigationCityMobile themselves (not here) so they
