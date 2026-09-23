@@ -1,0 +1,516 @@
+/* ==========================================================================
+   TransitBusCard — Cyberpunk Mecha Trading Card (Samurai Card Aesthetic)
+   CYBERSENTINEL 2K26 — Cybercity Dark Theme
+   ========================================================================== */
+
+.cyber-trading-card-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.cyber-trading-card {
+  position: relative;
+  width: 100%;
+  max-width: 390px;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, rgba(22, 10, 36, 0.96) 0%, rgba(12, 7, 24, 0.98) 50%, rgba(18, 9, 32, 0.97) 100%);
+  border: 2px solid rgba(255, 62, 165, 0.45);
+  border-radius: 12px;
+  clip-path: polygon(
+    14px 0%,
+    calc(100% - 14px) 0%,
+    100% 14px,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    14px 100%,
+    0% calc(100% - 14px),
+    0% 14px
+  );
+  padding: 1.1rem 1rem 1rem;
+  color: #e2e8f0;
+  box-shadow:
+    0 15px 35px -10px rgba(0, 0, 0, 0.9),
+    0 0 25px rgba(255, 62, 165, 0.18),
+    inset 0 0 20px rgba(255, 62, 165, 0.08);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+  overflow: hidden;
+}
+
+.cyber-trading-card:hover {
+  transform: translateY(-8px) scale(1.015);
+}
+
+/* Subtle Circuit Grid in Background */
+.cyber-card-bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255, 62, 165, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 62, 165, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Variant Neon Colors (Magenta / Cyan / Violet) */
+.cyber-trading-card--magenta {
+  border-color: rgba(255, 62, 165, 0.55);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.85), 0 0 25px rgba(255, 62, 165, 0.22);
+}
+
+.cyber-trading-card--magenta:hover {
+  border-color: #ff3ea5;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.9), 0 0 35px rgba(255, 62, 165, 0.5), inset 0 0 20px rgba(255, 62, 165, 0.2);
+}
+
+.cyber-trading-card--cyan {
+  border-color: rgba(34, 211, 238, 0.55);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.85), 0 0 25px rgba(34, 211, 238, 0.22);
+}
+
+.cyber-trading-card--cyan:hover {
+  border-color: #22d3ee;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.9), 0 0 35px rgba(34, 211, 238, 0.5), inset 0 0 20px rgba(34, 211, 238, 0.2);
+}
+
+.cyber-trading-card--violet {
+  border-color: rgba(168, 85, 247, 0.55);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.85), 0 0 25px rgba(168, 85, 247, 0.22);
+}
+
+.cyber-trading-card--violet:hover {
+  border-color: #a855f7;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.9), 0 0 35px rgba(168, 85, 247, 0.5), inset 0 0 20px rgba(168, 85, 247, 0.2);
+}
+
+/* --------------------------------------------------------------------------
+   TOP HUD BAR: Cost Pod (Left), Role Badge (Center), Status Pod (Right)
+   -------------------------------------------------------------------------- */
+.cyber-card-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Cost / Node Pod (Image 3 Top-Left: "3 COST") */
+.cyber-cost-pod {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 6, 20, 0.92);
+  border: 1px solid #22d3ee;
+  border-radius: 4px;
+  padding: 0.15rem 0.45rem;
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.35);
+  min-width: 44px;
+}
+
+.cyber-cost-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: #22d3ee;
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+.cyber-cost-value {
+  font-family: 'Orbitron', monospace, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1.1;
+  text-shadow: 0 0 8px #22d3ee;
+}
+
+/* Role Badge (Image 3 Top-Center: "FIGHTER") */
+.cyber-role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: linear-gradient(180deg, rgba(42, 14, 56, 0.95) 0%, rgba(20, 8, 30, 0.95) 100%);
+  border: 1px solid rgba(255, 62, 165, 0.6);
+  padding: 0.22rem 0.85rem;
+  border-radius: 4px;
+  box-shadow: 0 0 12px rgba(255, 62, 165, 0.35);
+}
+
+.cyber-role-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+  text-shadow: 0 0 8px #ff3ea5;
+}
+
+.cyber-role-bracket {
+  color: #ff3ea5;
+  font-weight: 700;
+  font-size: 0.72rem;
+}
+
+/* Status Pod (Top-Right) */
+.cyber-status-pod {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(12, 6, 24, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  max-width: 140px;
+}
+
+.cyber-status-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22d3ee;
+  box-shadow: 0 0 6px #22d3ee;
+  animation: cyberPulseDot 1.6s infinite ease-in-out;
+  flex-shrink: 0;
+}
+
+@keyframes cyberPulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.75); }
+}
+
+.cyber-status-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --------------------------------------------------------------------------
+   CHARACTER / MECHA BUS ART VIEWPORT
+   -------------------------------------------------------------------------- */
+.cyber-art-viewport {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #080410;
+  border: 1.5px solid rgba(255, 62, 165, 0.4);
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.9), 0 0 16px rgba(255, 62, 165, 0.15);
+  z-index: 2;
+}
+
+.cyber-trading-card--cyan .cyber-art-viewport {
+  border-color: rgba(34, 211, 238, 0.45);
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.9), 0 0 16px rgba(34, 211, 238, 0.15);
+}
+
+.cyber-trading-card--violet .cyber-art-viewport {
+  border-color: rgba(168, 85, 247, 0.45);
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.9), 0 0 16px rgba(168, 85, 247, 0.15);
+}
+
+.cyber-art-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.cyber-trading-card:hover .cyber-art-image {
+  transform: scale(1.05);
+}
+
+/* Reticle Corner Brackets on Art */
+.cyber-art-reticle {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #22d3ee;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.cyber-art-reticle--tl {
+  top: 6px;
+  left: 6px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.cyber-art-reticle--tr {
+  top: 6px;
+  right: 6px;
+  border-left: none;
+  border-bottom: none;
+  border-color: #ff3ea5;
+}
+
+.cyber-art-reticle--bl {
+  bottom: 6px;
+  left: 6px;
+  border-right: none;
+  border-top: none;
+  border-color: #ff3ea5;
+}
+
+.cyber-art-reticle--br {
+  bottom: 6px;
+  right: 6px;
+  border-left: none;
+  border-top: none;
+}
+
+/* Scanlines Effect */
+.cyber-art-scanlines {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.28) 50%);
+  background-size: 100% 3px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.6;
+}
+
+.cyber-art-lightbar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #ff3ea5, #22d3ee, #ff3ea5);
+  box-shadow: 0 0 8px #ff3ea5;
+  z-index: 3;
+}
+
+/* --------------------------------------------------------------------------
+   CARD TITLE (SAMURAI Equivalent)
+   -------------------------------------------------------------------------- */
+.cyber-title-block {
+  text-align: center;
+  margin: 0.85rem 0 0.65rem;
+  position: relative;
+  z-index: 2;
+}
+
+.cyber-card-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0 0 0.2rem;
+  text-shadow: 0 0 14px rgba(255, 62, 165, 0.7);
+}
+
+.cyber-trading-card--cyan .cyber-card-name {
+  text-shadow: 0 0 14px rgba(34, 211, 238, 0.7);
+}
+
+.cyber-trading-card--violet .cyber-card-name {
+  text-shadow: 0 0 14px rgba(168, 85, 247, 0.7);
+}
+
+.cyber-route-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #38bdf8;
+  letter-spacing: 0.08em;
+}
+
+/* --------------------------------------------------------------------------
+   TRANSIT DIRECTIVE (EFFECTS Equivalent from Image 3)
+   -------------------------------------------------------------------------- */
+.cyber-directive-section {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 0.85rem;
+}
+
+.cyber-directive-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #ff3ea5;
+  letter-spacing: 0.16em;
+  margin-bottom: 0.45rem;
+}
+
+.cyber-directive-dash {
+  width: 28px;
+  height: 1px;
+  background: rgba(255, 62, 165, 0.45);
+}
+
+.cyber-directive-panel {
+  background: rgba(10, 5, 20, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 0.75rem 0.85rem;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
+}
+
+.cyber-waypoint-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding-bottom: 0.45rem;
+  margin-bottom: 0.45rem;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.cyber-wp {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.cyber-wp--origin {
+  color: #cbd5e1;
+}
+
+.cyber-wp-arrow {
+  color: #ff3ea5;
+  font-size: 0.85rem;
+}
+
+.cyber-wp--dest {
+  color: #22d3ee;
+  text-shadow: 0 0 6px rgba(34, 211, 238, 0.5);
+}
+
+.cyber-directive-text {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.84rem;
+  line-height: 1.35;
+  color: #cbd5e1;
+  margin: 0 0 0.5rem;
+  text-align: center;
+}
+
+.cyber-directive-footer {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.cyber-white {
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   BOTTOM STAT PODS (ATK 5 / DEF 3 equivalent from Image 3)
+   -------------------------------------------------------------------------- */
+.cyber-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 0.4rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Left Stat Pod (ATK 5 style in Image 3 with Amber/Gold trim) */
+.cyber-stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 62px;
+  padding: 0.35rem 0.55rem;
+  border-radius: 6px;
+  background: rgba(12, 6, 24, 0.95);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+}
+
+.cyber-stat-box--left {
+  border: 1.5px solid #f59e0b;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.35);
+}
+
+.cyber-stat-box--left .cyber-stat-label {
+  color: #fbbf24;
+}
+
+.cyber-stat-box--left .cyber-stat-number {
+  color: #ffffff;
+  text-shadow: 0 0 8px #f59e0b;
+}
+
+/* Right Stat Pod (DEF 3 style in Image 3 with Green trim) */
+.cyber-stat-box--right {
+  border: 1.5px solid #10b981;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.35);
+}
+
+.cyber-stat-box--right .cyber-stat-label {
+  color: #34d399;
+}
+
+.cyber-stat-box--right .cyber-stat-number {
+  color: #ffffff;
+  text-shadow: 0 0 8px #10b981;
+}
+
+.cyber-stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.cyber-stat-number {
+  font-family: 'Orbitron', monospace, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 900;
+  line-height: 1.15;
+  margin-top: 0.15rem;
+}
+
+/* Center Mecha Tech Crest Emblem */
+.cyber-card-crest {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cyber-crest-hexagon {
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(135deg, rgba(42, 12, 54, 0.95) 0%, rgba(20, 8, 32, 0.95) 100%);
+  border: 1.5px solid #ff3ea5;
+  border-radius: 6px;
+  transform: rotate(45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 14px rgba(255, 62, 165, 0.45);
+}
+
+.cyber-crest-icon {
+  transform: rotate(-45deg);
+  font-size: 0.85rem;
+  color: #ff3ea5;
+}

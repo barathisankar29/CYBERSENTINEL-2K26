@@ -11,7 +11,13 @@ export const siteSections: SiteSection[] = [
   { slug: 'events', title: 'Events', shortLabel: 'Events', order: 1, summary: 'Competitions, workshops, and sessions at CYBERSENTINEL 2K26.' },
   { slug: 'timeline', title: 'Timeline', shortLabel: 'Timeline', order: 2, summary: 'The schedule across the symposium.' },
   { slug: 'about', title: 'About', shortLabel: 'About', order: 3, summary: 'About Vel Tech High Tech, CyberSentinel 2K26, Hackathon Club, and College Leadership.' },
-  { slug: 'transport', title: 'Transport', shortLabel: 'Transport', order: 4, summary: 'Getting to and from the venue.' },
+  {
+    slug: 'transportation',
+    title: 'Transportation & Campus Navigation',
+    shortLabel: 'Transport',
+    order: 4,
+    summary: 'College Bus Transit, Government MTC Bus Routes, Campus Directions & Live Tactical Nav Grid',
+  },
   { slug: 'credentials', title: 'Credentials', shortLabel: 'Credentials', order: 5, summary: 'Convenors, Co-Convenors, Student Coordinators, Editing Experts, and Designers.' },
   { slug: 'contact', title: 'Contact', shortLabel: 'Contact', order: 6, summary: 'Reach the organizing team.' },
 ]

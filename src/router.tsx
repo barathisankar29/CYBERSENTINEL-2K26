@@ -7,6 +7,7 @@ import { TimelinePage } from '@/pages/TimelinePage'
 import { CredentialsPage } from '@/pages/CredentialsPage'
 import { EventsPage } from '@/pages/EventsPage'
 import { ProfilePage } from '@/pages/ProfilePage'
+import { TransportationPage } from '@/pages/TransportationPage'
 
 /**
  * Route shape is intentionally data-driven at the section level:
@@ -23,6 +24,8 @@ export function AppRoutes() {
       <Route path="/credentials" element={<CredentialsPage />} />
       <Route path="/events" element={<EventsPage />} />
       <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/transportation" element={<TransportationPage />} />
+      <Route path="/transport" element={<TransportationPage />} />
       <Route path="/:slug" element={<SectionPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

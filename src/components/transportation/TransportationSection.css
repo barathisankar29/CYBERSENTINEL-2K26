@@ -1,0 +1,278 @@
+/* ==========================================================================
+   TransportationSection — CyberSentinel 2K26
+   ========================================================================== */
+
+.transportation-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  padding: 5rem 1.5rem 6rem;
+  background-color: transparent;
+  color: #ffffff;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .transportation-section {
+    padding: 3.5rem 1rem 4.5rem;
+  }
+}
+
+/* Background Image Layer (User's Neon Gate Image) */
+.transportation-section__bg-wrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.transportation-section__bg-image {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(ellipse at 50% 30%, rgba(5, 4, 10, 0.12) 0%, rgba(5, 4, 10, 0.42) 65%, rgba(5, 4, 10, 0.88) 100%),
+    linear-gradient(180deg, rgba(5, 4, 10, 0.65) 0%, rgba(5, 4, 10, 0.18) 20%, rgba(5, 4, 10, 0.25) 60%, rgba(5, 4, 10, 0.85) 100%),
+    url('/assets/transportation/transport-bg.jpg');
+  background-size: cover;
+  background-position: center 25%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  opacity: 0.72;
+  filter: saturate(120%) contrast(108%);
+}
+
+@media (max-width: 768px) {
+  .transportation-section__bg-image {
+    background-attachment: scroll;
+    background-size: cover;
+    background-position: center top;
+  }
+}
+
+
+.transportation-section__scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.12) 0px,
+    rgba(0, 0, 0, 0.12) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  opacity: 0.25;
+}
+
+/* Atmospheric Neon Glows */
+.transportation-section__glow {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(120px);
+  z-index: 1;
+}
+
+.transportation-section__glow--cyan {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.15) 0%, transparent 70%);
+  top: 15%;
+  right: -100px;
+}
+
+.transportation-section__glow--magenta {
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, rgba(255, 62, 165, 0.14) 0%, transparent 70%);
+  bottom: 25%;
+  left: -150px;
+}
+
+.transportation-section__glow--violet {
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.16) 0%, transparent 70%);
+  top: 55%;
+  right: 10%;
+}
+
+/* Horizon Laser Seam */
+.transportation-section__horizon-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(34, 211, 238, 0.3) 20%,
+    rgba(255, 62, 165, 0.8) 50%,
+    rgba(34, 211, 238, 0.3) 80%,
+    transparent 100%
+  );
+  box-shadow: 0 0 16px rgba(255, 62, 165, 0.6), 0 0 8px rgba(34, 211, 238, 0.5);
+  z-index: 2;
+}
+
+/* Section Container */
+.transportation-section__container {
+  position: relative;
+  z-index: 2;
+  max-width: 1320px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+/* Section Main Header */
+.transport-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.transport-header__title {
+  font-family: 'Orbitron', system-ui, sans-serif;
+  font-size: clamp(1.85rem, 4vw, 3rem);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  margin: 0 0 1rem 0;
+  text-transform: uppercase;
+}
+
+.transport-header__title-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.transport-header__title-neon {
+  background: linear-gradient(135deg, #22d3ee 0%, #38bdf8 50%, #a855f7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 20px rgba(34, 211, 238, 0.5));
+}
+
+.transport-header__subtitle {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  font-weight: 500;
+  color: #94a3b8;
+  max-width: 720px;
+  line-height: 1.5;
+  margin: 0 0 1.5rem 0;
+}
+
+.transport-header__divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 320px;
+}
+
+.transport-header__divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.5), transparent);
+}
+
+.transport-header__divider-gem {
+  width: 7px;
+  height: 7px;
+  background: #ff3ea5;
+  transform: rotate(45deg);
+  box-shadow: 0 0 10px #ff3ea5;
+}
+
+/* Sub-headers for Bus & Map Areas */
+.transport-subhead {
+  margin-bottom: 1.75rem;
+}
+
+.transport-subhead__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #ff3ea5;
+  margin-bottom: 0.4rem;
+}
+
+.transport-subhead__tag--cyan {
+  color: #22d3ee;
+}
+
+.transport-subhead__icon {
+  font-size: 1rem;
+}
+
+.transport-subhead__title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  margin: 0 0 0.4rem 0;
+}
+
+.transport-subhead__desc {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.05rem;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* Bus Cards Grid */
+.transport-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+  align-items: stretch;
+}
+
+@media (max-width: 1080px) {
+  .transport-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .transport-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* Map Area */
+.transport-map-area {
+  position: relative;
+  margin-top: 1rem;
+}
+
+.transport-map-area::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  height: 80%;
+  background: radial-gradient(ellipse at center, rgba(255, 62, 165, 0.18) 0%, rgba(124, 58, 237, 0.12) 50%, transparent 80%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}

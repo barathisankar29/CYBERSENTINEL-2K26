@@ -1,0 +1,1357 @@
+/* ==========================================================================
+   TacticalMapHud — Chennai Metropolitan Satellite Transit Matrix
+   CYBERSENTINEL 2K26 — Cybercity Dark Theme
+   ========================================================================== */
+
+.tactical-map-hud {
+  width: 100%;
+  position: relative;
+  background: linear-gradient(180deg, rgba(26, 10, 38, 0.96) 0%, rgba(13, 8, 26, 0.98) 50%, rgba(20, 8, 30, 0.96) 100%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 62, 165, 0.45);
+  border-radius: 14px;
+  box-shadow:
+    0 25px 60px -10px rgba(0, 0, 0, 0.95),
+    0 0 40px rgba(255, 62, 165, 0.22),
+    0 0 75px rgba(124, 58, 237, 0.16),
+    inset 0 1px 0 rgba(255, 62, 165, 0.35);
+  overflow: hidden;
+  margin-top: 2rem;
+}
+
+/* --------------------------------------------------------------------------
+   Top Console Ribbon
+   -------------------------------------------------------------------------- */
+.tactical-map-hud__console-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  background: linear-gradient(90deg, rgba(32, 12, 44, 0.98) 0%, rgba(18, 10, 34, 0.98) 50%, rgba(36, 12, 48, 0.98) 100%);
+  border-bottom: 1px solid rgba(255, 62, 165, 0.35);
+  flex-wrap: wrap;
+}
+
+/* Corridor Filter Pills (Exactly 2 Filter Options) */
+.tactical-corridor-filters {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.filter-pill-icon {
+  margin-right: 0.35rem;
+  font-size: 0.85rem;
+}
+
+.tactical-filter-pill {
+  padding: 0.45rem 1.05rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(14, 8, 24, 0.65);
+  color: #cbd5e1;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.tactical-filter-pill:hover {
+  color: #ffffff;
+  background: rgba(255, 62, 165, 0.15);
+  border-color: rgba(255, 62, 165, 0.45);
+}
+
+.tactical-filter-pill--active {
+  background: rgba(34, 211, 238, 0.22);
+  color: #22d3ee;
+  border-color: #22d3ee;
+  box-shadow: 0 0 14px rgba(34, 211, 238, 0.4);
+}
+
+.tactical-filter-pill--magenta.tactical-filter-pill--active {
+  background: rgba(255, 62, 165, 0.25);
+  color: #ff3ea5;
+  border-color: #ff3ea5;
+  box-shadow: 0 0 16px rgba(255, 62, 165, 0.45);
+}
+
+.tactical-filter-pill--cyan.tactical-filter-pill--active {
+  background: rgba(34, 211, 238, 0.25);
+  color: #22d3ee;
+  border-color: #22d3ee;
+  box-shadow: 0 0 16px rgba(34, 211, 238, 0.45);
+}
+
+.tactical-filter-pill--violet.tactical-filter-pill--active {
+  background: rgba(168, 85, 247, 0.25);
+  color: #c084fc;
+  border-color: #a855f7;
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.45);
+}
+
+/* --------------------------------------------------------------------------
+   Sub-ribbon for Individual Stops from Selected Group
+   -------------------------------------------------------------------------- */
+.tactical-stops-subbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1.25rem;
+  background: rgba(18, 9, 32, 0.96);
+  border-bottom: 1px dashed rgba(255, 62, 165, 0.25);
+  overflow-x: auto;
+  flex-wrap: wrap;
+}
+
+.tactical-stops-subbar__label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #ff3ea5;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.tactical-stops-subbar__chips {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tactical-stop-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.32rem 0.75rem;
+  background: rgba(12, 6, 22, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: #cbd5e1;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.tactical-stop-chip:hover {
+  background: rgba(255, 62, 165, 0.18);
+  border-color: rgba(255, 62, 165, 0.5);
+  color: #ffffff;
+}
+
+.tactical-stop-chip--active {
+  background: rgba(34, 211, 238, 0.25) !important;
+  color: #22d3ee !important;
+  border-color: #22d3ee !important;
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.45);
+}
+
+.tactical-stop-chip--magenta.tactical-stop-chip--active {
+  background: rgba(255, 62, 165, 0.28) !important;
+  color: #ff3ea5 !important;
+  border-color: #ff3ea5 !important;
+  box-shadow: 0 0 14px rgba(255, 62, 165, 0.5);
+}
+
+.tactical-stop-chip--cyan.tactical-stop-chip--active {
+  background: rgba(34, 211, 238, 0.28) !important;
+  color: #22d3ee !important;
+  border-color: #22d3ee !important;
+  box-shadow: 0 0 14px rgba(34, 211, 238, 0.5);
+}
+
+.tactical-stop-chip--violet.tactical-stop-chip--active {
+  background: rgba(168, 85, 247, 0.28) !important;
+  color: #c084fc !important;
+  border-color: #a855f7 !important;
+  box-shadow: 0 0 14px rgba(168, 85, 247, 0.5);
+}
+
+.stop-chip-icon {
+  font-size: 0.8rem;
+}
+
+.stop-chip-name {
+  color: #ffffff;
+}
+
+.stop-chip-dist {
+  color: #38bdf8;
+  font-size: 0.58rem;
+}
+
+/* View Style Switcher: Real Google Map vs Cyber Theme */
+.tactical-map-view-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+@media (max-width: 768px) {
+  .tactical-map-view-switcher {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+.view-switcher-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #a78bfa;
+  letter-spacing: 0.08em;
+}
+
+.tactical-view-btn {
+  padding: 0.42rem 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(14, 8, 24, 0.7);
+  color: #94a3b8;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.tactical-view-btn:hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.tactical-view-btn--active {
+  background: rgba(34, 211, 238, 0.22);
+  color: #22d3ee;
+  border-color: #22d3ee;
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.4);
+}
+
+.tactical-view-btn--cyber.tactical-view-btn--active {
+  background: rgba(255, 62, 165, 0.25);
+  color: #ff3ea5;
+  border-color: #ff3ea5;
+  box-shadow: 0 0 14px rgba(255, 62, 165, 0.45);
+}
+
+/* --------------------------------------------------------------------------
+   Main Map Viewport Chassis
+   -------------------------------------------------------------------------- */
+.tactical-map-hud__viewport-container {
+  position: relative;
+  width: 100%;
+  height: 560px;
+  overflow: hidden;
+  background: radial-gradient(circle at 65% 45%, #230832 0%, #130724 50%, #06040e 100%);
+}
+
+@media (max-width: 768px) {
+  .tactical-map-hud__viewport-container {
+    height: 440px;
+  }
+}
+
+/* Leaflet satellite map — must fill the entire viewport container */
+.tactical-satellite-map {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Tactical Corner Reticles (Dual-Tone Pink & Cyan) */
+.tactical-corner {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-width: 2px;
+  border-style: solid;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.tactical-corner--tl {
+  top: 14px;
+  left: 14px;
+  border-color: #ff3ea5;
+  border-right: none;
+  border-bottom: none;
+  filter: drop-shadow(0 0 8px #ff3ea5);
+}
+
+.tactical-corner--tr {
+  top: 14px;
+  right: 14px;
+  border-color: #22d3ee;
+  border-left: none;
+  border-bottom: none;
+  filter: drop-shadow(0 0 8px #22d3ee);
+}
+
+.tactical-corner--bl {
+  bottom: 74px;
+  left: 14px;
+  border-color: #22d3ee;
+  border-right: none;
+  border-top: none;
+  filter: drop-shadow(0 0 8px #22d3ee);
+}
+
+.tactical-corner--br {
+  bottom: 74px;
+  right: 14px;
+  border-color: #ff3ea5;
+  border-left: none;
+  border-top: none;
+  filter: drop-shadow(0 0 8px #ff3ea5);
+}
+
+/* Cyberpunk atmospheric overlays as pseudo-elements — keeps Leaflet's stacking context clean */
+.tactical-map-hud__viewport-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 75% 90% at 85% 50%, rgba(255, 62, 165, 0.16) 0%, rgba(217, 38, 201, 0.08) 40%, rgba(124, 58, 237, 0.05) 75%, transparent 100%),
+    radial-gradient(circle at 35% 35%, rgba(255, 62, 165, 0.10) 0%, rgba(217, 38, 201, 0.07) 40%, rgba(124, 58, 237, 0.05) 70%, transparent 85%),
+    linear-gradient(135deg, rgba(36, 10, 48, 0.12) 0%, rgba(18, 8, 30, 0.05) 50%, rgba(255, 62, 165, 0.08) 100%);
+  z-index: 900;
+  pointer-events: none;
+}
+
+.tactical-map-hud__viewport-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(18, 16, 36, 0) 50%,
+    rgba(0, 0, 0, 0.14) 50%
+  );
+  background-size: 100% 4px;
+  z-index: 901;
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+/* --------------------------------------------------------------------------
+   Top Floating Target Campus Info Card
+   -------------------------------------------------------------------------- */
+.tactical-floating-info {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  max-width: 400px;
+  padding: 0.85rem 1.1rem;
+  background: rgba(22, 10, 36, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 62, 165, 0.45);
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85), 0 0 20px rgba(255, 62, 165, 0.22);
+  z-index: 1000;
+  pointer-events: auto;
+}
+
+@media (max-width: 640px) {
+  .tactical-floating-info {
+    left: 10px;
+    right: 10px;
+    max-width: none;
+    top: 10px;
+    padding: 0.65rem 0.85rem;
+  }
+}
+
+.tactical-floating-info__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.tactical-floating-info__toggle {
+  background: rgba(255, 62, 165, 0.15);
+  border: 1px solid rgba(255, 62, 165, 0.4);
+  color: #ff3ea5;
+  border-radius: 4px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.tactical-floating-info__toggle:hover {
+  background: rgba(255, 62, 165, 0.35);
+  color: #ffffff;
+  box-shadow: 0 0 8px rgba(255, 62, 165, 0.5);
+}
+
+.tactical-floating-info--minimized {
+  padding: 0.45rem 0.8rem;
+  max-width: 320px;
+}
+
+.tactical-floating-info--minimized .tactical-floating-info__tag {
+  margin-bottom: 0;
+  font-size: 0.62rem;
+}
+
+.tactical-floating-info__tag {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #ff3ea5;
+  margin-bottom: 0.3rem;
+}
+
+.info-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff3ea5;
+  box-shadow: 0 0 8px #ff3ea5;
+  animation: beaconPulse 1.5s infinite;
+}
+
+.tactical-floating-info__title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 0.35rem 0;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+}
+
+.tactical-floating-info__addr {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  margin: 0 0 0.35rem 0;
+  line-height: 1.35;
+}
+
+.tactical-floating-info__coords {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: #38bdf8;
+  letter-spacing: 0.06em;
+}
+
+/* --------------------------------------------------------------------------
+   Real Google Maps Embed Container & View Modes
+   -------------------------------------------------------------------------- */
+.tactical-google-maps-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: #0e071a;
+  z-index: 100;
+}
+
+.tactical-google-map-iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  transition: filter 0.4s ease;
+}
+
+/* Cyber Theme: Dark synthwave color matrix with neon pink glow */
+.tactical-google-map-iframe--cyber {
+  filter: invert(90%) hue-rotate(175deg) saturate(1.8) contrast(1.15) brightness(0.92);
+}
+
+/* Active Hub / Corridor Telemetry Bar */
+.tactical-selected-hub-hud {
+  position: absolute;
+  bottom: 80px;
+  left: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 0.9rem;
+  background: rgba(14, 8, 26, 0.94);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 62, 165, 0.45);
+  border-radius: 6px;
+  z-index: 950;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.85), 0 0 16px rgba(255, 62, 165, 0.25);
+  max-width: calc(100% - 36px);
+}
+
+.selected-hub-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.selected-hub-dot--magenta {
+  background: #ff3ea5;
+  box-shadow: 0 0 8px #ff3ea5;
+}
+
+.selected-hub-dot--cyan {
+  background: #22d3ee;
+  box-shadow: 0 0 8px #22d3ee;
+}
+
+.selected-hub-dot--violet {
+  background: #a855f7;
+  box-shadow: 0 0 8px #a855f7;
+}
+
+.selected-hub-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.82rem;
+  color: #e2e8f0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.selected-hub-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  color: #ff3ea5;
+  font-weight: 700;
+}
+
+.selected-hub-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.selected-hub-dist {
+  color: #38bdf8;
+  font-size: 0.75rem;
+}
+
+.selected-hub-dismiss {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #cbd5e1;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 0.22rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: 0.4rem;
+  flex-shrink: 0;
+}
+
+.selected-hub-dismiss:hover {
+  background: rgba(255, 62, 165, 0.35);
+  color: #ffffff;
+  border-color: #ff3ea5;
+}
+
+/* --------------------------------------------------------------------------
+   COLLEGE CENTER BEACON (Vel Tech High Tech Command Target)
+   -------------------------------------------------------------------------- */
+.college-center-marker-wrap {
+  background: transparent;
+  border: none;
+}
+
+.college-center-marker {
+  position: relative;
+  width: 68px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.college-center-sonar {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid #22d3ee;
+  pointer-events: none;
+}
+
+.college-center-sonar--1 {
+  width: 52px;
+  height: 52px;
+  animation: campusRadarPulse 2.6s infinite cubic-bezier(0.1, 0.7, 0.1, 1);
+}
+
+.college-center-sonar--2 {
+  width: 52px;
+  height: 52px;
+  animation: campusRadarPulse 2.6s infinite cubic-bezier(0.1, 0.7, 0.1, 1) 1.3s;
+}
+
+@keyframes campusRadarPulse {
+  0% {
+    transform: scale(0.3);
+    opacity: 1;
+    box-shadow: 0 0 12px #22d3ee;
+    border-color: #22d3ee;
+  }
+  50% {
+    border-color: #ff3ea5;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+    box-shadow: 0 0 30px rgba(34, 211, 238, 0);
+  }
+}
+
+.college-center-reticle {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #22d3ee;
+  background: radial-gradient(circle, rgba(255, 62, 165, 0.3) 0%, rgba(14, 10, 32, 0.95) 75%);
+  box-shadow: 0 0 20px #22d3ee, inset 0 0 10px #ff3ea5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reticle-axis {
+  position: absolute;
+  background: #38bdf8;
+  opacity: 0.75;
+}
+
+.reticle-axis--h {
+  width: 44px;
+  height: 1.5px;
+}
+
+.reticle-axis--v {
+  height: 44px;
+  width: 1.5px;
+}
+
+.college-center-core {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ff3ea5;
+  box-shadow: 0 0 12px #ff3ea5, 0 0 25px #22d3ee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.college-center-cross {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.college-center-label {
+  position: absolute;
+  bottom: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(10, 8, 26, 0.96);
+  border: 1.5px solid #22d3ee;
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.9), 0 0 12px rgba(34, 211, 238, 0.5);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.label-beacon-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #22d3ee;
+  box-shadow: 0 0 6px #22d3ee;
+}
+
+.label-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 800;
+  color: #22d3ee;
+  letter-spacing: 0.08em;
+}
+
+/* --------------------------------------------------------------------------
+   CYBER TRANSIT NODE PIN (Replaces the anchor icon with high-tech cyber pin)
+   -------------------------------------------------------------------------- */
+.cyber-stop-marker-wrap {
+  background: transparent;
+  border: none;
+}
+
+.cyber-stop-node {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cyber-stop-node:hover {
+  transform: scale(1.35) translateY(-3px);
+  z-index: 999 !important;
+}
+
+.stop-node-glow {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(34, 211, 238, 0.35);
+  filter: blur(5px);
+  animation: beaconPulse 2.5s infinite;
+}
+
+.stop-node-badge {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: rgba(14, 10, 32, 0.94);
+  border: 1.5px solid #22d3ee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #22d3ee;
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.5);
+  transform: rotate(45deg);
+  transition: all 0.2s ease;
+}
+
+.stop-node-icon {
+  width: 14px;
+  height: 14px;
+  transform: rotate(-45deg);
+  stroke: currentColor;
+}
+
+.stop-node-ping {
+  position: absolute;
+  bottom: -4px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #22d3ee;
+  box-shadow: 0 0 6px #22d3ee;
+}
+
+/* Corridor Color Themes */
+.cyber-stop-node--magenta .stop-node-badge {
+  border-color: #ff3ea5;
+  color: #ff3ea5;
+  box-shadow: 0 0 12px rgba(255, 62, 165, 0.6);
+}
+
+.cyber-stop-node--magenta .stop-node-glow {
+  background: rgba(255, 62, 165, 0.35);
+}
+
+.cyber-stop-node--magenta .stop-node-ping {
+  background: #ff3ea5;
+  box-shadow: 0 0 6px #ff3ea5;
+}
+
+.cyber-stop-node--cyan .stop-node-badge {
+  border-color: #22d3ee;
+  color: #22d3ee;
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.6);
+}
+
+.cyber-stop-node--cyan .stop-node-glow {
+  background: rgba(34, 211, 238, 0.35);
+}
+
+.cyber-stop-node--cyan .stop-node-ping {
+  background: #22d3ee;
+  box-shadow: 0 0 6px #22d3ee;
+}
+
+.cyber-stop-node--violet .stop-node-badge {
+  border-color: #a855f7;
+  color: #c084fc;
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.6);
+}
+
+.cyber-stop-node--violet .stop-node-glow {
+  background: rgba(168, 85, 247, 0.35);
+}
+
+.cyber-stop-node--violet .stop-node-ping {
+  background: #a855f7;
+  box-shadow: 0 0 6px #a855f7;
+}
+
+/* --------------------------------------------------------------------------
+   Leaflet Popup Customization
+   -------------------------------------------------------------------------- */
+.leaflet-popup-pane {
+  z-index: 1001 !important;
+}
+
+.tactical-popup-container .leaflet-popup-content-wrapper {
+  background: rgba(10, 8, 26, 0.96) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(34, 211, 238, 0.5) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.95), 0 0 25px rgba(34, 211, 238, 0.25) !important;
+  padding: 0 !important;
+  color: #ffffff !important;
+}
+
+.tactical-popup-container .leaflet-popup-tip {
+  background: rgba(10, 8, 26, 0.96) !important;
+  border: 1px solid rgba(34, 211, 238, 0.5) !important;
+}
+
+.tactical-popup-container .leaflet-popup-content {
+  margin: 0.9rem 1.1rem !important;
+  line-height: 1.4 !important;
+}
+
+.tactical-popup-container a.leaflet-popup-close-button {
+  color: #22d3ee !important;
+  padding: 6px !important;
+  font-size: 1.1rem !important;
+}
+
+.tactical-popup__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.35rem;
+}
+
+.tactical-popup__badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #ff3ea5;
+  letter-spacing: 0.08em;
+}
+
+.tactical-popup__code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  color: #22d3ee;
+  background: rgba(34, 211, 238, 0.12);
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  padding: 0.08rem 0.35rem;
+  border-radius: 3px;
+}
+
+.tactical-popup__title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 0.35rem 0;
+}
+
+.tactical-popup__addr {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.82rem;
+  color: #cbd5e1;
+  margin: 0 0 0.4rem 0;
+}
+
+.tactical-popup__meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: #38bdf8;
+  margin-bottom: 0.5rem;
+}
+
+.tactical-popup__link {
+  display: inline-block;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #22d3ee;
+  text-decoration: none;
+  letter-spacing: 0.06em;
+  transition: color 0.2s ease;
+}
+
+.tactical-popup__link:hover {
+  color: #ffffff;
+  text-shadow: 0 0 10px #22d3ee;
+}
+
+/* --------------------------------------------------------------------------
+   In-Map Tactical HUD Control Buttons
+   -------------------------------------------------------------------------- */
+.tactical-hud-controls {
+  position: absolute;
+  right: 18px;
+  bottom: 84px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  z-index: 1000;
+}
+
+.tactical-hud-btn {
+  width: 36px;
+  height: 36px;
+  background: rgba(26, 10, 42, 0.94);
+  border: 1px solid rgba(255, 62, 165, 0.4);
+  border-radius: 6px;
+  color: #ff3ea5;
+  font-family: 'Orbitron', monospace, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7), 0 0 12px rgba(255, 62, 165, 0.2);
+  transition: all 0.2s ease;
+}
+
+.tactical-hud-btn:hover {
+  background: rgba(255, 62, 165, 0.28);
+  border-color: #ff3ea5;
+  color: #ffffff;
+  box-shadow: 0 0 18px rgba(255, 62, 165, 0.6);
+  transform: translateY(-1px);
+}
+
+.tactical-hud-btn--target,
+.tactical-hud-btn--overview {
+  font-size: 0.9rem;
+}
+
+.tactical-hud-btn-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 62, 165, 0.25);
+  margin: 0.1rem 0;
+}
+
+/* Selected Stop Telemetry HUD Pill */
+.tactical-selected-stop-hud {
+  position: absolute;
+  bottom: 82px;
+  left: 18px;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(22, 10, 36, 0.95);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 62, 165, 0.45);
+  border-radius: 6px;
+  padding: 0.45rem 0.85rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.85), 0 0 18px rgba(255, 62, 165, 0.25);
+  z-index: 1000;
+  max-width: calc(100% - 100px);
+}
+
+.selected-stop-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #22d3ee;
+  box-shadow: 0 0 8px #22d3ee;
+}
+
+.selected-stop-dot--magenta {
+  background: #ff3ea5;
+  box-shadow: 0 0 8px #ff3ea5;
+}
+
+.selected-stop-dot--cyan {
+  background: #22d3ee;
+  box-shadow: 0 0 8px #22d3ee;
+}
+
+.selected-stop-dot--violet {
+  background: #a855f7;
+  box-shadow: 0 0 8px #a855f7;
+}
+
+.selected-stop-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: #cbd5e1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.selected-stop-tag {
+  color: #ff3ea5;
+  font-weight: 700;
+}
+
+.selected-stop-name {
+  font-family: 'Orbitron', sans-serif;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.selected-stop-dist {
+  color: #38bdf8;
+}
+
+.selected-stop-dismiss {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0 0.2rem;
+  margin-left: 0.3rem;
+  transition: color 0.2s ease;
+}
+
+.selected-stop-dismiss:hover {
+  color: #ff3ea5;
+}
+
+/* --------------------------------------------------------------------------
+   Bottom Quick Control Overlay
+   -------------------------------------------------------------------------- */
+.tactical-map-hud__bottom-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.75rem 1.25rem;
+  background: linear-gradient(180deg, rgba(22, 10, 36, 0.96) 0%, rgba(12, 6, 22, 0.98) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid rgba(255, 62, 165, 0.35);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  z-index: 1000;
+}
+
+.tactical-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1rem;
+  border-radius: 6px;
+  font-family: 'Orbitron', monospace, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.tactical-action-btn--primary {
+  background: linear-gradient(135deg, #d926c9 0%, #ff3ea5 100%);
+  color: #ffffff;
+  border: 1px solid #ff3ea5;
+  box-shadow: 0 0 16px rgba(255, 62, 165, 0.45);
+}
+
+.tactical-action-btn--primary:hover {
+  background: linear-gradient(135deg, #ff3ea5 0%, #ec4899 100%);
+  box-shadow: 0 0 24px rgba(255, 62, 165, 0.7);
+  transform: translateY(-1px);
+}
+
+.tactical-action-btn--secondary {
+  background: rgba(255, 62, 165, 0.1);
+  color: #fdf2f8;
+  border: 1px solid rgba(255, 62, 165, 0.3);
+}
+
+.tactical-action-btn--secondary:hover {
+  background: rgba(255, 62, 165, 0.22);
+  border-color: #ff3ea5;
+  color: #ffffff;
+}
+
+.tactical-action-btn--tertiary {
+  background: rgba(34, 211, 238, 0.1);
+  color: #22d3ee;
+  border: 1px solid rgba(34, 211, 238, 0.35);
+}
+
+.tactical-action-btn--tertiary:hover {
+  background: rgba(34, 211, 238, 0.22);
+  color: #ffffff;
+  box-shadow: 0 0 14px rgba(34, 211, 238, 0.4);
+}
+
+.tactical-action-btn--overview {
+  background: rgba(168, 85, 247, 0.12);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.35);
+}
+
+.tactical-action-btn--overview:hover {
+  background: rgba(168, 85, 247, 0.24);
+  color: #ffffff;
+  box-shadow: 0 0 14px rgba(168, 85, 247, 0.4);
+}
+
+.tactical-action-btn--ghost {
+  background: transparent;
+  color: #94a3b8;
+  border: 1px solid transparent;
+  margin-left: auto;
+}
+
+.tactical-action-btn--ghost:hover {
+  color: #38bdf8;
+}
+
+@media (max-width: 640px) {
+  .tactical-action-btn--ghost {
+    margin-left: 0;
+  }
+}
+
+.tactical-action-btn__icon {
+  font-size: 0.85rem;
+}
+
+.tactical-action-btn__arrow {
+  font-size: 0.85rem;
+  transition: transform 0.2s ease;
+}
+
+.tactical-action-btn:hover .tactical-action-btn__arrow {
+  transform: translate(2px, -2px);
+}
+
+/* --------------------------------------------------------------------------
+   Regional Transit Hubs Distance Matrix (Centered Layout)
+   -------------------------------------------------------------------------- */
+.tactical-landmarks {
+  padding: 1.75rem 1.25rem 2rem;
+  background: linear-gradient(180deg, rgba(22, 10, 36, 0.95) 0%, rgba(12, 6, 22, 0.98) 100%);
+  border-top: 1px dashed rgba(255, 62, 165, 0.35);
+  text-align: center;
+}
+
+.tactical-landmarks__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.tactical-landmarks__title-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.tactical-landmarks__indicator {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff3ea5;
+  box-shadow: 0 0 10px #ff3ea5;
+}
+
+.tactical-landmarks__title {
+  font-family: 'JetBrains Mono', 'Orbitron', monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #f472b6;
+}
+
+.tactical-landmarks__hint {
+  margin: 0 auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  color: #22d3ee;
+  letter-spacing: 0.08em;
+  background: rgba(34, 211, 238, 0.1);
+  border: 1px solid rgba(34, 211, 238, 0.25);
+  padding: 0.2rem 0.75rem;
+  border-radius: 4px;
+}
+
+.tactical-landmarks__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(280px, 360px));
+  justify-content: center;
+  max-width: 1140px;
+  margin: 0 auto;
+  gap: 1.25rem;
+}
+
+@media (max-width: 1024px) {
+  .tactical-landmarks__grid {
+    grid-template-columns: repeat(2, minmax(260px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .tactical-landmarks__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tactical-hub-card {
+  background: linear-gradient(135deg, rgba(32, 14, 48, 0.7) 0%, rgba(18, 10, 34, 0.65) 100%);
+  border: 1px solid rgba(255, 62, 165, 0.25);
+  border-radius: 8px;
+  padding: 0.95rem;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.tactical-hub-card:hover {
+  background: linear-gradient(135deg, rgba(48, 18, 68, 0.88) 0%, rgba(26, 14, 48, 0.85) 100%);
+  border-color: #ff3ea5;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 62, 165, 0.3);
+}
+
+.tactical-hub-card--selected {
+  background: linear-gradient(135deg, rgba(56, 20, 78, 0.95) 0%, rgba(32, 16, 56, 0.95) 100%) !important;
+  border-color: #ff3ea5 !important;
+  box-shadow: 0 0 25px rgba(255, 62, 165, 0.45) !important;
+  transform: translateY(-2px);
+}
+
+.tactical-hub-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.tactical-hub-card__icon {
+  font-size: 1.3rem;
+}
+
+.tactical-hub-card__distance {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+
+.tactical-hub-card__name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 0.35rem 0;
+  line-height: 1.35;
+}
+
+.tactical-hub-card__time {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #ff3ea5;
+  margin-bottom: 0.35rem;
+}
+
+.tactical-hub-card__mode {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.82rem;
+  color: #cbd5e1;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.35;
+}
+
+.tactical-hub-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 0.45rem;
+}
+
+.tactical-hub-card__sector {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #a855f7;
+}
+
+.tactical-hub-card__action {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #22d3ee;
+  letter-spacing: 0.05em;
+  transition: transform 0.2s ease;
+}
+
+.tactical-hub-card:hover .tactical-hub-card__action {
+  transform: translateX(2px);
+}

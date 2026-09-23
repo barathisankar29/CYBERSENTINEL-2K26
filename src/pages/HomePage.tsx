@@ -4,7 +4,8 @@ import { NavigationCityScene } from '@/components/city/NavigationCityScene'
 import { VideoIntro } from '@/components/intro/VideoIntro'
 import { FuturisticTransition } from '@/components/intro/FuturisticTransition'
 import { SiteFooter } from '@/components/ui/SiteFooter'
-import { hasSeenIntro, markIntroAsSeen } from '@/utils/introSession'
+import { ReplayIntroButton } from '@/components/ui/ReplayIntroButton'
+import { hasSeenIntro, markIntroAsSeen, resetIntroSeen } from '@/utils/introSession'
 
 // Landing/main experience: two normal, independent page sections — the
 // hero city, then the navigation city — stacked in ordinary document
@@ -40,6 +41,11 @@ export function HomePage() {
     setIntroStage('completed')
   }, [])
 
+  const handleReplayIntro = useCallback(() => {
+    resetIntroSeen()
+    setIntroStage('intro')
+  }, [])
+
   return (
     <main data-page="home">
       {introStage === 'intro' && <VideoIntro onFinish={handleVideoFinish} />}
@@ -49,6 +55,9 @@ export function HomePage() {
       <CityScene introCompleted={introStage === 'completed'} />
       <NavigationCityScene />
       <SiteFooter />
+
+      {/* Floating Replay Intro Button when city scene is active */}
+      <ReplayIntroButton onReplay={handleReplayIntro} visible={introStage === 'completed'} />
     </main>
   )
 }
