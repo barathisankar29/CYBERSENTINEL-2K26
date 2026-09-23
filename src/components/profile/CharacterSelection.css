@@ -1,0 +1,260 @@
+.selection-root {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background: #05040a;
+  color: white;
+  font-family: var(--font-body, 'Rajdhani', sans-serif);
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.selection-status {
+  max-width: 900px;
+  margin: 0 auto 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.selection-status__title {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: clamp(1.1rem, 3vw, 1.6rem);
+  letter-spacing: 0.06em;
+  color: white;
+}
+
+.selection-status__subtitle {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: clamp(0.75rem, 2vw, 0.95rem);
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.selection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.character-card {
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--char-primary) 35%, transparent);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(5, 4, 10, 0.3) 0%, rgba(5, 4, 10, 0.92) 65%), var(--char-bg-gradient);
+  box-shadow: 0 0 30px color-mix(in srgb, var(--char-glow) 25%, transparent) inset;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.character-card__portrait {
+  position: relative;
+  height: 260px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.character-card__portrait img {
+  max-height: 100%;
+  object-fit: contain;
+  object-position: bottom;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.6));
+}
+
+.character-card__name {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  color: var(--char-primary);
+  text-shadow: 0 0 14px var(--char-glow);
+  padding: 0.9rem 1rem 0.2rem;
+}
+
+.character-card__quote {
+  font-size: 0.78rem;
+  font-style: italic;
+  color: var(--char-text-tint);
+  padding: 0 1rem;
+}
+
+.character-card__packs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem 1.1rem;
+  margin-top: auto;
+}
+
+.character-card__pack {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--char-primary) 30%, transparent);
+  border-radius: 4px;
+  padding: 0.5rem 0.7rem;
+}
+
+.character-card__pack-label {
+  display: flex;
+  flex-direction: column;
+}
+
+.character-card__pack-name {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: white;
+}
+
+.character-card__pack-price {
+  font-size: 0.75rem;
+  color: var(--char-text-tint);
+}
+
+.character-card__select-btn {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  color: #05040a;
+  background: var(--char-primary);
+  border: none;
+  border-radius: 4px;
+  padding: 0.4rem 0.7rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: filter 0.15s ease;
+}
+
+.character-card__select-btn:hover {
+  filter: brightness(1.15);
+}
+
+/* ---------- Mock payment gate ---------- */
+
+.payment-gate {
+  max-width: 520px;
+  margin: 2rem auto 0;
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--char-primary) 40%, transparent);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(5, 4, 10, 0.6), rgba(5, 4, 10, 0.95));
+  box-shadow: 0 0 30px color-mix(in srgb, var(--char-glow) 30%, transparent) inset;
+  padding: 1.5rem;
+}
+
+.payment-gate__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid color-mix(in srgb, var(--char-primary) 30%, transparent);
+  padding-bottom: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.payment-gate__character {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  color: var(--char-primary);
+}
+
+.payment-gate__pack {
+  font-size: 0.8rem;
+  color: var(--char-text-tint);
+}
+
+.payment-gate__price {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 1.1rem;
+  color: white;
+}
+
+.payment-gate__field {
+  margin-bottom: 0.85rem;
+}
+
+.payment-gate__field label {
+  display: block;
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0.3rem;
+}
+
+.payment-gate__field input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid color-mix(in srgb, var(--char-primary) 35%, transparent);
+  border-radius: 4px;
+  padding: 0.55rem 0.7rem;
+  color: white;
+  font-family: var(--font-body, 'Rajdhani', sans-serif);
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.payment-gate__field input:focus {
+  border-color: var(--char-primary);
+}
+
+.payment-gate__notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  background: rgba(250, 204, 21, 0.08);
+  border: 1px solid rgba(250, 204, 21, 0.4);
+  border-radius: 4px;
+  padding: 0.65rem 0.8rem;
+  margin: 1rem 0;
+  font-size: 0.78rem;
+  color: #fde68a;
+  line-height: 1.5;
+}
+
+.payment-gate__actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.payment-gate__cancel {
+  flex: 1;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+  border-radius: 4px;
+  padding: 0.65rem;
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+
+.payment-gate__submit {
+  flex: 2;
+  background: var(--char-primary);
+  border: none;
+  color: #05040a;
+  border-radius: 4px;
+  padding: 0.65rem;
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+.payment-gate__submit:hover {
+  filter: brightness(1.15);
+}
+
+.payment-gate__submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

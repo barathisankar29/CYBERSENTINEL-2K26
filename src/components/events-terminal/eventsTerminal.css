@@ -1,0 +1,209 @@
+/*
+ * Ported as-is from the team's CyberSentinel 2K26 "retro terminal" events
+ * reference (cyberfest-2025-terminal.ai.studio). Everything here is scoped
+ * under `.cft-root` (the wrapper this whole feature mounts inside) rather
+ * than applied to `body`/`*`/global pseudo-elements like the original
+ * source did — this app previously had the whole page to itself, but here
+ * it's one route among several, so its resets (pixelated images,
+ * unselectable text, pink scrollbars) must not leak onto the rest of the
+ * site. The visual design and behavior are otherwise unchanged from the
+ * source.
+ */
+
+@layer utilities {
+  .font-pixel {
+    font-family: "Press Start 2P", monospace;
+  }
+  .font-silkscreen {
+    font-family: "Silkscreen", monospace;
+  }
+  .font-mono {
+    font-family: "Share Tech Mono", monospace;
+  }
+  .font-vt {
+    font-family: "VT323", monospace;
+  }
+}
+
+.cft-root {
+  background-color: #000;
+  color: #fff;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+.cft-root,
+.cft-root * {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* CRT Scanline Overlay */
+.scanlines {
+  position: relative;
+}
+.scanlines::before {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 255, 0, 0.03));
+  z-index: 999;
+  background-size: 100% 3px, 6px 100%;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* CRT Screen Flicker */
+.crt-flicker {
+  animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.98; }
+  50% { opacity: 1; }
+  100% { opacity: 0.99; }
+}
+
+/* Pixel border styling for the main container */
+.pixel-window-frame {
+  border: 3px solid var(--theme-border, #ff007f);
+  position: relative;
+  background: #000;
+  box-shadow: var(--theme-glow, 0 0 25px rgba(255, 0, 127, 0.4));
+}
+
+/* Authentic pixel corner diagonal stripes on bottom-left */
+.corner-stripes {
+  position: absolute;
+  bottom: 2px;
+  left: 2px;
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(
+    135deg,
+    transparent 40%,
+    #ffffff 40%,
+    #ffffff 50%,
+    var(--theme-border, #ff007f) 50%,
+    var(--theme-border, #ff007f) 65%,
+    #000000 65%
+  );
+  clip-path: polygon(0 100%, 0 0, 100% 100%);
+}
+
+/* Pixel Dither Header Bar */
+.pixel-dither-bar {
+  background: var(--dither-bg, #ff007f);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 15px var(--theme-border, rgba(255, 0, 127, 0.35));
+}
+
+/* Authentic Dot-Matrix Dither Fade on Right Edge */
+.pixel-dither-fade {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 140px;
+  background-image: radial-gradient(#000 25%, transparent 25%), radial-gradient(#000 25%, transparent 25%);
+  background-position: 0 0, 4px 4px;
+  background-size: 8px 8px;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* Top Arcade Protrusion Tab */
+.top-protrusion-tab {
+  position: absolute;
+  top: -24px;
+  left: 58%;
+  transform: translateX(-50%);
+  width: 52px;
+  height: 24px;
+  background-color: #000;
+  border-top: 2px solid var(--theme-border, #ff007f);
+  border-left: 2px solid var(--theme-border, #ff007f);
+  border-right: 2px solid var(--theme-border, #ff007f);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+
+/* Pixel button styling */
+.pixel-nav-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background-color: #000;
+  border: 3px solid;
+  image-rendering: pixelated;
+  transition: transform 0.08s ease, filter 0.1s ease;
+}
+
+.pixel-nav-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.25);
+}
+
+.pixel-nav-btn:active {
+  transform: translateY(1px);
+}
+
+/* Chunky pixel buttons & data chips */
+.pixel-chip {
+  border: 1px solid #2d123d;
+  background: #08030d;
+  box-shadow: inset 1px 1px 0px #1a0824, inset -1px -1px 0px #000000;
+}
+
+.pixel-chip:hover {
+  border-color: #ff007f;
+}
+
+/* High Voltage CTA Arcade Button with 3D Bevel and Inset Shadow */
+.arcade-cta {
+  background: linear-gradient(180deg, #ff007f 0%, #d6006b 50%, #99004d 100%);
+  border: 3px solid #ff007f;
+  box-shadow:
+    inset 2px 2px 0px rgba(255, 255, 255, 0.4),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.6),
+    0px 4px 0px #660033,
+    0px 0px 15px rgba(255, 0, 127, 0.5);
+  text-shadow: 1px 1px 0px #000;
+}
+.arcade-cta:hover {
+  background: linear-gradient(180deg, #ff1a8c 0%, #e60073 50%, #b30059 100%);
+  box-shadow:
+    inset 2px 2px 0px rgba(255, 255, 255, 0.6),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.6),
+    0px 4px 0px #660033,
+    0px 0px 20px rgba(255, 0, 127, 0.8);
+}
+.arcade-cta:active {
+  transform: translateY(3px);
+  box-shadow:
+    inset 2px 2px 0px rgba(0, 0, 0, 0.6),
+    inset -2px -2px 0px rgba(255, 255, 255, 0.2),
+    0px 1px 0px #660033,
+    0px 0px 10px rgba(255, 0, 127, 0.4);
+}
+
+/* Custom scrollbars with pixel aesthetic — scoped so the rest of the site
+   keeps its normal scrollbar. */
+.cft-root ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.cft-root ::-webkit-scrollbar-track {
+  background: #000;
+}
+.cft-root ::-webkit-scrollbar-thumb {
+  background: #ff007f;
+}

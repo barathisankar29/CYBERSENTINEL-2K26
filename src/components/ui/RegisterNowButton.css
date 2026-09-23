@@ -1,0 +1,57 @@
+.register-now-btn {
+  position: absolute;
+  top: clamp(1rem, 3vw, 1.75rem);
+  right: clamp(1rem, 3vw, 1.75rem);
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.15rem;
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #05040a;
+  background: linear-gradient(120deg, #38bdf8, #a855f7 40%, #d926c9 70%, #d4af37);
+  background-size: 220% 220%;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  user-select: none;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.4), 0 4px 16px rgba(5, 4, 10, 0.6);
+  animation: registerGradientDrift 6s ease-in-out infinite;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
+
+.register-now-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 28px rgba(168, 85, 247, 0.6), 0 6px 20px rgba(5, 4, 10, 0.7);
+}
+
+@keyframes registerGradientDrift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.register-now-btn__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #05040a;
+  animation: registerDotBlink 1s infinite alternate;
+}
+
+@keyframes registerDotBlink {
+  0% { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+@media (max-width: 640px) {
+  .register-now-btn {
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0.5rem 0.85rem;
+    font-size: 0.62rem;
+  }
+}

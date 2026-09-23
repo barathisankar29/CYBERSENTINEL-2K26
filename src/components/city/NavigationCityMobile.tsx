@@ -2,6 +2,8 @@ import { useState, type CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { navigationBuildings } from '@/data/navigation'
 import { mobileNavigationLayout } from '@/data/navigationMobile'
+import { ProfileAccessBadge } from '@/components/ui/ProfileAccessBadge'
+import { RegisterNowButton } from '@/components/ui/RegisterNowButton'
 import './NavigationCityMobile.css'
 
 const BG_SRC = '/assets/city/navigation/navigation-mobile.png'
@@ -43,6 +45,8 @@ export function NavigationCityMobile() {
             NavigationCityScene.css) so the hero -> navigation transition
             reads as one continuous environment on mobile too. */}
         <div className="mobile-nav-scene__atmosphere-blend" aria-hidden="true" />
+        <ProfileAccessBadge />
+        <RegisterNowButton />
 
         <svg
           className="mobile-nav-scene__connectors"

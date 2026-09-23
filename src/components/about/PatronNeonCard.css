@@ -1,0 +1,433 @@
+/* ==========================================================================
+   CYBERSENTINEL 2K26 - PATRON NEON HUD CARD
+   Exact Reproduction of the 2nd Reference Image:
+   - Elevated top trapezoid header with centered title and lens flare
+   - 4 diagonal cyan hazard slashes (////) over left and right shoulders
+   - Stepped-out side armor brackets on left and right flanks
+   - 4 glowing neon cyan corner reticles (┌ ┐ └ ┘)
+   - Deep dark purple gradient container with vibrant neon purple frame
+   ========================================================================== */
+
+.patron-hud-card-wrapper {
+  position: relative;
+  width: 100%;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.patron-hud-card-wrapper:hover {
+  transform: translateY(-6px);
+}
+
+/* ==========================================================================
+   Outer Frame Card
+   ========================================================================== */
+
+.patron-hud-card {
+  position: relative;
+  width: 100%;
+  border: 2.2px solid #c084fc;
+  border-radius: 6px;
+  background: linear-gradient(
+    180deg,
+    rgba(20, 11, 44, 0.96) 0%,
+    rgba(12, 7, 26, 0.98) 55%,
+    rgba(8, 4, 18, 0.99) 100%
+  );
+  box-shadow:
+    0 0 16px rgba(192, 132, 252, 0.6),
+    0 0 35px rgba(168, 85, 247, 0.35),
+    inset 0 0 20px rgba(168, 85, 247, 0.15),
+    0 20px 45px rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 1.75rem 1.25rem 1.4rem;
+  transition: all 0.35s ease;
+}
+
+.patron-hud-card-wrapper:hover .patron-hud-card {
+  border-color: #d8b4fe;
+  box-shadow:
+    0 0 24px rgba(192, 132, 252, 0.8),
+    0 0 48px rgba(168, 85, 247, 0.5),
+    inset 0 0 25px rgba(168, 85, 247, 0.22),
+    0 26px 55px rgba(0, 0, 0, 0.95);
+}
+
+/* ==========================================================================
+   1. TOP SHOULDER CYAN HAZARD DASHES (////)
+   ========================================================================== */
+
+.patron-hud-card__shoulder {
+  position: absolute;
+  top: -14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.patron-hud-card__shoulder--left {
+  left: 18px;
+}
+
+.patron-hud-card__shoulder--right {
+  right: 18px;
+}
+
+.patron-hud-card__slash {
+  display: block;
+  width: 3.5px;
+  height: 12px;
+  background: #22d3ee;
+  transform: skewX(-26deg);
+  border-radius: 1px;
+  box-shadow: 0 0 8px #22d3ee, 0 0 14px rgba(34, 211, 238, 0.6);
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.patron-hud-card-wrapper:hover .patron-hud-card__slash {
+  opacity: 1;
+  box-shadow: 0 0 12px #22d3ee, 0 0 20px rgba(34, 211, 238, 0.9);
+}
+
+/* ==========================================================================
+   2. TOP ELEVATED TRAPEZOIDAL HEADER
+   ========================================================================== */
+
+.patron-hud-card__header-trapezoid {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(240px, 86%, 380px);
+  height: 38px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.patron-hud-card__header-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 0 10px rgba(192, 132, 252, 0.75));
+}
+
+.patron-hud-card__header-path {
+  fill: #110928;
+  stroke: #c084fc;
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.patron-hud-card-wrapper:hover .patron-hud-card__header-path {
+  stroke: #e9d5ff;
+}
+
+.patron-hud-card__header-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem;
+  top: -2px;
+  width: 100%;
+  max-width: 88%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.patron-hud-card__header-text {
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: clamp(0.52rem, 0.95vw, 0.65rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow:
+    0 0 8px rgba(192, 132, 252, 0.85),
+    0 0 16px rgba(168, 85, 247, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.patron-hud-card__lens-flare {
+  position: absolute;
+  bottom: 0px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(168, 85, 247, 0.6) 20%,
+    #ffffff 50%,
+    rgba(168, 85, 247, 0.6) 80%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 8px #c084fc,
+    0 0 18px #a855f7,
+    0 0 30px rgba(168, 85, 247, 0.8);
+  border-radius: 9999px;
+  z-index: 3;
+}
+
+/* ==========================================================================
+   3. LEFT & RIGHT STEPPED-OUT SIDE BRACKETS
+   ========================================================================== */
+
+.patron-hud-card__side-bracket {
+  position: absolute;
+  top: 18%;
+  bottom: 18%;
+  width: 14px;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.patron-hud-card__side-bracket--left {
+  left: -13px;
+}
+
+.patron-hud-card__side-bracket--right {
+  right: -13px;
+}
+
+.patron-hud-card__bracket-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 0 8px rgba(192, 132, 252, 0.7));
+}
+
+.patron-hud-card__bracket-path {
+  fill: none;
+  stroke: #c084fc;
+  stroke-width: 2.2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.patron-hud-card-wrapper:hover .patron-hud-card__bracket-path {
+  stroke: #e9d5ff;
+}
+
+/* ==========================================================================
+   4. MAIN INNER CONTAINER & RETICLES
+   ========================================================================== */
+
+.patron-hud-card__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-top: 0.5rem;
+}
+
+/* 4 Glowing Neon Cyan Corner Reticles */
+.patron-hud-card__reticle {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  z-index: 5;
+  filter: drop-shadow(0 0 6px #22d3ee);
+  transition: all 0.3s ease;
+}
+
+.patron-hud-card__reticle--tl {
+  top: -4px;
+  left: -4px;
+  border-top: 2.5px solid #22d3ee;
+  border-left: 2.5px solid #22d3ee;
+}
+
+.patron-hud-card__reticle--tr {
+  top: -4px;
+  right: -4px;
+  border-top: 2.5px solid #22d3ee;
+  border-right: 2.5px solid #22d3ee;
+}
+
+.patron-hud-card__reticle--bl {
+  bottom: -4px;
+  left: -4px;
+  border-bottom: 2.5px solid #22d3ee;
+  border-left: 2.5px solid #22d3ee;
+}
+
+.patron-hud-card__reticle--br {
+  bottom: -4px;
+  right: -4px;
+  border-bottom: 2.5px solid #22d3ee;
+  border-right: 2.5px solid #22d3ee;
+}
+
+.patron-hud-card-wrapper:hover .patron-hud-card__reticle {
+  filter: drop-shadow(0 0 10px #22d3ee);
+  width: 22px;
+  height: 22px;
+}
+
+/* Bottom Lens Flare Beam */
+.patron-hud-card__bottom-flare {
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(80px, 45%, 150px);
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(168, 85, 247, 0.7) 25%,
+    #ffffff 50%,
+    rgba(168, 85, 247, 0.7) 75%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 8px #c084fc,
+    0 0 16px rgba(168, 85, 247, 0.8);
+  border-radius: 9999px;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   5. Content Slot & Inside Elements
+   ========================================================================== */
+
+.patron-hud-card__body {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.patron-hud-card .patron-card__frame {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.patron-hud-card .patron-card__corner {
+  display: none;
+}
+
+.patron-hud-card .bldg-tower__roof {
+  display: none;
+}
+
+.patron-hud-card .bldg-tower__pillar {
+  display: none;
+}
+
+.patron-hud-card .bldg-tower__podium {
+  display: none;
+}
+
+/* ==========================================================================
+   Responsive Adaptations for Patron HUD Card
+   ========================================================================== */
+
+@media (max-width: 640px) {
+  .patron-hud-card-wrapper {
+    margin-top: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .patron-hud-card {
+    padding: 1.5rem 0.85rem 1.2rem;
+  }
+
+  .patron-hud-card__shoulder {
+    top: -12px;
+    gap: 3px;
+  }
+
+  .patron-hud-card__shoulder--left {
+    left: 10px;
+  }
+
+  .patron-hud-card__shoulder--right {
+    right: 10px;
+  }
+
+  .patron-hud-card__slash {
+    width: 3px;
+    height: 10px;
+  }
+
+  .patron-hud-card__header-trapezoid {
+    top: -18px;
+    height: 34px;
+    width: clamp(210px, 92%, 340px);
+  }
+
+  .patron-hud-card__header-content {
+    padding: 0 0.75rem;
+    max-width: 90%;
+  }
+
+  .patron-hud-card__header-text {
+    font-size: clamp(0.46rem, 2.4vw, 0.58rem);
+    letter-spacing: 0.04em;
+  }
+
+  .patron-hud-card__side-bracket {
+    width: 10px;
+  }
+
+  .patron-hud-card__side-bracket--left {
+    left: -9px;
+  }
+
+  .patron-hud-card__side-bracket--right {
+    right: -9px;
+  }
+
+  .patron-hud-card__reticle {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-width: 440px) {
+  .patron-hud-card__side-bracket {
+    display: none;
+  }
+
+  .patron-hud-card {
+    padding: 1.35rem 0.7rem 1.1rem;
+  }
+
+  .patron-hud-card__header-trapezoid {
+    width: calc(100% - 20px);
+    max-width: 280px;
+    height: 32px;
+    top: -16px;
+  }
+
+  .patron-hud-card__header-text {
+    font-size: 0.5rem;
+    letter-spacing: 0.03em;
+  }
+
+  .patron-hud-card__shoulder {
+    display: none;
+  }
+}
+

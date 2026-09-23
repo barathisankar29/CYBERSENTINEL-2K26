@@ -1,0 +1,396 @@
+/**
+ * Shared dossier chrome for the character-profile events system. Every
+ * color here is a CSS custom property set by ThemeProvider.tsx from the
+ * active character's theme config (see data/characterProfiles.ts) — no
+ * character's color is ever hardcoded in this file. Swapping the
+ * `--char-*` variables on `.profile-root` re-themes the entire dossier.
+ */
+
+.profile-root {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #05040a;
+  background-image: var(--char-bg-gradient);
+  color: #e5e7eb;
+  font-family: var(--font-body, 'Rajdhani', sans-serif);
+  padding: clamp(1rem, 3vw, 2rem);
+  overflow-x: clip;
+}
+
+/* Faint technical grid backdrop, tinted by the active character. */
+.profile-root::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--char-primary) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--char-primary) 6%, transparent) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.profile-root > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Header ---------- */
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.profile-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--char-primary);
+  background: color-mix(in srgb, var(--char-primary) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--char-primary) 45%, transparent);
+  padding: 0.5rem 0.9rem;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.profile-back-btn:hover {
+  background: color-mix(in srgb, var(--char-primary) 20%, transparent);
+  border-color: var(--char-primary);
+}
+
+.profile-header__progress {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+  min-width: 180px;
+  max-width: 420px;
+}
+
+.profile-header__records-label {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  color: white;
+  white-space: nowrap;
+}
+
+.profile-header__bar {
+  flex: 1;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.profile-header__bar-fill {
+  height: 100%;
+  width: var(--progress, 100%);
+  background: linear-gradient(90deg, var(--char-secondary), var(--char-primary));
+  box-shadow: 0 0 10px var(--char-glow);
+}
+
+.profile-header__percent {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.75rem;
+  color: var(--char-primary);
+}
+
+/* ---------- Main dossier grid ---------- */
+
+.profile-dossier {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.4fr);
+  grid-template-areas:
+    'portrait info'
+    'portrait intent'
+    'portrait events';
+  gap: 1.25rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 900px) {
+  .profile-dossier {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'portrait'
+      'info'
+      'intent'
+      'events';
+  }
+}
+
+/* ---------- Portrait column ---------- */
+
+.profile-portrait {
+  grid-area: portrait;
+  position: relative;
+  display: flex;
+  gap: 1rem;
+  border: 1px solid color-mix(in srgb, var(--char-primary) 35%, transparent);
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(5, 4, 10, 0.4), rgba(5, 4, 10, 0.85));
+  box-shadow: 0 0 30px color-mix(in srgb, var(--char-glow) 40%, transparent) inset;
+  padding: 1.25rem 1rem;
+  min-height: 460px;
+  overflow: hidden;
+}
+
+.profile-portrait__sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+}
+
+.profile-portrait__name {
+  font-size: clamp(1.5rem, 3.2vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--char-primary);
+  text-shadow: 0 0 18px var(--char-glow);
+}
+
+.profile-portrait__lines {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.6;
+}
+
+.profile-portrait__image-wrap {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 0;
+}
+
+.profile-portrait__image {
+  max-width: 100%;
+  max-height: 560px;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.6));
+}
+
+/* ---------- Corner brackets, reused on every panel ---------- */
+
+.profile-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--char-primary);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.profile-corner--tl { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+.profile-corner--tr { top: -1px; right: -1px; border-left: none; border-bottom: none; }
+.profile-corner--bl { bottom: -1px; left: -1px; border-right: none; border-top: none; }
+.profile-corner--br { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+/* ---------- Generic dossier panel (ID card, Intent, Registered Events) ---------- */
+
+.profile-panel {
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--char-primary) 35%, transparent);
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(5, 4, 10, 0.5), rgba(5, 4, 10, 0.9));
+  box-shadow: 0 0 24px color-mix(in srgb, var(--char-glow) 25%, transparent) inset;
+  padding: 1.1rem 1.25rem;
+}
+
+.profile-panel--info { grid-area: info; }
+.profile-panel--intent { grid-area: intent; }
+.profile-panel--events { grid-area: events; }
+
+.profile-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.profile-panel__title {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  color: var(--char-primary);
+  text-transform: uppercase;
+}
+
+.profile-panel__hint {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: right;
+}
+
+/* ---------- ID panel layout (CharacterInfo) ---------- */
+
+.profile-id-layout {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.profile-id-portrait {
+  flex-shrink: 0;
+  width: 96px;
+  height: 96px;
+  border: 2px solid var(--char-primary);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 0 16px color-mix(in srgb, var(--char-glow) 60%, transparent);
+  background: #000;
+}
+
+.profile-id-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-id-table {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 480px) {
+  .profile-id-layout {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+/* ---------- ID table (CharacterInfo) ---------- */
+
+.profile-id-row {
+  display: grid;
+  grid-template-columns: minmax(110px, 40%) 1fr;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.45rem 0;
+  font-size: 0.82rem;
+}
+
+.profile-id-row:last-child {
+  border-bottom: none;
+}
+
+.profile-id-row dt {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+}
+
+.profile-id-row dd {
+  margin: 0;
+  color: white;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.profile-id-row dd.tint {
+  color: var(--char-text-tint);
+}
+
+/* ---------- Intent body text ---------- */
+
+.profile-panel__body {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: rgba(229, 231, 235, 0.88);
+}
+
+/* ---------- Registered events list ---------- */
+
+.profile-events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.profile-event-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--char-primary) 22%, transparent);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.profile-event-row__name {
+  font-size: 0.85rem;
+  color: white;
+}
+
+.profile-event-row__badge {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  color: var(--char-primary);
+  border: 1px solid color-mix(in srgb, var(--char-primary) 45%, transparent);
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+}
+
+/* ---------- Footer ---------- */
+
+.profile-footer {
+  max-width: 1400px;
+  margin: 1.5rem auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.4);
+  flex-wrap: wrap;
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+  .profile-portrait {
+    flex-direction: column-reverse;
+    min-height: 0;
+  }
+  .profile-portrait__sidebar {
+    writing-mode: horizontal-tb;
+    transform: none;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .profile-portrait__lines {
+    display: none;
+  }
+  .profile-id-row {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+}

@@ -1,0 +1,70 @@
+.site-footer {
+  position: relative;
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1rem, 4vw, 3rem);
+  background: linear-gradient(180deg, var(--city-black, #05040a) 0%, #0b0a1a 100%);
+  border-top: 1px solid rgba(124, 58, 237, 0.25);
+  color: rgba(255, 255, 255, 0.6);
+  font-family: var(--font-body, 'Rajdhani', sans-serif);
+}
+
+.site-footer__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.site-footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.site-footer__title {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  color: white;
+}
+
+.site-footer__tagline {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.site-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+}
+
+.site-footer__links a {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.site-footer__links a:hover {
+  color: var(--city-cyan, #22d3ee);
+}
+
+.site-footer__meta {
+  width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.3);
+}

@@ -8,8 +8,8 @@
   width: 100%;
   min-height: 100vh;
   margin-top: clamp(-7rem, -12vw, -4.5rem);
-  padding: clamp(6rem, 10vw, 10rem) clamp(1rem, 4vw, 3rem) clamp(4rem, 8vw, 8rem);
-  overflow: hidden;
+  padding: clamp(6rem, 10vw, 10rem) clamp(1rem, 4vw, 3rem) clamp(4rem, 6vw, 6rem);
+  overflow-x: clip;
   z-index: 12;
   font-family: var(--font-body, 'Rajdhani', sans-serif);
   color: #ffffff;
@@ -144,6 +144,8 @@
     linear-gradient(rgba(34, 211, 238, 0.025) 1px, transparent 1px),
     linear-gradient(90deg, rgba(34, 211, 238, 0.025) 1px, transparent 1px);
   background-size: 48px 48px;
+  -webkit-mask-image: linear-gradient(180deg, #000000 0%, #000000 calc(100% - 100px), transparent 100%);
+  mask-image: linear-gradient(180deg, #000000 0%, #000000 calc(100% - 100px), transparent 100%);
   pointer-events: none;
   z-index: 0;
 }
@@ -877,21 +879,21 @@
   gap: clamp(1rem, 2vw, 1.35rem);
 }
 
-/* Futuristic Building Pod Card */
+/* Futuristic Building Pod Card - Ultra Compact */
 .bldg-pod {
   position: relative;
   background: rgba(11, 10, 26, 0.88);
   border: 1.5px solid rgba(255, 255, 255, 0.12);
-  border-radius: 14px;
-  padding: 1.1rem 1.15rem;
+  border-radius: 10px;
+  padding: 0.65rem 0.85rem 0.6rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 0.85rem;
-  min-height: 155px;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: auto;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 8px 30px rgba(5, 4, 10, 0.7);
+  box-shadow: 0 6px 18px rgba(5, 4, 10, 0.7);
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
   outline: none;
@@ -917,29 +919,47 @@
 
 .bldg-pod:hover,
 .bldg-pod:focus-visible {
-  transform: translateY(-6px) scale(1.03);
-  box-shadow: 0 16px 40px rgba(5, 4, 10, 0.9);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 16px 36px rgba(5, 4, 10, 0.9);
   z-index: 5;
 }
 
-/* Pod Rooftop Lintel */
+/* Pod Rooftop Lintel with Role Heading */
 .bldg-pod__roof {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  padding-bottom: 0.45rem;
+  padding-bottom: 0.28rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   font-family: var(--font-display, 'Orbitron', monospace);
-  font-size: 0.65rem;
-  letter-spacing: 0.12em;
   position: relative;
   z-index: 2;
 }
 
+.bldg-pod__role-heading {
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: clamp(0.56rem, 1vw, 0.68rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bldg-pod__role-heading--cyan { color: #22d3ee; }
+.bldg-pod__role-heading--pink { color: #ff3ea5; }
+.bldg-pod__role-heading--green { color: #10b981; }
+.bldg-pod__role-heading--orange { color: #f59e0b; }
+.bldg-pod__role-heading--yellow { color: #fbbf24; }
+.bldg-pod__role-heading--purple { color: #c084fc; }
+
 .bldg-pod__beacon {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.4rem;
+  width: 100%;
 }
 
 .bldg-pod__dot {
@@ -1012,11 +1032,13 @@
 
 .club-member-card__name {
   font-family: var(--font-display, 'Orbitron', sans-serif);
-  font-size: 1.05rem;
+  font-size: clamp(0.85rem, 1.2vw, 1.02rem);
   font-weight: 800;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   color: #ffffff;
   margin: 0;
+  line-height: 1.25;
+  margin: 0 auto;
 }
 
 .club-member-card__role-pill {
@@ -1208,7 +1230,7 @@
 /* Patrons Cards Grid */
 .patrons-grid {
   display: grid;
-  gap: 1.75rem;
+  gap: 3.0rem;
 }
 
 .patrons-grid--chief {
@@ -1602,6 +1624,11 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .club-members-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
   .patrons-grid--chief {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
@@ -1798,36 +1825,38 @@
   }
 
   .club-members-grid {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.5rem;
   }
 
   .bldg-pod {
-    padding: 0.8rem 0.75rem 0.6rem;
-    border-radius: 10px;
+    padding: 0.5rem 0.55rem 0.45rem;
+    border-radius: 8px;
+    gap: 0.22rem;
   }
 
-  .bldg-pod__id,
-  .bldg-pod__lvl {
-    font-size: 0.58rem;
+  .bldg-pod__roof {
+    padding-bottom: 0.2rem;
+  }
+
+  .bldg-pod__beacon {
+    gap: 0.3rem;
+  }
+
+  .bldg-pod__dot {
+    width: 5px;
+    height: 5px;
+  }
+
+  .bldg-pod__role-heading {
+    font-size: clamp(0.48rem, 2.2vw, 0.58rem);
+    letter-spacing: 0.04em;
   }
 
   .club-member-card__name {
-    font-size: 0.92rem;
-    letter-spacing: 0.03em;
-  }
-
-  .club-member-card__role-pill {
-    padding: 0.18rem 0.55rem;
-  }
-
-  .club-member-card__role {
-    font-size: 0.62rem;
-    letter-spacing: 0.06em;
-  }
-
-  .bldg-pod__base-text {
-    font-size: 0.55rem;
+    font-size: clamp(0.72rem, 3.1vw, 0.86rem);
+    letter-spacing: 0.02em;
+    word-break: break-word;
   }
 
   /* Leadership & Patrons */
@@ -1918,3 +1947,74 @@
     padding: 0.38rem 0.25rem;
   }
 }
+
+/* ==========================================================================
+   CyberNeonCard Integration Overrides for AboutSection
+   ========================================================================== */
+
+.cyber-neon-card-wrapper .bldg-card__roof {
+  background: rgba(14, 8, 30, 0.7);
+  border: 1px solid rgba(192, 132, 252, 0.35);
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.12);
+}
+
+.cyber-neon-card-wrapper .bldg-card__roof-light {
+  background: #c084fc;
+  box-shadow: 0 0 8px #c084fc, 0 0 16px #a855f7;
+}
+
+.cyber-neon-card-wrapper .bldg-card__roof-text {
+  color: #d8b4fe;
+}
+
+.patron-neon-card {
+  margin: 1.5rem 0 2rem;
+}
+
+.patron-neon-card .cyber-neon-card__body {
+  padding: 1.25rem;
+}
+
+.patron-neon-card .patron-card__frame {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.patron-neon-card .bldg-tower__roof {
+  background: rgba(14, 8, 30, 0.75);
+  border: 1px solid rgba(192, 132, 252, 0.35);
+}
+
+.patron-neon-card .bldg-tower__beacon-light {
+  background: #c084fc;
+  box-shadow: 0 0 8px #c084fc;
+}
+
+.patron-neon-card .bldg-tower__beacon-code {
+  color: #d8b4fe;
+}
+
+.patron-neon-card .bldg-tower__level {
+  background: rgba(168, 85, 247, 0.18);
+  border-color: rgba(192, 132, 252, 0.5);
+  color: #e9d5ff;
+}
+
+.patron-neon-card .bldg-tower__pillar {
+  background: linear-gradient(180deg, transparent, rgba(192, 132, 252, 0.45) 20%, rgba(192, 132, 252, 0.45) 80%, transparent);
+}
+
+.patron-neon-card .bldg-tower__podium {
+  border-top-color: rgba(192, 132, 252, 0.25);
+}
+
+.patron-neon-card .bldg-tower__podium-text {
+  color: #d8b4fe;
+}
+
+.patron-neon-card .patron-card__corner {
+  display: none;
+}
+

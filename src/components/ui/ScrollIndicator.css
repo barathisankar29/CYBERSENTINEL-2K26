@@ -1,0 +1,134 @@
+.scroll-indicator {
+  position: fixed;
+  bottom: calc(1.2rem + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  z-index: 50;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.4s;
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+}
+
+.scroll-indicator--hidden {
+  opacity: 0;
+  transform: translateX(-50%) translateY(14px);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.scroll-indicator__inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.16rem;
+  padding: 0.28rem 0.65rem;
+  background: rgba(11, 10, 26, 0.75);
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  border-radius: 9999px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow:
+    0 0 10px rgba(34, 211, 238, 0.12),
+    0 3px 12px rgba(5, 4, 10, 0.6);
+  transition: all 0.25s ease;
+}
+
+.scroll-indicator:hover .scroll-indicator__inner {
+  background: rgba(18, 16, 36, 0.9);
+  border-color: var(--city-cyan, #22d3ee);
+  box-shadow:
+    0 0 18px rgba(34, 211, 238, 0.3),
+    0 0 30px rgba(167, 139, 250, 0.15);
+  transform: translateY(-2px);
+}
+
+.scroll-indicator:active .scroll-indicator__inner {
+  transform: translateY(0);
+}
+
+/* Subtle ambient glow behind badge */
+.scroll-indicator__glow {
+  position: absolute;
+  inset: -4px;
+  background: radial-gradient(ellipse at center, rgba(34, 211, 238, 0.2) 0%, transparent 75%);
+  border-radius: 9999px;
+  z-index: -1;
+  pointer-events: none;
+  animation: indicatorGlowPulse 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes indicatorGlowPulse {
+  0% { opacity: 0.25; transform: scale(0.95); }
+  100% { opacity: 0.7; transform: scale(1.06); }
+}
+
+
+/* Refined Small Typography */
+.scroll-indicator__content {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: var(--font-display, monospace);
+  font-size: clamp(0.56rem, 1.2vw, 0.64rem);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: white;
+  padding-top: 2px;
+}
+
+.scroll-indicator__bracket {
+  color: var(--city-cyan, #22d3ee);
+  opacity: 0.7;
+}
+
+.scroll-indicator__text {
+  background: linear-gradient(90deg, #ffffff 0%, var(--city-cyan, #22d3ee) 50%, var(--city-violet-soft, #a78bfa) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 8px rgba(34, 211, 238, 0.3);
+}
+
+/* Tiny Chevron Arrow */
+.scroll-indicator__chevrons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.scroll-indicator__arrow {
+  width: 4px;
+  height: 4px;
+  border-right: 1px solid var(--city-cyan, #22d3ee);
+  border-bottom: 1px solid var(--city-cyan, #22d3ee);
+  transform: rotate(45deg);
+  opacity: 0.5;
+  animation: arrowPulse 1.4s infinite;
+}
+
+@keyframes arrowPulse {
+  0% { opacity: 0.2; transform: rotate(45deg) translate(0, 0); }
+  50% { opacity: 0.95; transform: rotate(45deg) translate(1.5px, 1.5px); }
+  100% { opacity: 0.2; transform: rotate(45deg) translate(0, 0); }
+}
+
+/* Ultra-compact Mobile optimization */
+@media (max-width: 640px) {
+  .scroll-indicator {
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  }
+  .scroll-indicator__inner {
+    padding: 0.22rem 0.52rem;
+    gap: 0.12rem;
+  }
+  .scroll-indicator__content {
+    font-size: 0.52rem;
+    letter-spacing: 0.1em;
+  }
+}

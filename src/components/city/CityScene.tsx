@@ -3,6 +3,7 @@ import { useScrollProgress } from '@/animation/scrollController'
 import { useReducedMotion } from '@/animation/useReducedMotion'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { IdentityLayer } from '@/components/intro/IdentityLayer'
+import { ScrollIndicator } from '@/components/ui/ScrollIndicator'
 import { CityLayer } from './CityLayer'
 import { ParticleField } from './ParticleField'
 import { cityLayers } from './cityLayers.config'
@@ -30,7 +31,14 @@ const HERO_SCROLL_VH = 500
  * HomePage.tsx) purely through normal document flow — no shared
  * progress value, no cross-fade with the next section.
  */
-export function CityScene() {
+interface CitySceneProps {
+  /** Whether the intro (video + FuturisticTransition) has finished — gates
+   * the "SCROLL TO SEE MAGIC" indicator so it only shows once the hero is
+   * actually revealed, not underneath the intro overlays. */
+  introCompleted?: boolean
+}
+
+export function CityScene({ introCompleted = true }: CitySceneProps) {
   const spacerRef = useRef<HTMLDivElement>(null)
   const isMobile = useIsMobile()
   const reducedMotion = useReducedMotion()
@@ -45,6 +53,7 @@ export function CityScene() {
         ))}
         <ParticleField zIndex={PARTICLE_Z_INDEX} reducedMotion={reducedMotion} />
         <IdentityLayer zIndex={IDENTITY_Z_INDEX} progress={progress} />
+        <ScrollIndicator progress={progress} visible={introCompleted} />
       </div>
     </section>
   )

@@ -7,6 +7,8 @@ import { CityLayer } from './CityLayer'
 import { navigationCityEnvironmentLayers, NAVIGATION_REVEAL_PROGRESS } from './navigationCityEnvironment.config'
 import { Building } from './buildings/Building'
 import { NavigationCityMobile } from './NavigationCityMobile'
+import { ProfileAccessBadge } from '@/components/ui/ProfileAccessBadge'
+import { RegisterNowButton } from '@/components/ui/RegisterNowButton'
 import './NavigationCityScene.css'
 
 // Above every navigationCityEnvironmentLayers entry — buildings always
@@ -78,6 +80,8 @@ export function NavigationCityScene() {
             reads as blending into this cosmic environment rather than
             cutting into it. Purely decorative — see NavigationCityScene.css. */}
         <div className="navigation-city-scene__atmosphere-blend" aria-hidden="true" />
+        <ProfileAccessBadge />
+        <RegisterNowButton />
         <div className="navigation-city-scene__buildings" style={{ zIndex: BUILDINGS_Z_INDEX }}>
           {navigationBuildings.map((building) => (
             <Building key={building.id} building={building} revealed={revealed} isMobile={isMobile} />

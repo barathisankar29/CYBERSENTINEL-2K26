@@ -1,0 +1,218 @@
+.discovery-root {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background: #05040a;
+  color: white;
+  font-family: var(--font-body, 'Rajdhani', sans-serif);
+  padding-bottom: 4rem;
+}
+
+.discovery-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem clamp(0.75rem, 3vw, 1.5rem);
+  background: rgba(5, 4, 10, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(34, 211, 238, 0.2);
+}
+
+.discovery-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--city-cyan, #22d3ee);
+  text-decoration: none;
+}
+
+.discovery-hero {
+  text-align: center;
+  max-width: 720px;
+  margin: clamp(2rem, 5vw, 3.5rem) auto 2.5rem;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.discovery-hero__eyebrow {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  color: var(--city-cyan, #22d3ee);
+}
+
+.discovery-hero__title {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: clamp(1.6rem, 5vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  background: linear-gradient(135deg, #ffffff 20%, var(--city-cyan, #22d3ee) 60%, var(--city-violet, #7c3aed) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.discovery-hero__subtitle {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.discovery-section {
+  max-width: 1300px;
+  margin: 0 auto 3rem;
+  padding: 0 clamp(0.75rem, 3vw, 1.5rem);
+}
+
+.discovery-section__header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+  border-bottom: 1px solid rgba(124, 58, 237, 0.3);
+  padding-bottom: 0.6rem;
+}
+
+.discovery-section__title {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+  color: white;
+  text-transform: uppercase;
+}
+
+.discovery-section__count {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.7rem;
+  color: var(--city-violet-soft, #a78bfa);
+}
+
+.discovery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+/* Read-only informational event card (Day 1 / Day 2). */
+.info-card {
+  position: relative;
+  border: 1px solid rgba(124, 58, 237, 0.28);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--city-deep-indigo) 55%, var(--city-black) 45%);
+  backdrop-filter: blur(8px);
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info-card__name {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 1rem;
+  color: white;
+  letter-spacing: 0.02em;
+}
+
+.info-card__desc {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.5;
+  flex: 1;
+}
+
+.info-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.9rem;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.info-card__tag {
+  align-self: flex-start;
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  color: var(--city-cyan, #22d3ee);
+  border: 1px solid rgba(34, 211, 238, 0.4);
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+}
+
+/* Purchasable option card (Special Events + Packages). */
+.option-card {
+  position: relative;
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--city-deep-indigo) 55%, var(--city-black) 45%);
+  backdrop-filter: blur(8px);
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.option-card:hover {
+  border-color: var(--city-cyan, #22d3ee);
+  transform: translateY(-2px);
+}
+
+.option-card__name {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 1.05rem;
+  color: white;
+}
+
+.option-card__desc {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.5;
+  flex: 1;
+}
+
+.option-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.option-card__price {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 1.1rem;
+  color: var(--city-cyan, #22d3ee);
+}
+
+.option-card__select {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: #05040a;
+  background: linear-gradient(135deg, var(--city-cyan, #22d3ee), var(--city-violet, #7c3aed));
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+.option-card__select:hover {
+  filter: brightness(1.15);
+}
+
+@media (max-width: 640px) {
+  .discovery-grid {
+    grid-template-columns: 1fr;
+  }
+}
