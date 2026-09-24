@@ -46,7 +46,26 @@ export interface CharacterConfig {
   sideLines: string[]
   /** "Intent of application" flavor text — rewritten around the real pack,
    * not the reference's fictional character lore. */
-  intent: string
+  /** Display name in mixed case for ID table, e.g. "Nico" */
+  displayName?: string
+  age?: string
+  birthday?: string
+  bloodType?: string
+  gender?: string
+  unlockRequirement?: string
+  eventsUnlockRequirement?: string
+  intentLoreHtml?: string
+  eventsLoreHtml?: string
+  intent?:string
+  cityImage?: string
+  terminalImage?: string
+  crestImage?: string
+  middleTagline?: string
+  bottomTagline?: string
+  footerLeft?: string
+  footerRight?: string
+  cityBadgeText?: string
+  terminalBadgeText?: string
   packs: RegistrationPack[]
 }
 

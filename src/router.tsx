@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 import { HomePage } from '@/pages/HomePage'
 import { SectionPage } from '@/pages/SectionPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
-import { AboutSection } from '@/components/about/AboutSection'
+import { AboutPage } from '@/pages/AboutPage'
 import { TimelinePage } from '@/pages/TimelinePage'
 import { CredentialsPage } from '@/pages/CredentialsPage'
 import { EventsPage } from '@/pages/EventsPage'
@@ -19,7 +19,7 @@ export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/about" element={<AboutSection />} />
+      <Route path="/about" element={<AboutPage />} />
       <Route path="/timeline" element={<TimelinePage />} />
       <Route path="/credentials" element={<CredentialsPage />} />
       <Route path="/events" element={<EventsPage />} />

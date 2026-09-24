@@ -6,6 +6,7 @@ interface ThemeProviderProps {
   theme: CharacterTheme
   children: ReactNode
   className?: string
+  charId?: string
 }
 
 /**
@@ -14,7 +15,7 @@ interface ThemeProviderProps {
  * hardcoded value, so swapping `theme` here re-themes the whole dossier —
  * no character's styling is hardcoded into any component.
  */
-export function ThemeProvider({ theme, children, className = '' }: ThemeProviderProps) {
+export function ThemeProvider({ theme, children, className = '', charId = 'nico' }: ThemeProviderProps) {
   const style = {
     '--char-primary': theme.primary,
     '--char-secondary': theme.secondary,
@@ -22,6 +23,7 @@ export function ThemeProvider({ theme, children, className = '' }: ThemeProvider
     '--char-glow': theme.glow,
     '--char-text-tint': theme.textTint,
     '--char-bg-gradient': theme.backgroundGradient,
+    '--char-panel-frame': `url('/assets/characters/card-panel-frame-${charId}.png')`,
   } as CSSProperties
 
   return (

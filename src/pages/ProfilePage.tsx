@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { getRegistration } from '@/utils/eventRegistration'
 import { characterProfiles } from '@/data/characterProfiles'
+import type { CharacterId, RegistrationRecord } from '@/types/characterProfile'
 import { CharacterProfile } from '@/components/profile/CharacterProfile'
 import './ProfileEmptyState.css'
 
@@ -15,9 +16,14 @@ const CHARACTER_COLORS = ['#38bdf8', '#a855f7', '#2dd4bf', '#d4af37']
  * character dossier.
  */
 export function ProfilePage() {
-  const registration = getRegistration()
+  const [searchParams] = useSearchParams()
+  const queryChar = (searchParams.get('char') || '').toLowerCase()
+  const storedRegistration = getRegistration()
 
-  if (!registration) {
+  // If ?char= query param is provided and matches a character, preview that character
+  const targetCharId = (queryChar in characterProfiles ? queryChar : storedRegistration?.characterId) as CharacterId | undefined
+
+  if (!storedRegistration && !targetCharId) {
     return (
       <div className="profile-empty">
         <div className="profile-empty__card">
@@ -41,6 +47,22 @@ export function ProfilePage() {
     )
   }
 
-  const character = characterProfiles[registration.characterId]
+  const activeCharId = targetCharId || 'nico'
+  const character = characterProfiles[activeCharId]
+
+  // If there's no stored registration for this specific character, create a mock preview record
+  const registration: RegistrationRecord = storedRegistration && storedRegistration.characterId === activeCharId
+    ? storedRegistration
+    : {
+        registrationId: `REG-${activeCharId.toUpperCase()}-7729`,
+        characterId: activeCharId as CharacterId,
+        packId: character.packs[0]?.id || 'day1',
+        events: character.packs[0]?.events || [],
+        username: `OPERATIVE_${activeCharId.toUpperCase()}`,
+        email: `${activeCharId}@cybersentinel.city`,
+        registeredAt: '2026-09-23T18:30:00.000Z',
+        paymentStatus: 'test_mode_unverified',
+      }
+
   return <CharacterProfile character={character} registration={registration} />
 }

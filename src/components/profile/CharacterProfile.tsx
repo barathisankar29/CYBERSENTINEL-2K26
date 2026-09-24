@@ -11,29 +11,59 @@ interface CharacterProfileProps {
   registration: RegistrationRecord
 }
 
-/** The unlocked dossier view — shown after a mock registration completes.
- * Every color comes from `character.theme` via ThemeProvider; nothing here
- * is hardcoded to any one character. */
+/**
+ * Full-screen cyberpunk dossier — exact match to reference images.
+ *
+ * Structure:
+ *   [TOP HEADER]      ← BACK   UNLOCKED ══════════════ RECORDS 100%
+ *   [MAIN DOSSIER]    [LEFT: Big Vertically Centered Portrait + Vertical Name Bar]
+ *                     [RIGHT: Stacked Cards]
+ *                       - Card 1: ID Bio Card + Color Ramp + Crest + Quote
+ *                       - Card 2: [ INTENT OF APPLICATION ] + 7 Hatch Bars + City Window
+ *                       - Card 3: [ REGISTERED EVENTS ] + 7 Hatch Bars + Terminal Window
+ *   [FOOTER]          CYBERSENTINEL CITY // PUBLIC SECURITY BUREAU
+ */
 export function CharacterProfile({ character, registration }: CharacterProfileProps) {
   return (
-    <ThemeProvider theme={character.theme}>
-      <ProfileHeader progress={100} label="UNLOCKED" />
+    <ThemeProvider theme={character.theme} charId={character.id}>
+      <div className="profile-frame">
+        {/* ── Top header bar ── */}
+        <ProfileHeader progress={100} label="RECORDS" />
 
-      <div className="profile-dossier">
-        <CharacterPortrait character={character} />
-        <CharacterInfo character={character} registration={registration} />
+        {/* ── Main dossier body ── */}
+        <div className="profile-dossier">
+          {/* LEFT: Full-body art (big, vertically centered) with vertical name bar */}
+          <CharacterPortrait character={character} />
 
-        <IntentPanel title="INTENT OF APPLICATION" hint="PROJECT ACCESS" areaClass="profile-panel--intent">
-          <p className="profile-panel__body">{character.intent}</p>
-        </IntentPanel>
+          {/* RIGHT: Stacked 3 cyber cards */}
+          <div className="profile-right-col">
+            {/* Card 1: Personnel Dossier Identification */}
+            <CharacterInfo character={character} registration={registration} />
 
-        <RegisteredEvents events={registration.events} />
+            {/* Card 2: Intent of Application */}
+            <IntentPanel character={character} />
+
+            {/* Card 3: Registered Events / Security Evaluation */}
+            <RegisteredEvents character={character} registration={registration} />
+          </div>
+        </div>
+
+        {/* ── Footer ── */}
+        <footer className="profile-footer">
+          <div className="profile-footer__left">
+            <img
+              src={character?.crestImage || '/assets/characters/cyber-crest.png'}
+              alt="Bureau Crest"
+              className="profile-footer__crest"
+              aria-hidden="true"
+            />
+            <span>{character?.footerLeft || 'CYBERSENTINEL CITY // PUBLIC SECURITY BUREAU'}</span>
+          </div>
+          <div className="profile-footer__right">
+            <span>{character?.footerRight || 'A SAFER CITY. A MORE HONEST TOMORROW.'}</span>
+          </div>
+        </footer>
       </div>
-
-      <footer className="profile-footer">
-        <span>CYBERSENTINEL CITY // EVENTS REGISTRY</span>
-        <span>A SAFER CITY. A MORE HONEST TOMORROW.</span>
-      </footer>
     </ThemeProvider>
   )
 }

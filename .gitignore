@@ -30,4 +30,7 @@ Thumbs.db
 # Scratch & loose root assets
 8087.png
 \# CYBERSENTINEL 2K26.txt
+scratch/
+*.cpuprofile
+
 

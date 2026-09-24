@@ -1,0 +1,60 @@
+.cyber-back-btn {
+  position: fixed;
+  top: 1.25rem;
+  left: 1.25rem;
+  z-index: 999;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 1rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #22d3ee;
+  background: rgba(6, 11, 24, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(34, 211, 238, 0.45);
+  box-shadow:
+    0 0 16px rgba(34, 211, 238, 0.18),
+    0 4px 16px rgba(0, 0, 0, 0.65);
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.cyber-back-btn:hover {
+  color: #ffffff;
+  background: rgba(34, 211, 238, 0.22);
+  border-color: #22d3ee;
+  box-shadow:
+    0 0 22px rgba(34, 211, 238, 0.5),
+    0 4px 20px rgba(0, 0, 0, 0.8);
+  transform: translateX(-3px);
+}
+
+.cyber-back-btn:active {
+  transform: translateX(-1px) scale(0.98);
+}
+
+.cyber-back-btn__arrow {
+  font-size: 0.85rem;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.cyber-back-btn:hover .cyber-back-btn__arrow {
+  transform: translateX(-2px);
+}
+
+@media (max-width: 640px) {
+  .cyber-back-btn {
+    top: 0.85rem;
+    left: 0.85rem;
+    padding: 0.35rem 0.8rem;
+    font-size: 0.65rem;
+  }
+}
