@@ -1,8 +1,11 @@
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import type { CSSProperties } from 'react'
 import './ParticleField.css'
 
 const PARTICLE_COUNT = 28
+// Phones get a sparser field: each particle is its own animated compositor
+// layer, and low-end mobile GPUs feel that cost first.
+const PARTICLE_COUNT_MOBILE = 16
 const PARTICLE_COLORS = ['var(--city-violet-soft)', 'var(--city-cyan)', 'var(--city-pink)']
 
 interface Particle {
@@ -16,8 +19,8 @@ interface Particle {
   delay: number
 }
 
-function createParticles(): Particle[] {
-  return Array.from({ length: PARTICLE_COUNT }, (_, id) => ({
+function createParticles(count: number): Particle[] {
+  return Array.from({ length: count }, (_, id) => ({
     id,
     left: Math.random() * 100,
     top: Math.random() * 70, // keep sparse/ambient, favor the upper-mid scene over the busy foreground
@@ -32,6 +35,7 @@ function createParticles(): Particle[] {
 interface ParticleFieldProps {
   zIndex: number
   reducedMotion: boolean
+  isMobile: boolean
 }
 
 /**
@@ -39,8 +43,10 @@ interface ParticleFieldProps {
  * Category A (camera-anchored): they live inside CityScene's sticky viewport
  * so they never move with the page, only drift gently in place via CSS.
  */
-export function ParticleField({ zIndex, reducedMotion }: ParticleFieldProps) {
-  const particles = useMemo(() => createParticles(), [])
+// memo: CityScene re-renders on every scroll frame, but nothing here depends
+// on scroll progress — skip re-rendering the whole field each frame.
+export const ParticleField = memo(function ParticleField({ zIndex, reducedMotion, isMobile }: ParticleFieldProps) {
+  const particles = useMemo(() => createParticles(isMobile ? PARTICLE_COUNT_MOBILE : PARTICLE_COUNT), [isMobile])
 
   return (
     <div className="particle-field" style={{ zIndex }} aria-hidden="true">
@@ -52,7 +58,7 @@ export function ParticleField({ zIndex, reducedMotion }: ParticleFieldProps) {
           top: `${particle.top}%`,
           width: `${particle.size}px`,
           height: `${particle.size}px`,
-          background: particle.color,
+          '--particle-color': particle.color,
           animationDuration: reducedMotion ? '0s' : `${particle.duration}s`,
           animationDelay: reducedMotion ? '0s' : `${particle.delay}s`,
           animationPlayState: reducedMotion ? 'paused' : 'running',
@@ -63,4 +69,4 @@ export function ParticleField({ zIndex, reducedMotion }: ParticleFieldProps) {
       })}
     </div>
   )
-}
+})

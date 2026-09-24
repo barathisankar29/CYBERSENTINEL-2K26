@@ -19,7 +19,7 @@ export interface BrandingStripLogo {
  * add/remove/reorder a logo here without touching BrandingStrip.tsx.
  */
 export const brandingStripLogos: BrandingStripLogo[] = [
-  { id: 'aicte', src: '/assets/branding/aicte-logo.png', alt: 'AICTE', width: 316, height: 316 },
+  { id: 'aicte', src: '/assets/branding/aicte-logo.webp', alt: 'AICTE', width: 316, height: 316 },
   { id: 'naac', src: '/assets/branding/naac-logo.png', alt: 'NAAC Accredited Grade A', width: 225, height: 225, blend: 'multiply' },
   {
     id: 'vel-tech',
@@ -32,7 +32,7 @@ export const brandingStripLogos: BrandingStripLogo[] = [
   { id: 'nba', src: '/assets/branding/nba-logo.png', alt: 'National Board of Accreditation', width: 225, height: 225, blend: 'multiply' },
   {
     id: 'hackathon-club',
-    src: '/assets/branding/hackathon_club_logo.png',
+    src: '/assets/branding/hackathon_club_logo.webp',
     alt: 'Hackathon Club',
     width: 1152,
     height: 1152,

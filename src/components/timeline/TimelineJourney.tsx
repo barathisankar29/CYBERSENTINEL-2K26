@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { useReducedMotion } from '@/animation/useReducedMotion'
 import { timelineEvents } from '@/data/timelineSchedule'
 import type { DayKey, TimelineEvent } from '@/types/timeline'
@@ -7,7 +7,7 @@ import { useJourneyProgress } from './useJourneyProgress'
 import { TimelinePoint } from './TimelinePoint'
 import './TimelineJourney.css'
 
-const TRAIN_SRC = '/assets/timeline/timeline-train.png'
+const TRAIN_SRC = '/assets/timeline/timeline-train.webp'
 
 // Frame 1 is the only one ever visible at rest (both days' journeys start
 // there — see journeyBoundsFor) so it alone loads eagerly/with priority.
@@ -335,9 +335,12 @@ export function TimelineJourney() {
             </div>
 
             <div className={`timeline-hud__progress timeline-hud__progress--${activeDay}`}>
-              <div className="timeline-hud__progress-track">
-                <div className="timeline-hud__progress-fill" style={{ width: `${progress * 100}%` }} />
-                <div className="timeline-hud__progress-dot" style={{ left: `${progress * 100}%` }} />
+              {/* One CSS variable drives both fill (scaleX) and dot (translateX)
+                  — transform-only, so the per-frame journey update never
+                  triggers layout. See TimelineJourney.css. */}
+              <div className="timeline-hud__progress-track" style={{ '--p': progress } as CSSProperties}>
+                <div className="timeline-hud__progress-fill" />
+                <div className="timeline-hud__progress-dot" />
               </div>
               <span className="timeline-hud__event-count">
                 EVENT {String(currentStationNumber).padStart(2, '0')} / {String(points.length).padStart(2, '0')}

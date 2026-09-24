@@ -1,16 +1,15 @@
 import './ScrollIndicator.css'
 
 interface ScrollIndicatorProps {
-  /** Master scroll progress (0-1). Indicator fades out once progress > 0.04 */
-  progress: number
+  /** Whether the hero has been scrolled past the hint's threshold — the
+   * indicator fades out once true. */
+  scrolledPast: boolean
   /** Whether the intro has completed and the website is revealed */
   visible?: boolean
 }
 
-export function ScrollIndicator({ progress, visible = true }: ScrollIndicatorProps) {
-  // Fade out as user scrolls past 0.04
-  const isScrolledPast = progress > 0.04
-  const isShown = visible && !isScrolledPast
+export function ScrollIndicator({ scrolledPast, visible = true }: ScrollIndicatorProps) {
+  const isShown = visible && !scrolledPast
 
   const handleClick = () => {
     // Smooth scroll into the city scene

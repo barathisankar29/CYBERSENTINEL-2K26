@@ -187,8 +187,9 @@
 }
 
 .timeline-hud__progress-track {
+  --track-w: min(240px, 58vw);
   position: relative;
-  width: min(240px, 58vw);
+  width: var(--track-w);
   height: 3px;
   border-radius: 9999px;
   background: rgba(255, 255, 255, 0.12);
@@ -198,6 +199,9 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
+  transform: scaleX(var(--p, 0));
+  transform-origin: left center;
+  will-change: transform;
   background: linear-gradient(90deg, rgba(34, 211, 238, 0.9), rgba(124, 58, 237, 0.9));
 }
 
@@ -208,12 +212,14 @@
 .timeline-hud__progress-dot {
   position: absolute;
   top: 50%;
+  left: 0;
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: #ffffff;
   box-shadow: 0 0 10px rgba(34, 211, 238, 0.9), 0 0 4px #ffffff;
-  transform: translate(-50%, -50%);
+  transform: translate(calc(var(--p, 0) * var(--track-w) - 50%), -50%);
+  will-change: transform;
 }
 
 .timeline-hud__event-count {
@@ -689,7 +695,7 @@
   }
 
   .timeline-hud__progress-track {
-    width: min(180px, 52vw);
+    --track-w: min(180px, 52vw);
   }
 
   .day-select {

@@ -1,0 +1,53 @@
+.route-fallback {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  background: var(--city-black, #05040a);
+  /* Only appears if loading takes noticeably long, so a fast (prefetched)
+     chunk never flashes it on screen. */
+  animation: route-fallback-in 200ms ease 150ms both;
+}
+
+.route-fallback__bar {
+  position: relative;
+  width: 140px;
+  height: 2px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--city-cyan, #22d3ee) 18%, transparent);
+}
+
+.route-fallback__bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--city-cyan, #22d3ee), var(--city-magenta, #d926c9), transparent);
+  transform: translateX(-100%);
+  animation: route-fallback-scan 1.1s ease-in-out infinite;
+}
+
+.route-fallback__text {
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 0.62rem;
+  letter-spacing: 0.4em;
+  color: color-mix(in srgb, white 60%, var(--city-cyan, #22d3ee) 40%);
+}
+
+@keyframes route-fallback-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes route-fallback-scan {
+  to { transform: translateX(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-fallback__bar::after {
+    animation: none;
+    transform: none;
+  }
+}

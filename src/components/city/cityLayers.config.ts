@@ -72,7 +72,7 @@ export interface CityLayerConfig {
 export const cityLayers: CityLayerConfig[] = [
   {
     id: 'sky',
-    src: '/assets/city/city-bg-sky.png',
+    src: '/assets/city/city-bg-sky.webp',
     zIndex: 1,
     anchor: 'fill',
     objectPosition: 'center top',
@@ -87,7 +87,7 @@ export const cityLayers: CityLayerConfig[] = [
   },
   {
     id: 'distant-skyline',
-    src: '/assets/city/city-distant-skyline.png',
+    src: '/assets/city/city-distant-skyline.webp',
     zIndex: 2,
     anchor: 'fill',
     objectPosition: 'center bottom',
@@ -99,7 +99,7 @@ export const cityLayers: CityLayerConfig[] = [
   },
   {
     id: 'midground',
-    src: '/assets/city/city-midground.png',
+    src: '/assets/city/city-midground.webp',
     zIndex: 3,
     anchor: 'fill',
     objectPosition: 'center bottom',
@@ -111,7 +111,7 @@ export const cityLayers: CityLayerConfig[] = [
   },
   {
     id: 'bridges',
-    src: '/assets/city/city-bridges.png',
+    src: '/assets/city/city-bridges.webp',
     zIndex: 4,
     anchor: 'fill',
     objectPosition: 'center bottom',
@@ -124,7 +124,7 @@ export const cityLayers: CityLayerConfig[] = [
   },
   {
     id: 'light-trails',
-    src: '/assets/city/city-light-trails.png',
+    src: '/assets/city/city-light-trails.webp',
     zIndex: 5,
     anchor: 'fill',
     objectPosition: 'center bottom',
@@ -137,7 +137,7 @@ export const cityLayers: CityLayerConfig[] = [
   },
   {
     id: 'foreground',
-    src: '/assets/city/city-foreground.png',
+    src: '/assets/city/city-foreground.webp',
     zIndex: 6,
     anchor: 'fill',
     objectPosition: 'center bottom',
@@ -150,7 +150,7 @@ export const cityLayers: CityLayerConfig[] = [
   },
   {
     id: 'foreground-glow',
-    src: '/assets/city/city-foreground-glow.png',
+    src: '/assets/city/city-foreground-glow.webp',
     zIndex: 7,
     // Bottom-anchored so it always hugs the bottom edge regardless of travel.
     anchor: 'bottom',

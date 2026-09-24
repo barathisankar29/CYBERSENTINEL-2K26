@@ -1,13 +1,16 @@
-import { useRef } from 'react'
-import { useScrollProgress } from '@/animation/scrollController'
+import { useCallback, useRef, useState } from 'react'
+import { useScrollProgressVar } from '@/animation/scrollController'
 import { useReducedMotion } from '@/animation/useReducedMotion'
 import { useIsMobile } from '@/hooks/useIsMobile'
-import { IdentityLayer } from '@/components/intro/IdentityLayer'
+import { IdentityLayer, REGISTER_CTA_INTERACTIVE_PROGRESS } from '@/components/intro/IdentityLayer'
 import { ScrollIndicator } from '@/components/ui/ScrollIndicator'
 import { CityLayer } from './CityLayer'
 import { ParticleField } from './ParticleField'
 import { cityLayers } from './cityLayers.config'
 import './CityScene.css'
+
+/** Progress past which the "scroll to see magic" hint has done its job. */
+const SCROLL_HINT_HIDE_PROGRESS = 0.04
 
 const PARTICLE_Z_INDEX = 8
 const IDENTITY_Z_INDEX = 9
@@ -16,10 +19,12 @@ const IDENTITY_Z_INDEX = 9
  * The hero's own scroll distance, driving its own internal cinematic reveal.
  * Sticky-pin math: the actual scroll distance to take progress 0->1 is
  * (this value - 100vh), since the 100vh sticky viewport stays pinned for
- * that span before un-sticking. 500vh - 100vh = 400vh = ~4 viewport-height
- * scrolls of progressive assembly.
+ * that span before un-sticking. 400vh - 100vh = 300vh = ~3 viewport-height
+ * scrolls of progressive assembly. Every reveal window (cityLayers.config.ts,
+ * identityReveal.config.ts) is expressed as a 0-1 fraction of that span, so
+ * shortening it keeps every stage and their relative pacing intact.
  */
-const HERO_SCROLL_VH = 500
+const HERO_SCROLL_VH = 400
 
 /**
  * The opening hero city — a normal, self-contained page section (its own
@@ -42,18 +47,26 @@ export function CityScene({ introCompleted = true }: CitySceneProps) {
   const spacerRef = useRef<HTMLDivElement>(null)
   const isMobile = useIsMobile()
   const reducedMotion = useReducedMotion()
-  const { progress: scrollProgress } = useScrollProgress(spacerRef)
-  const progress = reducedMotion ? 1 : scrollProgress
+  // Per-frame progress goes straight to CSS (--scene-progress on the
+  // section; see progressCss.ts) — React only re-renders here when one of
+  // these two coarse flags actually flips, never on every scroll tick.
+  const [scrolledPast, setScrolledPast] = useState(reducedMotion)
+  const [ctaInteractive, setCtaInteractive] = useState(reducedMotion)
+  const handleProgress = useCallback((progress: number) => {
+    setScrolledPast(progress > SCROLL_HINT_HIDE_PROGRESS)
+    setCtaInteractive(progress >= REGISTER_CTA_INTERACTIVE_PROGRESS)
+  }, [])
+  useScrollProgressVar(spacerRef, { pinned: reducedMotion ? 1 : null, onProgress: handleProgress })
 
   return (
     <section ref={spacerRef} className="city-scene" style={{ height: `${HERO_SCROLL_VH}vh` }}>
       <div className="city-scene__viewport">
         {cityLayers.map((layer) => (
-          <CityLayer key={layer.id} layer={layer} progress={progress} isMobile={isMobile} />
+          <CityLayer key={layer.id} layer={layer} isMobile={isMobile} />
         ))}
-        <ParticleField zIndex={PARTICLE_Z_INDEX} reducedMotion={reducedMotion} />
-        <IdentityLayer zIndex={IDENTITY_Z_INDEX} progress={progress} />
-        <ScrollIndicator progress={progress} visible={introCompleted} />
+        <ParticleField zIndex={PARTICLE_Z_INDEX} reducedMotion={reducedMotion} isMobile={isMobile} />
+        <IdentityLayer zIndex={IDENTITY_Z_INDEX} ctaInteractive={ctaInteractive} />
+        <ScrollIndicator scrolledPast={scrolledPast} visible={introCompleted} />
       </div>
     </section>
   )

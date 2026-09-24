@@ -16,8 +16,8 @@ export const characterProfiles: Record<string, CharacterConfig> = {
     id: 'nico',
     name: 'NICO',
     recordId: 'NICO-007',
-    image: '/assets/characters/Nico.png',
-    shortImage: '/assets/characters/short_nico.jpeg',
+    image: '/assets/characters/Nico.webp',
+    shortImage: '/assets/characters/short_nico.webp',
     theme: {
       primary: '#38bdf8',
       secondary: '#3b82f6',
@@ -37,8 +37,8 @@ export const characterProfiles: Record<string, CharacterConfig> = {
     id: 'ruelle',
     name: 'RUELLE',
     recordId: 'RUELLE-077',
-    image: '/assets/characters/Ruelle.png',
-    shortImage: '/assets/characters/short_ruelle.jpeg',
+    image: '/assets/characters/Ruelle.webp',
+    shortImage: '/assets/characters/short_ruelle.webp',
     theme: {
       primary: '#a855f7',
       secondary: '#7c3aed',
@@ -58,8 +58,8 @@ export const characterProfiles: Record<string, CharacterConfig> = {
     id: 'dacre',
     name: 'Dr. DACRE',
     recordId: 'DACRE-001',
-    image: '/assets/characters/Dr_Dacre.png',
-    shortImage: '/assets/characters/short_dr_dacre.jpeg',
+    image: '/assets/characters/Dr_Dacre.webp',
+    shortImage: '/assets/characters/short_dr_dacre.webp',
     theme: {
       primary: '#2dd4bf',
       secondary: '#10b981',
@@ -80,8 +80,8 @@ export const characterProfiles: Record<string, CharacterConfig> = {
     id: 'cosma',
     name: 'COSMA',
     recordId: 'COSMA-001',
-    image: '/assets/characters/Cosma.png',
-    shortImage: '/assets/characters/short_cosma.jpeg',
+    image: '/assets/characters/Cosma.webp',
+    shortImage: '/assets/characters/short_cosma.webp',
     theme: {
       primary: '#d4af37',
       secondary: '#f5c542',

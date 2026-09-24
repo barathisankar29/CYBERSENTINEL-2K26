@@ -111,3 +111,23 @@
     font-size: 0.66rem;
   }
 }
+
+/* Bottom-center placement (mobile navigation city) — sits below the six
+   cards, over the dark lower-city buildings. Centered with left/right +
+   margin rather than translateX so the existing hover lift (transform)
+   keeps working unchanged. */
+.identity-terminal--bottom {
+  top: auto;
+  bottom: clamp(1rem, 4%, 2rem);
+  left: 0;
+  right: 0;
+  width: max-content;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .identity-terminal--bottom {
+    top: auto;
+    left: 0;
+  }
+}

@@ -22,7 +22,6 @@ export function VideoIntro({
   const activeVideoSrc = videoSrc ?? (isMobile ? mobileSrc : desktopSrc)
 
   const videoRef = useRef<HTMLVideoElement>(null)
-  const bgVideoRef = useRef<HTMLVideoElement>(null)
   const [isMuted, setIsMuted] = useState(true)
   const [isLoaded, setIsLoaded] = useState(false)
   const hasTriggeredFinish = useRef(false)
@@ -31,8 +30,14 @@ export function VideoIntro({
   const handleFinish = useCallback(() => {
     if (hasTriggeredFinish.current) return
     hasTriggeredFinish.current = true
-    if (videoRef.current) {
-      videoRef.current.pause()
+    const video = videoRef.current
+    if (video) {
+      // Release the decoder and buffered media right away (skip or natural
+      // end) — detaching `src` + `load()` is what actually frees them;
+      // pausing alone keeps the decoder and network connection alive.
+      video.pause()
+      video.removeAttribute('src')
+      video.load()
     }
     onFinish()
   }, [onFinish])
@@ -40,7 +45,6 @@ export function VideoIntro({
   // Normal muted video playback on initial website load
   useEffect(() => {
     const video = videoRef.current
-    const bgVideo = bgVideoRef.current
     if (!video) return
 
     video.muted = true
@@ -53,20 +57,11 @@ export function VideoIntro({
         // Autoplay fallback
       }
 
-      if (bgVideo) {
-        try {
-          bgVideo.muted = true
-          await bgVideo.play()
-        } catch {
-          // Ambient background video fallback
-        }
-      }
     }
 
     tryPlay()
   }, [activeVideoSrc])
 
-  // Sync background ambient video with main video
   const handleTimeUpdate = () => {
     const video = videoRef.current
     if (!video) return
@@ -79,9 +74,6 @@ export function VideoIntro({
       return
     }
 
-    if (bgVideoRef.current && Math.abs(bgVideoRef.current.currentTime - video.currentTime) > 0.3) {
-      bgVideoRef.current.currentTime = video.currentTime
-    }
   }
 
   const handleLoadedMetadata = () => {
@@ -89,9 +81,6 @@ export function VideoIntro({
     const video = videoRef.current
     if (video && lastTimeRef.current > 0 && lastTimeRef.current < (video.duration || 10) - 0.2) {
       video.currentTime = lastTimeRef.current
-      if (bgVideoRef.current) {
-        bgVideoRef.current.currentTime = lastTimeRef.current
-      }
     }
   }
 
@@ -127,24 +116,13 @@ export function VideoIntro({
       role="region"
       aria-label="Symposium Cinematic Intro Screen"
     >
-      {/* Reactive ambient lighting layer mirroring video tones */}
-      <video
-        ref={bgVideoRef}
-        className="video-intro__bg-blur"
-        src={activeVideoSrc}
-        playsInline
-        autoPlay
-        muted
-        loop
-        aria-hidden="true"
-      />
-
       {/* Main cinematic video canvas (uninterrupted playback, no click-to-pause) */}
       <div className="video-intro__stage">
         <video
           ref={videoRef}
           className="video-intro__video"
           src={activeVideoSrc}
+          preload="auto"
           playsInline
           autoPlay
           muted={isMuted}

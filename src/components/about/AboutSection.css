@@ -23,7 +23,7 @@
   background-color: var(--city-black, #05040a);
   background-image: 
     linear-gradient(180deg, rgba(5, 4, 10, 0.25) 0%, rgba(5, 4, 10, 0.78) 90px, rgba(11, 10, 26, 0.88) 220px, rgba(5, 4, 10, 0.95) 100%),
-    url('/assets/city/city-bg-sky.png');
+    url('/assets/city/city-bg-sky.webp');
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;

@@ -3,10 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { navigationBuildings } from '@/data/navigation'
 import { mobileNavigationLayout } from '@/data/navigationMobile'
 import { ProfileAccessBadge } from '@/components/ui/ProfileAccessBadge'
-import { RegisterNowButton } from '@/components/ui/RegisterNowButton'
 import './NavigationCityMobile.css'
 
-const BG_SRC = '/assets/city/navigation/navigation-mobile.png'
+const BG_SRC = '/assets/city/navigation/navigation-mobile.webp'
 
 /**
  * The MOBILE-ONLY navigation presentation — a completely separate camera
@@ -28,7 +27,9 @@ const BG_SRC = '/assets/city/navigation/navigation-mobile.png'
  * Six liquid-glass cards, each independently positioned near its own
  * landmark (see navigationMobile.ts), with a thin glowing connector line
  * running DOWN to the building and a synchronized glow/brighten at the
- * building's own anchor point on hover/touch.
+ * building's own anchor point on hover/touch. The identity terminal sits
+ * at the bottom of the composition, below the cards; the Register Now CTA
+ * lives in the hero (see IdentityLayer.tsx).
  */
 export function NavigationCityMobile() {
   const navigate = useNavigate()
@@ -39,14 +40,22 @@ export function NavigationCityMobile() {
   return (
     <section className="mobile-nav-section">
       <div className="mobile-nav-scene">
-        <img src={BG_SRC} alt="" draggable={false} className="mobile-nav-scene__bg" />
+        <img
+          src={BG_SRC}
+          alt=""
+          width={941}
+          height={1672}
+          loading="lazy"
+          decoding="async"
+          draggable={false}
+          className="mobile-nav-scene__bg"
+        />
 
         {/* Same atmospheric handoff treatment as desktop (see
             NavigationCityScene.css) so the hero -> navigation transition
             reads as one continuous environment on mobile too. */}
         <div className="mobile-nav-scene__atmosphere-blend" aria-hidden="true" />
-        <ProfileAccessBadge />
-        <RegisterNowButton />
+        <ProfileAccessBadge placement="bottom" />
 
         <svg
           className="mobile-nav-scene__connectors"

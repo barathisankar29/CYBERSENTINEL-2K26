@@ -12,8 +12,15 @@ import './ProfileAccessBadge.css'
  * shimmer (nobody knows their identity yet); after registration it locks
  * to that character's own color and name — both states are derived from
  * the actual stored registration, never hardcoded.
+ *
+ * `placement` picks the corner: `top` (default, top-left — desktop) or
+ * `bottom` (bottom-center — mobile, below the navigation cards).
  */
-export function ProfileAccessBadge() {
+interface ProfileAccessBadgeProps {
+  placement?: 'top' | 'bottom'
+}
+
+export function ProfileAccessBadge({ placement = 'top' }: ProfileAccessBadgeProps) {
   const navigate = useNavigate()
   const [characterName, setCharacterName] = useState<string | null>(null)
   const [color, setColor] = useState<string | null>(null)
@@ -39,7 +46,7 @@ export function ProfileAccessBadge() {
   return (
     <button
       type="button"
-      className={`identity-terminal ${isAssigned ? 'identity-terminal--assigned' : 'identity-terminal--unassigned'}`}
+      className={`identity-terminal identity-terminal--${placement} ${isAssigned ? 'identity-terminal--assigned' : 'identity-terminal--unassigned'}`}
       style={style}
       onClick={() => navigate('/profile')}
       title={isAssigned ? `Open ${characterName} dossier` : 'No active identity record'}
