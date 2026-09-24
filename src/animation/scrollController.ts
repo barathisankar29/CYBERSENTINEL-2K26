@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { RefObject } from 'react'
+import { PROGRESS_VAR } from './progressCss'
 
 /**
  * Scroll-progress abstraction described in ARCHITECTURE.md §6. Tracks how
@@ -69,4 +70,66 @@ export function useScrollProgress<T extends HTMLElement>(
   }, [ref, enabled])
 
   return { progress }
+}
+
+interface ScrollProgressVarOptions {
+  /** Fixed progress to hold instead of tracking scroll (reduced motion). */
+  pinned?: number | null
+  /** Called with every new progress value — for the few consumers that
+   * need a coarse JS-side flag. Keep it to setState on booleans, so React
+   * bails out on unchanged values instead of re-rendering every frame. */
+  onProgress?: (progress: number) => void
+}
+
+/**
+ * Same measurement as useScrollProgress, but instead of React state it
+ * writes the value to `--scene-progress` on `ref`'s element once per
+ * frame, so a scroll-driven scene updates through CSS alone (see
+ * progressCss.ts) and React does not re-render it on every scroll tick.
+ * Layout effect: the initial value lands before first paint, so there is
+ * no single-frame flash at the wrong progress.
+ */
+export function useScrollProgressVar<T extends HTMLElement>(
+  ref: RefObject<T | null>,
+  { pinned = null, onProgress }: ScrollProgressVarOptions = {},
+): void {
+  const onProgressRef = useRef(onProgress)
+  useLayoutEffect(() => {
+    onProgressRef.current = onProgress
+  })
+
+  useLayoutEffect(() => {
+    const element = ref.current
+    if (!element) return
+
+    const apply = (value: number) => {
+      element.style.setProperty(PROGRESS_VAR, String(value))
+      onProgressRef.current?.(value)
+    }
+
+    if (pinned !== null) {
+      apply(pinned)
+      return
+    }
+
+    let frame: number | null = null
+    const measure = () => {
+      frame = null
+      const rect = element.getBoundingClientRect()
+      const scrollableDistance = Math.max(rect.height - window.innerHeight, 1)
+      apply(Math.min(Math.max(-rect.top / scrollableDistance, 0), 1))
+    }
+    const requestMeasure = () => {
+      if (frame === null) frame = requestAnimationFrame(measure)
+    }
+
+    measure()
+    window.addEventListener('scroll', requestMeasure, { passive: true })
+    window.addEventListener('resize', requestMeasure)
+    return () => {
+      window.removeEventListener('scroll', requestMeasure)
+      window.removeEventListener('resize', requestMeasure)
+      if (frame !== null) cancelAnimationFrame(frame)
+    }
+  }, [ref, pinned])
 }

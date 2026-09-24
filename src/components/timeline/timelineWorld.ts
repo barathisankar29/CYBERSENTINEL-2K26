@@ -8,9 +8,9 @@ import type { DayKey } from '@/types/timeline'
  * frame sits in the stitched world, with no DOM measurement required.
  */
 export const FRAME_SOURCES: { frame: 1 | 2 | 3; src: string; aspect: number }[] = [
-  { frame: 1, src: '/assets/timeline/timeline-frame-01.png', aspect: 2048 / 682 },
-  { frame: 2, src: '/assets/timeline/timeline-frame-02.png', aspect: 2172 / 724 },
-  { frame: 3, src: '/assets/timeline/timeline-frame-03.png', aspect: 2172 / 724 },
+  { frame: 1, src: '/assets/timeline/timeline-frame-01.webp', aspect: 2048 / 682 },
+  { frame: 2, src: '/assets/timeline/timeline-frame-02.webp', aspect: 2172 / 724 },
+  { frame: 3, src: '/assets/timeline/timeline-frame-03.webp', aspect: 2172 / 724 },
 ]
 
 const FRAME_ASPECT_SUM = FRAME_SOURCES.reduce((sum, frame) => sum + frame.aspect, 0)

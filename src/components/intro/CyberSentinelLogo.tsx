@@ -9,7 +9,7 @@ interface CyberSentinelLogoProps {
 
 /**
  * The CyberSentinel brand mark — real artwork
- * (public/assets/branding/cybersentinel-logo.png), not CSS-rendered type or
+ * (public/assets/branding/cybersentinel-logo.webp), not CSS-rendered type or
  * an added glitch/RGB-split effect layer; the artwork already carries its
  * own cyberpunk identity, including "2K26" as part of the lockup. This is
  * the PRIMARY visual element of the hero — sized as a fraction of the
@@ -24,7 +24,7 @@ interface CyberSentinelLogoProps {
 export function CyberSentinelLogo({ style }: CyberSentinelLogoProps) {
   return (
     <BrandLogo
-      src="/assets/branding/cybersentinel-logo.png"
+      src="/assets/branding/cybersentinel-logo.webp"
       alt="CyberSentinel 2K26"
       width={937}
       height={289}

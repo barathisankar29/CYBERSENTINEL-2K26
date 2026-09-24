@@ -48,6 +48,9 @@ export const identityReveal = {
   presents: { start: 0.61, end: 0.68, depthPx: 10 } satisfies RevealWindow,
   symposium: { start: 0.72, end: 0.9, depthPx: 28 } satisfies RevealWindow,
   info: { start: 0.85, end: 0.98, depthPx: 18 } satisfies RevealWindow,
+  // Hero Register Now CTA (see IdentityLayer.tsx) — follows the
+  // CyberSentinel identity so it lands last, just before the hero hands off.
+  registerCta: { start: 0.88, end: 0.97, depthPx: 18 } satisfies RevealWindow,
 }
 
 /**

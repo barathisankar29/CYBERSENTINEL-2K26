@@ -46,7 +46,7 @@ export const NAVIGATION_REVEAL_PROGRESS = 0.35
 export const navigationCityEnvironmentLayers: CityLayerConfig[] = [
   {
     id: 'new-bg',
-    src: '/assets/city/navigation/new_bg.png',
+    src: '/assets/city/navigation/new_bg.webp',
     zIndex: 2,
     anchor: 'fill',
     objectPosition: 'center bottom',

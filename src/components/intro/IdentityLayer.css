@@ -87,6 +87,7 @@
 .presented-by__association,
 .presented-by__presents,
 .symposium-identity__tagline,
-.symposium-identity__info {
+.symposium-identity__info,
+.identity-layer__cta {
   will-change: transform, opacity;
 }

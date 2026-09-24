@@ -9,7 +9,9 @@
   position: absolute;
   border-radius: 50%;
   opacity: var(--particle-opacity, 0.25);
-  filter: blur(0.5px);
+  /* Soft edge baked into the fill instead of `filter: blur()` — same look,
+     without a filter pass on every animated particle layer each frame. */
+  background: radial-gradient(circle, var(--particle-color) 45%, transparent 100%);
   animation-name: particle-drift;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;

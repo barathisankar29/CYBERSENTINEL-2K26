@@ -1,4 +1,5 @@
-import { useRef } from 'react'
+import { useRef, type CSSProperties } from 'react'
+import { PROGRESS_VAR } from '@/animation/progressCss'
 import { useScrollProgress } from '@/animation/scrollController'
 import { useReducedMotion } from '@/animation/useReducedMotion'
 import { useIsMobile } from '@/hooks/useIsMobile'
@@ -69,10 +70,15 @@ export function NavigationCityScene() {
   }
 
   return (
-    <section ref={spacerRef} className="navigation-city-scene" style={{ height: `${SCROLL_VH}vh` }}>
+    <section
+      ref={spacerRef}
+      className="navigation-city-scene"
+      // CityLayer reads its motion from --scene-progress (see progressCss.ts).
+      style={{ height: `${SCROLL_VH}vh`, [PROGRESS_VAR]: progress } as CSSProperties}
+    >
       <div className="navigation-city-scene__viewport">
         {navigationCityEnvironmentLayers.map((layer) => (
-          <CityLayer key={layer.id} layer={layer} progress={progress} isMobile={isMobile} />
+          <CityLayer key={layer.id} layer={layer} isMobile={isMobile} lazy />
         ))}
         {/* Atmospheric handoff from the hero above: a dark-to-violet-to-
             transparent haze (plus soft cyan/magenta glow) sitting over the
