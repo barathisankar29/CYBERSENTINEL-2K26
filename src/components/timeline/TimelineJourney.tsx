@@ -258,7 +258,7 @@ export function TimelineJourney() {
   }
 
   return (
-    <section className="timeline-journey">
+    <section id="timeline" className="timeline-journey">
       <div className="timeline-viewport" aria-label="CyberSentinel 2K26 Event Timeline">
         <div className="timeline-viewport__vignette" aria-hidden="true" />
 

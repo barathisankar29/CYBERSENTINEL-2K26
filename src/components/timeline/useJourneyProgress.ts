@@ -256,13 +256,36 @@ export function useJourneyProgress({ activeDay, breakpoints, reducedMotion }: Us
     let touchStartY: number | null = null
 
     const onWheel = (event: WheelEvent) => {
+      const target = event.target as HTMLElement | null
+      // Only capture when scrolling inside the timeline
+      if (!target?.closest('.timeline-journey')) return
+
+      const bps = breakpointsRef.current
+      // If at beginning and scrolling up, allow normal page scroll up
+      if (stepIndexRef.current <= 0 && event.deltaY < 0) return
+      // If at end and scrolling down, allow normal page scroll down (e.g. to footer)
+      if (stepIndexRef.current >= bps.length - 1 && event.deltaY > 0) return
+
       event.preventDefault()
       step(event.deltaY > 0 ? 1 : -1)
     }
     const onTouchStart = (event: TouchEvent) => {
+      const target = event.target as HTMLElement | null
+      if (!target?.closest('.timeline-journey')) return
       touchStartY = event.touches[0]?.clientY ?? null
     }
     const onTouchMove = (event: TouchEvent) => {
+      const target = event.target as HTMLElement | null
+      if (!target?.closest('.timeline-journey')) return
+
+      if (touchStartY !== null) {
+        const currentY = event.touches[0]?.clientY ?? touchStartY
+        const delta = touchStartY - currentY
+        const bps = breakpointsRef.current
+        if (stepIndexRef.current <= 0 && delta < 0) return
+        if (stepIndexRef.current >= bps.length - 1 && delta > 0) return
+      }
+
       event.preventDefault()
     }
     const onTouchEnd = (event: TouchEvent) => {
@@ -274,6 +297,10 @@ export function useJourneyProgress({ activeDay, breakpoints, reducedMotion }: Us
       step(delta > 0 ? 1 : -1)
     }
     const onKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null
+      const isInput = target?.tagName === 'INPUT' || target?.tagName === 'TEXTAREA' || target?.isContentEditable
+      if (isInput) return
+
       if (['ArrowDown', 'PageDown', ' '].includes(event.key)) {
         event.preventDefault()
         step(1)

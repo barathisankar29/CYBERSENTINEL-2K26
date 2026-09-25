@@ -2,6 +2,9 @@ import { useCallback, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { CityScene } from '@/components/city/CityScene'
 import { NavigationCityScene } from '@/components/city/NavigationCityScene'
+import { AboutSection } from '@/components/about/AboutSection'
+import { CredentialsSection } from '@/components/credentials/CredentialsSection'
+import { TimelineJourney } from '@/components/timeline/TimelineJourney'
 import { VideoIntro } from '@/components/intro/VideoIntro'
 import { FuturisticTransition } from '@/components/intro/FuturisticTransition'
 import { SiteFooter } from '@/components/ui/SiteFooter'
@@ -12,10 +15,10 @@ type IntroStage = 'intro' | 'transition' | 'completed'
 
 export function HomePage() {
   const location = useLocation()
-  const isNavigatingToBuildings = location.hash === '#buildings'
+  const isNavigatingToSection = ['#buildings', '#about', '#credentials', '#timeline'].includes(location.hash)
 
   const [introStage, setIntroStage] = useState<IntroStage>(() => {
-    if (isNavigatingToBuildings) {
+    if (isNavigatingToSection) {
       return 'completed'
     }
     if (hasSeenIntro()) {
@@ -29,6 +32,14 @@ export function HomePage() {
       markIntroAsSeen()
       setIntroStage('completed')
       scrollToBuildings()
+    } else if (['#about', '#credentials', '#timeline'].includes(location.hash)) {
+      markIntroAsSeen()
+      setIntroStage('completed')
+      const targetId = location.hash.slice(1)
+      const el = document.getElementById(targetId)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' })
+      }
     }
   }, [location.hash])
 
@@ -50,6 +61,9 @@ export function HomePage() {
       )}
       <CityScene introCompleted={introStage === 'completed'} />
       <NavigationCityScene />
+      <AboutSection />
+      <CredentialsSection />
+      <TimelineJourney />
       <SiteFooter />
     </main>
   )

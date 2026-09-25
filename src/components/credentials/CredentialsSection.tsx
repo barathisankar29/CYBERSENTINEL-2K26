@@ -16,6 +16,12 @@ export function CredentialsSection() {
 
   return (
     <section id="credentials" className="credentials-section" aria-label="Credentials & Committee">
+      {/* Background Graphic: User's Cyberpunk Campus Corridor Image */}
+      <div className="credentials-section__bg-wrap" aria-hidden="true">
+        <div className="credentials-section__bg-image" />
+        <div className="credentials-section__scanlines" />
+      </div>
+
       {/* Seamless Horizon Laser Seam & Portal Atmospheric Mist matching About Section */}
       <div className="credentials-section__horizon-line" aria-hidden="true" />
       <div className="credentials-section__portal-mist" aria-hidden="true" />
