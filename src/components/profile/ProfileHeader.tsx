@@ -9,7 +9,7 @@ interface ProfileHeaderProps {
 export function ProfileHeader({ progress, label = 'RECORDS' }: ProfileHeaderProps) {
   return (
     <header className="profile-header">
-      <Link to="/" className="profile-back-btn" aria-label="Back to home">
+      <Link to="/#buildings" className="profile-back-btn" aria-label="Back to buildings">
         ← BACK
       </Link>
 

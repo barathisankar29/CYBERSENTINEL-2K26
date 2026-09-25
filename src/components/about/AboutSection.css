@@ -170,23 +170,7 @@
   flex-direction: column;
   align-items: center;
   gap: 1.25rem;
-}
-
-.about-header__telemetry {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(11, 10, 26, 0.85);
-  border: 1px solid rgba(255, 62, 165, 0.6);
-  padding: 0.35rem 0.85rem;
-  border-radius: 9999px;
-  font-family: var(--font-display, 'Orbitron', monospace);
-  font-size: clamp(0.6rem, 1.3vw, 0.8rem);
-  letter-spacing: 0.12em;
-  color: var(--city-pink, #ff3ea5);
-  box-shadow: 0 0 16px rgba(255, 62, 165, 0.25);
-  backdrop-filter: blur(12px);
-  max-width: 95vw;
+  padding-top: 4.0rem;
 }
 
 .about-header__dot {

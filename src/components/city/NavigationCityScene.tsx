@@ -72,6 +72,7 @@ export function NavigationCityScene() {
   return (
     <section
       ref={spacerRef}
+      id="buildings"
       className="navigation-city-scene"
       // CityLayer reads its motion from --scene-progress (see progressCss.ts).
       style={{ height: `${SCROLL_VH}vh`, [PROGRESS_VAR]: progress } as CSSProperties}

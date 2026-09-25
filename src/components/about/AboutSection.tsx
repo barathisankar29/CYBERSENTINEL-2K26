@@ -26,11 +26,6 @@ export function AboutSection() {
       <div className="about-section__container">
         {/* Section Header */}
         <header className="about-header">
-          <div className="about-header__telemetry">
-            <span className="about-header__dot" />
-            <span className="about-header__code">SYSTEM ARCHIVE // NODE 0x01</span>
-            <span className="about-header__bracket">[ABOUT_SECTION]</span>
-          </div>
 
           <h2 className="about-header__title">
             <span className="about-header__title-gradient">ABOUT</span>{' '}
@@ -273,7 +268,6 @@ export function AboutSection() {
                       <div
                         key={member.name}
                         className={`club-member-card club-member-card--${member.color} bldg-pod`}
-                        tabIndex={0}
                       >
                         {/* Heading as their role */}
                         <div className="bldg-pod__roof">

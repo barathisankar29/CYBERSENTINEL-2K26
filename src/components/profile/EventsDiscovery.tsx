@@ -34,7 +34,7 @@ export function EventsDiscovery({ onSelectPack }: EventsDiscoveryProps) {
   return (
     <div className="discovery-root">
       <header className="discovery-header">
-        <Link to="/" className="discovery-back">← RETURN TO CITY</Link>
+        <Link to="/#buildings" className="discovery-back">← RETURN TO CITY</Link>
       </header>
 
       <div className="discovery-hero">

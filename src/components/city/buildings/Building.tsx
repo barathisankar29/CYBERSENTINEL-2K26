@@ -156,7 +156,10 @@ export function Building({ building, revealed, isMobile }: BuildingProps) {
       className="nav-building"
       style={wrapperStyle}
       aria-label={building.label}
-      onClick={() => navigate(`/${building.sectionSlug}`)}
+      onClick={() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+        navigate(`/${building.sectionSlug}`)
+      }}
     >
       <div className="nav-building__label-group" style={anchorStyle}>
         <div className={cardClassName} style={{ opacity: revealed ? 1 : 0 }}>

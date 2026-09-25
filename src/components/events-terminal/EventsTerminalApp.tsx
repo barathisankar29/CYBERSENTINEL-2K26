@@ -145,7 +145,7 @@ export function EventsTerminalApp() {
           reference's own pixel-button language rather than our neon-glass
           header, to not break the terminal's visual world. */}
       <Link
-        to="/"
+        to="/#buildings"
         onClick={() => sound.playNavClick()}
         className="self-start mb-2 px-2.5 py-1 font-silkscreen text-[10px] text-gray-400 border border-[#333] hover:text-white hover:border-[#ff007f] transition-colors"
         title="Exit terminal, return to CyberSentinel city"

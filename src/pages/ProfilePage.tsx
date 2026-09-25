@@ -41,7 +41,7 @@ export function ProfilePage() {
           <Link to="/events" className="profile-empty__cta">
             REGISTER TO UNLOCK YOUR CHARACTER
           </Link>
-          <Link to="/" className="profile-empty__back">← Return to City</Link>
+          <Link to="/#buildings" className="profile-empty__back">← Return to City</Link>
         </div>
       </div>
     )

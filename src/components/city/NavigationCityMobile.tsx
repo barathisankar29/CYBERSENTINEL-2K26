@@ -38,7 +38,7 @@ export function NavigationCityMobile() {
   const clearActive = (id: string) => setActiveId((current) => (current === id ? null : current))
 
   return (
-    <section className="mobile-nav-section">
+    <section className="mobile-nav-section" id="buildings">
       <div className="mobile-nav-scene">
         <img
           src={BG_SRC}
@@ -115,7 +115,10 @@ export function NavigationCityMobile() {
                     '--building-accent': building.accentColor,
                   } as CSSProperties
                 }
-                onClick={() => navigate(`/${building.sectionSlug}`)}
+                onClick={() => {
+                  window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+                  navigate(`/${building.sectionSlug}`)
+                }}
                 onPointerEnter={() => setActiveId(building.id)}
                 onPointerLeave={() => clearActive(building.id)}
                 onFocus={() => setActiveId(building.id)}

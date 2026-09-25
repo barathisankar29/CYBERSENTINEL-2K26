@@ -15,7 +15,7 @@ export function CharacterSelection({ onSelectPack }: CharacterSelectionProps) {
   return (
     <div className="selection-root">
       <header className="profile-header" style={{ maxWidth: 1300, margin: '0 auto 1.5rem' }}>
-        <Link to="/" className="profile-back-btn" style={{ color: '#22d3ee', borderColor: 'rgba(34,211,238,0.45)', background: 'rgba(34,211,238,0.1)' }}>
+        <Link to="/#buildings" className="profile-back-btn" style={{ color: '#22d3ee', borderColor: 'rgba(34,211,238,0.45)', background: 'rgba(34,211,238,0.1)' }}>
           ← BACK
         </Link>
       </header>

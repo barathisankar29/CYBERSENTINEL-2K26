@@ -118,6 +118,7 @@ export function VideoIntro({
     >
       {/* Main cinematic video canvas (uninterrupted playback, no click-to-pause) */}
       <div className="video-intro__stage">
+        {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
         <video
           ref={videoRef}
           className="video-intro__video"

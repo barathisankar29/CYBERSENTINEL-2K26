@@ -8,7 +8,7 @@ interface CyberBackButtonProps {
 }
 
 export function CyberBackButton({
-  to = '/',
+  to = '/#buildings',
   label = 'BACK',
   className = '',
 }: CyberBackButtonProps) {
