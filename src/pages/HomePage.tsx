@@ -5,6 +5,7 @@ import { NavigationCityScene } from '@/components/city/NavigationCityScene'
 import { AboutSection } from '@/components/about/AboutSection'
 import { CredentialsSection } from '@/components/credentials/CredentialsSection'
 import { TimelineJourney } from '@/components/timeline/TimelineJourney'
+import { TransportationSection } from '@/components/transportation/TransportationSection'
 import { VideoIntro } from '@/components/intro/VideoIntro'
 import { FuturisticTransition } from '@/components/intro/FuturisticTransition'
 import { SiteFooter } from '@/components/ui/SiteFooter'
@@ -15,7 +16,7 @@ type IntroStage = 'intro' | 'transition' | 'completed'
 
 export function HomePage() {
   const location = useLocation()
-  const isNavigatingToSection = ['#buildings', '#about', '#credentials', '#timeline'].includes(location.hash)
+  const isNavigatingToSection = ['#buildings', '#about', '#credentials', '#timeline', '#transport', '#transportation'].includes(location.hash)
 
   const [introStage, setIntroStage] = useState<IntroStage>(() => {
     if (isNavigatingToSection) {
@@ -32,11 +33,11 @@ export function HomePage() {
       markIntroAsSeen()
       setIntroStage('completed')
       scrollToBuildings()
-    } else if (['#about', '#credentials', '#timeline'].includes(location.hash)) {
+    } else if (['#about', '#credentials', '#timeline', '#transport', '#transportation'].includes(location.hash)) {
       markIntroAsSeen()
       setIntroStage('completed')
-      const targetId = location.hash.slice(1)
-      const el = document.getElementById(targetId)
+      const targetId = location.hash === '#transportation' ? 'transport' : location.hash.slice(1)
+      const el = document.getElementById(targetId) || (targetId === 'transport' ? document.getElementById('transportation') : null)
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' })
       }
@@ -64,6 +65,7 @@ export function HomePage() {
       <AboutSection />
       <CredentialsSection />
       <TimelineJourney />
+      <TransportationSection />
       <SiteFooter />
     </main>
   )

@@ -5,7 +5,8 @@ import './TransportationSection.css'
 
 export function TransportationSection() {
   return (
-    <section id="transportation" className="transportation-section" aria-label="Transportation & Campus Transit">
+    <section id="transport" className="transportation-section" aria-label="Transportation & Campus Transit">
+      <div id="transportation" aria-hidden="true" style={{ position: 'absolute', top: 0, left: 0 }} />
       {/* Background Graphic: User's Cyberpunk Vel Tech Gate Image */}
       <div className="transportation-section__bg-wrap" aria-hidden="true">
         <div className="transportation-section__bg-image" />
