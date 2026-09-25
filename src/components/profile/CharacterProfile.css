@@ -1106,9 +1106,13 @@
 
 /* ─── Responsive Adjustments: Desktop = No Scroll, Tablets & Mobile = Natural Scroll ─── */
 @media (max-width: 1024px), (max-height: 680px) {
-  html,
-  body,
-  #root {
+  /* Scoped to while the profile page is mounted: once this stylesheet is
+     loaded it stays in the document, and an unscoped html/body/#root
+     overflow override turns #root into a scroll container site-wide —
+     which breaks every `position: sticky` scene (e.g. the Home hero). */
+  html:has(.profile-root),
+  html:has(.profile-root) body,
+  html:has(.profile-root) #root {
     height: auto !important;
     min-height: 100% !important;
     overflow-x: hidden !important;
