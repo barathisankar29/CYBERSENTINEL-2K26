@@ -6,6 +6,7 @@
   position: sticky;
   top: 0;
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   background: var(--city-black);
 }
@@ -37,6 +38,91 @@
       color-mix(in srgb, var(--city-violet) 40%, transparent) 65%,
       transparent 100%
     );
+}
+
+/* Futuristic Laser Seam & Horizon Beacon across Hero -> Buildings Transition */
+.navigation-city-scene__horizon-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(34, 211, 238, 0.2) 15%,
+    rgba(255, 62, 165, 0.9) 50%,
+    rgba(34, 211, 238, 0.2) 85%,
+    transparent 100%
+  );
+  box-shadow: 
+    0 0 14px rgba(255, 62, 165, 0.85),
+    0 0 28px rgba(34, 211, 238, 0.45);
+  pointer-events: none;
+  z-index: 15;
+  animation: heroBuildingSeamPulse 4s ease-in-out infinite alternate;
+}
+
+.navigation-city-scene__horizon-line::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 4px;
+  background: #ff3ea5;
+  border-radius: 9999px;
+  box-shadow: 0 0 16px #ff3ea5, 0 0 32px #22d3ee;
+}
+
+@keyframes heroBuildingSeamPulse {
+  0% {
+    opacity: 0.75;
+    filter: drop-shadow(0 0 8px rgba(255, 62, 165, 0.7));
+  }
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 18px rgba(34, 211, 238, 0.9));
+  }
+}
+
+/* Atmospheric Horizon Portal Mist Layer */
+.navigation-city-scene__portal-mist {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1400px;
+  height: 200px;
+  background: radial-gradient(
+    ellipse 75% 55% at 50% 25%,
+    rgba(255, 62, 165, 0.2) 0%,
+    rgba(124, 58, 237, 0.14) 38%,
+    rgba(34, 211, 238, 0.08) 68%,
+    transparent 85%
+  );
+  filter: blur(28px);
+  pointer-events: none;
+  z-index: 14;
+}
+
+/* Subtle holographic grid lines between Hero & Buildings */
+.navigation-city-scene__grid-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 35vh;
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.035) 1px, transparent 1px);
+  background-size: 48px 48px;
+  -webkit-mask-image: linear-gradient(180deg, #000000 0%, rgba(0, 0, 0, 0.7) 60%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000000 0%, rgba(0, 0, 0, 0.7) 60%, transparent 100%);
+  pointer-events: none;
+  z-index: 3;
 }
 
 /* The ground plane buildings sit on — fills the viewport so each

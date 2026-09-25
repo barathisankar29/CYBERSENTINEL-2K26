@@ -9,98 +9,78 @@
   min-height: 100vh;
   margin-top: clamp(-7rem, -12vw, -4.5rem);
   padding: clamp(6rem, 10vw, 10rem) clamp(1rem, 4vw, 3rem) clamp(4rem, 6vw, 6rem);
-  overflow-x: clip;
+  overflow: clip;
+  clip-path: inset(0);
   z-index: 12;
   font-family: var(--font-body, 'Rajdhani', sans-serif);
   color: #ffffff;
 }
 
-/* Layered backdrop with smooth top dissolution into CityScene */
+/* Background base */
 .about-section::before {
   content: '';
   position: absolute;
   inset: 0;
   background-color: var(--city-black, #05040a);
-  background-image: 
-    linear-gradient(180deg, rgba(5, 4, 10, 0.25) 0%, rgba(5, 4, 10, 0.78) 90px, rgba(11, 10, 26, 0.88) 220px, rgba(5, 4, 10, 0.95) 100%),
-    url('/assets/city/city-bg-sky.webp');
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.5) 45px, rgba(0, 0, 0, 0.9) 100px, #000000 160px);
-  mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.5) 45px, rgba(0, 0, 0, 0.9) 100px, #000000 160px);
   pointer-events: none;
   z-index: 0;
 }
 
-/* Horizon Cyber Laser Line Seam across transition */
-.about-section__horizon-line {
-  position: absolute;
+/* Background Image Layer (Cyberpunk College Campus Building) - Matching Credentials & Transportation */
+.about-section__bg-wrap {
+  position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(34, 211, 238, 0.15) 15%,
-    rgba(255, 62, 165, 0.85) 50%,
-    rgba(34, 211, 238, 0.15) 85%,
-    transparent 100%
-  );
-  box-shadow: 
-    0 0 14px rgba(255, 62, 165, 0.8),
-    0 0 28px rgba(34, 211, 238, 0.4);
-  pointer-events: none;
-  z-index: 15;
-  animation: horizonPulse 4s ease-in-out infinite alternate;
-}
-
-.about-section__horizon-line::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 140px;
-  height: 4px;
-  background: #ff3ea5;
-  border-radius: 9999px;
-  box-shadow: 0 0 16px #ff3ea5, 0 0 32px #22d3ee;
-}
-
-@keyframes horizonPulse {
-  0% {
-    opacity: 0.75;
-    filter: drop-shadow(0 0 8px rgba(255, 62, 165, 0.7));
-  }
-  100% {
-    opacity: 1;
-    filter: drop-shadow(0 0 18px rgba(34, 211, 238, 0.9));
-  }
-}
-
-/* Atmospheric Horizon Portal Mist Layer */
-.about-section__portal-mist {
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translateX(-50%);
   width: 100%;
-  max-width: 1400px;
-  height: 220px;
-  background: radial-gradient(
-    ellipse 75% 55% at 50% 25%,
-    rgba(255, 62, 165, 0.18) 0%,
-    rgba(124, 58, 237, 0.12) 38%,
-    rgba(34, 211, 238, 0.06) 68%,
-    transparent 85%
-  );
-  filter: blur(28px);
+  height: 100%;
+  height: 100dvh;
   pointer-events: none;
-  z-index: 14;
+  z-index: 0;
+  overflow: hidden;
+  will-change: transform;
+  transform: translateZ(0);
 }
+
+.about-section__bg-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(ellipse at 50% 30%, rgba(5, 4, 10, 0.15) 0%, rgba(5, 4, 10, 0.48) 60%, rgba(5, 4, 10, 0.92) 100%),
+    linear-gradient(180deg, rgba(5, 4, 10, 0.82) 0%, rgba(5, 4, 10, 0.22) 18%, rgba(5, 4, 10, 0.3) 65%, rgba(5, 4, 10, 0.9) 100%),
+    url('/assets/about/about-bg.jpg');
+  background-size: cover;
+  background-position: center 25%;
+  background-repeat: no-repeat;
+  opacity: 0.82;
+  filter: saturate(120%) contrast(110%);
+}
+
+@media (max-width: 768px) {
+  .about-section {
+    padding: clamp(4rem, 8vw, 6rem) clamp(0.75rem, 3vw, 1.25rem) 3rem;
+  }
+
+  .about-section__bg-image {
+    background-position: center 30%;
+  }
+}
+
+.about-section__scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.12) 0px,
+    rgba(0, 0, 0, 0.12) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  opacity: 0.22;
+}
+
+
 
 /* Atmospheric ambient glow layers */
 .about-section__bg-glow {
@@ -170,7 +150,6 @@
   flex-direction: column;
   align-items: center;
   gap: 1.25rem;
-  padding-top: 4.0rem;
 }
 
 .about-header__dot {
@@ -1631,6 +1610,7 @@
 
   .about-header {
     gap: 0.85rem;
+    padding-top: 3.0rem;
   }
 
   .about-header__telemetry {

@@ -81,11 +81,10 @@ export function NavigationCityScene() {
         {navigationCityEnvironmentLayers.map((layer) => (
           <CityLayer key={layer.id} layer={layer} isMobile={isMobile} lazy />
         ))}
-        {/* Atmospheric handoff from the hero above: a dark-to-violet-to-
-            transparent haze (plus soft cyan/magenta glow) sitting over the
-            background's own top edge, so the hero's cyberpunk platform
-            reads as blending into this cosmic environment rather than
-            cutting into it. Purely decorative — see NavigationCityScene.css. */}
+        {/* Futuristic Laser Seam & Portal Mist between Hero and Buildings */}
+        <div className="navigation-city-scene__horizon-line" aria-hidden="true" />
+        <div className="navigation-city-scene__portal-mist" aria-hidden="true" />
+        <div className="navigation-city-scene__grid-pattern" aria-hidden="true" />
         <div className="navigation-city-scene__atmosphere-blend" aria-hidden="true" />
         <ProfileAccessBadge />
         <RegisterNowButton />

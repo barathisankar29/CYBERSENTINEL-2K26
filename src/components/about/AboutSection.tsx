@@ -13,9 +13,12 @@ export function AboutSection() {
 
   return (
     <section id="about" className="about-section" aria-label="About CyberSentinel 2K26">
-      {/* Seamless Horizon Laser Seam & Portal Atmospheric Mist */}
-      <div className="about-section__horizon-line" aria-hidden="true" />
-      <div className="about-section__portal-mist" aria-hidden="true" />
+      {/* Background Graphic: User's Cyberpunk Vel Tech College Building Image */}
+      <div className="about-section__bg-wrap" aria-hidden="true">
+        <div className="about-section__bg-image" />
+        <div className="about-section__scanlines" />
+      </div>
+
 
       {/* Background Cyber Ambient Glow Elements */}
       <div className="about-section__bg-glow about-section__bg-glow--cyan" aria-hidden="true" />

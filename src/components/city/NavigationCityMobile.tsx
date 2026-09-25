@@ -51,9 +51,12 @@ export function NavigationCityMobile() {
           className="mobile-nav-scene__bg"
         />
 
-        {/* Same atmospheric handoff treatment as desktop (see
-            NavigationCityScene.css) so the hero -> navigation transition
-            reads as one continuous environment on mobile too. */}
+        {/* Futuristic Laser Seam & Portal Mist between Hero and Buildings */}
+        <div className="navigation-city-scene__horizon-line" aria-hidden="true" />
+        <div className="navigation-city-scene__portal-mist" aria-hidden="true" />
+        <div className="navigation-city-scene__grid-pattern" aria-hidden="true" />
+
+        {/* Same atmospheric handoff treatment as desktop */}
         <div className="mobile-nav-scene__atmosphere-blend" aria-hidden="true" />
         <ProfileAccessBadge placement="bottom" />
 
