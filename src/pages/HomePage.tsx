@@ -15,9 +15,11 @@ export function HomePage() {
   const isNavigatingToBuildings = location.hash === '#buildings'
 
   const [introStage, setIntroStage] = useState<IntroStage>(() => {
-    if (isNavigatingToBuildings || hasSeenIntro()) {
-      markIntroAsSeen()
+    if (isNavigatingToBuildings) {
       return 'completed'
+    }
+    if (hasSeenIntro()) {
+      return 'transition'
     }
     return 'intro'
   })
