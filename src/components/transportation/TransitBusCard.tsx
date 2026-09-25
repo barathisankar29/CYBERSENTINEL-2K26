@@ -19,7 +19,7 @@ export function TransitBusCard({ route, index }: TransitBusCardProps) {
         <div className="cyber-card-top-bar">
           {/* Top-Left: Node / Cost Indicator Box */}
           <div className="cyber-cost-pod">
-            <span className="cyber-cost-label">// NODE</span>
+            <span className="cyber-cost-label">{'// NODE'}</span>
             <span className="cyber-cost-value">{route.cardCost || nodeIndex}</span>
           </div>
 
