@@ -241,7 +241,7 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
           <div className="w-8 h-8 bg-[#9333ea] border border-[#c084fc] flex items-center justify-center font-silkscreen text-white font-bold text-sm shadow-[0_0_10px_rgba(147,51,234,0.5)]">
             CS
           </div>
-          <span className="font-pixel text-lg sm:text-xl text-white tracking-wider">Cyber Sentinel</span>
+          <span className="font-pixel text-lg sm:text-xl text-white tracking-wider">CyberSentinel</span>
         </div>
 
         <div className="flex items-center gap-3">
@@ -267,7 +267,7 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
           <span className="inline-block px-2.5 py-0.5 bg-[#1f0a33] border border-[#9333ea] text-[#f472b6] font-silkscreen text-[10px] tracking-wider uppercase mb-2">
             DAY OR SPECIAL-EVENT REGISTRATION
           </span>
-          <h1 className="font-pixel text-2xl sm:text-4xl text-white tracking-wide mb-2">Register for Cyber Sentinel</h1>
+          <h1 className="font-pixel text-2xl sm:text-4xl text-white tracking-wide mb-2">Register for CyberSentinel</h1>
           <p className="text-gray-400 text-xs sm:text-sm font-body leading-relaxed max-w-2xl">
             Select your symposium day, make the official UPI payment, enter the UTR and upload your payment screenshot. You receive your final QR only after payment verification.
           </p>
@@ -514,7 +514,7 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
       </main>
 
       <footer className="w-full bg-[#07020d] border-t border-[#2d123d] py-4 text-center text-gray-500 font-mono text-xs mt-6">
-        Cyber Sentinel CS Symposium • Supabase-backed registration
+        CyberSentinel CS Symposium • Supabase-backed registration
       </footer>
     </div>
   );

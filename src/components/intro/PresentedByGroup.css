@@ -22,6 +22,16 @@
   max-width: min(92vw, 34rem);
 }
 
+/* One line from tablet up — sized off the viewport so the full department
+   name always fits across. */
+@media (min-width: 768px) {
+  .presented-by__department {
+    white-space: nowrap;
+    max-width: none;
+    font-size: clamp(0.8rem, 1.55vw, 1.3rem);
+  }
+}
+
 .presented-by__association {
   margin: 0;
   font-family: var(--font-body);

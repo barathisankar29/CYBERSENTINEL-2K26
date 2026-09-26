@@ -98,6 +98,17 @@ export function EventsTerminalApp({
     };
   }, []);
 
+  // Every screen change (e.g. KNOW MORE -> event page) starts at the top of
+  // the terminal, not wherever the previous screen was scrolled to.
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [activeModule, selectedEvent]);
+
   const handleBookmarkToggle = (eventId: string) => {
     setBookmarkedIds((prev) => {
       const updated = prev.includes(eventId) ? prev.filter((id) => id !== eventId) : [...prev, eventId];

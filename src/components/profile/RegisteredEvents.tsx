@@ -77,6 +77,8 @@ export function RegisteredEvents({ character, registration }: RegisteredEventsPr
             <img
               src={terminalImg}
               alt="Hacker Terminal Surveillance"
+              loading="lazy"
+              decoding="async"
               className="profile-viewport-img"
               draggable={false}
             />

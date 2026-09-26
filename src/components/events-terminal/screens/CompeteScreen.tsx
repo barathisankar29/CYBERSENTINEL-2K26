@@ -168,9 +168,6 @@ export const CompeteScreen: React.FC<CompeteScreenProps> = ({
                 <h3 className="font-pixel text-base sm:text-lg text-white mt-2.5 mb-2 tracking-wider font-bold">
                   {ev.title}
                 </h3>
-                <p className="font-body text-xs sm:text-[13px] text-slate-200 line-clamp-3 leading-relaxed tracking-normal font-normal">
-                  {ev.description}
-                </p>
 
                 <div
                   className={`mt-3 pt-2 border-t text-[11px] font-mono text-slate-300 ${
@@ -199,9 +196,9 @@ export const CompeteScreen: React.FC<CompeteScreenProps> = ({
                       ? 'border-[#5fa07a] text-[#5fa07a] hover:bg-[#5fa07a]/15'
                       : 'border-[#db2777] text-[#db2777] hover:bg-[#db2777]/15'
                   }`}
-                  title={`View detailed specs for ${ev.title}`}
+                  title={`Know more about ${ev.title}`}
                 >
-                  VIEW SPEC
+                  KNOW MORE
                 </button>
                 <button
                   onClick={() => {

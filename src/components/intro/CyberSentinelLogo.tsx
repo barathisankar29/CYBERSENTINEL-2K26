@@ -28,8 +28,8 @@ export function CyberSentinelLogo({ style }: CyberSentinelLogoProps) {
       alt="CyberSentinel 2K26"
       width={937}
       height={289}
-      maxWidth="min(52vw, 44rem)"
-      maxWidthMobile="min(80vw, 30rem)"
+      maxWidth="min(46vw, 40rem, 78vh)"
+      maxWidthMobile="min(74vw, 28rem)"
       className="cyber-sentinel-logo"
       style={style}
     />

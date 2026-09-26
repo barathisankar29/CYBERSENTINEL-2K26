@@ -7,6 +7,7 @@ import { VideoIntro } from '@/components/intro/VideoIntro'
 import { FuturisticTransition } from '@/components/intro/FuturisticTransition'
 import { SiteFooter } from '@/components/ui/SiteFooter'
 import { useIsMobile } from '@/hooks/useIsMobile'
+import { useSmoothScroll } from '@/animation/useSmoothScroll'
 import { hasSeenIntro, markIntroAsSeen } from '@/utils/introSession'
 import { clearLeftHome, hasLeftHome, isCityReturnState, markLeftHome } from '@/utils/homeReturn'
 
@@ -59,6 +60,10 @@ export function HomePage() {
     markIntroAsSeen()
     setIntroStage('completed')
   }, [])
+
+  // Smooth, eased wheel scrolling once the intro overlays are gone (they
+  // own the screen and don't scroll).
+  useSmoothScroll(introStage === 'completed')
 
   // Leaving home (to any page) arms the browser-Back return; arriving consumes it.
   useEffect(() => {
