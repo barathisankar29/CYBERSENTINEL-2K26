@@ -19,7 +19,7 @@ const NAV_ITEMS: NavItem[] = [
   {
     id: 'home',
     label: '01 // HOME',
-    color: '#9333ea',
+    color: '#7c3aed',
     title: '01 // HOME (CYBERSENTINEL 2K26)',
     renderIcon: () => (
       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 16 16">
@@ -30,7 +30,7 @@ const NAV_ITEMS: NavItem[] = [
   {
     id: 'compete',
     label: '02 // EVENT LIST',
-    color: '#ff007f',
+    color: '#db2777',
     title: '02 // EVENT LIST (ARENA TRACKS)',
     renderIcon: () => (
       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 16 16">
@@ -41,7 +41,7 @@ const NAV_ITEMS: NavItem[] = [
   {
     id: 'firmware',
     label: '03 // EVENT DETAILS',
-    color: '#9333ea',
+    color: '#7c3aed',
     title: '03 // EVENT DETAILS (FIRMWARE)',
     renderIcon: () => (
       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 16 16">
@@ -50,24 +50,24 @@ const NAV_ITEMS: NavItem[] = [
     )
   },
   {
-    id: 'info',
-    label: '04 // PROTOCOLS',
-    color: '#ff007f',
-    title: '04 // EVENT PROTOCOLS & RULES',
+    id: 'favorites',
+    label: '04 // REGISTRATIONS',
+    color: '#a855f7',
+    title: '04 // MY REGISTRATIONS (ACTIVE PASSES)',
     renderIcon: () => (
       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 16 16">
-        <path d="M7 3H9V5H7V3ZM7 7H9V13H7V7ZM3 1H13V3H15V13H13V15H3V13H1V3H3V1ZM3 3V13H13V3H3Z" fillRule="evenodd" />
+        <path d="M3 3H6V5H7V6H9V5H10V3H13V7H12V9H10V11H9V13H7V11H6V9H4V7H3V3Z" />
       </svg>
     )
   },
   {
-    id: 'favorites',
-    label: '05 // REGISTRATIONS',
-    color: '#c084fc',
-    title: '05 // MY REGISTRATIONS (ACTIVE PASSES)',
+    id: 'team',
+    label: '05 // CREATE TEAM',
+    color: '#a855f7',
+    title: '05 // CREATE TEAM',
     renderIcon: () => (
       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 16 16">
-        <path d="M3 3H6V5H7V6H9V5H10V3H13V7H12V9H10V11H9V13H7V11H6V9H4V7H3V3Z" />
+        <path d="M7 1H9V3H11V5H13V7H15V9H13V11H11V13H9V15H7V13H5V11H3V9H1V7H3V5H5V3H7V1ZM8 5C6.34 5 5 6.34 5 8C5 9.66 6.34 11 8 11C9.66 11 11 9.66 11 8C11 6.34 9.66 5 8 5Z" />
       </svg>
     )
   }
@@ -76,11 +76,11 @@ const NAV_ITEMS: NavItem[] = [
 export const RetroNav: React.FC<RetroNavProps> = ({ activeModule, onSelectModule }) => {
   return (
     <header className="w-full max-w-6xl flex flex-col items-center mb-4 z-20" data-purpose="top-navigation-header">
-      <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 flex-wrap py-2 px-3 bg-black border-2 border-[#222222] shadow-[0_4px_12px_rgba(0,0,0,0.8)]">
-        {/* 5 Exact Navigation Buttons in Required Order: [ HOME ] [ + ] [ PINK ] [ H ] [ HEART ] */}
+      <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 flex-wrap py-2 px-3 bg-[#0c0914] border-2 border-[#241a33] shadow-[0_4px_12px_rgba(0,0,0,0.8)]">
+        {/* 5 Navigation Buttons in Required Order */}
         {NAV_ITEMS.map((item) => {
           const isActive = activeModule === item.id;
-          const isRadiance = item.id === 'favorites';
+          const isRadiance = item.id === 'favorites' || item.id === 'team';
           return (
             <button
               key={item.id}
@@ -89,13 +89,11 @@ export const RetroNav: React.FC<RetroNavProps> = ({ activeModule, onSelectModule
               style={{
                 borderColor: item.color,
                 color: isActive ? '#ffffff' : item.color,
-                backgroundColor: isActive ? `${item.color}33` : '#000000',
+                backgroundColor: isActive ? `${item.color}26` : '#08060e',
                 boxShadow: isActive
                   ? isRadiance
-                    ? '0 0 16px #c084fc, 0 0 10px #ff007f, 0 0 8px #00ffff'
-                    : `0 0 14px ${item.color}`
-                  : isRadiance
-                  ? '0 0 8px rgba(192, 132, 252, 0.45)'
+                    ? '0 0 12px #a855f7, 0 0 8px #db2777'
+                    : `0 0 10px ${item.color}80`
                   : 'none'
               }}
               title={item.title}

@@ -13,6 +13,11 @@ const loadCredentialsPage = () => import('@/pages/CredentialsPage').then((m) => 
 const loadEventsPage = () => import('@/pages/EventsPage').then((m) => ({ default: m.EventsPage }))
 const loadProfilePage = () => import('@/pages/ProfilePage').then((m) => ({ default: m.ProfilePage }))
 const loadTransportationPage = () => import('@/pages/TransportationPage').then((m) => ({ default: m.TransportationPage }))
+const loadContactPage = () => import('@/pages/ContactPage').then((m) => ({ default: m.ContactPage }))
+const loadRegistrationPage = () => import('@/pages/RegistrationPage').then((m) => ({ default: m.RegistrationPage }))
+const loadRegistrationStatusPage = () =>
+  import('@/pages/RegistrationStatusPage').then((m) => ({ default: m.RegistrationStatusPage }))
+const loadCreateTeamPage = () => import('@/pages/CreateTeamPage').then((m) => ({ default: m.CreateTeamPage }))
 
 const SectionPage = lazy(loadSectionPage)
 const AboutPage = lazy(loadAboutPage)
@@ -21,6 +26,10 @@ const CredentialsPage = lazy(loadCredentialsPage)
 const EventsPage = lazy(loadEventsPage)
 const ProfilePage = lazy(loadProfilePage)
 const TransportationPage = lazy(loadTransportationPage)
+const ContactPage = lazy(loadContactPage)
+const RegistrationPage = lazy(loadRegistrationPage)
+const RegistrationStatusPage = lazy(loadRegistrationStatusPage)
+const CreateTeamPage = lazy(loadCreateTeamPage)
 
 const routeLoaders = [
   loadAboutPage,
@@ -29,6 +38,8 @@ const routeLoaders = [
   loadEventsPage,
   loadProfilePage,
   loadTransportationPage,
+  loadContactPage,
+  loadRegistrationPage,
   loadSectionPage,
 ]
 
@@ -70,6 +81,10 @@ export function AppRoutes() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/transportation" element={<TransportationPage />} />
         <Route path="/transport" element={<TransportationPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/register" element={<RegistrationPage />} />
+        <Route path="/register/status" element={<RegistrationStatusPage />} />
+        <Route path="/register/team" element={<CreateTeamPage />} />
         <Route path="/:slug" element={<SectionPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

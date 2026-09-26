@@ -1,16 +1,16 @@
+/** Modules mounted by EventsTerminalApp (the ones RetroNav can reach). */
 export type ModuleId =
-  | 'info'       // 01 Cyan
-  | 'firmware'   // 02 Neon Pink (default / active in screenshot)
-  | 'compete'    // 03 Neon Green
-  | 'categories' // 04 Yellow
-  | 'highlights' // 05 Neon Magenta
-  | 'schedule'   // 06 Electric Blue
-  | 'favorites'  // 07 Neon Purple
-  | 'security'   // 08 Cyan Shield
-  | 'settings'   // 09 Orange Gear
-  | 'power'      // 10 Red Kill Switch
-  | 'home'       // 11 Deep Violet
-  | 'search';    // 12 Lime Green
+  | 'home'       // Deep Violet
+  | 'compete'    // Neon Pink
+  | 'firmware'   // Purple
+  | 'favorites'  // My Registrations (radiance)
+  | 'team';      // Team Creation (radiance)
+
+export interface Coordinator {
+  name: string;
+  phone: string;
+  role?: string;
+}
 
 export interface EventSpec {
   id: string;
@@ -36,19 +36,8 @@ export interface EventSpec {
   busFreq: string;
   tags: string[];
   protocols: string[];
-}
-
-export interface RegisteredOperator {
-  regId: string;
-  eventName: string;
-  crewName: string;
-  leadOperator: string;
-  callsign: string;
-  teamCount: number;
-  contactEmail: string;
-  contactPhone: string;
-  timestamp: string;
-  securityHash: string;
+  coordinators?: Coordinator[];
+  isSpecial?: boolean;
 }
 
 export type ThemeName = 'pink' | 'cyan' | 'green' | 'amber';

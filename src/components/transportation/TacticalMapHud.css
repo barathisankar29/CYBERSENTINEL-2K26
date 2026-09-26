@@ -371,11 +371,7 @@
 
 @media (max-width: 640px) {
   .tactical-floating-info {
-    left: 10px;
-    right: 10px;
-    max-width: none;
-    top: 10px;
-    padding: 0.65rem 0.85rem;
+    display: none;
   }
 }
 

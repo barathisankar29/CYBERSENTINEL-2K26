@@ -79,6 +79,13 @@ interface ScrollProgressVarOptions {
    * need a coarse JS-side flag. Keep it to setState on booleans, so React
    * bails out on unchanged values instead of re-rendering every frame. */
   onProgress?: (progress: number) => void
+  /**
+   * Fraction (0-1] of the element's scroll range by which progress reaches
+   * 1. Anything below 1 leaves a "hold" at the end: the scene sits fully
+   * complete for the remaining scroll before the element un-pins, so a
+   * section visibly finishes before the next one arrives. Default 1 (no hold).
+   */
+  completeAt?: number
 }
 
 /**
@@ -91,7 +98,7 @@ interface ScrollProgressVarOptions {
  */
 export function useScrollProgressVar<T extends HTMLElement>(
   ref: RefObject<T | null>,
-  { pinned = null, onProgress }: ScrollProgressVarOptions = {},
+  { pinned = null, onProgress, completeAt = 1 }: ScrollProgressVarOptions = {},
 ): void {
   const onProgressRef = useRef(onProgress)
   useLayoutEffect(() => {
@@ -117,7 +124,7 @@ export function useScrollProgressVar<T extends HTMLElement>(
       frame = null
       const rect = element.getBoundingClientRect()
       const scrollableDistance = Math.max(rect.height - window.innerHeight, 1)
-      apply(Math.min(Math.max(-rect.top / scrollableDistance, 0), 1))
+      apply(Math.min(Math.max(-rect.top / (scrollableDistance * completeAt), 0), 1))
     }
     const requestMeasure = () => {
       if (frame === null) frame = requestAnimationFrame(measure)
@@ -131,5 +138,5 @@ export function useScrollProgressVar<T extends HTMLElement>(
       window.removeEventListener('resize', requestMeasure)
       if (frame !== null) cancelAnimationFrame(frame)
     }
-  }, [ref, pinned])
+  }, [ref, pinned, completeAt])
 }

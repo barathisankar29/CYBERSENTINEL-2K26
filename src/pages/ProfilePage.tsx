@@ -1,4 +1,5 @@
 import { Link, useSearchParams } from 'react-router-dom'
+import { CITY_RETURN_STATE } from '@/utils/homeReturn'
 import { getRegistration } from '@/utils/eventRegistration'
 import { characterProfiles } from '@/data/characterProfiles'
 import type { CharacterId, RegistrationRecord } from '@/types/characterProfile'
@@ -41,7 +42,7 @@ export function ProfilePage() {
           <Link to="/events" className="profile-empty__cta">
             REGISTER TO UNLOCK YOUR CHARACTER
           </Link>
-          <Link to="/" className="profile-empty__back">← Return to City</Link>
+          <Link to="/" state={CITY_RETURN_STATE} className="profile-empty__back">← Return to City</Link>
         </div>
       </div>
     )

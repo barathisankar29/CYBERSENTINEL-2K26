@@ -69,7 +69,13 @@ export interface CharacterConfig {
   packs: RegistrationPack[]
 }
 
-export type PaymentStatus = 'test_mode_unverified'
+/**
+ * - 'test_mode_unverified': legacy local-only mock record (no backend).
+ * - 'under_review': submitted to the Supabase backend (public-register);
+ *   payment awaits admin verification. The backend's check-registration
+ *   is the only source for whether it has since been VERIFIED.
+ */
+export type PaymentStatus = 'test_mode_unverified' | 'under_review'
 
 export interface RegistrationRecord {
   registrationId: string
@@ -79,7 +85,6 @@ export interface RegistrationRecord {
   username: string
   email: string
   registeredAt: string
-  /** Always 'test_mode_unverified' until a real payment provider is wired
-   * up — never claim a payment succeeded when none was processed. */
+  /** Never claims a payment succeeded — see PaymentStatus. */
   paymentStatus: PaymentStatus
 }

@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
+import { CITY_RETURN_STATE } from '@/utils/homeReturn'
 
 interface ProfileHeaderProps {
   progress: number
@@ -9,7 +10,7 @@ interface ProfileHeaderProps {
 export function ProfileHeader({ progress, label = 'RECORDS' }: ProfileHeaderProps) {
   return (
     <header className="profile-header">
-      <Link to="/" className="profile-back-btn" aria-label="Back to home">
+      <Link to="/" state={CITY_RETURN_STATE} className="profile-back-btn" aria-label="Back to home">
         ← BACK
       </Link>
 

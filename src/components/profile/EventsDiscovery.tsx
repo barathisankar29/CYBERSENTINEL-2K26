@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { CITY_RETURN_STATE } from '@/utils/homeReturn'
 import { DAY_1_EVENTS, DAY_2_EVENTS, SPECIAL_EVENTS } from '@/data/eventCatalog'
 import { characterProfiles } from '@/data/characterProfiles'
 import { EventInfoCard } from './EventInfoCard'
@@ -34,7 +35,7 @@ export function EventsDiscovery({ onSelectPack }: EventsDiscoveryProps) {
   return (
     <div className="discovery-root">
       <header className="discovery-header">
-        <Link to="/" className="discovery-back">← RETURN TO CITY</Link>
+        <Link to="/" state={CITY_RETURN_STATE} className="discovery-back">← RETURN TO CITY</Link>
       </header>
 
       <div className="discovery-hero">

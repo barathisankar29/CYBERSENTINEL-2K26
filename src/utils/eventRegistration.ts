@@ -67,3 +67,37 @@ export function clearRegistration(): void {
     // Ignore
   }
 }
+
+/**
+ * Records the profile/character for a registration that the Supabase
+ * backend (public-register) has ACCEPTED. `registrationId` is the backend's
+ * own registration_code — nothing here is generated client-side. Payment
+ * stays 'under_review' locally; verified status only ever comes from the
+ * backend's check-registration.
+ */
+export function recordBackendRegistration(
+  characterId: CharacterId,
+  pack: RegistrationPack,
+  registrationCode: string,
+  username: string,
+  email: string
+): RegistrationRecord {
+  const record: RegistrationRecord = {
+    registrationId: registrationCode,
+    characterId,
+    packId: pack.id,
+    events: pack.events,
+    username,
+    email,
+    registeredAt: new Date().toISOString(),
+    paymentStatus: 'under_review',
+  }
+
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(record))
+  } catch {
+    // Storage unavailable — the backend registration itself already succeeded.
+  }
+
+  return record
+}
