@@ -44,10 +44,10 @@ const PACK_CONFIGS: Record<string, CharacterConfig> = {
     dayType: 'DAY_1',
     events: [
       { id: 'nico-1', name: 'Paper Presentation', day: 'DAY 1', originalEventId: 'paper_presentation' },
-      { id: 'nico-2', name: 'Cypher Coding', day: 'DAY 1', originalEventId: 'cypher_coding' },
+      { id: 'nico-2', name: 'Cipher Coding', day: 'DAY 1', originalEventId: 'cypher_coding' },
       { id: 'nico-3', name: 'Unsaid', day: 'DAY 1', originalEventId: 'unsaid' },
       { id: 'nico-4', name: 'Weblica', day: 'DAY 1', originalEventId: 'weblica' },
-      { id: 'nico-5', name: 'X-Coders', day: 'DAY 1', originalEventId: 'x_coders' }
+      { id: 'nico-5', name: 'XCoders', day: 'DAY 1', originalEventId: 'x_coders' }
     ]
   },
   RUELLE: {
@@ -61,11 +61,10 @@ const PACK_CONFIGS: Record<string, CharacterConfig> = {
     dayType: 'DAY_2',
     events: [
       { id: 'ruelle-1', name: 'Connections', day: 'DAY 2', originalEventId: 'connections' },
-      { id: 'ruelle-2', name: 'BGM', day: 'DAY 2', originalEventId: 'bgm' },
-      { id: 'ruelle-3', name: 'Lyrics', day: 'DAY 2', originalEventId: 'lyrics' },
-      { id: 'ruelle-4', name: 'Mixed Signal', day: 'DAY 2', originalEventId: 'mixed_signals' },
-      { id: 'ruelle-5', name: 'Talent Show', day: 'DAY 2', originalEventId: 'talent_show' },
-      { id: 'ruelle-6', name: 'E-Sports', day: 'DAY 2', originalEventId: 'e_sports' }
+      { id: 'ruelle-2', name: 'Find the BGM', day: 'DAY 2', originalEventId: 'bgm' },
+      { id: 'ruelle-3', name: 'Lost in Lyrics', day: 'DAY 2', originalEventId: 'lyrics' },
+      { id: 'ruelle-4', name: 'Mixed Signals', day: 'DAY 2', originalEventId: 'mixed_signals' },
+      { id: 'ruelle-5', name: 'Spotlight', day: 'DAY 2', originalEventId: 'talent_show' }
     ]
   },
   'DR. DACRE': {
@@ -99,16 +98,15 @@ const PACK_CONFIGS: Record<string, CharacterConfig> = {
     dayType: 'BOTH',
     events: [
       { id: 'cosma-1', name: 'Paper Presentation', day: 'DAY 1', originalEventId: 'paper_presentation' },
-      { id: 'cosma-2', name: 'Cypher Coding', day: 'DAY 1', originalEventId: 'cypher_coding' },
+      { id: 'cosma-2', name: 'Cipher Coding', day: 'DAY 1', originalEventId: 'cypher_coding' },
       { id: 'cosma-3', name: 'Unsaid', day: 'DAY 1', originalEventId: 'unsaid' },
       { id: 'cosma-4', name: 'Weblica', day: 'DAY 1', originalEventId: 'weblica' },
-      { id: 'cosma-5', name: 'X-Coders', day: 'DAY 1', originalEventId: 'x_coders' },
+      { id: 'cosma-5', name: 'XCoders', day: 'DAY 1', originalEventId: 'x_coders' },
       { id: 'cosma-6', name: 'Connections', day: 'DAY 2', originalEventId: 'connections' },
-      { id: 'cosma-7', name: 'BGM', day: 'DAY 2', originalEventId: 'bgm' },
-      { id: 'cosma-8', name: 'Lyrics', day: 'DAY 2', originalEventId: 'lyrics' },
-      { id: 'cosma-9', name: 'Mixed Signal', day: 'DAY 2', originalEventId: 'mixed_signals' },
-      { id: 'cosma-10', name: 'Talent Show', day: 'DAY 2', originalEventId: 'talent_show' },
-      { id: 'cosma-11', name: 'E-Sports', day: 'DAY 2', originalEventId: 'e_sports' }
+      { id: 'cosma-7', name: 'Find the BGM', day: 'DAY 2', originalEventId: 'bgm' },
+      { id: 'cosma-8', name: 'Lost in Lyrics', day: 'DAY 2', originalEventId: 'lyrics' },
+      { id: 'cosma-9', name: 'Mixed Signals', day: 'DAY 2', originalEventId: 'mixed_signals' },
+      { id: 'cosma-10', name: 'Spotlight', day: 'DAY 2', originalEventId: 'talent_show' }
     ]
   }
 };

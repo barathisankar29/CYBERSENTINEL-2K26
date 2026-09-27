@@ -35,14 +35,7 @@ export const FirmwareScreen: React.FC<FirmwareScreenProps> = ({
           'Certificates will be distributed at the valedictory session to all verified participants.'
         ];
 
-  // Up to 4 coordinators from the event data; falls back to the event's own
-  // chief operator + contact number. No invented names or numbers.
-  const coordinators =
-    event.coordinators && event.coordinators.length > 0
-      ? event.coordinators.slice(0, 4)
-      : event.chiefOperator && event.contactNumber
-        ? [{ name: event.chiefOperator, phone: event.contactNumber, role: 'Event Coordinator' }]
-        : [];
+  const coordinators = event.coordinators;
 
   const eventDay = event.date.split('//')[0].trim();
 
@@ -212,6 +205,21 @@ export const FirmwareScreen: React.FC<FirmwareScreenProps> = ({
             </div>
           </div>
 
+          {/* Cash prizes: 1st / 2nd / 3rd */}
+          {event.prizes && (
+            <div className="pixel-chip p-2 flex flex-col text-xs font-mono" data-purpose="event-prizes">
+              <span className="text-gray-400 text-[9px] sm:text-[10px] font-silkscreen">[PRIZES]</span>
+              <div className="grid grid-cols-3 gap-2 mt-1">
+                {event.prizes.map((amount, idx) => (
+                  <span key={idx} className="font-bold text-[11px] sm:text-xs truncate">
+                    <span className="text-gray-400">{['1ST', '2ND', '3RD'][idx]}</span>{' '}
+                    <span className={idx === 0 ? 'text-[#ffd700]' : 'text-white'}>{amount}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* REGISTER NOW Action Button Container */}
           <div className="pt-1">
             <button
@@ -320,7 +328,7 @@ export const FirmwareScreen: React.FC<FirmwareScreenProps> = ({
             </h3>
           </div>
 
-          {/* 4 Coordinators List */}
+          {/* Coordinators List */}
           <div className="space-y-2 flex-1">
             {coordinators.map((coord, idx) => (
               <div
@@ -329,7 +337,7 @@ export const FirmwareScreen: React.FC<FirmwareScreenProps> = ({
               >
                 <div className="min-w-0 flex items-center gap-2.5">
                   <span className="w-5 h-5 bg-[#1f0930] text-[#ff007f] border border-[#9333ea]/50 flex items-center justify-center font-silkscreen text-[9px] shrink-0 font-bold">
-                    0{idx + 1}
+                    {String(idx + 1).padStart(2, '0')}
                   </span>
                   <div className="min-w-0">
                     <div className="font-mono text-white text-xs sm:text-sm font-bold truncate">
@@ -343,15 +351,17 @@ export const FirmwareScreen: React.FC<FirmwareScreenProps> = ({
                   </div>
                 </div>
 
-                <a
-                  href={`tel:${coord.phone.replace(/[^0-9+]/g, '')}`}
-                  onClick={() => sound.playNavClick()}
-                  className="px-2.5 py-1.5 bg-[#000000] hover:bg-[#9333ea] text-[#00ffff] hover:text-white font-mono text-xs font-bold border border-[#9333ea] hover:border-white transition-all flex items-center justify-center gap-2 shrink-0 self-start sm:self-center"
-                  title={`Call ${coord.name}`}
-                >
-                  <span>📞</span>
-                  <span className="tracking-wider">{coord.phone}</span>
-                </a>
+                {coord.phone && (
+                  <a
+                    href={`tel:${coord.phone.replace(/[^0-9+]/g, '')}`}
+                    onClick={() => sound.playNavClick()}
+                    className="px-2.5 py-1.5 bg-[#000000] hover:bg-[#9333ea] text-[#00ffff] hover:text-white font-mono text-xs font-bold border border-[#9333ea] hover:border-white transition-all flex items-center justify-center gap-2 shrink-0 self-start sm:self-center"
+                    title={`Call ${coord.name}`}
+                  >
+                    <span>📞</span>
+                    <span className="tracking-wider">{coord.phone}</span>
+                  </a>
+                )}
               </div>
             ))}
           </div>

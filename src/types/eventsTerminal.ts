@@ -8,35 +8,28 @@ export type ModuleId =
 
 export interface Coordinator {
   name: string;
-  phone: string;
+  /** Some coordinators have no published number. */
+  phone?: string;
   role?: string;
 }
 
 export interface EventSpec {
   id: string;
   moduleId?: ModuleId;
-  terminalId: string;
-  category: string;
   title: string;
   day: 1 | 2;
   track: 'technical' | 'non_technical';
   quote: string;
   description: string;
-  venue: string;
   date: string;
   time: string;
-  fee: string;
   teamSize: string;
-  eligibility: string;
-  chiefOperator: string;
-  contactNumber: string;
-  relayEmail: string;
+  /** Cash prizes, 1st / 2nd / 3rd place. */
+  prizes?: [string, string, string];
   chipLabel: string;
   chipSub: string;
-  busFreq: string;
-  tags: string[];
   protocols: string[];
-  coordinators?: Coordinator[];
+  coordinators: Coordinator[];
   isSpecial?: boolean;
 }
 

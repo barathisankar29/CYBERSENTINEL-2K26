@@ -43,7 +43,7 @@ export const CompeteScreen: React.FC<CompeteScreenProps> = ({
 
   // Group events based on requested classification:
   // Day 1: 5 events (all day 1 events)
-  // Day 2: 6 events (technical_quiz, connections, ipl_auction, opposites_attract, solo_dance, e_sports)
+  // Day 2: 5 events (talent_show, connections, bgm, mixed_signals, lyrics)
   // Special Events: 2 events (thiruvizha_corner and group_dance)
   const isSpecialEvent = (ev: EventSpec) =>
     ev.id === 'group_dance' || ev.id === 'thiruvizha_corner';
