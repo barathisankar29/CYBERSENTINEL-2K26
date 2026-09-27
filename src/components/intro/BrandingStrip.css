@@ -1,11 +1,10 @@
 /*
  * No hard border/pill/panel here on purpose — this section should read as
  * atmosphere integrated into the sky, not a navbar floating above it. The
- * "container" is two blurred radial-gradient pseudo-elements (a diffused
- * pink/magenta aura, plus a much subtler dark backing only for contrast),
- * both scoped to this element via `isolation: isolate` so they never
- * escape into the rest of the identity layer's stacking. The glow
- * surrounds the WHOLE group; individual logos never get their own glow.
+ * "container" is a single blurred dark radial backing (for contrast only),
+ * scoped to this element via `isolation: isolate` so it never escapes into
+ * the rest of the identity layer's stacking. There is deliberately no pink
+ * aura: it washed over the college name and made it hard to read.
  */
 .branding-strip {
   position: relative;
@@ -18,21 +17,6 @@
   padding: 1rem clamp(1.25rem, 4vw, 2.5rem);
   max-width: min(96vw, 72rem);
   will-change: transform, opacity;
-}
-
-.branding-strip::before {
-  content: '';
-  position: absolute;
-  inset: -60% -14%;
-  background: radial-gradient(
-    ellipse 62% 72% at center,
-    color-mix(in srgb, var(--city-pink) 45%, transparent) 0%,
-    color-mix(in srgb, var(--city-magenta) 30%, transparent) 45%,
-    transparent 75%
-  );
-  filter: blur(20px);
-  z-index: -2;
-  pointer-events: none;
 }
 
 /* Subtle dark backing for contrast only — never an opaque panel. */
@@ -116,6 +100,6 @@
 
   [data-logo-id='vel-tech'] .branding-strip__logo {
     height: auto;
-    width: min(74vw, 300px);
+    width: min(62vw, 250px);
   }
 }

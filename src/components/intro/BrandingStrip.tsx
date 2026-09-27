@@ -8,8 +8,8 @@ interface BrandingStripProps {
 }
 
 /**
- * The top accreditation/branding strip: ONE shared glass container (the
- * pink/magenta glow belongs to this container only) holding each logo as
+ * The top accreditation/branding strip: ONE shared container (a soft dark
+ * backing for contrast, no glow) holding each logo as
  * an independent <img> so they can be sized/reflowed individually. Reveal
  * motion comes entirely from `style` (scroll progress, via IdentityLayer) —
  * nothing here animates on its own. Logos are lazy-loaded since they're

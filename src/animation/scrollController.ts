@@ -11,6 +11,32 @@ import { PROGRESS_VAR } from './progressCss'
  * (e.g. swapped for a GSAP ScrollTrigger-driven value) without touching
  * component code.
  */
+/**
+ * Viewport height for scroll-progress math that ignores the mobile browser
+ * chrome. On phones the address bar collapses/expands mid-scroll, which
+ * changes `innerHeight` (and fires `resize`) while the finger is still
+ * moving; feeding that into the progress denominator makes every
+ * scroll-driven scene jump a few pixels. The height is only re-read when
+ * the WIDTH changes (rotation, real window resize), never for the
+ * height-only resizes the address bar causes.
+ */
+function createStableViewport() {
+  let width = window.innerWidth
+  let height = window.innerHeight
+  return {
+    get height() {
+      return height
+    },
+    /** Returns true when the change is a real resize worth re-measuring for. */
+    update(): boolean {
+      if (window.innerWidth === width) return false
+      width = window.innerWidth
+      height = window.innerHeight
+      return true
+    },
+  }
+}
+
 export interface ScrollProgress {
   /** 0-1 progress through the tracked element's scrollable range. */
   progress: number
@@ -41,10 +67,11 @@ export function useScrollProgress<T extends HTMLElement>(
     const element = ref.current
     if (!element) return
 
+    const viewport = createStableViewport()
     const measure = () => {
       frameRef.current = null
       const rect = element.getBoundingClientRect()
-      const scrollableDistance = Math.max(rect.height - window.innerHeight, 1)
+      const scrollableDistance = Math.max(rect.height - viewport.height, 1)
       const next = Math.min(Math.max(-rect.top / scrollableDistance, 0), 1)
       setProgress(next)
     }
@@ -55,13 +82,17 @@ export function useScrollProgress<T extends HTMLElement>(
       }
     }
 
+    const handleResize = () => {
+      if (viewport.update()) requestMeasure()
+    }
+
     requestMeasure()
     window.addEventListener('scroll', requestMeasure, { passive: true })
-    window.addEventListener('resize', requestMeasure)
+    window.addEventListener('resize', handleResize)
 
     return () => {
       window.removeEventListener('scroll', requestMeasure)
-      window.removeEventListener('resize', requestMeasure)
+      window.removeEventListener('resize', handleResize)
       if (frameRef.current !== null) {
         cancelAnimationFrame(frameRef.current)
         frameRef.current = null
@@ -120,22 +151,27 @@ export function useScrollProgressVar<T extends HTMLElement>(
     }
 
     let frame: number | null = null
+    const viewport = createStableViewport()
     const measure = () => {
       frame = null
       const rect = element.getBoundingClientRect()
-      const scrollableDistance = Math.max(rect.height - window.innerHeight, 1)
+      const scrollableDistance = Math.max(rect.height - viewport.height, 1)
       apply(Math.min(Math.max(-rect.top / (scrollableDistance * completeAt), 0), 1))
     }
     const requestMeasure = () => {
       if (frame === null) frame = requestAnimationFrame(measure)
     }
 
+    const handleResize = () => {
+      if (viewport.update()) requestMeasure()
+    }
+
     measure()
     window.addEventListener('scroll', requestMeasure, { passive: true })
-    window.addEventListener('resize', requestMeasure)
+    window.addEventListener('resize', handleResize)
     return () => {
       window.removeEventListener('scroll', requestMeasure)
-      window.removeEventListener('resize', requestMeasure)
+      window.removeEventListener('resize', handleResize)
       if (frame !== null) cancelAnimationFrame(frame)
     }
   }, [ref, pinned, completeAt])

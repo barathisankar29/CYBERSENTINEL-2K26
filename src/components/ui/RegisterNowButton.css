@@ -206,6 +206,22 @@
   outline-offset: 6px;
 }
 
+/* Glow pulse is opacity-only: keep it on the compositor. */
+.register-now-hero__glow {
+  will-change: opacity;
+}
+
+/*
+ * Phones: the drifting gradient border animates background-position through
+ * a mask, which repaints every frame for as long as the hero is on screen
+ * and competes with scrolling. Hold it static there.
+ */
+@media (max-width: 767px) {
+  .register-now-hero::before {
+    animation: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .register-now-hero::before,
   .register-now-hero__glow,
