@@ -42,33 +42,33 @@ export const frontendDevelopersData: FrontendDeveloperMember[] = [
     image: '/assets/developers/frontend_pranith.png',
     role: 'Lead Architect & Tech Director',
     description:
-      'CHIEF ARCHITECT ORCHESTRATING THE REACTIVE STATE ECOSYSTEM, 3D VIEWPORT PIPELINES, AND HIGH-OCTANE CYBERPUNK USER EXPERIENCE OF CYBERSENTINEL 2K26. CODE CREATE INNOVATE.',
-    linkedinUrl: 'https://linkedin.com',
-    githubUrl: 'https://github.com',
+      'I see design as a mix of logic, creativity, and curiosity. I enjoy turning simple ideas into thoughtful interfaces where every detail has a reason and every screen has a little personality.',
+    linkedinUrl: 'https://www.linkedin.com/in/pranithl/',
+    githubUrl: 'https://github.com/pranithl',
   },
   {
     id: 'fed-jeevadharani',
-    name: 'JEEVADHARANI',
+    name: 'JEEVADHARANI VG',
     nameColor: '#FFAE00', // Amber / golden yellow-orange
     textColor: '#FF007F', // Vibrant neon pink / magenta
     image: '/assets/developers/frontend_jeevadharani.png',
     role: 'Lead UI/UX & Frontend Engineer',
     description:
-      'CRAFTING THE CYBERPUNK HOLOGRAPHIC HUD SYSTEMS, FLUID MICRO-INTERACTIONS, RESPONSIVE MATRIX GRIDS, AND NEON AESTHETICS WHERE SCREENS SPEAK DESIGN.',
-    linkedinUrl: 'https://linkedin.com',
-    githubUrl: 'https://github.com',
+      'I chase ideas where imagination meets the screen, shaping raw thoughts into visual poetry. With every pixel, I build a little universe—where colors whisper, shapes breathe, and creativity takes form. ',
+    linkedinUrl: 'www.linkedin.com/in/jeevadharani-venkatesan-916173332',
+    githubUrl: 'https://github.com/Jeevadharani2403',
   },
   {
     id: 'fed-barathi-sankar',
-    name: 'BARATHI SANKAR',
+    name: 'BARATHI SANKAR M',
     nameColor: '#FFEE00', // Bright neon yellow
     textColor: '#C800FF', // Vivid neon purple/violet
     image: '/assets/developers/frontend_barathi.png',
     role: 'Frontend & Motion Engineer',
     description:
-      'WEAVING PURPOSEFUL ENGINEERING WITH FUTURISTIC VISUAL DEPTH, DYNAMIC PARALLAX VIEWPORTS, AND FLUID STATELESS NAVIGATION PIPELINES. PURPOSE MEETS AESTHETIC.',
-    linkedinUrl: 'https://linkedin.com',
-    githubUrl: 'https://github.com',
+      'Part designer, part pixel menace. I make interfaces look so good, even the blank canvas gets jealous. Turning caffeine-fueled chaos into designs that hit different.',
+    linkedinUrl: 'https://www.linkedin.com/in/barathi-sankar-b2737a32b/',
+    githubUrl: 'https://github.com/barathisankar29',
   },
 ]
 
