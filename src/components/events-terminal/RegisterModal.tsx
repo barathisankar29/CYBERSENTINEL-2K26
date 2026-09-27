@@ -64,7 +64,8 @@ const PACK_CONFIGS: Record<string, CharacterConfig> = {
       { id: 'ruelle-2', name: 'Find the BGM', day: 'DAY 2', originalEventId: 'bgm' },
       { id: 'ruelle-3', name: 'Lost in Lyrics', day: 'DAY 2', originalEventId: 'lyrics' },
       { id: 'ruelle-4', name: 'Mixed Signals', day: 'DAY 2', originalEventId: 'mixed_signals' },
-      { id: 'ruelle-5', name: 'Spotlight', day: 'DAY 2', originalEventId: 'talent_show' }
+      { id: 'ruelle-5', name: 'Spotlight', day: 'DAY 2', originalEventId: 'talent_show' },
+      { id: 'ruelle-6', name: 'E-Sports', day: 'DAY 2', originalEventId: 'e_sports' }
     ]
   },
   'DR. DACRE': {
@@ -106,7 +107,8 @@ const PACK_CONFIGS: Record<string, CharacterConfig> = {
       { id: 'cosma-7', name: 'Find the BGM', day: 'DAY 2', originalEventId: 'bgm' },
       { id: 'cosma-8', name: 'Lost in Lyrics', day: 'DAY 2', originalEventId: 'lyrics' },
       { id: 'cosma-9', name: 'Mixed Signals', day: 'DAY 2', originalEventId: 'mixed_signals' },
-      { id: 'cosma-10', name: 'Spotlight', day: 'DAY 2', originalEventId: 'talent_show' }
+      { id: 'cosma-10', name: 'Spotlight', day: 'DAY 2', originalEventId: 'talent_show' },
+      { id: 'cosma-11', name: 'E-Sports', day: 'DAY 2', originalEventId: 'e_sports' }
     ]
   }
 };

@@ -8,6 +8,7 @@ import { PresentedByGroup } from './PresentedByGroup'
 import { SymposiumIdentity } from './SymposiumIdentity'
 import { RegisterNowButton } from '@/components/ui/RegisterNowButton'
 import { HeroMascotCompanion } from '@/components/mascot/HeroMascotCompanion'
+import { SymposiumCountdown } from './SymposiumCountdown'
 import './IdentityLayer.css'
 
 /**
@@ -47,6 +48,7 @@ const presentsStyle = computeReveal(identityReveal.presents)
 const symposiumStyle = computeReveal(identityReveal.symposium)
 const infoStyle = computeReveal(identityReveal.info)
 const registerCtaStyle = computeReveal(identityReveal.registerCta)
+const countdownStyle = computeReveal(identityReveal.countdown)
 const mascotStyle = computeReveal(identityReveal.symposium)
 const taglineStyles = introTaglines.map((tagline) => computeStageReveal(tagline.window))
 
@@ -105,6 +107,9 @@ export function IdentityLayer({ zIndex, ctaInteractive }: IdentityLayerProps) {
           style={{ ...registerCtaStyle, pointerEvents: ctaInteractive ? 'auto' : 'none' }}
         >
           <RegisterNowButton variant="hero" />
+        </div>
+        <div className="identity-layer__countdown" style={countdownStyle}>
+          <SymposiumCountdown />
         </div>
       </div>
 

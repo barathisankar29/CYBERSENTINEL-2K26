@@ -18,20 +18,20 @@ export interface ContactGroup {
  * Contact directory for the /contact payphone terminal. People and numbers
  * come from the Student Coordinators in credentials.ts, so a phone number
  * is only ever edited in one place. The design shows three color groups of
- * two — reorder the ids here to change who appears where.
+ * two, filled in the coordinators' list order (1-2, 3-4, 5-6) — reorder
+ * `studentCoordinatorsData` to change who appears where.
  */
-const GROUPS: { id: string; tone: ContactGroup['tone']; memberIds: string[] }[] = [
-  { id: 'leadership', tone: 'pink', memberIds: ['hirikaran-m', 'bhagya-b'] },
-  { id: 'coordination', tone: 'cyan', memberIds: ['dharsani-g', 'abishek-d'] },
-  { id: 'operations', tone: 'violet', memberIds: ['sharath-a-r-coord', 'prathish-m'] },
+const GROUPS: { id: string; tone: ContactGroup['tone'] }[] = [
+  { id: 'leadership', tone: 'pink' },
+  { id: 'coordination', tone: 'cyan' },
+  { id: 'operations', tone: 'violet' },
 ]
 
-export const contactGroups: ContactGroup[] = GROUPS.map((group) => ({
+export const contactGroups: ContactGroup[] = GROUPS.map((group, index) => ({
   id: group.id,
   tone: group.tone,
-  contacts: group.memberIds.flatMap((memberId) => {
-    const member = studentCoordinatorsData.find((entry) => entry.id === memberId)
-    if (!member?.phone) return []
+  contacts: studentCoordinatorsData.slice(index * 2, index * 2 + 2).flatMap((member) => {
+    if (!member.phone) return []
     return [{ id: member.id, name: member.name, title: member.role, phone: member.phone }]
   }),
 }))

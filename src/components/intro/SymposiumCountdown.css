@@ -1,0 +1,160 @@
+/*
+ * Liquid-glass countdown card (hero, under Register Now). Frosted, lightly
+ * tinted glass with a specular top highlight, a soft sheen, and a
+ * cyan -> violet -> magenta hairline edge matching the Register Now CTA.
+ * Static except the digits and the small live pulse.
+ */
+.symposium-countdown {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: min(92vw, 23rem);
+  padding: 0.75rem 1rem 0.7rem;
+  border-radius: 20px;
+  text-align: center;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.05) 38%, rgba(124, 58, 237, 0.1) 100%),
+    rgba(16, 12, 34, 0.32);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 0 22px rgba(167, 139, 250, 0.1),
+    0 14px 40px rgba(5, 4, 10, 0.55),
+    0 0 32px rgba(124, 58, 237, 0.2);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+}
+
+/* Gradient hairline edge (masked ring). */
+.symposium-countdown::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(120deg, rgba(34, 211, 238, 0.85), rgba(255, 255, 255, 0.35) 30%, rgba(124, 58, 237, 0.7) 60%, rgba(217, 38, 201, 0.85));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Specular sheen across the upper-left of the glass. */
+.symposium-countdown__sheen {
+  position: absolute;
+  inset: -40% -10% auto -30%;
+  height: 90%;
+  z-index: -1;
+  background: radial-gradient(ellipse at 30% 60%, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 60%);
+  transform: rotate(-8deg);
+  pointer-events: none;
+}
+
+.symposium-countdown__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  color: rgba(226, 232, 240, 0.85);
+}
+
+.symposium-countdown__pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--city-cyan, #22d3ee);
+  box-shadow: 0 0 8px var(--city-cyan, #22d3ee);
+  animation: symposiumPulse 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes symposiumPulse {
+  from { opacity: 0.35; }
+  to { opacity: 1; }
+}
+
+.symposium-countdown__units {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.45rem;
+  margin: 0.55rem 0 0.45rem;
+}
+
+/* Each unit is its own small inner glass pane. */
+.symposium-countdown__unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  padding: 0.42rem 0 0.35rem;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.symposium-countdown__value {
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: clamp(1.15rem, 3.4vw, 1.45rem);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  background: linear-gradient(180deg, #ffffff 20%, #b9f3ff 60%, #d8b4fe 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.35));
+}
+
+.symposium-countdown__label {
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  color: rgba(203, 213, 225, 0.7);
+}
+
+.symposium-countdown__live {
+  margin: 0.55rem 0 0.4rem;
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #ffffff;
+  text-shadow: 0 0 14px rgba(34, 211, 238, 0.6);
+}
+
+.symposium-countdown__dates {
+  margin: 0;
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.56rem;
+  letter-spacing: 0.26em;
+  color: #e9b8ff;
+  text-shadow: 0 0 10px rgba(217, 38, 201, 0.45);
+}
+
+/* Phones: the hero city moves under this card on every scroll frame, and a
+   live backdrop blur there is costly on mobile GPUs (same reason the scroll
+   badge dropped its blur). A denser tinted glass keeps the look without it. */
+@media (max-width: 767px) {
+  .symposium-countdown {
+    width: min(90vw, 21rem);
+    padding: 0.65rem 0.8rem 0.6rem;
+    background:
+      linear-gradient(145deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 40%, rgba(124, 58, 237, 0.12) 100%),
+      rgba(14, 10, 30, 0.72);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .symposium-countdown__pulse {
+    animation: none;
+  }
+}

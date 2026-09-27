@@ -205,21 +205,6 @@ export const FirmwareScreen: React.FC<FirmwareScreenProps> = ({
             </div>
           </div>
 
-          {/* Cash prizes: 1st / 2nd / 3rd */}
-          {event.prizes && (
-            <div className="pixel-chip p-2 flex flex-col text-xs font-mono" data-purpose="event-prizes">
-              <span className="text-gray-400 text-[9px] sm:text-[10px] font-silkscreen">[PRIZES]</span>
-              <div className="grid grid-cols-3 gap-2 mt-1">
-                {event.prizes.map((amount, idx) => (
-                  <span key={idx} className="font-bold text-[11px] sm:text-xs truncate">
-                    <span className="text-gray-400">{['1ST', '2ND', '3RD'][idx]}</span>{' '}
-                    <span className={idx === 0 ? 'text-[#ffd700]' : 'text-white'}>{amount}</span>
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* REGISTER NOW Action Button Container */}
           <div className="pt-1">
             <button
@@ -330,6 +315,11 @@ export const FirmwareScreen: React.FC<FirmwareScreenProps> = ({
 
           {/* Coordinators List */}
           <div className="space-y-2 flex-1">
+            {coordinators.length === 0 && (
+              <p className="border border-dashed border-[#2d123d] bg-[#0c0414] p-3 text-xs sm:text-sm font-mono text-[#c084fc] tracking-wider">
+                COORDINATORS WILL BE ANNOUNCED SOON.
+              </p>
+            )}
             {coordinators.map((coord, idx) => (
               <div
                 key={idx}

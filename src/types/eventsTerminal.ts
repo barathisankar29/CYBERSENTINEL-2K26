@@ -24,8 +24,6 @@ export interface EventSpec {
   date: string;
   time: string;
   teamSize: string;
-  /** Cash prizes, 1st / 2nd / 3rd place. */
-  prizes?: [string, string, string];
   chipLabel: string;
   chipSub: string;
   protocols: string[];
