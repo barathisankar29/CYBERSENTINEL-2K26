@@ -7,6 +7,7 @@ import { navigationBuildings } from '@/data/navigation'
 import { CityLayer } from './CityLayer'
 import { navigationCityEnvironmentLayers, NAVIGATION_REVEAL_PROGRESS } from './navigationCityEnvironment.config'
 import { Building } from './buildings/Building'
+import { BuildingMascotGuide } from './buildings/BuildingMascotGuide'
 import { NavigationCityMobile } from './NavigationCityMobile'
 import { ProfileAccessBadge } from '@/components/ui/ProfileAccessBadge'
 import { RegisterNowButton } from '@/components/ui/RegisterNowButton'
@@ -93,6 +94,7 @@ export function NavigationCityScene() {
             <Building key={building.id} building={building} revealed={revealed} isMobile={isMobile} />
           ))}
         </div>
+        {revealed && <BuildingMascotGuide />}
       </div>
     </section>
   )

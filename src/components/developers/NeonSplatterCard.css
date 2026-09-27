@@ -1,0 +1,90 @@
+/* ==========================================================================
+   NEON SPLATTER CARD (FRONTEND DEVELOPER SIGNATURE CARD)
+   Deep Midnight Navy Surface encased in SVG Neon Splatter / Grunge Border
+   ========================================================================== */
+
+.neon-splatter-card {
+  position: relative;
+  width: 100%;
+  max-width: 980px;
+  min-height: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+@media (min-width: 640px) {
+  .neon-splatter-card {
+    padding: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .neon-splatter-card {
+    min-height: 500px;
+  }
+}
+
+.neon-splatter-card__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.neon-splatter-card__inner {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  background: #0b0827;
+  border-radius: 26px;
+  padding: 1.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .neon-splatter-card__inner {
+    flex-direction: row;
+    padding: 2rem 2.5rem;
+    gap: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .neon-splatter-card__inner {
+    padding: 2.5rem 3rem;
+  }
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVENESS: Compact card height and eliminated empty spaces
+   ========================================================================== */
+@media (max-width: 768px) {
+  .neon-splatter-card {
+    min-height: auto;
+    max-width: 320px;
+    padding: 0.4rem;
+  }
+
+  .neon-splatter-card__inner {
+    height: auto;
+    min-height: auto;
+    padding: 1.15rem 1rem 0.95rem;
+    gap: 0.5rem;
+    justify-content: flex-start;
+    border-radius: 22px;
+  }
+}

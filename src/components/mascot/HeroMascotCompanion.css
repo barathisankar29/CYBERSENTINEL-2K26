@@ -1,0 +1,330 @@
+/* ==========================================================================
+   HERO MASCOT COMPANION - FUTURISTIC CYBER GHOST
+   ========================================================================== */
+
+.hero-mascot-companion {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 25;
+  user-select: none;
+  filter: drop-shadow(0 12px 35px rgba(0, 240, 255, 0.25));
+}
+
+.hero-mascot__dock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* Neon Speech Bubble */
+.hero-mascot__bubble {
+  position: relative;
+  background: rgba(14, 11, 28, 0.88);
+  border: 1px solid rgba(0, 240, 255, 0.45);
+  box-shadow: 
+    0 0 15px rgba(0, 240, 255, 0.2),
+    inset 0 0 10px rgba(0, 240, 255, 0.08);
+  border-radius: 12px;
+  padding: 0.5rem 0.9rem;
+  margin-bottom: 0.6rem;
+  max-width: 240px;
+  text-align: left;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: bubbleFloat 4s ease-in-out infinite;
+}
+
+@keyframes bubbleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.hero-mascot__bubble-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.25rem;
+}
+
+.hero-mascot__bubble-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00f0ff;
+  box-shadow: 0 0 8px #00f0ff;
+  animation: bubbleDotPulse 1.6s infinite ease-in-out;
+}
+
+@keyframes bubbleDotPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+.hero-mascot__bubble-tag {
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #00f0ff;
+}
+
+.hero-mascot__bubble-text {
+  margin: 0;
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+}
+
+/* Triangle beak for speech bubble */
+.hero-mascot__bubble-beak {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 10px;
+  height: 10px;
+  background: rgba(14, 11, 28, 0.9);
+  border-right: 1px solid rgba(0, 240, 255, 0.45);
+  border-bottom: 1px solid rgba(0, 240, 255, 0.45);
+}
+
+/* Mascot Avatar Stage */
+.hero-mascot__avatar-stage {
+  position: relative;
+  width: 175px;
+  height: 190px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  animation: mascotLevitate 3.5s ease-in-out infinite;
+  transition: transform 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.hero-mascot__avatar-stage:hover {
+  transform: scale(1.08) translateY(-4px);
+}
+
+.hero-mascot__avatar-stage.is-reacting {
+  animation: mascotHop 0.55s ease;
+}
+
+@keyframes mascotLevitate {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1.5deg);
+  }
+}
+
+@keyframes mascotHop {
+  0% { transform: scale(1) translateY(0); }
+  40% { transform: scale(1.22) translateY(-16px) rotate(-4deg); }
+  75% { transform: scale(0.95) translateY(2px) rotate(2deg); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+/* Hologram Glow Ring under mascot */
+.hero-mascot__glow-ring {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 105px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(0, 240, 255, 0.45) 0%, rgba(255, 42, 133, 0.25) 50%, transparent 75%);
+  filter: blur(4px);
+  pointer-events: none;
+  animation: ringPulse 3.5s ease-in-out infinite;
+}
+
+@keyframes ringPulse {
+  0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.8; }
+  50% { transform: translateX(-50%) scale(0.75); opacity: 0.4; }
+}
+
+/* Mascot Image */
+.hero-mascot__img {
+  max-width: 155px;
+  max-height: 175px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.5)) drop-shadow(0 0 24px rgba(255, 42, 133, 0.35));
+  image-rendering: auto;
+  pointer-events: none;
+  transition: transform 0.2s ease;
+}
+
+/* Interactive Tap Sparkles */
+.hero-mascot__sparkles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hero-mascot__sparkle {
+  position: absolute;
+  color: #ffe600;
+  text-shadow: 0 0 8px #ff0077, 0 0 16px #00f0ff;
+  font-size: 1.1rem;
+  animation: sparklePop 0.55s ease-out forwards;
+}
+
+.hero-mascot__sparkle--1 { top: 15%; left: 15%; animation-delay: 0s; }
+.hero-mascot__sparkle--2 { top: 10%; right: 15%; animation-delay: 0.08s; }
+.hero-mascot__sparkle--3 { bottom: 30%; right: 10%; animation-delay: 0.15s; }
+
+@keyframes sparklePop {
+  0% { transform: scale(0) rotate(0deg); opacity: 0; }
+  50% { transform: scale(1.4) rotate(90deg); opacity: 1; }
+  100% { transform: scale(0.2) translateY(-20px) rotate(180deg); opacity: 0; }
+}
+
+/* Tactical Controls Under Mascot */
+.hero-mascot__controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: -4px;
+}
+
+.hero-mascot__mood-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.65rem;
+  background: rgba(14, 11, 28, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  color: #cbd5e1;
+}
+
+.hero-mascot__mood-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #22d3ee;
+  box-shadow: 0 0 6px #22d3ee;
+}
+
+.hero-mascot__btn-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.hero-mascot__switch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  background: rgba(0, 240, 255, 0.12);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  border-radius: 6px;
+  color: #00f0ff;
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.hero-mascot__switch-btn:hover {
+  background: rgba(0, 240, 255, 0.25);
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.hero-mascot__sound-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.hero-mascot__sound-btn:hover {
+  background: rgba(255, 42, 133, 0.2);
+  border-color: #ff2a85;
+  color: #ff2a85;
+}
+
+.hero-mascot__sound-btn.is-muted {
+  opacity: 0.5;
+  color: #64748b;
+}
+
+/* ==========================================================================
+   RESPONSIVENESS: Visible on ALL screens (mobile, tablet, desktop)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .hero-mascot-companion {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: scale(0.95);
+    transform-origin: bottom right;
+  }
+
+  .hero-mascot__bubble {
+    max-width: 190px;
+    padding: 0.4rem 0.75rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .hero-mascot__bubble-text {
+    font-size: 0.65rem;
+  }
+
+  .hero-mascot__avatar-stage {
+    width: 145px;
+    height: 160px;
+  }
+
+  .hero-mascot__img {
+    max-width: 130px;
+    max-height: 145px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-mascot-companion {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: scale(0.88);
+    transform-origin: bottom right;
+  }
+
+  .hero-mascot__avatar-stage {
+    width: 135px;
+    height: 150px;
+  }
+
+  .hero-mascot__img {
+    max-width: 120px;
+    max-height: 135px;
+  }
+}
+

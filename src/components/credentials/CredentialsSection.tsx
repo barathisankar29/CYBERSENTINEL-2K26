@@ -10,6 +10,7 @@ import { CoConvenorMechaCard } from './CoConvenorMechaCard'
 import { StudentInfiniteCarousel } from './StudentInfiniteCarousel'
 import { EditorExpertCard } from './EditorExpertCard'
 import { DesignerTeamCard } from './DesignerTeamCard'
+import { DevelopersSection } from '@/components/developers/DevelopersSection'
 import './CredentialsSection.css'
 
 export function CredentialsSection() {
@@ -81,7 +82,10 @@ export function CredentialsSection() {
           </div>
         </div>
 
-        {/* 3. STUDENT COORDINATORS (INTERACTIVE CAROUSEL) */}
+        {/* 3. MEET OUR DEVELOPERS (3D COVERFLOW INFINITE CAROUSEL) */}
+        <DevelopersSection />
+
+        {/* 4. STUDENT COORDINATORS (INTERACTIVE CAROUSEL) */}
         <div id="students" className="cred-group">
           <h3 className="cred-group-title cred-group-title--pink">
             STUDENT COORDINATORS

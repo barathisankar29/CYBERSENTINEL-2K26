@@ -1,41 +1,43 @@
-import { useState, type CSSProperties } from 'react'
+import { useState, useEffect, type CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { navigationBuildings } from '@/data/navigation'
 import { mobileNavigationLayout } from '@/data/navigationMobile'
 import { ProfileAccessBadge } from '@/components/ui/ProfileAccessBadge'
+import { MASCOT_SPRITES, type MascotExpression } from '@/data/mascot'
 import './NavigationCityMobile.css'
 
 const BG_SRC = '/assets/city/navigation/navigation-mobile.webp'
 
-/**
- * The MOBILE-ONLY navigation presentation — a completely separate camera
- * composition from desktop (see navigation-mobile.png), not a scaled-down
- * copy of it. Rendered by NavigationCityScene.tsx only when isMobile is
- * true, as a normal in-flow page section — NOT inside desktop's pinned
- * 100vh sticky viewport.
- *
- * The image is sized naturally (`width: 100%; height: auto`, see
- * NavigationCityMobile.css's `.mobile-nav-scene__bg`) — it is a normal,
- * in-flow block element, so it alone determines `.mobile-nav-scene`'s
- * height. Every other layer (connector SVG, cards) is `position: absolute;
- * inset: 0` inside that SAME element, which is why they stay correctly
- * anchored to the picture's actual content at any viewport width: no
- * JS-computed rect, no letterboxing, no cropping — the full composition is
- * always shown at its own aspect ratio, and the section is simply as tall
- * as the image renders.
- *
- * Six liquid-glass cards, each independently positioned near its own
- * landmark (see navigationMobile.ts), with a thin glowing connector line
- * running DOWN to the building and a synchronized glow/brighten at the
- * building's own anchor point on hover/touch. The identity terminal sits
- * at the bottom of the composition, below the cards; the Register Now CTA
- * lives in the hero (see IdentityLayer.tsx).
- */
+const MOBILE_MASCOT_DIALOGUES: { text: string; pose: MascotExpression }[] = [
+  { text: '⚡ TAP ANY BUILDING TO ENTER!', pose: 'happy' },
+  { text: '🎮 15+ HACKS & ESPORTS ARENA!', pose: 'cheer' },
+  { text: '⏳ SKYRAIL HAS ALL ROUND TIMINGS!', pose: 'fly' },
+  { text: '🕶️ MEET OUR TEAM IN CREDENTIALS!', pose: 'wave' },
+  { text: '🚀 BUS ROUTES IN TRANSPORT HUB!', pose: 'curious' },
+  { text: '🏛️ EXPLORE DEPT ARCHIVES IN ABOUT!', pose: 'float' },
+]
+
 export function NavigationCityMobile() {
   const navigate = useNavigate()
   const [activeId, setActiveId] = useState<string | null>(null)
+  const [mascotIdx, setMascotIdx] = useState(0)
 
   const clearActive = (id: string) => setActiveId((current) => (current === id ? null : current))
+
+  const handleNextDialogue = () => {
+    setMascotIdx((prev) => (prev + 1) % MOBILE_MASCOT_DIALOGUES.length)
+  }
+
+  // Smoothly rotate dialogue tips every 3.5s
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setMascotIdx((prev) => (prev + 1) % MOBILE_MASCOT_DIALOGUES.length)
+    }, 3500)
+    return () => clearInterval(timer)
+  }, [])
+
+  const currentDialogue = MOBILE_MASCOT_DIALOGUES[mascotIdx]
+  const currentSprite = MASCOT_SPRITES[currentDialogue.pose] || MASCOT_SPRITES.float
 
   return (
     <section className="mobile-nav-section" id="buildings">
@@ -143,6 +145,32 @@ export function NavigationCityMobile() {
             </div>
           )
         })}
+
+        {/* Mobile Mascot Companion Stationed in the Open Plaza Courtyard Space (Circled by user) */}
+        <div
+          className="mobile-nav-mascot"
+          style={{ left: '68%', top: '70%' }}
+          onClick={handleNextDialogue}
+          role="button"
+          tabIndex={0}
+          aria-label="Tap mascot companion for navigation hints"
+        >
+          <div className="mobile-nav-mascot__bubble">
+            <div className="mobile-nav-mascot__bubble-beak" aria-hidden="true" />
+            <span className="mobile-nav-mascot__speech">{currentDialogue.text}</span>
+          </div>
+
+          <div className="mobile-nav-mascot__actor">
+            <div className="mobile-nav-mascot__glow" aria-hidden="true" />
+            <img
+              src={currentSprite.src}
+              alt="CyberSentinel Mobile Guide"
+              className="mobile-nav-mascot__img"
+              draggable={false}
+            />
+            <div className="mobile-nav-mascot__badge">GUIDE</div>
+          </div>
+        </div>
       </div>
     </section>
   )

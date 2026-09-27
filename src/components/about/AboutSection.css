@@ -7,8 +7,8 @@
   position: relative;
   width: 100%;
   min-height: 100vh;
-  margin-top: clamp(-7rem, -12vw, -4.5rem);
-  padding: clamp(6rem, 10vw, 10rem) clamp(1rem, 4vw, 3rem) clamp(4rem, 6vw, 6rem);
+  margin-top: 0;
+  padding: clamp(5rem, 8vw, 7.5rem) clamp(1rem, 4vw, 3rem) clamp(4rem, 6vw, 6rem);
   overflow: clip;
   clip-path: inset(0);
   z-index: 12;
@@ -1600,7 +1600,7 @@
   .about-section {
     padding: clamp(3.5rem, 8vw, 5rem) clamp(0.75rem, 3vw, 1.25rem) 2.5rem;
     background-attachment: scroll;
-    margin-top: clamp(-4.5rem, -8vw, -3rem);
+    margin-top: 0;
   }
 
   .about-section__container {

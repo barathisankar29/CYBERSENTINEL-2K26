@@ -1,0 +1,6 @@
+{
+  "name": "Frontend Team Credentials",
+  "description": "Interactive credentials showcase for the frontend development team featuring neon cyberpunk aesthetic, developer profiles, and instant navigation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
