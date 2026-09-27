@@ -5,6 +5,7 @@ import { saveLastRegistration, submitRegistration, type RegistrationDay } from '
 import { recordBackendRegistration } from '@/utils/eventRegistration';
 import { sound } from './sound';
 import { formatRupees, useLiveRegistrationData } from './useLiveRegistrationData';
+import { useMascot } from '@/components/mascot';
 
 export interface RegistrationPortalInitialData {
   dayType?: RegistrationDay;
@@ -49,6 +50,7 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
   onClose,
   onNavigateToRegistrations
 }) => {
+  const { dispatchMascotEvent } = useMascot();
   // Form fields matching the HTML structure exactly
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -111,6 +113,7 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
   const showError = (message: string) => {
     sound.playError();
     setAlertInfo({ type: 'error', message });
+    dispatchMascotEvent('MASCOT_REGISTRATION_ERROR', { message });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -132,6 +135,7 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
 
     setIsSubmitting(true);
     setAlertInfo(null);
+    dispatchMascotEvent('MASCOT_REGISTRATION_START');
     try {
       const result = await submitRegistration({
         name: fullName,
@@ -176,6 +180,9 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
       }
 
       sound.playSuccess();
+      dispatchMascotEvent('MASCOT_REGISTRATION_SUCCESS', {
+        message: `Mission complete! Registration ID: ${result.registration_code}. You're in!`,
+      });
       setAlertInfo({
         type: 'success',
         message: `Registration submitted successfully. Registration ID: ${result.registration_code}. Payment status: ${result.status}. You will receive your final QR after payment verification.`,

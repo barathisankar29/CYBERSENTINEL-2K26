@@ -4,6 +4,7 @@ import { navigationBuildings } from '@/data/navigation'
 import { mobileNavigationLayout } from '@/data/navigationMobile'
 import { ProfileAccessBadge } from '@/components/ui/ProfileAccessBadge'
 import { MASCOT_SPRITES, type MascotExpression } from '@/data/mascot'
+import { useMascot } from '@/components/mascot'
 import './NavigationCityMobile.css'
 
 const BG_SRC = '/assets/city/navigation/navigation-mobile.webp'
@@ -19,6 +20,7 @@ const MOBILE_MASCOT_DIALOGUES: { text: string; pose: MascotExpression }[] = [
 
 export function NavigationCityMobile() {
   const navigate = useNavigate()
+  const { dispatchMascotEvent } = useMascot()
   const [activeId, setActiveId] = useState<string | null>(null)
   const [mascotIdx, setMascotIdx] = useState(0)
 
@@ -121,12 +123,19 @@ export function NavigationCityMobile() {
                   } as CSSProperties
                 }
                 onClick={() => {
+                  dispatchMascotEvent('MASCOT_CLICK_BUILDING', { buildingId: building.id })
                   window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
                   navigate(`/${building.sectionSlug}`)
                 }}
-                onPointerEnter={() => setActiveId(building.id)}
+                onPointerEnter={() => {
+                  setActiveId(building.id)
+                  dispatchMascotEvent('MASCOT_HOVER_BUILDING', { buildingId: building.id })
+                }}
                 onPointerLeave={() => clearActive(building.id)}
-                onFocus={() => setActiveId(building.id)}
+                onFocus={() => {
+                  setActiveId(building.id)
+                  dispatchMascotEvent('MASCOT_HOVER_BUILDING', { buildingId: building.id })
+                }}
                 onBlur={() => clearActive(building.id)}
                 aria-label={building.label}
               >
