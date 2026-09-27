@@ -273,7 +273,6 @@ export function AboutSection() {
                       <div
                         key={member.name}
                         className={`club-member-card club-member-card--${member.color} bldg-pod`}
-                        tabIndex={0}
                       >
                         {/* Heading as their role */}
                         <div className="bldg-pod__roof">

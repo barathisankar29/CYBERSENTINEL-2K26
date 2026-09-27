@@ -222,7 +222,6 @@ export function StudentInfiniteCarousel({ items }: StudentInfiniteCarouselProps)
               } ${isCenter ? 'infinite-carousel-item--active' : ''}`}
               style={getCardStyle(offset)}
               data-active={isCenter}
-              onClick={() => handleCardClick(globalIndex)}
             >
               <StudentCircuitCard
                 member={member}

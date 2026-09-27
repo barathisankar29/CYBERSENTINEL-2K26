@@ -4,6 +4,7 @@ import './VideoIntro.css'
 
 const DESKTOP_INTRO_SRC = '/assets/intro/desktop_intro.mp4'
 const MOBILE_INTRO_SRC = '/assets/intro/mobile_intro.mp4'
+const INTRO_CAPTIONS_SRC = '/assets/intro/intro-captions.vtt'
 
 interface VideoIntroProps {
   onFinish: () => void
@@ -129,7 +130,10 @@ export function VideoIntro({
           onTimeUpdate={handleTimeUpdate}
           onLoadedMetadata={handleLoadedMetadata}
           onEnded={handleFinish}
-        />
+        >
+          {/* Music/SFX only — no dialogue — so the track describes the sound. */}
+          <track kind="captions" src={INTRO_CAPTIONS_SRC} srcLang="en" label="English" />
+        </video>
       </div>
 
       {/* Subtle cinematic scanline & vignette textures */}
