@@ -250,25 +250,51 @@ export function StudentInfiniteCarousel({ items }: StudentInfiniteCarouselProps)
         })}
       </div>
 
-      {/* Pagination Dots (Middle controls) */}
-      <div
-        className="infinite-carousel-dots"
-        role="tablist"
-        aria-label="Student coordinators navigation"
-      >
-        {items.map((member, idx) => (
-          <button
-            key={member.id}
-            type="button"
-            className={`infinite-carousel-dot ${
-              idx === currentActiveDot ? 'infinite-carousel-dot--active' : ''
-            }`}
-            onClick={() => handleDotClick(idx)}
-            aria-label={`Go to coordinator ${member.name}`}
-            role="tab"
-            aria-selected={idx === currentActiveDot}
-          />
-        ))}
+      {/* Navigation Controls Bar with Arrow Buttons on the sides of the Dots */}
+      <div className="infinite-carousel-controls-bar">
+        <button
+          type="button"
+          className="infinite-carousel-arrow-btn infinite-carousel-arrow-btn--prev"
+          onClick={handlePrev}
+          aria-label="Previous Student Coordinator"
+          title="Previous Coordinator"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </button>
+
+        <div
+          className="infinite-carousel-dots"
+          role="tablist"
+          aria-label="Student coordinators navigation"
+        >
+          {items.map((member, idx) => (
+            <button
+              key={member.id}
+              type="button"
+              className={`infinite-carousel-dot ${
+                idx === currentActiveDot ? 'infinite-carousel-dot--active' : ''
+              }`}
+              onClick={() => handleDotClick(idx)}
+              aria-label={`Go to coordinator ${member.name}`}
+              role="tab"
+              aria-selected={idx === currentActiveDot}
+            />
+          ))}
+        </div>
+
+        <button
+          type="button"
+          className="infinite-carousel-arrow-btn infinite-carousel-arrow-btn--next"
+          onClick={handleNext}
+          aria-label="Next Student Coordinator"
+          title="Next Coordinator"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </button>
       </div>
     </div>
   )

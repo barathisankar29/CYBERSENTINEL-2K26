@@ -8,7 +8,7 @@ export function TransportationPage() {
       <CyberBackButton />
 
       {/* Main Transportation Content */}
-      <div className="pt-6 w-full max-w-full overflow-x-hidden">
+      <div className="w-full max-w-full overflow-x-hidden">
         <TransportationSection />
       </div>
     </main>

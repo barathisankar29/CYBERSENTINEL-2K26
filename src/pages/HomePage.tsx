@@ -2,10 +2,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { CityScene } from '@/components/city/CityScene'
 import { NavigationCityScene } from '@/components/city/NavigationCityScene'
-import { AboutSection } from '@/components/about/AboutSection'
-import { CredentialsSection } from '@/components/credentials/CredentialsSection'
-import { TimelineJourney } from '@/components/timeline/TimelineJourney'
-import { TransportationSection } from '@/components/transportation/TransportationSection'
 import { VideoIntro } from '@/components/intro/VideoIntro'
 import { FuturisticTransition } from '@/components/intro/FuturisticTransition'
 import { SiteFooter } from '@/components/ui/SiteFooter'
@@ -16,10 +12,10 @@ type IntroStage = 'intro' | 'transition' | 'completed'
 
 export function HomePage() {
   const location = useLocation()
-  const isNavigatingToSection = ['#buildings', '#about', '#credentials', '#timeline', '#transport', '#transportation'].includes(location.hash)
+  const isNavigatingToBuildings = location.hash === '#buildings'
 
   const [introStage, setIntroStage] = useState<IntroStage>(() => {
-    if (isNavigatingToSection) {
+    if (isNavigatingToBuildings) {
       return 'completed'
     }
     if (hasSeenIntro()) {
@@ -33,14 +29,6 @@ export function HomePage() {
       markIntroAsSeen()
       setIntroStage('completed')
       scrollToBuildings()
-    } else if (['#about', '#credentials', '#timeline', '#transport', '#transportation'].includes(location.hash)) {
-      markIntroAsSeen()
-      setIntroStage('completed')
-      const targetId = location.hash === '#transportation' ? 'transport' : location.hash.slice(1)
-      const el = document.getElementById(targetId) || (targetId === 'transport' ? document.getElementById('transportation') : null)
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' })
-      }
     }
   }, [location.hash])
 
@@ -62,10 +50,6 @@ export function HomePage() {
       )}
       <CityScene introCompleted={introStage === 'completed'} />
       <NavigationCityScene />
-      <AboutSection />
-      <CredentialsSection />
-      <TimelineJourney />
-      <TransportationSection />
       <SiteFooter />
     </main>
   )

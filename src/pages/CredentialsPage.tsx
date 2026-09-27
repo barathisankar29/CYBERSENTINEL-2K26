@@ -8,7 +8,7 @@ export function CredentialsPage() {
       <CyberBackButton />
 
       {/* Main Credentials Content */}
-      <div className="pt-6 w-full max-w-full overflow-x-hidden">
+      <div className="w-full max-w-full overflow-x-hidden">
         <CredentialsSection />
       </div>
     </main>

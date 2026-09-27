@@ -326,6 +326,7 @@
   background: conic-gradient(from var(--tl-edge-angle), transparent 0%, rgba(34, 211, 238, 0.9) 12%, transparent 30%, transparent 100%);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
   animation: tl-edge-spin 3.4s linear infinite;
 }
@@ -603,6 +604,7 @@
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
@@ -727,6 +729,7 @@
 
   .timeline-card__desc {
     -webkit-line-clamp: 2;
+    line-clamp: 2;
   }
 
   /* Mobile GPUs feel a large backdrop-filter blur far more than desktop

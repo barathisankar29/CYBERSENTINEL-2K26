@@ -7,6 +7,7 @@ import { IntroTagline } from './IntroTagline'
 import { PresentedByGroup } from './PresentedByGroup'
 import { SymposiumIdentity } from './SymposiumIdentity'
 import { RegisterNowButton } from '@/components/ui/RegisterNowButton'
+import { HeroMascotCompanion } from '@/components/mascot/HeroMascotCompanion'
 import './IdentityLayer.css'
 
 /**
@@ -46,6 +47,7 @@ const presentsStyle = computeReveal(identityReveal.presents)
 const symposiumStyle = computeReveal(identityReveal.symposium)
 const infoStyle = computeReveal(identityReveal.info)
 const registerCtaStyle = computeReveal(identityReveal.registerCta)
+const mascotStyle = computeReveal(identityReveal.symposium)
 const taglineStyles = introTaglines.map((tagline) => computeStageReveal(tagline.window))
 
 interface IdentityLayerProps {
@@ -104,6 +106,11 @@ export function IdentityLayer({ zIndex, ctaInteractive }: IdentityLayerProps) {
         >
           <RegisterNowButton variant="hero" />
         </div>
+      </div>
+
+      {/* Floating Hero Cyber Mascot Companion */}
+      <div className="identity-layer__mascot" style={mascotStyle}>
+        <HeroMascotCompanion />
       </div>
     </div>
   )
