@@ -151,6 +151,12 @@ export function NavigationCityMobile() {
           className="mobile-nav-mascot"
           style={{ left: '68%', top: '70%' }}
           onClick={handleNextDialogue}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              handleNextDialogue()
+            }
+          }}
           role="button"
           tabIndex={0}
           aria-label="Tap mascot companion for navigation hints"

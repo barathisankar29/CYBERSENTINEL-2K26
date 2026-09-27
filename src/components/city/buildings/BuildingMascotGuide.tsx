@@ -115,6 +115,15 @@ export const BuildingMascotGuide: React.FC = () => {
       <div
         className="building-mascot-guide__actor"
         onClick={goToNext}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            goToNext()
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label="Mascot guide: go to the next landmark"
         title="Click mascot to fly to next landmark"
       >
         <div className="building-mascot-guide__beacon" aria-hidden="true" />
