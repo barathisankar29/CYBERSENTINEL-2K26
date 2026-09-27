@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Mobile Timeline — NICO vs RUELLE on a ledge below the track.
+   Timeline — NICO vs RUELLE on a ledge below the track.
    Sits inside `.timeline-stage` (the city artwork is its background) and
    covers the stage's lower band, below the bridge deck. Sized from that
    band with container query units, so it scales with the stage.
@@ -16,7 +16,7 @@
    bodies — never hard cuts, and never see-through.
    ========================================================================== */
 
-.mobile-character-fight {
+.character-fight {
   position: absolute;
   left: 0;
   right: 0;
@@ -31,11 +31,16 @@
   container-type: size;
 }
 
-/* Mobile only. The component is also only mounted on mobile (useIsMobile in
-   TimelineJourney.tsx); this is a belt-and-braces guard. */
+/* Wider screens: the fight is choreographed for a phone-width stage (the
+   fighters, clash point and streams are placed in cqw), so keep that same
+   composition in a centred column below the track rather than stretching
+   the two fighters to opposite edges of a wide scene. */
 @media (min-width: 768px) {
-  .mobile-character-fight {
-    display: none;
+  .character-fight {
+    left: 50%;
+    right: auto;
+    width: min(100%, 44rem);
+    transform: translateX(-50%);
   }
 }
 

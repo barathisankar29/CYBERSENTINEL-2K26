@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import './MobileCharacterFight.css'
+import './CharacterFight.css'
 
 type PoseName = 'idle' | 'action' | 'attack' | 'recoil'
 
@@ -84,9 +84,10 @@ function FighterSprite({ fighter }: { fighter: Fighter }) {
 }
 
 /**
- * NICO vs RUELLE on a small ledge below the mobile Timeline's track. Lives
- * inside the Timeline stage (the city artwork is its background), mobile
- * only, purely decorative.
+ * NICO vs RUELLE on a small ledge below the Timeline's track. Lives inside
+ * the Timeline stage (the city artwork is its background); purely
+ * decorative. Phones use the full stage width; wider screens keep the same
+ * composition in a centred column (see CharacterFight.css).
  *
  * A tiny 2D fight rather than sliding images: each fighter is layered as
  * move (translate) > body (tilt / squash-stretch around the feet) > breathe
@@ -96,9 +97,9 @@ function FighterSprite({ fighter }: { fighter: Fighter }) {
  * `pointer-events: none` so the journey's scroll/swipe input is untouched.
  * Reduced motion shows a static "NICO ⚡ VS ⚡ RUELLE" standoff.
  */
-export function MobileCharacterFight() {
+export function CharacterFight() {
   return (
-    <div className="mobile-character-fight" aria-hidden="true">
+    <div className="character-fight" aria-hidden="true">
       <div className="mcf-stage">
         <div className="mcf-platform">
           <span className="mcf-platform__reflection" />

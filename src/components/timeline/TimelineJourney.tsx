@@ -6,7 +6,7 @@ import type { DayKey, TimelineEvent } from '@/types/timeline'
 import { FRAME_LAYOUT, SEAM_LAYOUTS, activationThreshold, featherMaskImage, journeyBoundsFor } from './timelineWorld'
 import { useJourneyProgress } from './useJourneyProgress'
 import { TimelinePoint } from './TimelinePoint'
-import { MobileCharacterFight } from './MobileCharacterFight'
+import { CharacterFight } from './CharacterFight'
 import './TimelineJourney.css'
 
 const TRAIN_SRC = '/assets/timeline/timeline-train.webp'
@@ -325,10 +325,10 @@ export function TimelineJourney() {
             )}
           </div>
 
-          {/* Mobile only: NICO vs RUELLE on a ledge below the track, over the
-              city artwork. Shown once a journey is running (the day picker
-              owns the screen before then). */}
-          {isMobile && activeDay && <MobileCharacterFight />}
+          {/* NICO vs RUELLE on a ledge below the track, over the city
+              artwork. Shown once a journey is running (the day picker owns
+              the screen before then). */}
+          {activeDay && <CharacterFight />}
 
           {/* Mobile: the active day's card sits in the scene's sky, anchored
               just above the train's roof (screen-centred rather than
