@@ -43,7 +43,7 @@ export const CompeteScreen: React.FC<CompeteScreenProps> = ({
 
   // Group events based on requested classification:
   // Day 1: 5 events (all day 1 events)
-  // Day 2: 5 events (technical_quiz, connections, ipl_auction, opposites_attract, solo_dance)
+  // Day 2: 6 events (technical_quiz, connections, ipl_auction, opposites_attract, solo_dance, e_sports)
   // Special Events: 2 events (thiruvizha_corner and group_dance)
   const isSpecialEvent = (ev: EventSpec) =>
     ev.id === 'group_dance' || ev.id === 'thiruvizha_corner';
@@ -169,15 +169,10 @@ export const CompeteScreen: React.FC<CompeteScreenProps> = ({
                   {ev.title}
                 </h3>
 
-                <div
-                  className={`mt-3 pt-2 border-t text-[11px] font-mono text-slate-300 ${
-                    isSpecial ? 'border-[#5fa07a]/20' : 'border-[#1e1428]'
-                  }`}
-                >
-                  <div>
-                    <span className="text-gray-400 font-silkscreen text-[9px]">CREW:</span>{' '}
-                    <span className="text-slate-200">{ev.teamSize}</span>
-                  </div>
+                <div className="hidden md:block">
+                  <p className="font-kelly text-xs sm:text-sm text-slate-200 line-clamp-3 leading-relaxed tracking-wide">
+                    {ev.description}
+                  </p>
                 </div>
               </div>
 

@@ -125,7 +125,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectModule, onNaviga
           </div>
 
           {/* Short Introduction Paragraph */}
-          <div className="font-body text-sm sm:text-base text-gray-100 leading-relaxed bg-[#0b0512] p-4 sm:p-5 border-l-4 border-[#9333ea] shadow-inner tracking-normal font-normal">
+          <div className="font-kelly text-sm sm:text-base text-gray-100 leading-relaxed bg-[#0b0512] p-4 sm:p-5 border-l-4 border-[#9333ea] shadow-inner tracking-wide">
             Cybersentinel 2K26 is a state level intercollegiate technical symposium by the Department of Computer Science and Engineering, bringing students together through technology, challenges, innovation, and creativity.
           </div>
 

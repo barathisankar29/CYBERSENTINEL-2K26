@@ -20,7 +20,7 @@ import { TeamCreationScreen } from './screens/TeamCreationScreen';
 
 const FONT_LINK_ID = 'events-terminal-fonts';
 const FONT_HREF =
-  'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Press+Start+2P&family=Share+Tech+Mono&family=Silkscreen:wght@400;700&family=VT323&display=swap';
+  'https://fonts.googleapis.com/css2?family=Kelly+Slab&family=Oswald:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Press+Start+2P&family=Share+Tech+Mono&family=Silkscreen:wght@400;700&family=VT323&display=swap';
 
 type EventsTab = 'all' | 'day1' | 'day2' | 'special';
 

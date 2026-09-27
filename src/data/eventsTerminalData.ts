@@ -31,11 +31,11 @@ export const ALL_EVENTS: EventSpec[] = [
     description:
       'Showcase cutting-edge technical insights across AI, cyber defense, IoT, quantum computing, and distributed networks before an esteemed panel of researchers.',
     venue: '',
-    date: 'DAY 01 // 10:00 AM',
+    date: 'DAY 01',
     time: '10:00 AM - 01:00 PM',
     fee: '',
     teamSize: '2 - 3 MEMBERS',
-    eligibility: 'ALL COLLEGE CADETS',
+    eligibility: 'ALL COLLEGE MEMBERS',
     chiefOperator: 'DR. S. RAGHAVAN',
     contactNumber: '+91 98401 11201',
     relayEmail: 'PAPER.CSE@CYBERSENTINEL.IN',
@@ -52,7 +52,7 @@ export const ALL_EVENTS: EventSpec[] = [
     protocols: [
       'PRESENTATION DURATION: 7 MINUTES FOR PRESENTATION + 3 MINUTES Q&A WITH THE JURY.',
       'SLIDES (PPT OR PDF) MUST BE SUBMITTED AT THE REPORTING DESK 30 MINUTES PRIOR.',
-      'ORIGINAL RESEARCH AND CASE STUDIES PREFERRED; MAXIMUM OF 3 CADETS PER TEAM.',
+      'ORIGINAL RESEARCH AND CASE STUDIES PREFERRED; MAXIMUM OF 3 MEMBERS PER TEAM.',
       'SCORING CRITERIA: NOVELTY, TECHNICAL RIGOR, PRACTICAL IMPACT, AND DEFENSE RIGOR.',
       'PLAGIARISM EXCEEDING 15% WILL RESULT IN IMMEDIATE DISQUALIFICATION.'
     ]
@@ -69,11 +69,11 @@ export const ALL_EVENTS: EventSpec[] = [
     description:
       'Decode encrypted problem statements, reverse-engineer algorithmic puzzles, and write high-efficiency code to breach multi-layered logical locks.',
     venue: '',
-    date: 'DAY 01 // 10:30 AM',
+    date: 'DAY 01',
     time: '10:30 AM - 01:00 PM',
     fee: '',
-    teamSize: '1 - 2 CADETS',
-    eligibility: 'OPEN CODING BRIGADES',
+    teamSize: '1 - 2 MEMBERS',
+    eligibility: 'ALL COLLEGE MEMBERS',
     chiefOperator: 'PROF. M. MEENAKSHI',
     contactNumber: '+91 98405 12201',
     relayEmail: 'CYPHER.CSE@CYBERSENTINEL.IN',
@@ -107,11 +107,11 @@ export const ALL_EVENTS: EventSpec[] = [
     description:
       'Test your crew synergy and lateral thinking in a high-energy communication challenge where critical clues must be conveyed without speaking forbidden keywords.',
     venue: '',
-    date: 'DAY 01 // 11:00 AM',
+    date: 'DAY 01',
     time: '11:00 AM - 01:00 PM',
     fee: '',
-    teamSize: '2 - 3 CADETS',
-    eligibility: 'ALL COLLEGE CADETS',
+    teamSize: '2 - 3 MEMBERS',
+    eligibility: 'ALL COLLEGE MEMBERS',
     chiefOperator: 'DR. K. ANAND',
     contactNumber: '+91 98409 13201',
     relayEmail: 'UNSAID.CSE@CYBERSENTINEL.IN',
@@ -145,11 +145,11 @@ export const ALL_EVENTS: EventSpec[] = [
     description:
       'Design and build responsive web interfaces, interactive layouts, and futuristic cyberpunk digital experiences under live sprint constraints.',
     venue: '',
-    date: 'DAY 01 // 01:30 PM',
+    date: 'DAY 01',
     time: '01:30 PM - 03:30 PM',
     fee: '',
-    teamSize: '1 - 2 CADETS',
-    eligibility: 'UI/UX & WEB OPERATORS',
+    teamSize: '1 - 2 MEMBERS',
+    eligibility: 'ALL COLLEGE MEMBERS',
     chiefOperator: 'PROF. S. REVATHI',
     contactNumber: '+91 98413 14201',
     relayEmail: 'WEBLICA.CSE@CYBERSENTINEL.IN',
@@ -183,11 +183,11 @@ export const ALL_EVENTS: EventSpec[] = [
     description:
       'High-intensity competitive programming arena testing data structures, dynamic programming, debugging reflexes, and algorithmic optimization.',
     venue: '',
-    date: 'DAY 01 // 01:30 PM',
+    date: 'DAY 01',
     time: '01:30 PM - 03:30 PM',
     fee: '',
-    teamSize: '1 - 2 CADETS',
-    eligibility: 'ALGORITHMIC CODERS',
+    teamSize: '1 - 2 MEMBERS',
+    eligibility: 'ALL COLLEGE MEMBERS',
     chiefOperator: 'DR. P. BALAJI',
     contactNumber: '+91 98417 15201',
     relayEmail: 'XCODERS.CSE@CYBERSENTINEL.IN',
@@ -211,7 +211,7 @@ export const ALL_EVENTS: EventSpec[] = [
   },
 
   // ==========================================
-  // DAY 2 (7 EVENTS)
+  // DAY 2 (8 EVENTS)
   // ==========================================
   {
     id: 'technical_quiz',
@@ -225,11 +225,11 @@ export const ALL_EVENTS: EventSpec[] = [
     description:
       'Fast-paced trivia tournament covering computing history, algorithms, operating system kernels, pop-tech lore, and logical deductions.',
     venue: '',
-    date: 'DAY 02 // 10:00 AM',
+    date: 'DAY 02',
     time: '10:00 AM - 12:30 PM',
     fee: '',
-    teamSize: '2 CADETS',
-    eligibility: 'DUO COGNITIVE OPERATORS',
+    teamSize: '2 MEMBERS',
+    eligibility: 'ALL COLLEGE MEMBERS',
     chiefOperator: 'PROF. C. SURESH',
     contactNumber: '+91 98402 16201',
     relayEmail: 'QUIZ.CSE@CYBERSENTINEL.IN',
@@ -263,11 +263,11 @@ export const ALL_EVENTS: EventSpec[] = [
     description:
       'Decode associative picture puzzles, pop culture cues, and cryptic rebuses to reveal hidden technical terminology.',
     venue: '',
-    date: 'DAY 02 // 11:00 AM',
+    date: 'DAY 02',
     time: '11:00 AM - 01:00 PM',
     fee: '',
-    teamSize: '2 CADETS',
-    eligibility: 'PAIRED OPERATORS',
+    teamSize: '2 MEMBERS',
+    eligibility: 'ALL COLLEGE MEMBERS',
     chiefOperator: 'DR. R. VASUKI',
     contactNumber: '+91 98407 17201',
     relayEmail: 'CONNECT.CSE@CYBERSENTINEL.IN',
@@ -301,11 +301,11 @@ export const ALL_EVENTS: EventSpec[] = [
     description:
       'Manage limited salary caps, strategize player acquisitions, and build a championship franchise through tense bidding rounds.',
     venue: '',
-    date: 'DAY 02 // 01:30 PM',
+    date: 'DAY 02',
     time: '01:30 PM - 04:00 PM',
     fee: '',
-    teamSize: '3 - 4 CADETS',
-    eligibility: 'CRICKET STRATEGISTS',
+    teamSize: '3 - 4 MEMBERS',
+    eligibility: 'ALL COLLEGE MEMBERS',
     chiefOperator: 'PROF. S. PRAVEEN',
     contactNumber: '+91 98411 18201',
     relayEmail: 'AUCTION.CSE@CYBERSENTINEL.IN',
@@ -339,11 +339,11 @@ export const ALL_EVENTS: EventSpec[] = [
     description:
       'Fast-reflex stage game where participants must respond with exact opposites to rapid prompts without hesitating or slipping up.',
     venue: '',
-    date: 'DAY 02 // 02:00 PM',
+    date: 'DAY 02',
     time: '02:00 PM - 03:30 PM',
     fee: '',
-    teamSize: 'SOLO OPERATOR',
-    eligibility: 'SOLO OPERATORS',
+    teamSize: '1 MEMBER',
+    eligibility: 'ALL COLLEGE MEMBERS',
     chiefOperator: 'DR. N. KAVITHA',
     contactNumber: '+91 98415 19201',
     relayEmail: 'OPPOSITE.CSE@CYBERSENTINEL.IN',
@@ -377,11 +377,11 @@ export const ALL_EVENTS: EventSpec[] = [
     description:
       'Solo performance battle across classical, western, hip-hop, or lyrical genres on the open-air auditorium stage.',
     venue: '',
-    date: 'DAY 02 // 03:00 PM',
+    date: 'DAY 02',
     time: '03:00 PM - 05:00 PM',
     fee: '',
-    teamSize: 'SOLO PERFORMER',
-    eligibility: 'SOLO PERFORMERS',
+    teamSize: '1 MEMBER',
+    eligibility: 'ALL COLLEGE MEMBERS',
     chiefOperator: 'PROF. S. HEMALATHA',
     contactNumber: '+91 98419 20201',
     relayEmail: 'SOLODANCE.CSE@CYBERSENTINEL.IN',
@@ -404,6 +404,44 @@ export const ALL_EVENTS: EventSpec[] = [
     ]
   },
   {
+    id: 'e_sports',
+    moduleId: 'firmware',
+    terminalId: 'ESP-11',
+    day: 2,
+    track: 'non_technical',
+    category: 'NON-TECHNICAL TRACK // TACTICAL GAMING ARENA',
+    title: 'E-SPORTS',
+    quote: '"LOCK IN YOUR LOADOUT. OUTPLAY THE LOBBY. CLAIM VICTORY."',
+    description:
+      'High-adrenaline competitive gaming tournament where squads and solo contenders battle across premier tactical and battle-royale arenas for ultimate supremacy.',
+    venue: '',
+    date: 'DAY 02',
+    time: '11:00 AM - 03:30 PM',
+    fee: '',
+    teamSize: '1 - 4 MEMBERS',
+    eligibility: 'ALL COLLEGE MEMBERS',
+    chiefOperator: 'PROF. R. KARTHIKEYAN',
+    contactNumber: '+91 98421 22201',
+    relayEmail: 'ESPORTS.CSE@CYBERSENTINEL.IN',
+    coordinators: [
+      { name: 'Prof. R. Karthikeyan', phone: '+91 98421 22201', role: 'Faculty Coordinator' },
+      { name: 'Dr. S. Vigneshwaran', phone: '+91 98422 22202', role: 'Faculty Coordinator' },
+      { name: 'M. Harish', phone: '+91 97897 22203', role: 'Student Coordinator' },
+      { name: 'R. Roshini', phone: '+91 98852 22204', role: 'Student Coordinator' }
+    ],
+    chipLabel: 'ESPORTS',
+    chipSub: 'FPS-144',
+    busFreq: '144.00 Hz',
+    tags: ['Esports', 'Gaming', 'Tactical', 'BattleRoyale', 'Squads'],
+    protocols: [
+      'PARTICIPANTS MUST BRING THEIR OWN UPDATED DEVICES, CHARGERS, AND EARPHONES.',
+      'EMULATORS, TRIGGERS, THIRD-PARTY MODS, OR HACK SCRIPTS LEAD TO INSTANT BAN.',
+      'CUSTOM ROOM CREDENTIALS WILL BE SHARED 10 MINUTES PRIOR TO MATCH START.',
+      'TOURNAMENT BRACKETS AND POINT MATRICES FOLLOW OFFICIAL LEAGUE RULES.',
+      'REFEREE AND LOBBY ADMIN DECISIONS ON DISCONNECTIONS OR FAIR PLAY ARE FINAL.'
+    ]
+  },
+  {
     id: 'group_dance',
     moduleId: 'firmware',
     terminalId: 'DNC-11',
@@ -415,11 +453,11 @@ export const ALL_EVENTS: EventSpec[] = [
     description:
       'High-energy dance battle where collegiate dance crews unleash synchronized moves, thematic costumes, and explosive rhythms on the mega stage.',
     venue: '',
-    date: 'DAY 02 // 04:30 PM',
+    date: 'DAY 02',
     time: '04:30 PM - 07:00 PM',
     fee: 'Rs 590',
-    teamSize: '6 - 15 CADETS',
-    eligibility: 'COLLEGE DANCE SQUADS',
+    teamSize: '6 - 15 MEMBERS',
+    eligibility: 'ALL COLLEGE MEMBERS',
     chiefOperator: 'MR. A. JAYAKUMAR',
     contactNumber: '+91 98403 21211',
     relayEmail: 'DANCE.CSE@CYBERSENTINEL.IN',
@@ -435,7 +473,7 @@ export const ALL_EVENTS: EventSpec[] = [
     isSpecial: true,
     tags: ['Dance', 'Choreography', 'Synchronized', 'Cultural', 'Mega Stage'],
     protocols: [
-      'CREW SIZE: 6 TO 15 CADETS ON STAGE; TIME LIMIT: 5 TO 8 MINUTES STRICT.',
+      'CREW SIZE: 6 TO 15 MEMBERS ON STAGE; TIME LIMIT: 5 TO 8 MINUTES STRICT.',
       'AUDIO TRACK (HIGH-BITRATE MP3) MUST BE SUBMITTED 2 HOURS BEFORE THE ACT.',
       'FIRE, WATER, SHARP WEAPONS, OR STAGE-DAMAGING MATERIALS ARE STRICTLY BANNED.',
       'SCORING BASED ON SYNCHRONIZATION, FORMATIONS, THEME, AND ENERGETIC EXECUTION.',
@@ -454,7 +492,7 @@ export const ALL_EVENTS: EventSpec[] = [
     description:
       'Festive carnival zone featuring student-run cultural game booths, savory street food, craft merchandise, and interactive celebratory carnival fun.',
     venue: '',
-    date: 'DAY 02 // ALL DAY',
+    date: 'DAY 02',
     time: '10:00 AM - 05:00 PM',
     fee: 'Rs 690',
     teamSize: 'OPEN TO ALL',
@@ -497,7 +535,7 @@ export const FEST_INFO = {
   rules: [
     'OPERATORS MUST CARRY PHYSICAL OR DIGITAL MAINFRAME PASS AT CHECK-IN.',
     'EVENTS ARE DIVIDED INTO TRACK 01 (TECHNICAL) AND TRACK 02 (NON-TECHNICAL).',
-    'COLLEGE ID CARD IS MANDATORY FOR ALL PARTICIPATING CADETS.',
+    'COLLEGE ID CARD IS MANDATORY FOR ALL PARTICIPATING MEMBERS.',
     'FAIR PLAY, ETHICAL CONDUCT, AND CREATIVE SPIRIT ARE PARAMOUNT.',
     'DECISIONS OF THE JUDGES AND CHIEF OPERATORS ARE FINAL AND BINDING.'
   ],

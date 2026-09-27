@@ -74,6 +74,42 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 export const RetroNav: React.FC<RetroNavProps> = ({ activeModule, onSelectModule }) => {
+  // Left/Right arrow keys step through the modules.
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+
+      // Do not intercept arrow keys when typing inside inputs, textareas, or selects
+      const target = e.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.tagName === 'SELECT' ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
+
+      // The pack chooser and registration portal lock body scroll while
+      // open; switching screens underneath them would discard the flow.
+      if (document.body.style.overflow === 'hidden') return;
+
+      const currentIndex = NAV_ITEMS.findIndex((item) => item.id === activeModule);
+      const startIndex = currentIndex === -1 ? 0 : currentIndex;
+      const nextIndex = e.key === 'ArrowRight' ? startIndex + 1 : startIndex - 1;
+      if (nextIndex < 0 || nextIndex >= NAV_ITEMS.length) return;
+
+      e.preventDefault();
+      sound.playNavClick();
+      onSelectModule(NAV_ITEMS[nextIndex].id);
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeModule, onSelectModule]);
+
   return (
     <header className="w-full max-w-6xl flex flex-col items-center mb-4 z-20" data-purpose="top-navigation-header">
       <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 flex-wrap py-2 px-3 bg-[#0c0914] border-2 border-[#241a33] shadow-[0_4px_12px_rgba(0,0,0,0.8)]">
