@@ -6,6 +6,7 @@ import { RetroNav } from './RetroNav';
 import { sound } from './sound';
 import { RegistrationPortalPage, type RegistrationPortalInitialData } from './RegistrationPortalPage';
 import { RegisterModal } from './RegisterModal';
+import { useMascot } from '@/components/mascot';
 import './eventsTerminal.css';
 
 // Screens reachable from RetroNav. The reference project also ships
@@ -56,6 +57,7 @@ export function EventsTerminalApp({
   startWithRegistration = false,
   onStartRegistrationClose
 }: EventsTerminalAppProps = {}) {
+  const { dispatchMascotEvent } = useMascot();
   const [activeModule, setActiveModule] = useState<ModuleId>(initialModule);
   // The event the user picked on the EVENTS grid (card, KNOW MORE or
   // REGISTER). Starts empty so no card is highlighted until one is chosen;
@@ -129,11 +131,13 @@ export function EventsTerminalApp({
   const handleSelectEvent = (event: EventSpec) => {
     setSelectedEvent(event);
     setActiveModule('firmware');
+    dispatchMascotEvent('MASCOT_EVENT_OPEN', { message: `Here's everything you need to know about ${event.title}.` });
   };
 
   const handleNavigateToEvents = (tab: EventsTab = 'all') => {
     setEventsTab(tab);
     setActiveModule('compete');
+    dispatchMascotEvent('MASCOT_DAY_SELECTED', { day: tab });
   };
 
   const handlePortalNavigateToRegistrations = () => {
@@ -257,7 +261,10 @@ export function EventsTerminalApp({
             onHighlightEvent={setSelectedEvent}
             selectedEventId={selectedEvent?.id}
             initialTab={eventsTab}
-            onTabChange={setEventsTab}
+            onTabChange={(tab) => {
+              setEventsTab(tab)
+              dispatchMascotEvent('MASCOT_DAY_SELECTED', { day: tab })
+            }}
             onProceedToPortal={openPortal}
           />
         )}
