@@ -2,10 +2,6 @@ import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
 import { useLocation, useNavigationType } from 'react-router-dom'
 import { CityScene } from '@/components/city/CityScene'
 import { NavigationCityScene } from '@/components/city/NavigationCityScene'
-import { AboutSection } from '@/components/about/AboutSection'
-import { CredentialsSection } from '@/components/credentials/CredentialsSection'
-import { TimelineJourney } from '@/components/timeline/TimelineJourney'
-import { TransportationSection } from '@/components/transportation/TransportationSection'
 import { VideoIntro } from '@/components/intro/VideoIntro'
 import { FuturisticTransition } from '@/components/intro/FuturisticTransition'
 import { SiteFooter } from '@/components/ui/SiteFooter'
@@ -16,18 +12,16 @@ import { clearLeftHome, hasLeftHome, isCityReturnState, markLeftHome } from '@/u
 
 type IntroStage = 'intro' | 'transition' | 'completed'
 
-const SECTION_HASHES = ['#buildings', '#about', '#credentials', '#timeline', '#transport', '#transportation']
-
-// Landing/main experience: the hero city, the navigation city (buildings),
-// then the embedded About / Credentials / Timeline / Transportation
-// sections and the footer, in ordinary document flow.
+// Landing/main experience: the hero city, then the navigation city (the
+// buildings), then the footer. Each building opens its own page (About,
+// Credentials, Timeline, Transport, Events, Contact) — those sections are
+// never stacked below the buildings on the home page.
 //
 // The intro runs intro -> transition -> completed; repeat visits in the
 // same tab skip to the transition (utils/introSession.ts).
 //
-// Arriving on a section: `/#buildings` and the other section hashes skip
-// the intro and scroll there (ScrollManager handles #buildings app-wide;
-// the effect below handles the rest). Coming BACK with the browser/phone
+// Arriving on `/#buildings` skips the intro and lands on the buildings
+// (ScrollManager handles the scroll app-wide). Coming BACK with the browser/phone
 // Back button (a POP navigation, which carries no hash from our links) —
 // or via a link carrying CITY_RETURN_STATE — also skips the intro and
 // lands on the buildings rather than the top of the hero
@@ -35,7 +29,7 @@ const SECTION_HASHES = ['#buildings', '#about', '#credentials', '#timeline', '#t
 export function HomePage() {
   const location = useLocation()
   const navigationType = useNavigationType()
-  const isNavigatingToSection = SECTION_HASHES.includes(location.hash)
+  const isNavigatingToBuildings = location.hash === '#buildings'
 
   // Decided once per visit (read-only here; the flag is cleared in an effect).
   const [returnToCity] = useState(
@@ -43,7 +37,7 @@ export function HomePage() {
   )
 
   const [introStage, setIntroStage] = useState<IntroStage>(() => {
-    if (isNavigatingToSection || returnToCity) {
+    if (isNavigatingToBuildings || returnToCity) {
       return 'completed'
     }
     if (hasSeenIntro()) {
@@ -57,14 +51,6 @@ export function HomePage() {
       markIntroAsSeen()
       setIntroStage('completed')
       scrollToBuildings()
-    } else if (['#about', '#credentials', '#timeline', '#transport', '#transportation'].includes(location.hash)) {
-      markIntroAsSeen()
-      setIntroStage('completed')
-      const targetId = location.hash === '#transportation' ? 'transport' : location.hash.slice(1)
-      const el = document.getElementById(targetId) || (targetId === 'transport' ? document.getElementById('transportation') : null)
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' })
-      }
     }
   }, [location.hash])
 
@@ -103,10 +89,6 @@ export function HomePage() {
       )}
       <CityScene introCompleted={introStage === 'completed'} />
       <NavigationCityScene />
-      <AboutSection />
-      <CredentialsSection />
-      <TimelineJourney />
-      <TransportationSection />
       <SiteFooter />
     </main>
   )

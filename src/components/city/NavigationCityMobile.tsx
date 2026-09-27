@@ -119,11 +119,6 @@ export function NavigationCityMobile() {
                   } as CSSProperties
                 }
                 onClick={() => {
-                  const targetElement = document.getElementById(building.sectionSlug)
-                  if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth' })
-                    return
-                  }
                   window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
                   navigate(`/${building.sectionSlug}`)
                 }}
