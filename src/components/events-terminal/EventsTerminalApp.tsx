@@ -57,7 +57,12 @@ export function EventsTerminalApp({
   onStartRegistrationClose
 }: EventsTerminalAppProps = {}) {
   const [activeModule, setActiveModule] = useState<ModuleId>(initialModule);
-  const [selectedEvent, setSelectedEvent] = useState<EventSpec>(ALL_EVENTS[0]);
+  // The event the user picked on the EVENTS grid (card, KNOW MORE or
+  // REGISTER). Starts empty so no card is highlighted until one is chosen;
+  // the detail screen falls back to the first event if it's opened straight
+  // from the nav.
+  const [selectedEvent, setSelectedEvent] = useState<EventSpec | null>(null);
+  const detailEvent = selectedEvent ?? ALL_EVENTS[0];
   const [eventsTab, setEventsTab] = useState<EventsTab>('all');
   const [bookmarkedIds, setBookmarkedIds] = useState<string[]>(() => {
     try {
@@ -98,7 +103,8 @@ export function EventsTerminalApp({
   }, []);
 
   // Every screen change (e.g. KNOW MORE -> event page) starts at the top of
-  // the terminal, not wherever the previous screen was scrolled to.
+  // the terminal, not wherever the previous screen was scrolled to. Keyed on
+  // the screen only: selecting a card on the EVENTS grid must not jump the page.
   const firstRender = useRef(true);
   useEffect(() => {
     if (firstRender.current) {
@@ -106,7 +112,7 @@ export function EventsTerminalApp({
       return;
     }
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-  }, [activeModule, selectedEvent]);
+  }, [activeModule]);
 
   const handleBookmarkToggle = (eventId: string) => {
     setBookmarkedIds((prev) => {
@@ -233,9 +239,9 @@ export function EventsTerminalApp({
       >
         {activeModule === 'firmware' && (
           <FirmwareScreen
-            event={selectedEvent}
+            event={detailEvent}
             onBookmarkToggle={handleBookmarkToggle}
-            isBookmarked={bookmarkedIds.includes(selectedEvent.id)}
+            isBookmarked={bookmarkedIds.includes(detailEvent.id)}
             onSelectModule={setActiveModule}
             onProceedToPortal={openPortal}
           />
@@ -248,7 +254,8 @@ export function EventsTerminalApp({
         {activeModule === 'compete' && (
           <CompeteScreen
             onSelectEvent={handleSelectEvent}
-            selectedEventId={selectedEvent.id}
+            onHighlightEvent={setSelectedEvent}
+            selectedEventId={selectedEvent?.id}
             initialTab={eventsTab}
             onTabChange={setEventsTab}
             onProceedToPortal={openPortal}

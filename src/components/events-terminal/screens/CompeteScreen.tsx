@@ -7,7 +7,10 @@ import { RegisterModal } from '../RegisterModal';
 import type { RegistrationPortalInitialData } from '../RegistrationPortalPage';
 
 interface CompeteScreenProps {
+  /** Select an event and open its detail screen (KNOW MORE). */
   onSelectEvent: (event: EventSpec) => void;
+  /** Select an event without leaving the grid (card click / REGISTER). */
+  onHighlightEvent: (event: EventSpec) => void;
   selectedEventId?: string;
   initialTab?: 'all' | 'day1' | 'day2' | 'special';
   onTabChange?: (tab: 'all' | 'day1' | 'day2' | 'special') => void;
@@ -16,6 +19,7 @@ interface CompeteScreenProps {
 
 export const CompeteScreen: React.FC<CompeteScreenProps> = ({
   onSelectEvent,
+  onHighlightEvent,
   selectedEventId,
   initialTab = 'all',
   onTabChange,
@@ -132,7 +136,7 @@ export const CompeteScreen: React.FC<CompeteScreenProps> = ({
           return (
             <div
               key={ev.id}
-              className={`border-2 bg-[#090710] p-3.5 flex flex-col justify-between transition-all shadow-sm ${
+              className={`relative border-2 bg-[#090710] p-3.5 flex flex-col justify-between transition-all shadow-sm ${
                 isSpecial
                   ? isSelected
                     ? 'border-[#5fa07a] shadow-[0_0_14px_rgba(95,160,122,0.4)] ring-1 ring-[#5fa07a]'
@@ -142,6 +146,23 @@ export const CompeteScreen: React.FC<CompeteScreenProps> = ({
                   : 'border-[#261f33] hover:border-[#db2777]/80'
               }`}
             >
+              {/* Clicking anywhere on the card selects it. A transparent
+                  button stretched over the card (below the KNOW MORE /
+                  REGISTER row) keeps it keyboard-accessible without nesting
+                  buttons inside a clickable card. */}
+              <button
+                type="button"
+                onClick={() => {
+                  sound.playNavClick();
+                  onHighlightEvent(ev);
+                }}
+                aria-pressed={isSelected}
+                aria-label={`Select ${ev.title}`}
+                className={`absolute inset-0 z-10 cursor-pointer bg-transparent focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-4 ${
+                  isSpecial ? 'focus-visible:outline-[#5fa07a]' : 'focus-visible:outline-[#db2777]'
+                }`}
+              />
+
               <div>
                 <div
                   className={`flex justify-between items-center text-[10px] font-silkscreen pb-2 border-b ${
@@ -177,7 +198,7 @@ export const CompeteScreen: React.FC<CompeteScreenProps> = ({
               </div>
 
               <div
-                className={`flex gap-2 mt-4 pt-2.5 border-t ${
+                className={`relative z-20 flex gap-2 mt-4 pt-2.5 border-t ${
                   isSpecial ? 'border-[#5fa07a]/25' : 'border-[#22162e]'
                 }`}
               >
@@ -198,6 +219,7 @@ export const CompeteScreen: React.FC<CompeteScreenProps> = ({
                 <button
                   onClick={() => {
                     sound.playNavClick();
+                    onHighlightEvent(ev);
                     setModalEvent(ev);
                   }}
                   className={`flex-1 py-1.5 font-pixel text-xs cursor-pointer transition-all text-center font-bold ${
