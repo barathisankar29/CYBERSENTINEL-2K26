@@ -17,14 +17,23 @@ const IDENTITY_Z_INDEX = 9
 
 /**
  * The hero's own scroll distance, driving its own internal cinematic reveal.
- * Sticky-pin math: the actual scroll distance to take progress 0->1 is
- * (this value - 100vh), since the 100vh sticky viewport stays pinned for
- * that span before un-sticking. 400vh - 100vh = 300vh = ~3 viewport-height
- * scrolls of progressive assembly. Every reveal window (cityLayers.config.ts,
+ * Sticky-pin math: the sticky viewport stays pinned for (this value -
+ * 100vh) of scroll; the reveal (progress 0->1) uses the first
+ * HERO_COMPLETE_AT of that span — 300vh = ~3 viewport-height scrolls of
+ * progressive assembly — and the remainder is a hold. Every reveal window (cityLayers.config.ts,
  * identityReveal.config.ts) is expressed as a 0-1 fraction of that span, so
  * shortening it keeps every stage and their relative pacing intact.
  */
-const HERO_SCROLL_VH = 400
+const HERO_SCROLL_VH = 475
+
+/**
+ * The reveal finishes at this fraction of the hero's scroll; the rest is a
+ * hold on the fully-assembled scene so the hero visibly ends before the
+ * navigation city scrolls in. 300vh of reveal / 0.8 = 375vh of scroll
+ * (HERO_SCROLL_VH - 100vh), i.e. the reveal keeps its original pacing and
+ * gains a ~75vh hold at the end.
+ */
+const HERO_COMPLETE_AT = 0.8
 
 /**
  * The opening hero city — a normal, self-contained page section (its own
@@ -56,7 +65,11 @@ export function CityScene({ introCompleted = true }: CitySceneProps) {
     setScrolledPast(progress > SCROLL_HINT_HIDE_PROGRESS)
     setCtaInteractive(progress >= REGISTER_CTA_INTERACTIVE_PROGRESS)
   }, [])
-  useScrollProgressVar(spacerRef, { pinned: reducedMotion ? 1 : null, onProgress: handleProgress })
+  useScrollProgressVar(spacerRef, {
+    pinned: reducedMotion ? 1 : null,
+    onProgress: handleProgress,
+    completeAt: HERO_COMPLETE_AT,
+  })
 
   return (
     <section ref={spacerRef} className="city-scene" style={{ height: `${HERO_SCROLL_VH}vh` }}>

@@ -880,8 +880,7 @@
   z-index: 0;
 }
 
-.bldg-pod:hover,
-.bldg-pod:focus-visible {
+.bldg-pod:hover {
   transform: translateY(-4px) scale(1.02);
   box-shadow: 0 16px 36px rgba(5, 4, 10, 0.9);
   z-index: 5;

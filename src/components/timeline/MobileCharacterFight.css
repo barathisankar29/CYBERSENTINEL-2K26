@@ -1,0 +1,669 @@
+/* ==========================================================================
+   Mobile Timeline — NICO vs RUELLE on a ledge below the track.
+   Sits inside `.timeline-stage` (the city artwork is its background) and
+   covers the stage's lower band, below the bridge deck. Sized from that
+   band with container query units, so it scales with the stage.
+
+   One shared keyframe timeline (--mcf-loop) drives every layer:
+     0–20%   idle — breathing, auras pulse
+    20–30%   anticipation — wind-up pose, lean back + squash
+    30–35%   attack — pose change on a fast lunge + stretch
+    34–46%   energy streams reach the clash point
+    44–58%   clash — flash, ring, particles, a small shake
+    48–58%   recoil — hit pose, knocked back + tilted
+    58–74%   recovery — ease back, crossfade to idle
+   Pose changes are short overlapping crossfades (~125ms) layered on moving
+   bodies — never hard cuts, and never see-through.
+   ========================================================================== */
+
+.mobile-character-fight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* 40% of the stage's height excluding the band the event card now sits in
+     (--tl-scene-lift, TimelineJourney.css) — keeps the ledge exactly where
+     it was when the card had its own row above the stage. */
+  height: calc(0.4 * (100% - var(--tl-scene-lift, 0px)));
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+  container-type: size;
+}
+
+/* Mobile only. The component is also only mounted on mobile (useIsMobile in
+   TimelineJourney.tsx); this is a belt-and-braces guard. */
+@media (min-width: 768px) {
+  .mobile-character-fight {
+    display: none;
+  }
+}
+
+.mcf-stage {
+  --mcf-loop: 4.2s;
+  /* Standing body height; both characters' PNGs are exported so their
+     standing body is 330 image px, making --mcf-px one image pixel. */
+  --mcf-body: min(62cqh, 27cqw);
+  --mcf-px: calc(var(--mcf-body) / 330);
+  /* Top surface of the ledge. */
+  --mcf-ground: 13cqh;
+  /* Where NICO's muzzle stream meets the tip of RUELLE's crystal burst:
+     the midpoint of the two weapons at full lunge, derived from the poses'
+     own geometry so it holds at every size. */
+  --mcf-clash-x: calc(50% - 0.2 * var(--mcf-body));
+  --mcf-clash-y: calc(var(--mcf-ground) + 0.6 * var(--mcf-body));
+  position: absolute;
+  inset: 0;
+  animation: mcf-shake var(--mcf-loop) infinite;
+}
+
+/* ---- Platform ------------------------------------------------------- */
+
+/* A small dark ledge, not a panel: translucent deck with a cyan (NICO's
+   side) -> violet -> magenta (RUELLE's side) lit edge, a faint reflection
+   below, and a few motes drifting up near the feet. */
+.mcf-platform {
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  bottom: calc(var(--mcf-ground) - 6cqh);
+  height: 6cqh;
+}
+
+.mcf-platform__deck {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(5% 0, 95% 0, 100% 100%, 0 100%);
+  background:
+    radial-gradient(ellipse 60% 120% at 50% 0%, rgba(124, 58, 237, 0.28) 0%, rgba(124, 58, 237, 0) 70%),
+    linear-gradient(180deg, rgba(22, 18, 48, 0.88) 0%, rgba(8, 6, 20, 0.55) 100%);
+}
+
+.mcf-platform__edge {
+  position: absolute;
+  top: 0;
+  left: 5%;
+  right: 5%;
+  height: 1.5px;
+  background: linear-gradient(
+    90deg,
+    rgba(34, 211, 238, 0) 0%,
+    rgba(34, 211, 238, 0.9) 18%,
+    rgba(124, 58, 237, 0.85) 50%,
+    rgba(217, 38, 201, 0.9) 82%,
+    rgba(217, 38, 201, 0) 100%
+  );
+  box-shadow:
+    0 0 8px rgba(124, 58, 237, 0.8),
+    0 0 18px rgba(124, 58, 237, 0.35);
+}
+
+.mcf-platform__reflection {
+  position: absolute;
+  top: 100%;
+  left: 10%;
+  right: 10%;
+  height: 5cqh;
+  background:
+    radial-gradient(ellipse 30% 100% at 22% 0%, rgba(34, 211, 238, 0.22) 0%, rgba(34, 211, 238, 0) 70%),
+    radial-gradient(ellipse 30% 100% at 78% 0%, rgba(217, 38, 201, 0.22) 0%, rgba(217, 38, 201, 0) 70%);
+}
+
+.mcf-mote {
+  position: absolute;
+  bottom: 100%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  opacity: 0;
+  animation: mcf-mote 2.6s ease-out infinite;
+  will-change: transform, opacity;
+}
+
+.mcf-mote--1 {
+  left: 12%;
+  background: #67e8f9;
+  box-shadow: 0 0 5px #22d3ee;
+}
+
+.mcf-mote--2 {
+  left: 27%;
+  background: #67e8f9;
+  box-shadow: 0 0 5px #22d3ee;
+  animation-delay: -1.3s;
+}
+
+.mcf-mote--3 {
+  left: 72%;
+  background: #f0abfc;
+  box-shadow: 0 0 5px #d926c9;
+  animation-delay: -0.6s;
+}
+
+.mcf-mote--4 {
+  left: 87%;
+  background: #f0abfc;
+  box-shadow: 0 0 5px #d926c9;
+  animation-delay: -1.9s;
+}
+
+@keyframes mcf-mote {
+  0% { opacity: 0; transform: translate3d(0, 0, 0); }
+  20% { opacity: 0.9; }
+  100% { opacity: 0; transform: translate3d(0, -9cqh, 0); }
+}
+
+/* ---- Fighters -------------------------------------------------------- */
+
+/* Zero-size anchor at the fighter's feet. Every layer below pivots here. */
+.mcf-fighter {
+  position: absolute;
+  bottom: var(--mcf-ground);
+  width: 0;
+  height: 0;
+}
+
+.mcf-fighter--nico {
+  --dir: 1;
+  left: 20%;
+}
+
+.mcf-fighter--ruelle {
+  --dir: -1;
+  left: 80%;
+}
+
+.mcf-move,
+.mcf-body,
+.mcf-breathe {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.mcf-move {
+  animation: mcf-move var(--mcf-loop) infinite;
+}
+
+.mcf-body {
+  animation: mcf-body var(--mcf-loop) infinite;
+}
+
+.mcf-breathe {
+  animation: mcf-breathe 1.6s ease-in-out infinite alternate;
+}
+
+/* RUELLE breathes on a slightly different beat so the two never bob in unison. */
+.mcf-fighter--ruelle .mcf-breathe {
+  animation-duration: 1.9s;
+  animation-delay: -0.7s;
+}
+
+/* Each pose is placed so its own foot point lands on the anchor. */
+.mcf-pose {
+  position: absolute;
+  left: calc(var(--w) * var(--mcf-px) * var(--fx) * -1);
+  top: calc(var(--h) * var(--mcf-px) * var(--fy) * -1);
+  width: calc(var(--w) * var(--mcf-px));
+  height: calc(var(--h) * var(--mcf-px));
+  max-width: none;
+  opacity: 0;
+  user-select: none;
+  animation-duration: var(--mcf-loop);
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  will-change: opacity;
+}
+
+.mcf-pose--idle {
+  animation-name: mcf-pose-idle;
+}
+
+.mcf-fighter--nico .mcf-pose--recoil {
+  animation-name: mcf-nico-crouch;
+}
+
+.mcf-fighter--nico .mcf-pose--attack {
+  animation-name: mcf-nico-attack;
+}
+
+.mcf-fighter--nico .mcf-pose--action {
+  animation-name: mcf-nico-spin;
+}
+
+.mcf-fighter--ruelle .mcf-pose--action {
+  animation-name: mcf-ruelle-charge;
+}
+
+.mcf-fighter--ruelle .mcf-pose--attack {
+  animation-name: mcf-ruelle-attack;
+}
+
+.mcf-fighter--ruelle .mcf-pose--recoil {
+  animation-name: mcf-ruelle-recoil;
+}
+
+/* Soft contact shadow on the ledge; rides the move layer, squashes with the body. */
+.mcf-shadow {
+  position: absolute;
+  left: calc(var(--mcf-body) * -0.34);
+  top: calc(var(--mcf-body) * -0.05);
+  width: calc(var(--mcf-body) * 0.68);
+  height: calc(var(--mcf-body) * 0.1);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(2, 1, 8, 0.85) 0%, rgba(2, 1, 8, 0.45) 45%, rgba(2, 1, 8, 0) 72%);
+  animation: mcf-shadow var(--mcf-loop) infinite;
+  will-change: transform, opacity;
+}
+
+/* Energy aura behind the body — cyan for NICO, magenta for RUELLE. */
+.mcf-aura {
+  position: absolute;
+  left: calc(var(--mcf-body) * -0.5);
+  top: calc(var(--mcf-body) * -1);
+  width: var(--mcf-body);
+  height: var(--mcf-body);
+  border-radius: 50%;
+  opacity: 0.4;
+  animation: mcf-aura 1.8s ease-in-out infinite alternate;
+  will-change: opacity, transform;
+}
+
+.mcf-fighter--nico .mcf-aura {
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.32) 0%, rgba(34, 211, 238, 0) 65%);
+}
+
+.mcf-fighter--ruelle .mcf-aura {
+  background: radial-gradient(circle, rgba(217, 38, 201, 0.32) 0%, rgba(217, 38, 201, 0) 65%);
+  animation-delay: -0.9s;
+}
+
+/* Names only appear in the reduced-motion standoff. */
+.mcf-name {
+  display: none;
+}
+
+/* Lunge and knockback. --dir makes one keyframe set serve both sides. */
+@keyframes mcf-move {
+  0%,
+  20% {
+    transform: translate3d(0, 0, 0);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  30% {
+    transform: translate3d(calc(var(--dir) * -3cqw), 0, 0);
+    animation-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+  35% {
+    transform: translate3d(calc(var(--dir) * 5cqw), 0, 0);
+    animation-timing-function: ease-out;
+  }
+  44% {
+    transform: translate3d(calc(var(--dir) * 5.5cqw), 0, 0);
+  }
+  50% {
+    transform: translate3d(calc(var(--dir) * 4.5cqw), 0, 0);
+    animation-timing-function: cubic-bezier(0.1, 0.8, 0.3, 1);
+  }
+  54% {
+    transform: translate3d(calc(var(--dir) * -3.5cqw), 0, 0);
+    animation-timing-function: ease-out;
+  }
+  58% {
+    transform: translate3d(calc(var(--dir) * -3cqw), 0, 0);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  74%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Lean, squash and stretch around the feet. */
+@keyframes mcf-body {
+  0%,
+  20% {
+    transform: rotate(0deg) scale(1, 1);
+    animation-timing-function: ease-in-out;
+  }
+  28% {
+    transform: rotate(calc(var(--dir) * -6deg)) scale(1.03, 0.95);
+  }
+  30% {
+    transform: rotate(calc(var(--dir) * -7deg)) scale(1.04, 0.94);
+    animation-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+  33% {
+    transform: rotate(calc(var(--dir) * 5deg)) scale(0.96, 1.06);
+    animation-timing-function: ease-out;
+  }
+  38% {
+    transform: rotate(calc(var(--dir) * 3deg)) scale(1, 1);
+  }
+  50% {
+    transform: rotate(0deg) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.1, 0.8, 0.3, 1);
+  }
+  53% {
+    transform: rotate(calc(var(--dir) * -10deg)) scale(1.04, 0.95);
+    animation-timing-function: ease-out;
+  }
+  58% {
+    transform: rotate(calc(var(--dir) * -5deg)) scale(1, 1);
+    animation-timing-function: ease-in-out;
+  }
+  70%,
+  100% {
+    transform: rotate(0deg) scale(1, 1);
+  }
+}
+
+@keyframes mcf-breathe {
+  from { transform: translate3d(0, 0, 0) scale(1, 1); }
+  to { transform: translate3d(0, -0.9cqh, 0) scale(1, 1.015); }
+}
+
+@keyframes mcf-shadow {
+  0%,
+  20% { transform: scale(1, 1); opacity: 0.85; }
+  30% { transform: scale(1.15, 1.1); opacity: 1; }
+  35% { transform: scale(1.25, 0.9); opacity: 0.9; }
+  50% { transform: scale(1.05, 1); opacity: 0.85; }
+  54% { transform: scale(1.2, 1.1); opacity: 1; }
+  74%,
+  100% { transform: scale(1, 1); opacity: 0.85; }
+}
+
+@keyframes mcf-aura {
+  from { opacity: 0.3; transform: scale(0.94); }
+  to { opacity: 0.6; transform: scale(1.06); }
+}
+
+/* Pose crossfades. Each change overlaps: the incoming pose reaches full
+   opacity FIRST (~85ms), then the outgoing one fades out — so the body is
+   never see-through mid-change (a symmetric 50/50 crossfade lets the city
+   show through the character).
+   NICO: idle -> crouch (wind-up) -> attack -> spin (clash follow-through)
+   -> crouch (recoil) -> idle. */
+@keyframes mcf-pose-idle {
+  0%, 21.5% { opacity: 1; }
+  23%, 64% { opacity: 0; }
+  67%, 100% { opacity: 1; }
+}
+
+@keyframes mcf-nico-crouch {
+  0%, 20% { opacity: 0; }
+  22%, 31.5% { opacity: 1; }
+  33%, 49% { opacity: 0; }
+  51%, 66% { opacity: 1; }
+  69%, 100% { opacity: 0; }
+}
+
+@keyframes mcf-nico-attack {
+  0%, 30% { opacity: 0; }
+  32%, 45.5% { opacity: 1; }
+  47%, 100% { opacity: 0; }
+}
+
+@keyframes mcf-nico-spin {
+  0%, 44% { opacity: 0; }
+  46%, 50.5% { opacity: 1; }
+  52%, 100% { opacity: 0; }
+}
+
+/* RUELLE: idle -> orb charge (wind-up) -> crystal burst -> swirl (recoil) -> idle. */
+@keyframes mcf-ruelle-charge {
+  0%, 20% { opacity: 0; }
+  22%, 31.5% { opacity: 1; }
+  33%, 100% { opacity: 0; }
+}
+
+@keyframes mcf-ruelle-attack {
+  0%, 30% { opacity: 0; }
+  32%, 49.5% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+@keyframes mcf-ruelle-recoil {
+  0%, 48% { opacity: 0; }
+  50%, 66% { opacity: 1; }
+  69%, 100% { opacity: 0; }
+}
+
+/* A few px of jitter on impact — the whole fight layer only, never the Timeline. */
+@keyframes mcf-shake {
+  0%, 44% { transform: translate3d(0, 0, 0); }
+  45% { transform: translate3d(-2px, 1px, 0); }
+  46% { transform: translate3d(2px, -1px, 0); }
+  47% { transform: translate3d(-1.5px, -1px, 0); }
+  48% { transform: translate3d(1px, 1px, 0); }
+  49%, 100% { transform: translate3d(0, 0, 0); }
+}
+
+/* ---- Energy streams -------------------------------------------------- */
+
+/* Each stream grows from its fighter's weapon toward the clash point. */
+.mcf-beam {
+  position: absolute;
+  bottom: var(--mcf-clash-y);
+  height: 5px;
+  margin-bottom: -2.5px;
+  border-radius: 999px;
+  opacity: 0;
+  animation: mcf-beam var(--mcf-loop) infinite;
+  will-change: transform, opacity;
+}
+
+.mcf-beam--nico {
+  right: calc(100% - var(--mcf-clash-x));
+  width: calc(0.26 * var(--mcf-body));
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, rgba(34, 211, 238, 0), rgba(34, 211, 238, 0.9) 45%, #e6fdff);
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.95);
+}
+
+.mcf-beam--ruelle {
+  left: var(--mcf-clash-x);
+  width: 24cqw;
+  transform-origin: 100% 50%;
+  background: linear-gradient(270deg, rgba(217, 38, 201, 0), rgba(192, 132, 252, 0.9) 45%, #fbeaff);
+  box-shadow: 0 0 10px rgba(217, 38, 201, 0.95);
+}
+
+@keyframes mcf-beam {
+  0%,
+  33% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  35% {
+    opacity: 1;
+    transform: scaleX(0.25);
+    animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.6);
+  }
+  44% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleX(1) scaleY(1.6);
+  }
+  55%,
+  100% {
+    opacity: 0;
+    transform: scaleX(1) scaleY(0.3);
+  }
+}
+
+/* ---- Clash ----------------------------------------------------------- */
+
+.mcf-clash {
+  position: absolute;
+  left: var(--mcf-clash-x);
+  bottom: var(--mcf-clash-y);
+  width: 0;
+  height: 0;
+}
+
+.mcf-clash__flash,
+.mcf-clash__ring,
+.mcf-clash__particle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  animation-duration: var(--mcf-loop);
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+
+.mcf-clash__flash {
+  width: 48px;
+  height: 48px;
+  margin: -24px 0 0 -24px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    #ffffff 0%,
+    rgba(186, 230, 253, 0.95) 20%,
+    rgba(34, 211, 238, 0.6) 40%,
+    rgba(217, 38, 201, 0.5) 58%,
+    rgba(217, 38, 201, 0) 72%
+  );
+  animation-name: mcf-flash;
+}
+
+.mcf-clash__ring {
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+  border-radius: 50%;
+  border: 2px solid rgba(34, 211, 238, 0.9);
+  box-shadow:
+    0 0 10px rgba(217, 38, 201, 0.8),
+    inset 0 0 8px rgba(217, 38, 201, 0.6);
+  animation-name: mcf-ring;
+}
+
+.mcf-clash__particle {
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  background: #67e8f9;
+  box-shadow: 0 0 6px #22d3ee;
+  animation-name: mcf-particle;
+}
+
+.mcf-clash__particle--purple {
+  background: #f0abfc;
+  box-shadow: 0 0 6px #d926c9;
+}
+
+@keyframes mcf-flash {
+  0%,
+  43% { opacity: 0; transform: scale(0.2); }
+  46% { opacity: 1; transform: scale(1.2); }
+  49% { opacity: 0.85; transform: scale(1); }
+  55%,
+  100% { opacity: 0; transform: scale(1.7); }
+}
+
+@keyframes mcf-ring {
+  0%,
+  45% { opacity: 0; transform: scale(0.3); }
+  47% { opacity: 1; transform: scale(0.7); }
+  58%,
+  100% { opacity: 0; transform: scale(2.6); }
+}
+
+@keyframes mcf-particle {
+  0%,
+  45% { opacity: 0; transform: rotate(var(--a)) translate3d(0, 0, 0); }
+  47% { opacity: 1; transform: rotate(var(--a)) translate3d(8px, 0, 0); }
+  60%,
+  100% { opacity: 0; transform: rotate(var(--a)) translate3d(34px, 0, 0) scale(0.4); }
+}
+
+/* "⚡ VS ⚡" — the reduced-motion standoff's centrepiece. */
+.mcf-versus {
+  display: none;
+}
+
+/* ---- Reduced motion: static "NICO ⚡ VS ⚡ RUELLE" standoff ----------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .mcf-stage,
+  .mcf-move,
+  .mcf-body,
+  .mcf-breathe,
+  .mcf-pose,
+  .mcf-shadow,
+  .mcf-aura,
+  .mcf-beam,
+  .mcf-mote,
+  .mcf-clash__flash,
+  .mcf-clash__ring,
+  .mcf-clash__particle {
+    animation: none;
+  }
+
+  /* Platform, shadows and auras stay; the fight itself doesn't happen. */
+  .mcf-pose--idle {
+    opacity: 1;
+  }
+
+  .mcf-beam,
+  .mcf-mote,
+  .mcf-clash {
+    display: none;
+  }
+
+  .mcf-name {
+    display: block;
+    position: absolute;
+    top: 0.5cqh;
+    left: 0;
+    transform: translateX(-50%);
+    font-family: var(--font-display, 'Orbitron', monospace);
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    white-space: nowrap;
+  }
+
+  .mcf-fighter--nico .mcf-name {
+    color: #67e8f9;
+    text-shadow: 0 0 8px rgba(34, 211, 238, 0.7);
+  }
+
+  .mcf-fighter--ruelle .mcf-name {
+    color: #f0abfc;
+    text-shadow: 0 0 8px rgba(217, 38, 201, 0.7);
+  }
+
+  .mcf-versus {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    position: absolute;
+    left: 50%;
+    bottom: calc(var(--mcf-ground) + 0.45 * var(--mcf-body));
+    transform: translate(-50%, 50%);
+    font-family: var(--font-display, 'Orbitron', monospace);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #ffffff;
+    text-shadow:
+      0 0 8px rgba(34, 211, 238, 0.8),
+      0 0 14px rgba(217, 38, 201, 0.7);
+  }
+
+  .mcf-versus__bolt {
+    font-size: 0.85rem;
+  }
+}

@@ -1,10 +1,12 @@
 import { useCallback, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { useReducedMotion } from '@/animation/useReducedMotion'
+import { useIsMobile } from '@/hooks/useIsMobile'
 import { timelineEvents } from '@/data/timelineSchedule'
 import type { DayKey, TimelineEvent } from '@/types/timeline'
 import { FRAME_LAYOUT, SEAM_LAYOUTS, activationThreshold, featherMaskImage, journeyBoundsFor } from './timelineWorld'
 import { useJourneyProgress } from './useJourneyProgress'
 import { TimelinePoint } from './TimelinePoint'
+import { MobileCharacterFight } from './MobileCharacterFight'
 import './TimelineJourney.css'
 
 const TRAIN_SRC = '/assets/timeline/timeline-train.webp'
@@ -64,6 +66,7 @@ const seamHazeLayer = SEAM_LAYOUTS.map((seam) => (
  */
 export function TimelineJourney() {
   const reducedMotion = useReducedMotion()
+  const isMobile = useIsMobile()
   const worldRef = useRef<HTMLDivElement>(null)
   const trainRef = useRef<HTMLDivElement>(null)
   const cardObserverRef = useRef<ResizeObserver | null>(null)
@@ -252,6 +255,29 @@ export function TimelineJourney() {
     return clampedLeft - idealLeft
   })()
 
+  // The single active card. Same element, content and crossfade on every
+  // layout — only WHERE it's placed differs: desktop floats it above the
+  // train inside the world; mobile gives it its own slot under the HUD.
+  const activeCard = activeDay && (
+    <article
+      ref={setMeasuredCardRef}
+      className={`timeline-active-card timeline-active-card--${activeDay} ${cardShown ? 'is-shown' : ''}`}
+    >
+      {displayedStation && (
+        <>
+          <div className="timeline-card__index">{String(currentStationNumber).padStart(2, '0')}</div>
+          <div className="timeline-card__divider" aria-hidden="true" />
+          <div className="timeline-card__time">{displayedStation.time}</div>
+          <div className="timeline-card__divider" aria-hidden="true" />
+          <div className="timeline-card__body">
+            <h3 className="timeline-card__title">{displayedStation.title}</h3>
+            <p className="timeline-card__desc">{displayedStation.description}</p>
+          </div>
+        </>
+      )}
+    </article>
+  )
+
   const selectDay = (nextDay: DayKey) => {
     if (nextDay === activeDay) return
     setActiveDay(nextDay)
@@ -262,53 +288,52 @@ export function TimelineJourney() {
       <div className="timeline-viewport" aria-label="CyberSentinel 2K26 Event Timeline">
         <div className="timeline-viewport__vignette" aria-hidden="true" />
 
-        <div
-          className={`timeline-world ${isRepositioning ? 'is-repositioning' : ''}`}
-          ref={worldRef}
-          style={{ transform: `translate3d(${-cameraPx}px, -50%, 0)` }}
-        >
-          {frameLayer}
-          {seamHazeLayer}
-
-          {activeDay &&
-            points.map((point) => (
-              <TimelinePoint key={point.id} point={point} isCurrent={point.id === currentStation?.id} />
-            ))}
-
+        {/* The world's own region. Desktop: the whole viewport (inset: 0), so
+            positioning is identical to before. Mobile: the middle grid row,
+            and the world scales to fit its height (see --tl-world-vh). */}
+        <div className="timeline-stage">
           <div
-            className={`timeline-train ${activeDay ? `timeline-train--${activeDay}` : 'timeline-train--standby'} ${isRepositioning ? 'is-repositioning' : ''}`}
-            style={{ transform: `translate3d(${trainScreenX}px, 0, 0) translate(-50%, -50%)` }}
-            ref={trainRef}
+            className={`timeline-world ${isRepositioning ? 'is-repositioning' : ''}`}
+            ref={worldRef}
+            style={{ transform: `translate3d(${-cameraPx}px, -50%, 0)` }}
           >
-            <img src={TRAIN_SRC} alt="" draggable={false} className="timeline-train__img" fetchPriority="low" />
+            {frameLayer}
+            {seamHazeLayer}
+
+            {activeDay &&
+              points.map((point) => (
+                <TimelinePoint key={point.id} point={point} isCurrent={point.id === currentStation?.id} />
+              ))}
+
+            <div
+              className={`timeline-train ${activeDay ? `timeline-train--${activeDay}` : 'timeline-train--standby'} ${isRepositioning ? 'is-repositioning' : ''}`}
+              style={{ transform: `translate3d(${trainScreenX}px, 0, 0) translate(-50%, -50%)` }}
+              ref={trainRef}
+            >
+              <img src={TRAIN_SRC} alt="" draggable={false} className="timeline-train__img" fetchPriority="low" />
+            </div>
+
+            {activeCard && !isMobile && (
+              <div
+                className="timeline-active-card-anchor"
+                style={{
+                  transform: `translate3d(${trainScreenX + cardShiftPx}px, ${-(trainHeight / 2 + CARD_TRAIN_GAP_PX)}px, 0) translate(-50%, -100%)`,
+                }}
+              >
+                {activeCard}
+              </div>
+            )}
           </div>
 
-          {activeDay && (
-            <div
-              className="timeline-active-card-anchor"
-              style={{
-                transform: `translate3d(${trainScreenX + cardShiftPx}px, ${-(trainHeight / 2 + CARD_TRAIN_GAP_PX)}px, 0) translate(-50%, -100%)`,
-              }}
-            >
-              <article
-                ref={setMeasuredCardRef}
-                className={`timeline-active-card timeline-active-card--${activeDay} ${cardShown ? 'is-shown' : ''}`}
-              >
-                {displayedStation && (
-                  <>
-                    <div className="timeline-card__index">{String(currentStationNumber).padStart(2, '0')}</div>
-                    <div className="timeline-card__divider" aria-hidden="true" />
-                    <div className="timeline-card__time">{displayedStation.time}</div>
-                    <div className="timeline-card__divider" aria-hidden="true" />
-                    <div className="timeline-card__body">
-                      <h3 className="timeline-card__title">{displayedStation.title}</h3>
-                      <p className="timeline-card__desc">{displayedStation.description}</p>
-                    </div>
-                  </>
-                )}
-              </article>
-            </div>
-          )}
+          {/* Mobile only: NICO vs RUELLE on a ledge below the track, over the
+              city artwork. Shown once a journey is running (the day picker
+              owns the screen before then). */}
+          {isMobile && activeDay && <MobileCharacterFight />}
+
+          {/* Mobile: the active day's card sits in the scene's sky, anchored
+              just above the train's roof (screen-centred rather than
+              following the train sideways — see .timeline-card-slot). */}
+          {isMobile && <div className="timeline-card-slot">{activeCard}</div>}
         </div>
 
         {activeDay && (

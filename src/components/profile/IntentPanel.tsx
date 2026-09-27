@@ -61,6 +61,8 @@ export function IntentPanel({ character }: IntentPanelProps) {
             <img
               src={cityImg}
               alt="Sector City Surveillance"
+              loading="lazy"
+              decoding="async"
               className="profile-viewport-img"
               draggable={false}
             />

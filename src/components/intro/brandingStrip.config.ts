@@ -22,12 +22,13 @@ export const brandingStripLogos: BrandingStripLogo[] = [
   { id: 'aicte', src: '/assets/branding/aicte-logo.webp', alt: 'AICTE', width: 316, height: 316 },
   { id: 'naac', src: '/assets/branding/naac-logo.png', alt: 'NAAC Accredited Grade A', width: 225, height: 225, blend: 'multiply' },
   {
+    // Transparent neon lockup, recolored from the supplied blue PNG into the
+    // city's violet -> magenta palette (emblem left untouched).
     id: 'vel-tech',
-    src: '/assets/branding/vel-tech-high-tech-logo.png',
+    src: '/assets/branding/vel-tech-high-tech-logo.webp',
     alt: 'Vel Tech High Tech Dr. Rangarajan Dr. Sakunthala Engineering College',
-    width: 504,
-    height: 93,
-    blend: 'multiply',
+    width: 482,
+    height: 300,
   },
   { id: 'nba', src: '/assets/branding/nba-logo.png', alt: 'National Board of Accreditation', width: 225, height: 225, blend: 'multiply' },
   {

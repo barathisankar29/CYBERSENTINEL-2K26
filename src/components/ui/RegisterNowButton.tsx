@@ -10,8 +10,9 @@ interface RegisterNowButtonProps {
   variant?: 'overlay' | 'hero'
 }
 
-/** Grand CTA into the events/registration flow — separate from clicking
- * the Events building itself, so registration has its own obvious entry
+/** Grand CTA into the registration portal (/register, backed by the
+ * Supabase registration Edge Functions) — separate from clicking the
+ * Events building itself, so registration has its own obvious entry
  * point. Always visible regardless of registration state (unlike the
  * identity terminal, which reflects current state). */
 export function RegisterNowButton({ variant = 'overlay' }: RegisterNowButtonProps) {
@@ -19,7 +20,7 @@ export function RegisterNowButton({ variant = 'overlay' }: RegisterNowButtonProp
 
   if (variant === 'hero') {
     return (
-      <button type="button" className="register-now-hero" onClick={() => navigate('/events')}>
+      <button type="button" className="register-now-hero" onClick={() => navigate('/register')}>
         <span className="register-now-hero__glow" aria-hidden="true" />
         <span className="register-now-hero__content">
           <span className="register-now-hero__dot" aria-hidden="true" />
@@ -33,7 +34,7 @@ export function RegisterNowButton({ variant = 'overlay' }: RegisterNowButtonProp
   }
 
   return (
-    <button type="button" className="register-now-btn" onClick={() => navigate('/events')}>
+    <button type="button" className="register-now-btn" onClick={() => navigate('/register')}>
       <span className="register-now-btn__dot" aria-hidden="true" />
       REGISTER NOW
     </button>

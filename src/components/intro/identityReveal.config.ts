@@ -36,8 +36,8 @@ export interface StageRevealWindow {
  *
  * Staged order: 0-13% dark -> 13-32% tagline 1 -> 28-48% tagline 2 ->
  * 46-56% department -> 54-63% "in association with" -> 61-68% "Presents" ->
- * 56-75% branding strip -> 72-90% CyberSentinel logo -> 85-98% supporting
- * info. Windows overlap deliberately for a smooth crossfade between stages
+ * 56-75% branding strip -> 72-90% CyberSentinel logo (Register Now CTA snaps in at 72-76%) ->
+ * 85-98% supporting info. Windows overlap deliberately for a smooth crossfade between stages
  * rather than a hard cut. Nudge `start`/`end` to retime a piece; nudge
  * `depthPx` to change how much it moves.
  */
@@ -48,9 +48,10 @@ export const identityReveal = {
   presents: { start: 0.61, end: 0.68, depthPx: 10 } satisfies RevealWindow,
   symposium: { start: 0.72, end: 0.9, depthPx: 28 } satisfies RevealWindow,
   info: { start: 0.85, end: 0.98, depthPx: 18 } satisfies RevealWindow,
-  // Hero Register Now CTA (see IdentityLayer.tsx) — follows the
-  // CyberSentinel identity so it lands last, just before the hero hands off.
-  registerCta: { start: 0.88, end: 0.97, depthPx: 18 } satisfies RevealWindow,
+  // Hero Register Now CTA (see IdentityLayer.tsx) — arrives together with
+  // the CyberSentinel logo (same start) over a short window, so it snaps in
+  // solid instead of creeping in at the very end of the hero.
+  registerCta: { start: 0.72, end: 0.76, depthPx: 18 } satisfies RevealWindow,
 }
 
 /**

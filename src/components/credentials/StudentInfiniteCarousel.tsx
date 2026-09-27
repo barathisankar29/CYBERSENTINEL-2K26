@@ -217,20 +217,11 @@ export function StudentInfiniteCarousel({ items }: StudentInfiniteCarouselProps)
           return (
             <div
               key={globalIndex}
-              role="button"
-              tabIndex={0}
               className={`infinite-carousel-item ${
                 enableTransition ? 'infinite-carousel-item--animated' : ''
               } ${isCenter ? 'infinite-carousel-item--active' : ''}`}
               style={getCardStyle(offset)}
               data-active={isCenter}
-              onClick={() => handleCardClick(globalIndex)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault()
-                  handleCardClick(globalIndex)
-                }
-              }}
             >
               <StudentCircuitCard
                 member={member}

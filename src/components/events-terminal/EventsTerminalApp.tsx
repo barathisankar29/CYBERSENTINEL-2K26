@@ -1,43 +1,81 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import type { ModuleId, EventSpec, SystemSettings } from '@/types/eventsTerminal';
 import { ALL_EVENTS } from '@/data/eventsTerminalData';
 import { RetroNav } from './RetroNav';
 import { sound } from './sound';
+import { RegistrationPortalPage, type RegistrationPortalInitialData } from './RegistrationPortalPage';
+import { RegisterModal } from './RegisterModal';
 import './eventsTerminal.css';
 
-// Screens (only the 5 wired into RetroNav — the reference project also
-// ships Categories/Highlights/Schedule/Security/Settings/Power/Search
-// screens, but its own App.tsx never mounts them; they're unreachable
-// dead code there too, so they weren't ported).
+// Screens reachable from RetroNav. The reference project also ships
+// Categories/Highlights/Schedule/Security/Settings/Power/Search screens, but
+// nothing in it navigates to them, so they weren't ported.
 import { HomeScreen } from './screens/HomeScreen';
-import { InfoScreen } from './screens/InfoScreen';
 import { CompeteScreen } from './screens/CompeteScreen';
 import { FirmwareScreen } from './screens/FirmwareScreen';
 import { FavoritesScreen } from './screens/FavoritesScreen';
+import { TeamCreationScreen } from './screens/TeamCreationScreen';
 
 const FONT_LINK_ID = 'events-terminal-fonts';
 const FONT_HREF =
-  'https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&family=Silkscreen:wght@400;700&family=VT323&display=swap';
+  'https://fonts.googleapis.com/css2?family=Kelly+Slab&family=Oswald:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Press+Start+2P&family=Share+Tech+Mono&family=Silkscreen:wght@400;700&family=VT323&display=swap';
+
+type EventsTab = 'all' | 'day1' | 'day2' | 'special';
 
 /**
- * The team's CyberSentinel 2K26 "retro terminal" events experience,
- * ported 1:1 from their AI Studio source (cyberfest-2025-terminal.ai.studio)
- * rather than reinterpreted — same 5 screens (Home/Compete/Firmware/Info/
- * Favorites), same RetroNav, same client-side registration-with-localStorage
- * flow, same sound engine, same pixel/CRT visual language. Mounted at our
- * existing `/events` route (see pages/EventsPage.tsx) instead of replacing
- * this site's routing.
+ * The team's CyberSentinel 2K26 "retro terminal" events experience, ported
+ * from their AI Studio source (final_final_complete_event_page) — same
+ * screens, RetroNav, sound engine and pixel/CRT visual language — mounted at
+ * our `/events` route.
  *
- * Font loading and the pixelated/unselectable-text CSS resets are scoped to
- * only apply while this is mounted (see eventsTerminal.css's `.cft-root`
- * scoping, and the dynamic <link> injection below) so the rest of the site
- * is unaffected when this route isn't active.
+ * Registration is NOT the reference's local mock: the pack modal hands off
+ * to RegistrationPortalPage, which submits to the backend team's Supabase
+ * `public-register`; My Registrations reads `check-registration`; Create
+ * Team uses `team-management`. All calls go through src/services/registration.
+ *
+ * Font loading and the pixelated/unselectable-text CSS resets only apply
+ * while this is mounted (`.cft-root` scoping in eventsTerminal.css + the
+ * dynamic <link> below), so the rest of the site is unaffected.
  */
-export function EventsTerminalApp() {
-  const [activeModule, setActiveModule] = useState<ModuleId>('home');
+interface EventsTerminalAppProps {
+  /** Screen to start on — /register/status and /register/team deep-link here. */
+  initialModule?: ModuleId;
+  /**
+   * Open the "Choose your player" registration flow immediately (the
+   * /register route) — the exact same pack modal -> portal flow as the
+   * Events screens' REGISTER buttons.
+   */
+  startWithRegistration?: boolean;
+  /** Called when that route-opened flow is dismissed without continuing. */
+  onStartRegistrationClose?: () => void;
+}
+
+export function EventsTerminalApp({
+  initialModule = 'home',
+  startWithRegistration = false,
+  onStartRegistrationClose
+}: EventsTerminalAppProps = {}) {
+  const [activeModule, setActiveModule] = useState<ModuleId>(initialModule);
   const [selectedEvent, setSelectedEvent] = useState<EventSpec>(ALL_EVENTS[0]);
-  const [bookmarkedIds, setBookmarkedIds] = useState<string[]>(['firmware']);
+  const [eventsTab, setEventsTab] = useState<EventsTab>('all');
+  const [bookmarkedIds, setBookmarkedIds] = useState<string[]>(() => {
+    try {
+      const stored = localStorage.getItem('cyberfest_bookmarks');
+      return stored ? (JSON.parse(stored) as string[]) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [portalData, setPortalData] = useState<RegistrationPortalInitialData | null>(null);
+  const [packChooserOpen, setPackChooserOpen] = useState(startWithRegistration);
+  // True while the registration flow was opened by the /register route
+  // itself; dismissing it then leaves /register for the event terminal.
+  const [flowFromRoute, setFlowFromRoute] = useState(startWithRegistration);
+  const [teamCreationTarget, setTeamCreationTarget] = useState<{ regId: string | null; eventName: string | null }>({
+    regId: null,
+    eventName: null
+  });
   const [settings] = useState<SystemSettings>({
     soundEnabled: true,
     soundVolume: 0.05,
@@ -59,26 +97,24 @@ export function EventsTerminalApp() {
     };
   }, []);
 
-  // Load bookmarks on mount
+  // Every screen change (e.g. KNOW MORE -> event page) starts at the top of
+  // the terminal, not wherever the previous screen was scrolled to.
+  const firstRender = useRef(true);
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem('cyberfest_bookmarks');
-      if (stored) {
-        setBookmarkedIds(JSON.parse(stored));
-      }
-    } catch {
-      // Fallback
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
     }
-  }, []);
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [activeModule, selectedEvent]);
 
   const handleBookmarkToggle = (eventId: string) => {
     setBookmarkedIds((prev) => {
-      const exists = prev.includes(eventId);
-      const updated = exists ? prev.filter((id) => id !== eventId) : [...prev, eventId];
+      const updated = prev.includes(eventId) ? prev.filter((id) => id !== eventId) : [...prev, eventId];
       try {
         localStorage.setItem('cyberfest_bookmarks', JSON.stringify(updated));
       } catch {
-        // Fallback
+        // Bookmarks are a convenience only.
       }
       return updated;
     });
@@ -89,41 +125,74 @@ export function EventsTerminalApp() {
     setActiveModule('firmware');
   };
 
-  // Frame color treatments in exact required order:
-  // FRAME 1 (home) → PURPLE
-  // FRAME 2 (compete) → PINK
-  // FRAME 3 (firmware) → PURPLE
-  // FRAME 4 (info) → PINK
-  // FRAME 5 (favorites) → RADIANCE EFFECT
-  const frameThemes: Record<string, { border: string; glow: string; ditherBg: string }> = {
-    home: {
-      border: '#9333ea',
-      glow: '0 0 28px rgba(147, 51, 234, 0.65), 0 0 12px rgba(168, 85, 247, 0.4)',
-      ditherBg: '#9333ea'
-    },
+  const handleNavigateToEvents = (tab: EventsTab = 'all') => {
+    setEventsTab(tab);
+    setActiveModule('compete');
+  };
+
+  const handlePortalNavigateToRegistrations = () => {
+    setPortalData(null);
+    setFlowFromRoute(false);
+    setActiveModule('favorites');
+  };
+
+  const leaveRouteFlow = () => {
+    if (flowFromRoute) {
+      setFlowFromRoute(false);
+      onStartRegistrationClose?.();
+    }
+  };
+
+  const handlePortalClose = () => {
+    setPortalData(null);
+    leaveRouteFlow();
+  };
+
+  // RegisterModal calls onProceedToPortal and then onClose synchronously;
+  // only a close that did NOT open the portal counts as dismissing the flow.
+  const proceededToPortal = useRef(false);
+
+  const openPortal = (data: RegistrationPortalInitialData) => {
+    proceededToPortal.current = true;
+    setPortalData(data);
+  };
+
+  const handlePackChooserClose = () => {
+    setPackChooserOpen(false);
+    if (!proceededToPortal.current) leaveRouteFlow();
+    proceededToPortal.current = false;
+  };
+
+  const handleNavigateToTeamCreation = (regId: string, eventName: string) => {
+    setTeamCreationTarget({ regId, eventName });
+    setActiveModule('team');
+  };
+
+  // Frame color treatments:
+  // home → PURPLE, compete → PINK, firmware → PURPLE,
+  // favorites → RADIANCE, team → RADIANCE (matching favorites)
+  const radiance = {
+    border: '#c084fc',
+    glow: '0 0 35px rgba(168, 85, 247, 0.7), 0 0 20px rgba(255, 0, 127, 0.45), 0 0 12px rgba(0, 255, 255, 0.4)',
+    ditherBg: 'linear-gradient(90deg, #9333ea 0%, #ff007f 50%, #00ffff 100%)'
+  };
+  const purple = {
+    border: '#9333ea',
+    glow: '0 0 28px rgba(147, 51, 234, 0.65), 0 0 12px rgba(168, 85, 247, 0.4)',
+    ditherBg: '#9333ea'
+  };
+  const frameThemes: Record<ModuleId, { border: string; glow: string; ditherBg: string }> = {
+    home: purple,
     compete: {
       border: '#ff007f',
       glow: '0 0 28px rgba(255, 0, 127, 0.65), 0 0 12px rgba(255, 0, 127, 0.35)',
       ditherBg: '#ff007f'
     },
-    firmware: {
-      border: '#9333ea',
-      glow: '0 0 28px rgba(147, 51, 234, 0.65), 0 0 12px rgba(168, 85, 247, 0.4)',
-      ditherBg: '#9333ea'
-    },
-    info: {
-      border: '#ff007f',
-      glow: '0 0 28px rgba(255, 0, 127, 0.65), 0 0 12px rgba(255, 0, 127, 0.35)',
-      ditherBg: '#ff007f'
-    },
-    favorites: {
-      border: '#c084fc',
-      glow: '0 0 35px rgba(168, 85, 247, 0.7), 0 0 20px rgba(255, 0, 127, 0.45), 0 0 12px rgba(0, 255, 255, 0.4)',
-      ditherBg: 'linear-gradient(90deg, #9333ea 0%, #ff007f 50%, #00ffff 100%)'
-    }
+    firmware: purple,
+    favorites: radiance,
+    team: radiance
   };
-
-  const activeFrameTheme = frameThemes[activeModule] || frameThemes.home;
+  const activeFrameTheme = frameThemes[activeModule];
 
   return (
     <div
@@ -138,12 +207,8 @@ export function EventsTerminalApp() {
         } as React.CSSProperties
       }
     >
-      {/* Minimal exit link back to the main CyberSentinel site — the
-          reference is a closed single-page app with no such link, but this
-          route lives alongside our other pages, so it needs one way back
-          that isn't just the browser's back button. Styled with the
-          reference's own pixel-button language rather than our neon-glass
-          header, to not break the terminal's visual world. */}
+      {/* Way back to the main CyberSentinel site (the reference is a closed
+          single-page app), styled in the terminal's own pixel language. */}
       <Link
         to="/#buildings"
         onClick={() => sound.playNavClick()}
@@ -153,15 +218,8 @@ export function EventsTerminalApp() {
         ‹ EXIT TO CITY
       </Link>
 
-      {/* Top Arcade Module Navigation Bar */}
-      <RetroNav
-        activeModule={activeModule}
-        onSelectModule={(mod) => {
-          setActiveModule(mod);
-        }}
-      />
+      <RetroNav activeModule={activeModule} onSelectModule={setActiveModule} />
 
-      {/* Main Pixel Frame Container */}
       <main
         className="w-full max-w-6xl pixel-window-frame bg-black relative p-4 sm:p-7 my-auto transition-all"
         style={
@@ -171,42 +229,59 @@ export function EventsTerminalApp() {
             '--dither-bg': activeFrameTheme.ditherBg
           } as React.CSSProperties
         }
-        data-purpose="event-details-frame"
+        data-purpose="main-screen-container"
       >
         {activeModule === 'firmware' && (
           <FirmwareScreen
             event={selectedEvent}
             onBookmarkToggle={handleBookmarkToggle}
             isBookmarked={bookmarkedIds.includes(selectedEvent.id)}
+            onSelectModule={setActiveModule}
+            onProceedToPortal={openPortal}
           />
         )}
 
         {activeModule === 'home' && (
-          <HomeScreen onSelectModule={setActiveModule} />
-        )}
-
-        {activeModule === 'info' && (
-          <InfoScreen
-            event={selectedEvent}
-            onSelectModule={setActiveModule}
-          />
+          <HomeScreen onSelectModule={setActiveModule} onNavigateToEvents={handleNavigateToEvents} />
         )}
 
         {activeModule === 'compete' && (
           <CompeteScreen
             onSelectEvent={handleSelectEvent}
             selectedEventId={selectedEvent.id}
+            initialTab={eventsTab}
+            onTabChange={setEventsTab}
+            onProceedToPortal={openPortal}
           />
         )}
 
         {activeModule === 'favorites' && (
-          <FavoritesScreen
-            bookmarkedEventIds={bookmarkedIds}
-            onSelectEvent={handleSelectEvent}
-            onRemoveBookmark={handleBookmarkToggle}
+          <FavoritesScreen onSelectModule={setActiveModule} onNavigateToTeamCreation={handleNavigateToTeamCreation} />
+        )}
+
+        {activeModule === 'team' && (
+          <TeamCreationScreen
+            key={teamCreationTarget.regId ?? 'manual'}
+            selectedRegId={teamCreationTarget.regId}
+            selectedEventName={teamCreationTarget.eventName}
+            onSelectModule={setActiveModule}
           />
         )}
       </main>
+
+      {/* Route-opened "Choose your player" (the /register page) */}
+      {packChooserOpen && (
+        <RegisterModal event={null} isOpen onClose={handlePackChooserClose} onProceedToPortal={openPortal} />
+      )}
+
+      {/* Full-screen registration portal (submits to the Supabase backend) */}
+      {portalData && (
+        <RegistrationPortalPage
+          initialData={portalData}
+          onClose={handlePortalClose}
+          onNavigateToRegistrations={handlePortalNavigateToRegistrations}
+        />
+      )}
     </div>
   );
 }

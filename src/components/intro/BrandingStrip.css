@@ -1,11 +1,10 @@
 /*
  * No hard border/pill/panel here on purpose — this section should read as
  * atmosphere integrated into the sky, not a navbar floating above it. The
- * "container" is two blurred radial-gradient pseudo-elements (a diffused
- * pink/magenta aura, plus a much subtler dark backing only for contrast),
- * both scoped to this element via `isolation: isolate` so they never
- * escape into the rest of the identity layer's stacking. The glow
- * surrounds the WHOLE group; individual logos never get their own glow.
+ * "container" is a single blurred dark radial backing (for contrast only),
+ * scoped to this element via `isolation: isolate` so it never escapes into
+ * the rest of the identity layer's stacking. There is deliberately no pink
+ * aura: it washed over the college name and made it hard to read.
  */
 .branding-strip {
   position: relative;
@@ -18,21 +17,6 @@
   padding: 1rem clamp(1.25rem, 4vw, 2.5rem);
   max-width: min(96vw, 72rem);
   will-change: transform, opacity;
-}
-
-.branding-strip::before {
-  content: '';
-  position: absolute;
-  inset: -60% -14%;
-  background: radial-gradient(
-    ellipse 62% 72% at center,
-    color-mix(in srgb, var(--city-pink) 45%, transparent) 0%,
-    color-mix(in srgb, var(--city-magenta) 30%, transparent) 45%,
-    transparent 75%
-  );
-  filter: blur(20px);
-  z-index: -2;
-  pointer-events: none;
 }
 
 /* Subtle dark backing for contrast only — never an opaque panel. */
@@ -64,7 +48,7 @@
 
 .branding-strip__logo {
   display: block;
-  height: 40px;
+  height: 56px;
   width: auto;
   object-fit: contain;
 }
@@ -73,40 +57,49 @@
   mix-blend-mode: multiply;
 }
 
+/* The college lockup is the hero of this strip — a tall 1.6:1 neon mark,
+   so it gets roughly twice the badge height to stay legible. */
+[data-logo-id='vel-tech'] .branding-strip__logo {
+  height: 104px;
+}
+
 @media (min-width: 1024px) {
   .branding-strip__logo {
-    height: 52px;
+    height: 76px;
+  }
+
+  [data-logo-id='vel-tech'] .branding-strip__logo {
+    height: 140px;
   }
 }
 
 /*
- * Matches BREAKPOINTS.mobileMax in src/styles/breakpoints.ts — desktop
- * (>767px) is completely untouched by anything in this block. Sized so all
- * 5 logos still fit on one row down to 375px without wrapping — a wrapped
- * logo drops to its own line and reads as an orphaned floating badge,
- * exactly the "individual glowing box" look this section must avoid.
- * Larger than before (was 27px/0.5rem/0.5rem+0.75rem) — the whole mobile
- * identity group should read as bigger/closer, not just be squeezed to fit
- * the desktop proportions.
- *
- * Vel Tech's logo is a wide banner (~5.4:1), not a badge like the other
- * four — at a shared height it alone would eat more than half the row's
- * width. Only on mobile (where every pixel of row width matters), it gets
- * a smaller height so the other four logos can be genuinely larger without
- * forcing a wrap; on desktop it still shares the same height as everything
- * else, unchanged.
+ * Mobile (matches BREAKPOINTS.mobileMax): two rows instead of one squeezed
+ * row — the college lockup takes a full-width row of its own at a readable
+ * size, and the four accreditation/club badges sit evenly underneath it.
  */
 @media (max-width: 767px) {
   .branding-strip {
-    gap: 0.5rem;
-    padding: 0.5rem 0.65rem;
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    justify-content: center;
+    justify-items: center;
+    column-gap: 0.85rem;
+    row-gap: 0.55rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  [data-logo-id='vel-tech'] {
+    grid-column: 1 / -1;
+    order: -1;
   }
 
   .branding-strip__logo {
-    height: 32px;
+    height: 40px;
   }
 
   [data-logo-id='vel-tech'] .branding-strip__logo {
-    height: 23px;
+    height: auto;
+    width: min(62vw, 250px);
   }
 }

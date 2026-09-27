@@ -117,6 +117,10 @@ class SoundEngine {
   public playBlip() {
     this.playTone(330, 'triangle', 0.05);
   }
+
+  public playError() {
+    this.playTone(180, 'sawtooth', 0.2, 0.01);
+  }
 }
 
 export const sound = new SoundEngine();
