@@ -4,6 +4,17 @@
   pointer-events: none;
 }
 
+/* The hero viewport is 100lvh tall (stable while the phone's address bar
+   slides — see CityScene.css), so its bottom strip sits under the bar while
+   the bar is showing. Keep the hero content inside the always-visible part:
+   end this layer that much above the bottom (0 on desktop). The city
+   backdrop behind it still fills the whole screen. */
+@supports (height: 100lvh) and (height: 100svh) {
+  .identity-layer {
+    bottom: calc(100lvh - 100svh);
+  }
+}
+
 .identity-layer > * {
   pointer-events: auto;
 }

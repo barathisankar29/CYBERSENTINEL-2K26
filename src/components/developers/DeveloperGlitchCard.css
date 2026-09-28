@@ -1,7 +1,7 @@
 /* ==========================================================================
    DEVELOPER GLITCH CARD STYLES
    Compact Cyberpunk Card with Pure CSS Stitched Geometric Artwork,
-   Horizontal Speed Glitch Slices, and 3D Extruded Angled Typography
+   and Horizontal Speed Glitch Slices
    ========================================================================== */
 
 .dev-card {
@@ -19,8 +19,6 @@
   box-shadow: 
     0 14px 40px rgba(0, 0, 0, 0.8),
     0 0 25px color-mix(in srgb, var(--dev-accent, #00f0ff) 20%, transparent);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   cursor: pointer;
   user-select: none;
   transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -116,7 +114,6 @@
   stroke-dasharray: 6 5;
   stroke-linecap: round;
   filter: drop-shadow(0 0 6px var(--dev-accent, #00f0ff));
-  animation: devStitchWalk 10s linear infinite;
 }
 
 .dev-card__polygon-stitch-inner {
@@ -127,10 +124,6 @@
   opacity: 0.75;
 }
 
-@keyframes devStitchWalk {
-  from { stroke-dashoffset: 0; }
-  to { stroke-dashoffset: -100; }
-}
 
 /* Secondary Intersecting Angle Shard */
 .dev-card__geo-shape--secondary {
@@ -305,57 +298,6 @@
 }
 
 /* ==========================================================================
-   3D ANGLED EXTRUDED SLOGAN TYPOGRAPHY
-   ========================================================================== */
-.dev-card__slogan-3d {
-  position: absolute;
-  right: 14px;
-  top: 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  transform: rotate(-12deg) skewX(-3deg);
-  transform-origin: right center;
-  pointer-events: none;
-  z-index: 6;
-}
-
-.dev-card__slogan-line {
-  font-family: var(--font-display, 'Orbitron', sans-serif);
-  font-size: 0.95rem;
-  font-weight: 900;
-  line-height: 0.94;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  color: #ffffff;
-  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.85);
-  text-shadow:
-    1px 1px 0 var(--dev-secondary, #3b82f6),
-    2px 2px 0 var(--dev-secondary, #3b82f6),
-    3px 3px 0 var(--dev-accent, #00f0ff),
-    4px 4px 0 var(--dev-accent, #00f0ff),
-    5px 5px 0 rgba(0, 0, 0, 0.95),
-    0 0 14px var(--dev-accent, #00f0ff);
-  transition: transform 0.3s ease;
-}
-
-.dev-card__slogan-line--1 {
-  font-size: 1.05rem;
-  color: #f8fafc;
-}
-
-.dev-card__slogan-line--2 {
-  font-size: 0.88rem;
-  color: #ffffff;
-}
-
-.dev-card:hover .dev-card__slogan-line,
-.dev-card.is-active .dev-card__slogan-line {
-  transform: scale(1.05);
-}
-
-/* ==========================================================================
    DEVELOPER INFO FOOTER WITH DESCRIPTION & SOCIALS
    ========================================================================== */
 .dev-card__info {
@@ -479,13 +421,7 @@
     height: 105px;
   }
 
-  .dev-card__slogan-line {
-    font-size: 0.78rem;
-  }
 
-  .dev-card__slogan-line--1 {
-    font-size: 0.84rem;
-  }
 
   .dev-card__name {
     font-size: 0.82rem;

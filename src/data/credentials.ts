@@ -82,16 +82,6 @@ export const coConvenorsData: CredentialMember[] = [
     accentColor: 'cyan',
   },
   {
-    id: 'mr-santhosh-kumar-j',
-    name: 'Mr. SANTHOSH KUMAR J',
-    role: 'Asst. Professor - CSE',
-    subRole: 'Event Coordinator',
-    image: '/assets/credentials/coconvenor_santhosh_kumar_j.webp',
-    imageStyle: { transform: 'scale(1.42) translateY(-15%)' },
-    linkedin: 'https://linkedin.com',
-    accentColor: 'cyan',
-  },
-  {
     id: 'mr-durai-vasanth',
     name: 'Mr. DURAI VASANTH',
     role: 'Asst. Professor - CSE',

@@ -7,6 +7,7 @@ import { CityLayer } from './CityLayer'
 import { navigationCityEnvironmentLayers, NAVIGATION_REVEAL_PROGRESS } from './navigationCityEnvironment.config'
 import { Building } from './buildings/Building'
 import { NavigationCityMobile } from './NavigationCityMobile'
+import { useWarmBuildingsImages } from './useWarmBuildingsImages'
 import { ProfileAccessBadge } from '@/components/ui/ProfileAccessBadge'
 import { RegisterNowButton } from '@/components/ui/RegisterNowButton'
 import './NavigationCityScene.css'
@@ -58,6 +59,9 @@ export function NavigationCityScene() {
   const [revealed, setRevealed] = useState(reducedMotion)
   const handleProgress = useCallback((value: number) => setRevealed(value >= REVEAL_PROGRESS), [])
   useScrollProgressVar(spacerRef, { pinned: reducedMotion ? 1 : null, onProgress: handleProgress })
+  // Fetch this section's images ahead of time (after the hero has loaded) so
+  // arriving here never shows a black screen while they download.
+  useWarmBuildingsImages(isMobile)
 
   // MOBILE — an entirely different container model from desktop: a
   // normal in-flow section sized by the nav image's own natural aspect

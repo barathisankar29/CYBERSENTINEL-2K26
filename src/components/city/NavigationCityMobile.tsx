@@ -4,9 +4,10 @@ import { navigationBuildings } from '@/data/navigation'
 import { mobileNavigationLayout } from '@/data/navigationMobile'
 import { ProfileAccessBadge } from '@/components/ui/ProfileAccessBadge'
 import { useMascot } from '@/components/mascot'
+import { MOBILE_NAVIGATION_BG } from './useWarmBuildingsImages'
 import './NavigationCityMobile.css'
 
-const BG_SRC = '/assets/city/navigation/navigation-mobile.webp'
+const BG_SRC = MOBILE_NAVIGATION_BG
 
 export function NavigationCityMobile() {
   const navigate = useNavigate()

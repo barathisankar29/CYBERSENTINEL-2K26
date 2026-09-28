@@ -35,7 +35,6 @@ export const DeveloperGlitchCard: React.FC<DeveloperGlitchCardProps> = ({
     '--dev-secondary': developer.secondaryHex,
   } as CSSProperties
 
-  const sloganLines = developer.sloganLines || [developer.slogan || 'Built to Be Seen.']
 
   return (
     <div
@@ -113,15 +112,6 @@ export const DeveloperGlitchCard: React.FC<DeveloperGlitchCardProps> = ({
           <span className="dev-card__slice dev-card__slice--4" />
           <span className="dev-card__slice dev-card__slice--5" />
           <span className="dev-card__slice dev-card__slice--6" />
-        </div>
-
-        {/* 3D Angled Extruded Slogan Typography */}
-        <div className="dev-card__slogan-3d" aria-hidden="true">
-          {sloganLines.map((line, idx) => (
-            <span key={idx} className={`dev-card__slogan-line dev-card__slogan-line--${idx}`}>
-              {line}
-            </span>
-          ))}
         </div>
       </div>
 
