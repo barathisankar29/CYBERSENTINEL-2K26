@@ -14,11 +14,13 @@ import type {
   MascotEventType,
   MascotContextType,
   MascotDialoguePriority,
+  MascotBubblePlacement,
 } from '@/types/mascot'
 import { MASCOT_STATE_PRIORITY, ALL_MASCOT_STATES } from '@/types/mascot'
 import {
   clampPositionToBounds,
   getDefaultMascotPosition,
+  getMascotDimensions,
 } from './MascotPhysics'
 import { findSafeMascotPosition } from './MascotObstruction'
 import { MASCOT_DIALOGUE, type MascotDialogueItem } from './mascotDialogue'
@@ -84,6 +86,9 @@ export function MascotProvider({ children }: { children: ReactNode }) {
   const [isSleeping, setIsSleeping] = useState(false)
   const [isRelocating, setIsRelocating] = useState(false)
   const isRelocatingRef = useRef(false)
+  const guideActiveRef = useRef(false)
+  const [facing, setFacing] = useState<'left' | 'right'>('right')
+  const [bubblePlacement, setBubblePlacement] = useState<MascotBubblePlacement | null>(null)
 
   // Tour State
   const [isTourActive, setIsTourActive] = useState(false)
@@ -368,6 +373,9 @@ export function MascotProvider({ children }: { children: ReactNode }) {
     // Never auto-move while user is actively dragging, falling, or already relocating (Part 6)
     if (isDragging || isFalling || isRelocatingRef.current) return false
 
+    // A guide (e.g. the city tour) has already placed the mascot clear of content
+    if (guideActiveRef.current) return false
+
     // Never auto-move while user is actively filling out a form or has an input focused
     const activeEl = document.activeElement
     if (
@@ -447,6 +455,7 @@ export function MascotProvider({ children }: { children: ReactNode }) {
         activeEl instanceof HTMLSelectElement
 
       if (
+        !guideActiveRef.current &&
         !isInputActive &&
         !isDragging &&
         !isFalling &&
@@ -647,6 +656,39 @@ export function MascotProvider({ children }: { children: ReactNode }) {
     [wakeUp, setMascotState, saySequence, checkObstructionAndRelocate]
   )
 
+  // Guided placement: same smooth glide as auto-relocation, but not persisted,
+  // so the visitor's own saved spot is untouched when the guide hands back.
+  const guideTo = useCallback(
+    (pos: MascotPosition) => {
+      isRelocatingRef.current = true
+      setIsRelocating(true)
+      // Only keep it on screen: the guide has already chosen a spot clear of
+      // content, which may be nearer the top edge than the usual safe bounds.
+      const { width, height } = getMascotDimensions(isMobile)
+      setPositionInternal({
+        x: Math.max(8, Math.min(window.innerWidth - width - 8, pos.x)),
+        y: Math.max(8, Math.min(window.innerHeight - height - 8, pos.y)),
+      })
+      if (relocatingTimerRef.current !== null) {
+        window.clearTimeout(relocatingTimerRef.current)
+      }
+      relocatingTimerRef.current = window.setTimeout(() => {
+        isRelocatingRef.current = false
+        setIsRelocating(false)
+        relocatingTimerRef.current = null
+      }, 700)
+    },
+    [isMobile]
+  )
+
+  const setGuideActive = useCallback((active: boolean) => {
+    guideActiveRef.current = active
+    if (!active) {
+      setFacing('right')
+      setBubblePlacement(null)
+    }
+  }, [])
+
   // Clean up all resources when unmounted
   useEffect(() => {
     return () => {
@@ -682,6 +724,12 @@ export function MascotProvider({ children }: { children: ReactNode }) {
     skipTour,
     tourSteps: TOUR_STEPS,
     dispatchMascotEvent,
+    facing,
+    setFacing,
+    guideTo,
+    setGuideActive,
+    bubblePlacement,
+    setBubblePlacement,
   }
 
   return <MascotContext.Provider value={contextValue}>{children}</MascotContext.Provider>

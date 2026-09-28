@@ -6,6 +6,7 @@ import {
   type PointerEvent,
   type CSSProperties,
 } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useMascot } from './MascotContext'
 import {
   DEFAULT_PHYSICS_CONFIG,
@@ -49,10 +50,13 @@ export function Mascot() {
     isTourActive,
     startTour,
     skipTour,
+    facing,
+    bubblePlacement,
   } = useMascot()
 
   const isMobile = useIsMobile()
   const reducedMotion = useReducedMotion()
+  const { pathname } = useLocation()
 
   // Physics animation reference
   const physicsLoopRef = useRef<number | null>(null)
@@ -284,9 +288,13 @@ export function Mascot() {
     isSleeping ? 'mascot-pet--sleeping' : '',
     isRelocating ? 'mascot-pet--relocating' : '',
     state === 'land' ? 'mascot-pet--landing' : '',
+    facing === 'left' ? 'mascot-pet--face-left' : '',
   ]
     .filter(Boolean)
     .join(' ')
+
+  // Not shown on the credentials page (the team cards have their own mascot moments).
+  if (pathname === '/credentials') return null
 
   const transformStyle: CSSProperties = {
     transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
@@ -389,6 +397,7 @@ export function Mascot() {
         {/* Speech Bubble */}
         <MascotSpeechBubble
           speech={currentSpeech}
+          placement={bubblePlacement}
           position={position}
           isMobile={isMobile}
           onClose={dismissSpeech}

@@ -40,6 +40,24 @@
     );
 }
 
+/*
+ * Depth veil: a very thin indigo-black tint over the background city only
+ * (above the environment layers, under the buildings at z-index 12), so the
+ * six buildings separate a little more from the skyline behind them. Almost
+ * uniform — just slightly deeper toward the edges — so it reads as
+ * atmosphere, not as an overlay or a transition. Colors underneath keep
+ * their hue; nothing interactive sits under it.
+ */
+.navigation-city-scene__depth-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 85% 75% at 50% 55%, transparent 55%, rgba(6, 4, 20, 0.1) 100%),
+    rgba(10, 7, 30, 0.14);
+}
+
 /* Futuristic Laser Seam & Horizon Beacon across Hero -> Buildings Transition */
 .navigation-city-scene__horizon-line {
   position: absolute;

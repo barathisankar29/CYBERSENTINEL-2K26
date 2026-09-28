@@ -8,7 +8,8 @@ interface DeveloperMascotPushCarouselProps {
   developers: FrontendDeveloperMember[]
 }
 
-const HOLD_DURATION_MS = 3000
+// Each developer card stays up 7s before the mascot pushes the next one in.
+const HOLD_DURATION_MS = 7000
 const PUSH_ANIMATION_MS = 750
 
 export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselProps> = ({ developers }) => {
@@ -17,12 +18,43 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
   const [isPushing, setIsPushing] = useState(false)
   const [pushDirection, setPushDirection] = useState<'next' | 'prev'>('next')
   const [isPaused, setIsPaused] = useState(false)
-  const [progress, setProgress] = useState(0)
+  // Hold progress lives in a ref (updated every frame); React only re-renders
+  // when the mascot's pose phase changes: 0 = just landed (<25%), 1 = idle,
+  // 2 = winding up for the next push (>85%).
+  const [phase, setPhase] = useState<0 | 1 | 2>(0)
   const [touchStartX, setTouchStartX] = useState<number | null>(null)
 
+  const [isOffscreen, setIsOffscreen] = useState(true)
+  const rootRef = useRef<HTMLDivElement>(null)
+  const pushTimeoutRef = useRef<number | null>(null)
   const timerRef = useRef<number | null>(null)
   const startTimeRef = useRef<number>(Date.now())
+  const progressRef = useRef(0)
   const total = developers.length
+
+  // The first developer (Barathi) is always the one showing when the carousel
+  // scrolls into view, from above or below: it rewinds to the first card while
+  // off screen (so the reset is never seen) and only auto-plays while visible.
+  useEffect(() => {
+    const el = rootRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsOffscreen(false)
+        return
+      }
+      setIsOffscreen(true)
+      if (pushTimeoutRef.current !== null) window.clearTimeout(pushTimeoutRef.current)
+      pushTimeoutRef.current = null
+      setActiveIndex(0)
+      setIncomingIndex(null)
+      setIsPushing(false)
+      progressRef.current = 0
+      setPhase(0)
+    })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   // Trigger push transition to a specific index
   const triggerPush = useCallback(
@@ -34,10 +66,12 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
       setIncomingIndex(normalizedTarget)
       setPushDirection(direction)
       setIsPushing(true)
-      setProgress(0)
+      progressRef.current = 0
+      setPhase(0)
 
       // Transition completes
-      setTimeout(() => {
+      pushTimeoutRef.current = window.setTimeout(() => {
+        pushTimeoutRef.current = null
         setActiveIndex(normalizedTarget)
         setIncomingIndex(null)
         setIsPushing(false)
@@ -68,19 +102,19 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [pushPrev, pushNext])
 
-  // Timer loop for auto-push (3.5 to 5s delay requested by user)
+  // Timer loop for auto-push. The start time is only re-derived when the
+  // timer (re)starts — not on every progress update — so the hold lasts
+  // exactly HOLD_DURATION_MS instead of losing a frame per tick.
   useEffect(() => {
-    if (isPaused || isPushing) {
-      if (timerRef.current) cancelAnimationFrame(timerRef.current)
-      return
-    }
+    if (isPaused || isOffscreen || isPushing) return
 
-    startTimeRef.current = Date.now() - (progress / 100) * HOLD_DURATION_MS
+    startTimeRef.current = Date.now() - (progressRef.current / 100) * HOLD_DURATION_MS
 
     const tick = () => {
       const elapsed = Date.now() - startTimeRef.current
       const pct = Math.min((elapsed / HOLD_DURATION_MS) * 100, 100)
-      setProgress(pct)
+      progressRef.current = pct
+      setPhase(pct > 85 ? 2 : pct < 25 ? 0 : 1)
 
       if (pct >= 100) {
         pushNext()
@@ -94,15 +128,15 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
     return () => {
       if (timerRef.current) cancelAnimationFrame(timerRef.current)
     }
-  }, [isPaused, isPushing, progress, pushNext])
+  }, [isPaused, isOffscreen, isPushing, pushNext])
 
   // Choose mascot pose based on state
   let mascotPose: MascotExpression = 'float'
   if (isPushing) {
     mascotPose = pushDirection === 'next' ? 'dash2' : 'fly'
-  } else if (progress > 85) {
+  } else if (phase === 2) {
     mascotPose = 'dash1' // Leaning into push position anticipation!
-  } else if (progress < 25) {
+  } else if (phase === 0) {
     mascotPose = 'cheer' // Celebrating after landing new card!
   } else {
     mascotPose = activeIndex % 2 === 0 ? 'wave' : 'happy'
@@ -129,6 +163,7 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
 
   return (
     <div
+      ref={rootRef}
       className="mascot-carousel"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}

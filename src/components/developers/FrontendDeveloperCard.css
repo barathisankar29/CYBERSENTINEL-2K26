@@ -69,6 +69,8 @@
   text-align: left;
   gap: 1.1rem;
   box-sizing: border-box;
+  /* Lets the name size itself to this column (cqw) so it stays on one line. */
+  container-type: inline-size;
 }
 
 @media (min-width: 768px) {
@@ -88,12 +90,15 @@
 /* Developer Name (Bangers Font) */
 .frontend-dev-card__name {
   font-family: 'Bangers', cursive, sans-serif;
-  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  /* ~7.2em wide for the longest name, so 13.5cqw always fits the column. */
+  font-size: clamp(1.6rem, min(5vw, 13.5cqw), 3.8rem);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   line-height: 1.05;
   margin: 0;
   display: block;
+  /* Keep the full name (with initial) on one line. */
+  white-space: nowrap;
 }
 
 /* Description Text (Share Tech Mono Font) */
@@ -152,6 +157,15 @@
   filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.85));
 }
 
+.frontend-dev-card__social-link--instagram {
+  color: #e1306c;
+  filter: drop-shadow(0 2px 8px rgba(225, 48, 108, 0.6));
+}
+
+.frontend-dev-card__social-link--instagram:hover {
+  filter: drop-shadow(0 0 16px rgba(255, 62, 165, 0.9));
+}
+
 .frontend-dev-card__social-svg {
   width: 2rem;
   height: 2rem;
@@ -191,7 +205,7 @@
   }
 
   .frontend-dev-card__name {
-    font-size: 1.85rem;
+    font-size: min(1.85rem, 13.5cqw);
     line-height: 1.05;
     margin: 0;
     text-align: center;

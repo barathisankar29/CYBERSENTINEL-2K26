@@ -156,6 +156,7 @@ export function Building({ building, revealed, isMobile }: BuildingProps) {
     <button
       type="button"
       className="nav-building"
+      data-building-id={building.id}
       style={wrapperStyle}
       aria-label={building.label}
       onPointerEnter={() => {

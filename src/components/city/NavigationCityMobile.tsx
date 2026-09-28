@@ -1,45 +1,18 @@
-import { useState, useEffect, type CSSProperties } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { navigationBuildings } from '@/data/navigation'
 import { mobileNavigationLayout } from '@/data/navigationMobile'
 import { ProfileAccessBadge } from '@/components/ui/ProfileAccessBadge'
-import { MASCOT_SPRITES, type MascotExpression } from '@/data/mascot'
-import { useMascot } from '@/components/mascot'
+import { useMascot, MascotCityGuide } from '@/components/mascot'
 import './NavigationCityMobile.css'
 
 const BG_SRC = '/assets/city/navigation/navigation-mobile.webp'
-
-const MOBILE_MASCOT_DIALOGUES: { text: string; pose: MascotExpression }[] = [
-  { text: '⚡ TAP ANY BUILDING TO ENTER!', pose: 'happy' },
-  { text: '🎮 15+ HACKS & ESPORTS ARENA!', pose: 'cheer' },
-  { text: '⏳ SKYRAIL HAS ALL ROUND TIMINGS!', pose: 'fly' },
-  { text: '🕶️ MEET OUR TEAM IN CREDENTIALS!', pose: 'wave' },
-  { text: '🚀 BUS ROUTES IN TRANSPORT HUB!', pose: 'curious' },
-  { text: '🏛️ EXPLORE DEPT ARCHIVES IN ABOUT!', pose: 'float' },
-]
 
 export function NavigationCityMobile() {
   const navigate = useNavigate()
   const { dispatchMascotEvent } = useMascot()
   const [activeId, setActiveId] = useState<string | null>(null)
-  const [mascotIdx, setMascotIdx] = useState(0)
-
   const clearActive = (id: string) => setActiveId((current) => (current === id ? null : current))
-
-  const handleNextDialogue = () => {
-    setMascotIdx((prev) => (prev + 1) % MOBILE_MASCOT_DIALOGUES.length)
-  }
-
-  // Smoothly rotate dialogue tips every 3.5s
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setMascotIdx((prev) => (prev + 1) % MOBILE_MASCOT_DIALOGUES.length)
-    }, 3500)
-    return () => clearInterval(timer)
-  }, [])
-
-  const currentDialogue = MOBILE_MASCOT_DIALOGUES[mascotIdx]
-  const currentSprite = MASCOT_SPRITES[currentDialogue.pose] || MASCOT_SPRITES.float
 
   return (
     <section className="mobile-nav-section" id="buildings">
@@ -103,6 +76,7 @@ export function NavigationCityMobile() {
               <span
                 className="mobile-nav-item__glow"
                 aria-hidden="true"
+                data-building-glow={building.id}
                 style={
                   {
                     left: `${layout.target.x}%`,
@@ -114,6 +88,7 @@ export function NavigationCityMobile() {
               <button
                 type="button"
                 className={cardClassName}
+                data-building-id={building.id}
                 style={
                   {
                     left: `${layout.anchor.x}%`,
@@ -155,37 +130,8 @@ export function NavigationCityMobile() {
           )
         })}
 
-        {/* Mobile Mascot Companion Stationed in the Open Plaza Courtyard Space (Circled by user) */}
-        <div
-          className="mobile-nav-mascot"
-          style={{ left: '68%', top: '70%' }}
-          onClick={handleNextDialogue}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault()
-              handleNextDialogue()
-            }
-          }}
-          role="button"
-          tabIndex={0}
-          aria-label="Tap mascot companion for navigation hints"
-        >
-          <div className="mobile-nav-mascot__bubble">
-            <div className="mobile-nav-mascot__bubble-beak" aria-hidden="true" />
-            <span className="mobile-nav-mascot__speech">{currentDialogue.text}</span>
-          </div>
-
-          <div className="mobile-nav-mascot__actor">
-            <div className="mobile-nav-mascot__glow" aria-hidden="true" />
-            <img
-              src={currentSprite.src}
-              alt="CyberSentinel Mobile Guide"
-              className="mobile-nav-mascot__img"
-              draggable={false}
-            />
-            <div className="mobile-nav-mascot__badge">GUIDE</div>
-          </div>
-        </div>
+        {/* Jeevadharani's site mascot flies between these cards to guide visitors. */}
+        <MascotCityGuide />
       </div>
     </section>
   )

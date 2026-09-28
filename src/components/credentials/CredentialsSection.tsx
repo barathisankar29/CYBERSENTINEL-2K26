@@ -114,10 +114,10 @@ export function CredentialsSection() {
           </div>
         </div>
 
-        {/* 5. MEET OUR DESIGNERS */}
+        {/* 5. POSTER DESIGNERS */}
         <div id="designers" className="cred-group">
           <h3 className="cred-group-title cred-group-title--violet">
-            <span className="cred-group-title__slash">MEET OUR DESIGNERS</span>
+            <span className="cred-group-title__slash">POSTER DESIGNERS</span>
           </h3>
 
           <div className="crew-grid crew-grid--5">

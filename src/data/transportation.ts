@@ -77,7 +77,7 @@ export const transitRoutesData: TransitRoute[] = [
     badgeText: 'ONLINE // ACTIVE',
     accentColor: 'cyan',
     cardCost: '01',
-    image: '/assets/transportation/cyber-college-bus.jpg',
+    image: '/assets/transportation/cyber-college-bus.webp',
     origin: 'Avadi Terminal / Railway Station',
     destinationHighlight: 'Vel Tech High Tech Campus Gate',
     instructions:
@@ -101,7 +101,7 @@ export const transitRoutesData: TransitRoute[] = [
     badgeText: 'RAPID CORRIDOR',
     accentColor: 'magenta',
     cardCost: '02',
-    image: '/assets/transportation/cyber-mtc-bus.jpg',
+    image: '/assets/transportation/cyber-mtc-bus.webp',
     origin: 'Koyambedu (CMBT) / Poonamallee',
     destinationHighlight: 'Avadi & Vel Tech Junction',
     instructions:
@@ -125,7 +125,7 @@ export const transitRoutesData: TransitRoute[] = [
     badgeText: 'HIGH SPEED',
     accentColor: 'violet',
     cardCost: '03',
-    image: '/assets/transportation/cyber-express-bus.jpg',
+    image: '/assets/transportation/cyber-express-bus.webp',
     origin: 'Chennai Central (Moore Market) / Beach',
     destinationHighlight: 'Avadi Junction ➜ Campus Shuttle',
     instructions:

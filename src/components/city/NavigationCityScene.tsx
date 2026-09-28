@@ -1,13 +1,12 @@
-import { useRef, type CSSProperties } from 'react'
-import { PROGRESS_VAR } from '@/animation/progressCss'
-import { useScrollProgress } from '@/animation/scrollController'
+import { useCallback, useRef, useState } from 'react'
+import { useScrollProgressVar } from '@/animation/scrollController'
 import { useReducedMotion } from '@/animation/useReducedMotion'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { navigationBuildings } from '@/data/navigation'
 import { CityLayer } from './CityLayer'
 import { navigationCityEnvironmentLayers, NAVIGATION_REVEAL_PROGRESS } from './navigationCityEnvironment.config'
 import { Building } from './buildings/Building'
-import { BuildingMascotGuide } from './buildings/BuildingMascotGuide'
+import { MascotCityGuide } from '@/components/mascot'
 import { NavigationCityMobile } from './NavigationCityMobile'
 import { ProfileAccessBadge } from '@/components/ui/ProfileAccessBadge'
 import { RegisterNowButton } from '@/components/ui/RegisterNowButton'
@@ -54,15 +53,18 @@ export function NavigationCityScene() {
   const spacerRef = useRef<HTMLDivElement>(null)
   const isMobile = useIsMobile()
   const reducedMotion = useReducedMotion()
-  const { progress: scrollProgress } = useScrollProgress(spacerRef)
-  const progress = reducedMotion ? 1 : scrollProgress
-  const revealed = progress >= REVEAL_PROGRESS
+  // Scroll progress goes straight to the --scene-progress CSS variable (the
+  // background layers read it); React only hears about the one boolean it
+  // needs, so the six buildings are not re-rendered on every scroll frame.
+  const [revealed, setRevealed] = useState(reducedMotion)
+  const handleProgress = useCallback((value: number) => setRevealed(value >= REVEAL_PROGRESS), [])
+  useScrollProgressVar(spacerRef, { pinned: reducedMotion ? 1 : null, onProgress: handleProgress })
 
   // MOBILE — an entirely different container model from desktop: a
   // normal in-flow section sized by the nav image's own natural aspect
   // ratio (see NavigationCityMobile.tsx), NOT a pinned/sticky 100vh
   // viewport — that fixed-height model is what caused letterboxing when
-  // it was (wrongly) shared with mobile before. `useScrollProgress` above
+  // it was (wrongly) shared with mobile before. `useScrollProgressVar` above
   // still runs every render (rules of hooks) but safely no-ops here since
   // `spacerRef` never attaches to anything on this branch. Desktop below
   // is completely untouched by this early return.
@@ -75,8 +77,9 @@ export function NavigationCityScene() {
       ref={spacerRef}
       id="buildings"
       className="navigation-city-scene"
-      // CityLayer reads its motion from --scene-progress (see progressCss.ts).
-      style={{ height: `${SCROLL_VH}vh`, [PROGRESS_VAR]: progress } as CSSProperties}
+      // CityLayer reads its motion from --scene-progress (see progressCss.ts),
+      // written by useScrollProgressVar above.
+      style={{ height: `${SCROLL_VH}vh` }}
     >
       <div className="navigation-city-scene__viewport">
         {navigationCityEnvironmentLayers.map((layer) => (
@@ -87,6 +90,7 @@ export function NavigationCityScene() {
         <div className="navigation-city-scene__portal-mist" aria-hidden="true" />
         <div className="navigation-city-scene__grid-pattern" aria-hidden="true" />
         <div className="navigation-city-scene__atmosphere-blend" aria-hidden="true" />
+        <div className="navigation-city-scene__depth-veil" aria-hidden="true" />
         <ProfileAccessBadge />
         <RegisterNowButton />
         <div className="navigation-city-scene__buildings" style={{ zIndex: BUILDINGS_Z_INDEX }}>
@@ -94,7 +98,7 @@ export function NavigationCityScene() {
             <Building key={building.id} building={building} revealed={revealed} isMobile={isMobile} />
           ))}
         </div>
-        {revealed && <BuildingMascotGuide />}
+        {revealed && <MascotCityGuide />}
       </div>
     </section>
   )

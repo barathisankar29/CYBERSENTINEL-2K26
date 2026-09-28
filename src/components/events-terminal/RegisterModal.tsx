@@ -246,8 +246,11 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
     setModalState(null);
   };
 
+  // Every pack's checklist is selectable. Day passes keep their fixed day fee
+  // (the backend registers the whole day); the ticked events are what the
+  // visitor plans to play and are saved to their profile.
   const toggleEvent = (eventId: string) => {
-    if (!modalState || !PACK_CONFIGS[modalState.characterKey]?.isPerEventPricing) return;
+    if (!modalState) return;
     sound.playBlip();
     setModalState((prev) => {
       if (!prev) return null;
@@ -320,6 +323,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
           <div
             role="dialog"
             aria-modal="true"
+            data-mascot-hide
             aria-label="Choose your player"
             className="relative bg-black border-2 border-zinc-800 p-3 sm:p-5 retro-grid-bg w-full max-w-7xl mx-auto my-auto shadow-2xl flex flex-col gap-4"
             data-purpose="registration-terminal-chassis"
@@ -793,6 +797,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
           <div
             role="dialog"
             aria-modal="true"
+            data-mascot-hide
             aria-label={`${activeConfig.name} registration`}
             className="bg-black border-2 p-4 sm:p-6 max-w-xl w-full relative my-auto shadow-2xl flex flex-col animate-in fade-in zoom-in-95 duration-150"
             style={{
@@ -867,9 +872,6 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                       {modalState.selectedEventIds.length}/{activeConfig.events.length}
                     </span>
                   </div>
-                  {!activeConfig.isPerEventPricing ? (
-                    <span className="font-arcade text-[8px] sm:text-[9px] text-zinc-400">[ALL INCLUDED]</span>
-                  ) : (
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
@@ -886,8 +888,12 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                       [CLEAR]
                     </button>
                   </div>
-                  )}
                 </div>
+                {!activeConfig.isPerEventPricing && (
+                  <p className="font-pixel text-[10px] text-zinc-400 pt-1.5">
+                    The pass price covers every event on its day — tick the ones you&apos;ll play.
+                  </p>
+                )}
 
                 {/* Event Checkboxes List */}
                 <div className="my-3 space-y-1.5">
@@ -898,11 +904,9 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                         type="button"
                         key={ev.id}
                         onClick={() => toggleEvent(ev.id)}
-                        aria-pressed={isChecked}
-                        aria-disabled={!activeConfig.isPerEventPricing}
-                        className={`w-full text-left flex items-center justify-between p-2 border select-none transition-all ${
-                          activeConfig.isPerEventPricing ? 'cursor-pointer' : 'cursor-default'
-                        } ${
+                        role="checkbox"
+                        aria-checked={isChecked}
+                        className={`w-full text-left flex items-center justify-between p-2 border select-none transition-all cursor-pointer ${
                           isChecked
                             ? 'bg-zinc-950 text-white'
                             : 'bg-black/60 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300'

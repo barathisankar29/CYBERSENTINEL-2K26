@@ -98,14 +98,6 @@ export function MascotRouteWatcher() {
       return () => clearTimeout(timer)
     }
 
-    if (pathname === '/credentials') {
-      const timer = setTimeout(() => {
-        setMascotState('happy', 3500, 'Meet the architects behind CyberSentinel.', 'idle', false, 'high')
-        checkObstructionAndRelocate()
-      }, 450)
-      return () => clearTimeout(timer)
-    }
-
     if (pathname === '/transport' || pathname === '/transportation') {
       const timer = setTimeout(() => {
         setMascotState('guide', 3500, 'Check college bus routes and stops.', 'idle', false, 'high')
@@ -130,11 +122,28 @@ export function MascotRouteWatcher() {
   useEffect(() => {
     if (isTourActive || (location.pathname !== '/' && location.pathname !== '')) return
 
-    const handleScroll = () => {
+    // Read the "already shown" flags once, not on every scroll event, and do
+    // the (layout-reading) checks at most once per frame; the listener
+    // removes itself once both milestones have been shown.
+    const seen = (key: string) => {
+      try {
+        return localStorage.getItem(key) !== null
+      } catch {
+        return false
+      }
+    }
+    let introScrollSeen = seen(STORAGE_KEY_INTRO_SCROLL)
+    let cityIntroSeen = seen(STORAGE_KEY_CITY_INTRO)
+    if (introScrollSeen && cityIntroSeen) return
+    let frame: number | null = null
+
+    const check = () => {
+      frame = null
       const scrollY = window.scrollY || document.documentElement.scrollTop
 
       // Part 9: When user starts scrolling into the CyberSentinel world
-      if (scrollY > 100 && !localStorage.getItem(STORAGE_KEY_INTRO_SCROLL)) {
+      if (scrollY > 100 && !introScrollSeen) {
+        introScrollSeen = true
         try {
           localStorage.setItem(STORAGE_KEY_INTRO_SCROLL, 'true')
         } catch {
@@ -145,10 +154,11 @@ export function MascotRouteWatcher() {
       }
 
       // Part 10: When user finishes entering the city / buildings area
-      const buildingsEl = document.getElementById('buildings')
-      if (buildingsEl && !localStorage.getItem(STORAGE_KEY_CITY_INTRO)) {
+      const buildingsEl = cityIntroSeen ? null : document.getElementById('buildings')
+      if (buildingsEl) {
         const rect = buildingsEl.getBoundingClientRect()
         if (rect.top <= window.innerHeight * 0.7) {
+          cityIntroSeen = true
           try {
             localStorage.setItem(STORAGE_KEY_CITY_INTRO, 'true')
           } catch {
@@ -161,10 +171,19 @@ export function MascotRouteWatcher() {
           ], cityIntro.priority)
         }
       }
+
+      if (introScrollSeen && cityIntroSeen) window.removeEventListener('scroll', handleScroll)
+    }
+
+    const handleScroll = () => {
+      if (frame === null) frame = requestAnimationFrame(check)
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      if (frame !== null) cancelAnimationFrame(frame)
+    }
   }, [location.pathname, isTourActive, saySequence, setMascotState])
 
   return null

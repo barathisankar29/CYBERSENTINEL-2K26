@@ -13,17 +13,17 @@ export function CharacterPortrait({ character }: CharacterPortraitProps) {
   const id = character?.id || 'nico'
   const name = character?.name || 'NICO'
   const sideLines = character?.sideLines || ['SYSTEMS', 'PEOPLE', 'PATTERNS', 'SAME THING.']
-  const image = character?.image || '/assets/characters/Nico.png'
+  const image = character?.image || '/assets/characters/Nico.webp'
 
   const bottomTag = character?.bottomTagline
-  const crestImg = character?.crestImage || '/assets/characters/cyber-crest.png'
+  const crestImg = character?.crestImage || '/assets/characters/cyber-crest.webp'
   const bureauTag = character?.footerLeft || 'CYBERSENTINEL CITY // PUBLIC SECURITY BUREAU'
 
   return (
     <aside className={`profile-portrait profile-portrait--${id}`} aria-label={`${name} operative portrait`}>
       {/* Sci-Fi Cyber HUD Frame from reference design */}
       <img
-        src={`/assets/characters/card-frame-${id}.png`}
+        src={`/assets/characters/card-frame-${id}.webp`}
         alt=""
         className="profile-portrait__hud-frame"
         aria-hidden="true"

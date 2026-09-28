@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import type { MascotSpeech, MascotPosition } from '@/types/mascot'
+import type { MascotSpeech, MascotPosition, MascotBubblePlacement } from '@/types/mascot'
 import { getMascotDimensions } from './MascotPhysics'
 import './MascotSpeechBubble.css'
 
@@ -10,6 +10,8 @@ interface MascotSpeechBubbleProps {
   onClose: () => void
   isTourActive?: boolean
   onSkipTour?: () => void
+  /** Explicit side chosen by a guide; otherwise decided from the mascot's position. */
+  placement?: MascotBubblePlacement | null
 }
 
 export function MascotSpeechBubble({
@@ -19,14 +21,17 @@ export function MascotSpeechBubble({
   onClose,
   isTourActive,
   onSkipTour,
+  placement,
 }: MascotSpeechBubbleProps) {
   if (!speech) return null
 
   const { width: mascotW } = getMascotDimensions(isMobile)
 
   // Smart repositioning so bubble never goes off screen
-  const isRightHalf = typeof window !== 'undefined' && position.x > window.innerWidth / 2
-  const isNearTop = position.y < 180
+  const isRightHalf = placement
+    ? placement.side === 'left'
+    : typeof window !== 'undefined' && position.x > window.innerWidth / 2
+  const isNearTop = placement ? placement.vertical === 'below' : position.y < 180
 
   const style: CSSProperties = {}
 

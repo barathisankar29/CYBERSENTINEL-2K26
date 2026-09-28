@@ -81,6 +81,12 @@ export interface SavedMascotPosition {
   manuallyPlaced: boolean
 }
 
+/** Where the speech bubble sits relative to the mascot. */
+export interface MascotBubblePlacement {
+  side: 'left' | 'right'
+  vertical: 'above' | 'below'
+}
+
 export interface MascotSpeech {
   id: string
   text: string
@@ -157,4 +163,14 @@ export interface MascotContextType {
   skipTour: () => void
   tourSteps: MascotTourStep[]
   dispatchMascotEvent: (type: MascotEventType, payload?: Record<string, unknown>) => void
+  /** Which way the sprite faces; the pointing poses point right by default. */
+  facing: 'left' | 'right'
+  setFacing: (facing: 'left' | 'right') => void
+  /** Smoothly fly to a spot chosen by a guide, without saving it as the visitor's own spot. */
+  guideTo: (pos: MascotPosition) => void
+  /** While a guide is steering the mascot, pause auto-relocation and idle sleep. */
+  setGuideActive: (active: boolean) => void
+  /** Guide-chosen bubble side (so it stays off buildings); null = automatic. */
+  bubblePlacement: MascotBubblePlacement | null
+  setBubblePlacement: (placement: MascotBubblePlacement | null) => void
 }

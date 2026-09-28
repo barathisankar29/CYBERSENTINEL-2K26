@@ -25,7 +25,7 @@ export const characterProfiles: Record<string, CharacterConfig> = {
     gender: 'MALE',
     image: '/assets/characters/Nico.webp',
     shortImage: '/assets/characters/short_nico.webp',
-    crestImage: '/assets/characters/nico-crest.png',
+    crestImage: '/assets/characters/nico-crest.webp',
     cityImage: '/assets/characters/dossier-city.png',
     terminalImage: '/assets/characters/dossier-terminal.png',
     theme: {
@@ -63,7 +63,7 @@ export const characterProfiles: Record<string, CharacterConfig> = {
     gender: 'FEMALE',
     image: '/assets/characters/Ruelle.webp',
     shortImage: '/assets/characters/short_ruelle.webp',
-    crestImage: '/assets/characters/ruelle-crest-new.png',
+    crestImage: '/assets/characters/ruelle-crest-new.webp',
     cityImage: '/assets/characters/ruelle-city.png',
     terminalImage: '/assets/characters/ruelle-terminal.png',
     theme: {
@@ -101,7 +101,7 @@ export const characterProfiles: Record<string, CharacterConfig> = {
     gender: 'MALE',
     image: '/assets/characters/Dr_Dacre.webp',
     shortImage: '/assets/characters/short_dr_dacre.webp',
-    crestImage: '/assets/characters/dacre-crest-new.png',
+    crestImage: '/assets/characters/dacre-crest-new.webp',
     cityImage: '/assets/characters/dacre-city.png',
     terminalImage: '/assets/characters/dacre-terminal.png',
     theme: {
@@ -140,7 +140,7 @@ export const characterProfiles: Record<string, CharacterConfig> = {
     gender: 'FEMALE',
     image: '/assets/characters/Cosma.webp',
     shortImage: '/assets/characters/short_cosma.webp',
-    crestImage: '/assets/characters/cosma-crest.png',
+    crestImage: '/assets/characters/cosma-crest.webp',
     cityImage: '/assets/characters/cosma-city.png',
     terminalImage: '/assets/characters/cosma-terminal.png',
     theme: {

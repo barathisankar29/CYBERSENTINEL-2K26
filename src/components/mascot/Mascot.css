@@ -1,4 +1,10 @@
 /* Cybersentinel Mascot / Pet Container */
+/* Step aside while a popup that needs every tap is open (the registration
+   pack pickers), so the mascot and its bubble never cover their buttons. */
+body:has([data-mascot-hide]) .mascot-system-layer {
+  display: none;
+}
+
 .mascot-system-layer {
   position: fixed;
   inset: 0;
@@ -76,6 +82,12 @@
 }
 
 /* Drag reaction: subtle tilt and glow */
+/* Mirror the sprite so pointing poses point left (independent `scale`,
+   so it composes with the transform-based drag/land effects). */
+.mascot-pet--face-left .mascot-pet__image {
+  scale: -1 1;
+}
+
 .mascot-pet--dragging .mascot-pet__image {
   transform: scale(1.06) rotate(-3deg);
   filter: drop-shadow(0 6px 18px rgba(255, 62, 165, 0.6)) drop-shadow(0 0 20px rgba(34, 211, 238, 0.5));
