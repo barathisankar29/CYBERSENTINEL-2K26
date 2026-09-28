@@ -142,7 +142,7 @@ export function AboutSection() {
                   <div className="emblem-orb__pulse emblem-orb__pulse--magenta" />
                   <img
                     src={cyberSentinelData.shieldSrc}
-                    alt="CyberSentinel Shield"
+                    alt="CyberSentinel 2K26 logo"
                     className="emblem-orb__image emblem-orb__image--shield"
                     width={180}
                     height={180}

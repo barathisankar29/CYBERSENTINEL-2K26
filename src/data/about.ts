@@ -48,7 +48,7 @@ export const cyberSentinelData = {
     { label: 'EVENTS', value: 'TECH & NON-TECH' },
   ] as StatItem[],
   logoSrc: '/assets/branding/cybersentinel-logo.webp',
-  shieldSrc: '/assets/about/cybersentinel-shield.png',
+  shieldSrc: '/assets/about/cybersentinel-logo-2k26.webp',
 }
 
 export const hackathonClubData = {
