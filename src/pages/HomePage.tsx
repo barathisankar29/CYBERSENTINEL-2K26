@@ -17,8 +17,9 @@ type IntroStage = 'intro' | 'transition' | 'completed'
 // Credentials, Timeline, Transport, Events, Contact) — those sections are
 // never stacked below the buildings on the home page.
 //
-// The intro runs intro -> transition -> completed; repeat visits in the
-// same tab skip to the transition (utils/introSession.ts).
+// The intro runs intro -> transition -> completed on every visit (each
+// fresh load or reload); coming back to home from another page within the
+// same load skips to the transition (utils/introSession.ts).
 //
 // Arriving on `/#buildings` skips the intro and lands on the buildings
 // (ScrollManager handles the scroll app-wide). Coming BACK with the browser/phone

@@ -96,27 +96,8 @@ export const coConvenorsData: CredentialMember[] = [
 /**
  * Student Coordinators
  */
+// Display order is the committee hierarchy.
 export const studentCoordinatorsData: CredentialMember[] = [
-  {
-    id: 'neha-m',
-    name: 'NEHA M',
-    role: 'Joint Secretary // Student Coordinator',
-    phone: '+91 7358901292',
-    image: '/assets/credentials/student_neha_m.webp',
-    instagram: 'https://www.instagram.com/nehamohandass/',
-    linkedin: 'https://www.linkedin.com/in/neha-mohandass-81944a32a/',
-    accentColor: 'pink',
-  },
-  {
-    id: 'akshaya-m',
-    name: 'AKSHAYA M',
-    role: 'Treasury // Student Coordinator',
-    phone: '+91 9940888882',
-    image: '/assets/credentials/student_akshaya_m.webp',
-    instagram: 'https://www.instagram.com/akshaya_mhaa/',
-    linkedin: 'https://www.linkedin.com/in/akshaya-mhaa/',
-    accentColor: 'pink',
-  },
   {
     id: 'devanand-v',
     name: 'DEVANAND V',
@@ -126,16 +107,6 @@ export const studentCoordinatorsData: CredentialMember[] = [
     instagram: 'https://www.instagram.com/yeah.deva.here/',
     linkedin: 'https://www.linkedin.com/in/devanand100606-v/',
     accentColor: 'pink',
-  },
-  {
-    id: 'hari-ganesh-t',
-    name: 'HARI GANESH T',
-    role: 'Joint Secretary // Student Coordinator',
-    phone: '+91 8015348845',
-    image: '/assets/credentials/student_hari_ganesh_t.webp',
-    instagram: 'https://www.instagram.com/its_hxri07_offl_/',
-    linkedin: 'https://www.linkedin.com/in/hari-ganesh-t/',
-    accentColor: 'orange',
   },
   {
     id: 'nihitha',
@@ -148,13 +119,13 @@ export const studentCoordinatorsData: CredentialMember[] = [
     accentColor: 'green',
   },
   {
-    id: 'rishikesh',
-    name: 'RISHIKESH',
+    id: 'akshaya-m',
+    name: 'AKSHAYA M',
     role: 'Treasury // Student Coordinator',
-    phone: '+91 8778286011',
-    image: '/assets/credentials/student_rishikesh.webp',
-    instagram: 'https://www.instagram.com/_.rishikx._/',
-    linkedin: 'https://www.linkedin.com/in/rishikesh-r02/',
+    phone: '+91 9940888882',
+    image: '/assets/credentials/student_akshaya_m.webp',
+    instagram: 'https://www.instagram.com/akshaya_mhaa/',
+    linkedin: 'https://www.linkedin.com/in/akshaya-mhaa/',
     accentColor: 'pink',
   },
   {
@@ -166,6 +137,36 @@ export const studentCoordinatorsData: CredentialMember[] = [
     instagram: 'https://www.instagram.com/mr_prathish_005/',
     linkedin: 'https://www.linkedin.com/in/prathish-m-87094b354/',
     accentColor: 'green',
+  },
+  {
+    id: 'hari-ganesh-t',
+    name: 'HARI GANESH T',
+    role: 'Joint Secretary // Student Coordinator',
+    phone: '+91 8015348845',
+    image: '/assets/credentials/student_hari_ganesh_t.webp',
+    instagram: 'https://www.instagram.com/its_hxri07_offl_/',
+    linkedin: 'https://www.linkedin.com/in/hari-ganesh-t/',
+    accentColor: 'orange',
+  },
+  {
+    id: 'neha-m',
+    name: 'NEHA M',
+    role: 'Joint Secretary // Student Coordinator',
+    phone: '+91 7358901292',
+    image: '/assets/credentials/student_neha_m.webp',
+    instagram: 'https://www.instagram.com/nehamohandass/',
+    linkedin: 'https://www.linkedin.com/in/neha-mohandass-81944a32a/',
+    accentColor: 'pink',
+  },
+  {
+    id: 'rishikesh',
+    name: 'RISHIKESH',
+    role: 'Treasury // Student Coordinator',
+    phone: '+91 8778286011',
+    image: '/assets/credentials/student_rishikesh.webp',
+    instagram: 'https://www.instagram.com/_.rishikx._/',
+    linkedin: 'https://www.linkedin.com/in/rishikesh-r02/',
+    accentColor: 'pink',
   },
 ]
 

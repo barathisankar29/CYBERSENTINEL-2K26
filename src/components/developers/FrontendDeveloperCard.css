@@ -27,7 +27,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 @media (min-width: 640px) {
@@ -44,9 +43,6 @@
   }
 }
 
-.frontend-dev-card__img-container:hover {
-  transform: scale(1.03) translateY(-4px);
-}
 
 .frontend-dev-card__img {
   width: 100%;
@@ -126,45 +122,29 @@
   align-items: center;
   justify-content: center;
   padding: 0.25rem;
-  transition: transform 0.2s ease, filter 0.2s ease;
   cursor: pointer;
   text-decoration: none;
 }
 
-.frontend-dev-card__social-link:hover {
-  transform: scale(1.18);
-}
 
-.frontend-dev-card__social-link:active {
-  transform: scale(0.95);
-}
 
 .frontend-dev-card__social-link--linkedin {
   color: #0a66c2;
   filter: drop-shadow(0 2px 8px rgba(10, 102, 194, 0.6));
 }
 
-.frontend-dev-card__social-link--linkedin:hover {
-  filter: drop-shadow(0 0 16px rgba(56, 189, 248, 0.9));
-}
 
 .frontend-dev-card__social-link--github {
   color: #ffffff;
   filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.4));
 }
 
-.frontend-dev-card__social-link--github:hover {
-  filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.85));
-}
 
 .frontend-dev-card__social-link--instagram {
   color: #e1306c;
   filter: drop-shadow(0 2px 8px rgba(225, 48, 108, 0.6));
 }
 
-.frontend-dev-card__social-link--instagram:hover {
-  filter: drop-shadow(0 0 16px rgba(255, 62, 165, 0.9));
-}
 
 .frontend-dev-card__social-svg {
   width: 2rem;

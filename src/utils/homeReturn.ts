@@ -5,12 +5,12 @@
  *
  * Two signals:
  * - Router state `{ returnTo: 'city' }` on in-app back links (CITY_RETURN_STATE).
- * - A sessionStorage flag set whenever the home page is left, so the
+ * - An in-memory flag set whenever the home page is left, so the
  *   browser/phone Back button (a POP navigation, which carries no state
- *   from our links) lands on the buildings too. Per-tab, so a fresh tab
- *   still gets the full hero.
+ *   from our links) lands on the buildings too. In memory (not storage) so
+ *   a fresh visit or reload always starts from the intro and hero.
  */
-const LEFT_HOME_KEY = 'cybersentinel_left_home'
+let leftHomeThisLoad = false
 
 export const CITY_RETURN_STATE = { returnTo: 'city' } as const
 
@@ -19,25 +19,13 @@ export function isCityReturnState(state: unknown): boolean {
 }
 
 export function markLeftHome(): void {
-  try {
-    sessionStorage.setItem(LEFT_HOME_KEY, '1')
-  } catch {
-    // Storage unavailable — Back simply lands on the hero.
-  }
+  leftHomeThisLoad = true
 }
 
 export function hasLeftHome(): boolean {
-  try {
-    return sessionStorage.getItem(LEFT_HOME_KEY) === '1'
-  } catch {
-    return false
-  }
+  return leftHomeThisLoad
 }
 
 export function clearLeftHome(): void {
-  try {
-    sessionStorage.removeItem(LEFT_HOME_KEY)
-  } catch {
-    // Ignore
-  }
+  leftHomeThisLoad = false
 }

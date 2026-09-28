@@ -1,4 +1,4 @@
-import React, { useRef, useState, type CSSProperties } from 'react'
+import React, { type CSSProperties } from 'react'
 import type { DeveloperMember } from '@/data/developers'
 import './DeveloperGlitchCard.css'
 
@@ -13,23 +13,6 @@ export const DeveloperGlitchCard: React.FC<DeveloperGlitchCardProps> = ({
   isActive = false,
   onClick,
 }) => {
-  const cardRef = useRef<HTMLDivElement>(null)
-  const [tilt, setTilt] = useState({ x: 0, y: 0 })
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current || !isActive) return
-    const rect = cardRef.current.getBoundingClientRect()
-    const x = e.clientX - rect.left - rect.width / 2
-    const y = e.clientY - rect.top - rect.height / 2
-    const tiltX = (y / (rect.height / 2)) * -5
-    const tiltY = (x / (rect.width / 2)) * 5
-    setTilt({ x: tiltX, y: tiltY })
-  }
-
-  const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0 })
-  }
-
   const themeVars = {
     '--dev-accent': developer.accentHex,
     '--dev-secondary': developer.secondaryHex,
@@ -38,15 +21,8 @@ export const DeveloperGlitchCard: React.FC<DeveloperGlitchCardProps> = ({
 
   return (
     <div
-      ref={cardRef}
       className={`dev-card dev-card--${developer.themeColor} ${isActive ? 'is-active' : ''}`}
-      style={{
-        ...themeVars,
-        transform:
-          isActive && (tilt.x !== 0 || tilt.y !== 0)
-            ? `perspective(800px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`
-            : undefined,
-      }}
+      style={themeVars}
       onClick={onClick}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -54,8 +30,6 @@ export const DeveloperGlitchCard: React.FC<DeveloperGlitchCardProps> = ({
           onClick?.()
         }
       }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
       role="button"
       tabIndex={0}
       aria-label={`${developer.name} - ${developer.role}`}

@@ -21,17 +21,13 @@
     0 0 25px color-mix(in srgb, var(--dev-accent, #00f0ff) 20%, transparent);
   cursor: pointer;
   user-select: none;
-  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
-              box-shadow 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
-              border-color 0.35s ease;
   overflow: hidden;
   box-sizing: border-box;
 }
 
-.dev-card.is-active,
-.dev-card:hover {
+.dev-card.is-active {
   border-color: color-mix(in srgb, var(--dev-accent, #00f0ff) 80%, transparent);
-  box-shadow: 
+  box-shadow:
     0 20px 50px rgba(0, 0, 0, 0.9),
     0 0 32px color-mix(in srgb, var(--dev-accent, #00f0ff) 60%, transparent),
     0 0 55px color-mix(in srgb, var(--dev-secondary, #7c3aed) 40%, transparent);
@@ -46,12 +42,10 @@
   border: 1px dashed color-mix(in srgb, var(--dev-accent, #00f0ff) 35%, transparent);
   border-radius: 14px;
   pointer-events: none;
-  transition: border-color 0.3s ease;
   z-index: 1;
 }
 
-.dev-card.is-active .dev-card__stitch-frame,
-.dev-card:hover .dev-card__stitch-frame {
+.dev-card.is-active .dev-card__stitch-frame {
   border-color: color-mix(in srgb, var(--dev-accent, #00f0ff) 70%, transparent);
 }
 
@@ -182,15 +176,7 @@
   transform: translateX(-50%) rotate(32deg);
 }
 
-.dev-card:hover .dev-card__burst-ray,
-.dev-card.is-active .dev-card__burst-ray {
-  animation: devSparkPulse 1.8s ease-in-out infinite alternate;
-}
 
-@keyframes devSparkPulse {
-  0% { transform: translateX(-50%) scaleY(1); opacity: 0.8; }
-  100% { transform: translateX(-50%) scaleY(1.25); opacity: 1; }
-}
 
 /* ==========================================================================
    DEVELOPER AVATAR CUTOUT
@@ -211,14 +197,9 @@
   max-width: 95%;
   object-fit: contain;
   filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.85));
-  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
   pointer-events: none;
 }
 
-.dev-card:hover .dev-card__avatar-img,
-.dev-card.is-active .dev-card__avatar-img {
-  transform: scale(1.05) translateY(-3px);
-}
 
 /* ==========================================================================
    HORIZONTAL SPEED & GLITCH SLICE BARS
@@ -239,7 +220,6 @@
   position: relative;
   border-radius: 2px;
   box-shadow: 0 0 8px var(--dev-accent, #00f0ff);
-  transition: transform 0.25s ease;
 }
 
 .dev-card__slice--1 {
@@ -286,16 +266,7 @@
   background: linear-gradient(270deg, #ffffff, var(--dev-secondary, #7c3aed));
 }
 
-.dev-card:hover .dev-card__slice,
-.dev-card.is-active .dev-card__slice {
-  animation: devSliceJitter 2s infinite ease-in-out;
-}
 
-@keyframes devSliceJitter {
-  0%, 100% { transform: translateX(0); opacity: 1; }
-  35% { transform: translateX(2px) scaleX(1.04); opacity: 0.9; }
-  68% { transform: translateX(-2px) scaleX(0.97); opacity: 0.8; }
-}
 
 /* ==========================================================================
    DEVELOPER INFO FOOTER WITH DESCRIPTION & SOCIALS
@@ -365,25 +336,10 @@
   border: 1.5px solid rgba(255, 255, 255, 0.2);
   color: #ffffff;
   text-decoration: none;
-  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
-.dev-card__social-link--linkedin:hover {
-  background: rgba(10, 102, 194, 0.3);
-  border-color: #0a66c2;
-  color: #38bdf8;
-  transform: translateY(-2px) scale(1.15);
-  box-shadow: 0 0 16px rgba(10, 102, 194, 0.85);
-}
 
-.dev-card__social-link--insta:hover {
-  background: rgba(225, 48, 108, 0.3);
-  border-color: #e1306c;
-  color: #ff5483;
-  transform: translateY(-2px) scale(1.15);
-  box-shadow: 0 0 16px rgba(225, 48, 108, 0.85);
-}
 
 
 
