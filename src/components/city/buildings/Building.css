@@ -350,8 +350,7 @@
 }
 
 .nav-building:hover .nav-building__card-glass,
-.nav-building:focus-visible .nav-building__card-glass,
-.nav-building[data-mascot-pointing] .nav-building__card-glass {
+.nav-building:focus-visible .nav-building__card-glass {
   border-color: color-mix(in srgb, white 42%, transparent);
   filter: brightness(1.14) saturate(1.12);
   box-shadow:
@@ -365,8 +364,7 @@
 }
 
 .nav-building:hover .nav-building__card-aura,
-.nav-building:focus-visible .nav-building__card-aura,
-.nav-building[data-mascot-pointing] .nav-building__card-aura {
+.nav-building:focus-visible .nav-building__card-aura {
   opacity: 1;
   filter: blur(16px);
 }

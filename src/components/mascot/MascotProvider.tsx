@@ -77,7 +77,8 @@ const TOUR_STEPS: MascotTourStep[] = [
 export function MascotProvider({ children }: { children: ReactNode }) {
   const isMobile = useIsMobile()
   const onMascotRoute = isMascotRoute(useLocation().pathname)
-  // Shown only while the buildings section is on screen (MascotCityGuide).
+  // Only true when something reports the mascot's section is on screen —
+  // nothing does now (the mascot is not shown on any page), so it stays idle.
   const [cityVisible, setCityVisible] = useState(false)
   const enabled = onMascotRoute && cityVisible
   const [state, setStateInternal] = useState<MascotState>('idle')

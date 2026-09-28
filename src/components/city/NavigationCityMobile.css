@@ -207,8 +207,7 @@
 
 .mobile-nav-item:has(.mobile-nav-card:hover) .mobile-nav-item__glow,
 .mobile-nav-item:has(.mobile-nav-card:focus-visible) .mobile-nav-item__glow,
-.mobile-nav-item:has(.mobile-nav-card:active) .mobile-nav-item__glow,
-.mobile-nav-item:has(.mobile-nav-card[data-mascot-pointing]) .mobile-nav-item__glow {
+.mobile-nav-item:has(.mobile-nav-card:active) .mobile-nav-item__glow {
   opacity: 1;
 }
 
@@ -426,16 +425,14 @@
 
 /* Touch / focus / active — brief, responsive, no cinematic easing. */
 .mobile-nav-card:active .mobile-nav-card__glass,
-.mobile-nav-card:focus-visible .mobile-nav-card__glass,
-.mobile-nav-card[data-mascot-pointing] .mobile-nav-card__glass {
+.mobile-nav-card:focus-visible .mobile-nav-card__glass {
   border-color: color-mix(in srgb, white 42%, transparent);
   filter: brightness(1.22) saturate(1.15);
   transition-duration: 90ms;
 }
 
 .mobile-nav-card:active .mobile-nav-card__aura,
-.mobile-nav-card:focus-visible .mobile-nav-card__aura,
-.mobile-nav-card[data-mascot-pointing] .mobile-nav-card__aura {
+.mobile-nav-card:focus-visible .mobile-nav-card__aura {
   opacity: 1;
   transition-duration: 90ms;
 }

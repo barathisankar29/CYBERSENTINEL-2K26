@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { navigationBuildings } from '@/data/navigation'
 import { mobileNavigationLayout } from '@/data/navigationMobile'
 import { ProfileAccessBadge } from '@/components/ui/ProfileAccessBadge'
-import { useMascot, MascotCityGuide } from '@/components/mascot'
+import { useMascot } from '@/components/mascot'
 import './NavigationCityMobile.css'
 
 const BG_SRC = '/assets/city/navigation/navigation-mobile.webp'
@@ -76,7 +76,6 @@ export function NavigationCityMobile() {
               <span
                 className="mobile-nav-item__glow"
                 aria-hidden="true"
-                data-building-glow={building.id}
                 style={
                   {
                     left: `${layout.target.x}%`,
@@ -130,8 +129,6 @@ export function NavigationCityMobile() {
           )
         })}
 
-        {/* Jeevadharani's site mascot guides visitors around these buildings. */}
-        <MascotCityGuide />
       </div>
     </section>
   )
