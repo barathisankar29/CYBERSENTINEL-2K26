@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import type { FrontendDeveloperMember } from '@/data/developers'
-import { MASCOT_SPRITES, type MascotExpression } from '@/data/mascot'
 import { FrontendDeveloperCard } from './FrontendDeveloperCard'
 import './DeveloperMascotPushCarousel.css'
 
@@ -8,7 +7,7 @@ interface DeveloperMascotPushCarouselProps {
   developers: FrontendDeveloperMember[]
 }
 
-// Each developer card stays up 7s before the mascot pushes the next one in.
+// Each developer card stays up 7s before the next one is pushed in.
 const HOLD_DURATION_MS = 7000
 const PUSH_ANIMATION_MS = 750
 
@@ -18,10 +17,6 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
   const [isPushing, setIsPushing] = useState(false)
   const [pushDirection, setPushDirection] = useState<'next' | 'prev'>('next')
   const [isPaused, setIsPaused] = useState(false)
-  // Hold progress lives in a ref (updated every frame); React only re-renders
-  // when the mascot's pose phase changes: 0 = just landed (<25%), 1 = idle,
-  // 2 = winding up for the next push (>85%).
-  const [phase, setPhase] = useState<0 | 1 | 2>(0)
   const [touchStartX, setTouchStartX] = useState<number | null>(null)
 
   const [isOffscreen, setIsOffscreen] = useState(true)
@@ -29,7 +24,8 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
   const pushTimeoutRef = useRef<number | null>(null)
   const timerRef = useRef<number | null>(null)
   const startTimeRef = useRef<number>(Date.now())
-  const progressRef = useRef(0)
+  /** How much of the current card's hold has elapsed (kept across hover pauses). */
+  const elapsedRef = useRef(0)
   const total = developers.length
 
   // The first developer (Barathi) is always the one showing when the carousel
@@ -49,8 +45,7 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
       setActiveIndex(0)
       setIncomingIndex(null)
       setIsPushing(false)
-      progressRef.current = 0
-      setPhase(0)
+      elapsedRef.current = 0
     })
     observer.observe(el)
     return () => observer.disconnect()
@@ -66,8 +61,7 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
       setIncomingIndex(normalizedTarget)
       setPushDirection(direction)
       setIsPushing(true)
-      progressRef.current = 0
-      setPhase(0)
+      elapsedRef.current = 0
 
       // Transition completes
       pushTimeoutRef.current = window.setTimeout(() => {
@@ -102,45 +96,19 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [pushPrev, pushNext])
 
-  // Timer loop for auto-push. The start time is only re-derived when the
-  // timer (re)starts — not on every progress update — so the hold lasts
-  // exactly HOLD_DURATION_MS instead of losing a frame per tick.
+  // Auto-advance: one timeout for the rest of this card's hold — no
+  // per-frame work. Hovering pauses it and it resumes where it left off.
   useEffect(() => {
     if (isPaused || isOffscreen || isPushing) return
 
-    startTimeRef.current = Date.now() - (progressRef.current / 100) * HOLD_DURATION_MS
-
-    const tick = () => {
-      const elapsed = Date.now() - startTimeRef.current
-      const pct = Math.min((elapsed / HOLD_DURATION_MS) * 100, 100)
-      progressRef.current = pct
-      setPhase(pct > 85 ? 2 : pct < 25 ? 0 : 1)
-
-      if (pct >= 100) {
-        pushNext()
-      } else {
-        timerRef.current = requestAnimationFrame(tick)
-      }
-    }
-
-    timerRef.current = requestAnimationFrame(tick)
+    startTimeRef.current = Date.now()
+    timerRef.current = window.setTimeout(pushNext, Math.max(HOLD_DURATION_MS - elapsedRef.current, 0))
 
     return () => {
-      if (timerRef.current) cancelAnimationFrame(timerRef.current)
+      if (timerRef.current !== null) window.clearTimeout(timerRef.current)
+      elapsedRef.current += Date.now() - startTimeRef.current
     }
   }, [isPaused, isOffscreen, isPushing, pushNext])
-
-  // Choose mascot pose based on state
-  let mascotPose: MascotExpression = 'float'
-  if (isPushing) {
-    mascotPose = pushDirection === 'next' ? 'dash2' : 'fly'
-  } else if (phase === 2) {
-    mascotPose = 'dash1' // Leaning into push position anticipation!
-  } else if (phase === 0) {
-    mascotPose = 'cheer' // Celebrating after landing new card!
-  } else {
-    mascotPose = activeIndex % 2 === 0 ? 'wave' : 'happy'
-  }
 
   const activeDev = developers[activeIndex]
   const incomingDev = incomingIndex !== null ? developers[incomingIndex] : null
@@ -209,34 +177,6 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
 
         {/* Active Developer Card Container */}
         <div className="mascot-carousel__card-wrapper">
-          {/* Animated Mascot Pusher Actor anchored directly to card shoulder */}
-          <div
-            className={`mascot-pusher ${isPushing ? `is-pushing is-pushing--${pushDirection}` : 'is-hovering'}`}
-            aria-hidden="true"
-          >
-            {/* Cyber Thruster Flame / Particle Trails */}
-            <div className="mascot-pusher__thruster" />
-
-            {/* Mascot Speech Callout */}
-            <div className="mascot-pusher__callout">
-              <span className="mascot-pusher__callout-dot" />
-              <span className="mascot-pusher__callout-msg">
-                {isPushing
-                  ? 'PUSHING NEW OPERATIVE! 🚀'
-                  : `MEET ${activeDev.name.split(' ')[0]}! ✨`}
-              </span>
-            </div>
-
-            {/* Mascot Image Sprite */}
-            <img
-              src={MASCOT_SPRITES[mascotPose].src}
-              alt="Mascot Pusher"
-              className="mascot-pusher__sprite"
-            />
-
-            {/* Push Energy Impact Rings */}
-            {isPushing && <div className="mascot-pusher__shockwave" />}
-          </div>
 
           {/* Exiting Card and Incoming Card during Push Animation */}
           {isPushing && incomingDev ? (

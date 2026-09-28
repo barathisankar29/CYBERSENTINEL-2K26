@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { useInView } from '@/hooks/useInView'
 import type { DeveloperMember } from '@/data/developers'
 import { DeveloperGlitchCard } from './DeveloperGlitchCard'
 import './Developer3DCarousel.css'
@@ -15,6 +16,8 @@ export const Developer3DCarousel: React.FC<Developer3DCarouselProps> = ({ develo
   const [isMobile, setIsMobile] = useState(false)
 
   const stageRef = useRef<HTMLDivElement>(null)
+  // Auto-rotate only while on screen.
+  const inView = useInView(stageRef)
   const dragStartX = useRef<number>(0)
   const dragStartAngle = useRef<number>(0)
   const currentAngleRef = useRef<number>(0)
@@ -61,12 +64,12 @@ export const Developer3DCarousel: React.FC<Developer3DCarouselProps> = ({ develo
 
   // Auto-rotation timer (3s delay, pauses on hover or active user drag)
   useEffect(() => {
-    if (isPaused || isDragging) return
+    if (isPaused || isDragging || !inView) return
     const timer = setInterval(() => {
       nextSlide()
     }, 3000)
     return () => clearInterval(timer)
-  }, [isPaused, isDragging, nextSlide])
+  }, [isPaused, isDragging, inView, nextSlide])
 
 
   // Keyboard navigation when hovered

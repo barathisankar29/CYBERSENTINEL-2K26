@@ -123,6 +123,10 @@ export type MascotEventType =
   | 'MASCOT_CLICK_BUILDING'
 
 export interface MascotContextType {
+  /** True only while the mascot is on screen: its page (mascotRoutes.ts) with the buildings in view. */
+  enabled: boolean
+  /** The city guide reports whether the buildings section is on screen. */
+  setCityVisible: (visible: boolean) => void
   state: MascotState
   setMascotState: (
     nextState: MascotState,

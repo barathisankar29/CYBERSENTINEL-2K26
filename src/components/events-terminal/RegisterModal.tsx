@@ -186,6 +186,15 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, modalState, onClose]);
 
+  // Keep the site mascot out of the way while a pack popup is open. An
+  // attribute on <html> (not a body:has() rule, which re-checks the whole
+  // page on every style change).
+  useEffect(() => {
+    if (!isOpen) return;
+    document.documentElement.setAttribute('data-mascot-hidden', '');
+    return () => document.documentElement.removeAttribute('data-mascot-hidden');
+  }, [isOpen]);
+
   // Lock body scroll to prevent duplicate background scrollbars
   useEffect(() => {
     if (isOpen) {
@@ -323,7 +332,6 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
           <div
             role="dialog"
             aria-modal="true"
-            data-mascot-hide
             aria-label="Choose your player"
             className="relative bg-black border-2 border-zinc-800 p-3 sm:p-5 retro-grid-bg w-full max-w-7xl mx-auto my-auto shadow-2xl flex flex-col gap-4"
             data-purpose="registration-terminal-chassis"
@@ -797,7 +805,6 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
           <div
             role="dialog"
             aria-modal="true"
-            data-mascot-hide
             aria-label={`${activeConfig.name} registration`}
             className="bg-black border-2 p-4 sm:p-6 max-w-xl w-full relative my-auto shadow-2xl flex flex-col animate-in fade-in zoom-in-95 duration-150"
             style={{

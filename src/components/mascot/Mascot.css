@@ -1,7 +1,7 @@
 /* Cybersentinel Mascot / Pet Container */
 /* Step aside while a popup that needs every tap is open (the registration
    pack pickers), so the mascot and its bubble never cover their buttons. */
-body:has([data-mascot-hide]) .mascot-system-layer {
+html[data-mascot-hidden] .mascot-system-layer {
   display: none;
 }
 

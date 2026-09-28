@@ -130,7 +130,7 @@ export function NavigationCityMobile() {
           )
         })}
 
-        {/* Jeevadharani's site mascot flies between these cards to guide visitors. */}
+        {/* Jeevadharani's site mascot guides visitors around these buildings. */}
         <MascotCityGuide />
       </div>
     </section>

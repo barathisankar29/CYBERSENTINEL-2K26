@@ -12,7 +12,8 @@ const MOBILE_STEP_MS = 2600
 /** Long enough for the page-load welcome line to show before the tour takes over. */
 const START_DELAY_MS = 1800
 const GAP = 8
-const GRID_STEP = 16
+// Coarse on purpose: a spot search is a few hundred checks, not thousands.
+const GRID_STEP = 32
 /** Half-width of a mobile building's painted tower around its glow point. */
 const MOBILE_BUILDING_HALF_W = 45
 /** How far a mobile building's painted base reaches below its glow point. */
@@ -222,11 +223,10 @@ function chooseSpot(
 }
 
 /**
- * City tour for the site mascot (Jeevadharani's companion): once the
- * buildings are on screen it flies from building to building, pointing at
- * each one and telling the visitor what it is. Hands the mascot back to
- * its previous spot when the buildings leave the screen, and stops for
- * good the moment the visitor drags the mascot themselves.
+ * City tour for the site mascot (Jeevadharani's companion), which appears
+ * only on the buildings section: it shows while the buildings are on screen
+ * (and hides when they leave), flies from building to building pointing at
+ * each one, and stops touring for good the moment the visitor drags it.
  */
 export function MascotCityGuide() {
   const mascot = useMascot()
@@ -249,7 +249,7 @@ export function MascotCityGuide() {
     let touring = false
     let order: string[] = []
     let step = 0
-    let homePos: { x: number; y: number } | null = null
+    let active = false
     let stepTimer: number | null = null
     let settleTimer: number | null = null
     let hovering = false
@@ -376,6 +376,8 @@ export function MascotCityGuide() {
     }
 
     const start = () => {
+      active = true
+      mascotRef.current.setCityVisible(true)
       if (userTookOverRef.current) return
       const targets = readTargets().filter((t) => fullyVisible(t.card))
       if (targets.length === 0) return
@@ -386,35 +388,31 @@ export function MascotCityGuide() {
       introDone = false
       introSpoken = false
       touring = true
-      homePos = { ...mascotRef.current.position }
       mascotRef.current.setGuideActive(true)
       stepTimer = window.setTimeout(runStep, START_DELAY_MS)
     }
 
     const stop = () => {
-      const wasActive = homePos !== null
       touring = false
       clearTimers()
       highlight(null)
-      if (!wasActive) return
+      if (!active) return
+      active = false
       const m = mascotRef.current
       m.setGuideActive(false)
-      if (homePos && !userTookOverRef.current) {
-        m.dismissSpeech()
-        m.guideTo(homePos)
-      }
-      homePos = null
+      m.dismissSpeech()
+      m.setCityVisible(false)
     }
 
-    // Re-check after scrolling settles: start when the buildings are on screen,
-    // hand back when they leave, and re-aim if the page moved under the mascot.
+    // Re-check after scrolling settles: show + start when the buildings are on
+    // screen, hide when they leave, and re-aim if the page moved under it.
     const onScroll = () => {
       if (settleTimer !== null) window.clearTimeout(settleTimer)
       settleTimer = window.setTimeout(() => {
         settleTimer = null
         if (!inView()) {
           stop()
-        } else if (homePos === null) {
+        } else if (!active) {
           start()
         } else if (touring && step > 0) {
           const target = readTargets().find((t) => t.id === order[step - 1])

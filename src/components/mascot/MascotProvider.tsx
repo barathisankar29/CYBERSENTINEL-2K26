@@ -24,7 +24,9 @@ import {
 } from './MascotPhysics'
 import { findSafeMascotPosition } from './MascotObstruction'
 import { MASCOT_DIALOGUE, type MascotDialogueItem } from './mascotDialogue'
+import { useLocation } from 'react-router-dom'
 import { useIsMobile } from '@/hooks/useIsMobile'
+import { isMascotRoute } from './mascotRoutes'
 import { MascotContext } from './MascotContext'
 
 const STORAGE_KEY_POSITION = 'cybersentinel_mascot_position'
@@ -74,6 +76,10 @@ const TOUR_STEPS: MascotTourStep[] = [
 
 export function MascotProvider({ children }: { children: ReactNode }) {
   const isMobile = useIsMobile()
+  const onMascotRoute = isMascotRoute(useLocation().pathname)
+  // Shown only while the buildings section is on screen (MascotCityGuide).
+  const [cityVisible, setCityVisible] = useState(false)
+  const enabled = onMascotRoute && cityVisible
   const [state, setStateInternal] = useState<MascotState>('idle')
   const stateRef = useRef<MascotState>('idle')
   const currentPriorityRef = useRef<number>(MASCOT_STATE_PRIORITY.idle)
@@ -99,13 +105,17 @@ export function MascotProvider({ children }: { children: ReactNode }) {
   const isManuallyPlacedRef = useRef<boolean>(false)
   const lastBuildingHoverRef = useRef<{ buildingId: string; time: number } | null>(null)
 
-  // Preload all mascot sprite assets on initial mount so transitions and rapid states (blink, land) are instant
+  // Preload the mascot sprites (so rapid states like blink/land are instant) —
+  // once, and only when a page that shows the mascot is first opened.
+  const spritesPreloadedRef = useRef(false)
   useEffect(() => {
+    if (!enabled || spritesPreloadedRef.current) return
+    spritesPreloadedRef.current = true
     ALL_MASCOT_STATES.forEach((s) => {
       const img = new Image()
       img.src = `/assets/mascot/${s}.png`
     })
-  }, [])
+  }, [enabled])
 
   // Position state with bounds clamping and localStorage recovery (Part 1, 2 & 3)
   const [position, setPositionInternal] = useState<MascotPosition>(() => {
@@ -422,6 +432,7 @@ export function MascotProvider({ children }: { children: ReactNode }) {
 
   // Debounced check on scroll stop (Part 5, 31)
   useEffect(() => {
+    if (!enabled) return
     let scrollTimer: number | null = null
     const handleScroll = () => {
       if (scrollTimer !== null) window.clearTimeout(scrollTimer)
@@ -435,10 +446,11 @@ export function MascotProvider({ children }: { children: ReactNode }) {
       window.removeEventListener('scroll', handleScroll)
       if (scrollTimer !== null) window.clearTimeout(scrollTimer)
     }
-  }, [checkObstructionAndRelocate])
+  }, [enabled, checkObstructionAndRelocate])
 
   // Inactivity tracking (25s idle triggers subtle thinking/sleep or relocation) (Part 7 & 8)
   useEffect(() => {
+    if (!enabled) return
     const resetInactivity = () => {
       lastInteractionRef.current = Date.now()
       if (isSleeping || stateRef.current === 'sleep') {
@@ -480,7 +492,7 @@ export function MascotProvider({ children }: { children: ReactNode }) {
       window.clearInterval(interval)
       events.forEach((evt) => window.removeEventListener(evt, resetInactivity))
     }
-  }, [isSleeping, isDragging, isFalling, isTourActive, setMascotState, checkObstructionAndRelocate])
+  }, [enabled, isSleeping, isDragging, isFalling, isTourActive, setMascotState, checkObstructionAndRelocate])
 
   const nextTourStep = useCallback(() => {
     setCurrentTourStep((curr) => {
@@ -702,6 +714,8 @@ export function MascotProvider({ children }: { children: ReactNode }) {
   }, [clearStateTimer, clearSpeechTimer, clearSequenceTimers])
 
   const contextValue: MascotContextType = {
+    enabled,
+    setCityVisible,
     state,
     setMascotState,
     say,

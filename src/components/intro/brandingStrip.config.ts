@@ -20,7 +20,7 @@ export interface BrandingStripLogo {
  */
 export const brandingStripLogos: BrandingStripLogo[] = [
   { id: 'aicte', src: '/assets/branding/aicte-logo.webp', alt: 'AICTE', width: 316, height: 316 },
-  { id: 'naac', src: '/assets/branding/naac-logo.png', alt: 'NAAC Accredited Grade A', width: 225, height: 225, blend: 'multiply' },
+  { id: 'naac', src: '/assets/branding/naac-logo.webp', alt: 'NAAC Accredited Grade A', width: 347, height: 228 },
   {
     // Transparent neon lockup, recolored from the supplied blue PNG into the
     // city's violet -> magenta palette (emblem left untouched).
@@ -30,7 +30,7 @@ export const brandingStripLogos: BrandingStripLogo[] = [
     width: 482,
     height: 300,
   },
-  { id: 'nba', src: '/assets/branding/nba-logo.png', alt: 'National Board of Accreditation', width: 225, height: 225, blend: 'multiply' },
+  { id: 'nba', src: '/assets/branding/nba-logo.webp', alt: 'National Board of Accreditation', width: 227, height: 228 },
   {
     id: 'hackathon-club',
     src: '/assets/branding/hackathon_club_logo.webp',

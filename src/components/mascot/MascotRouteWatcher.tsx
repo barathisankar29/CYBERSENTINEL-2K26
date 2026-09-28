@@ -12,13 +12,13 @@ const STORAGE_KEY_CITY_INTRO = 'cybersentinel_city_intro_seen'
  */
 export function MascotRouteWatcher() {
   const location = useLocation()
-  const { setMascotState, saySequence, isTourActive, checkObstructionAndRelocate } = useMascot()
+  const { enabled, setMascotState, saySequence, isTourActive, checkObstructionAndRelocate } = useMascot()
   const prevPathRef = useRef<string | null>(null)
   const hasIntroducedRef = useRef(false)
 
   // Route change handler
   useEffect(() => {
-    if (isTourActive) return
+    if (isTourActive || !enabled) return
 
     const pathname = location.pathname
 
@@ -98,29 +98,13 @@ export function MascotRouteWatcher() {
       return () => clearTimeout(timer)
     }
 
-    if (pathname === '/transport' || pathname === '/transportation') {
-      const timer = setTimeout(() => {
-        setMascotState('guide', 3500, 'Check college bus routes and stops.', 'idle', false, 'high')
-        checkObstructionAndRelocate()
-      }, 450)
-      return () => clearTimeout(timer)
-    }
 
-    if (pathname === '/' || pathname === '') {
-      // Returning to homepage from another subpage
-      if (hasIntroducedRef.current) {
-        const timer = setTimeout(() => {
-          setMascotState('happy', 3000, 'Welcome back to the city.', 'idle', false, 'high')
-          checkObstructionAndRelocate()
-        }, 450)
-        return () => clearTimeout(timer)
-      }
-    }
-  }, [location.pathname, isTourActive, setMascotState, saySequence, checkObstructionAndRelocate])
+  }, [location.pathname, enabled, isTourActive, setMascotState, saySequence, checkObstructionAndRelocate])
 
   // Scroll milestones for initial landing experience (Part 9 & Part 10)
   useEffect(() => {
-    if (isTourActive || (location.pathname !== '/' && location.pathname !== '')) return
+    // The buildings tour (MascotCityGuide) does the talking on the home page.
+    if (isTourActive || !enabled || location.pathname === '/' || location.pathname === '') return
 
     // Read the "already shown" flags once, not on every scroll event, and do
     // the (layout-reading) checks at most once per frame; the listener
@@ -184,7 +168,7 @@ export function MascotRouteWatcher() {
       window.removeEventListener('scroll', handleScroll)
       if (frame !== null) cancelAnimationFrame(frame)
     }
-  }, [location.pathname, isTourActive, saySequence, setMascotState])
+  }, [location.pathname, enabled, isTourActive, saySequence, setMascotState])
 
   return null
 }

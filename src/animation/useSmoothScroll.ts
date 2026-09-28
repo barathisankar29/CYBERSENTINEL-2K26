@@ -9,8 +9,10 @@ import { useReducedMotion } from './useReducedMotion'
  * the user stops, instead of stepping in hard notches — so pinned/scrubbed
  * scenes (the hero reveal) glide to a stop rather than halting abruptly.
  *
- * - Touch keeps the platform's own momentum scrolling (syncTouch: false):
- *   it is already smooth on phones, and emulating it costs frames.
+ * - Not created at all on touch-first devices (phones/tablets): there it
+ *   would only leave touch to native scrolling anyway (syncTouch: false),
+ *   while its scroll handler still ran — and restyled the page — on every
+ *   scroll event. Native momentum scrolling is already smooth there.
  * - Disabled entirely for reduced-motion users.
  * - Scrollable overlays opt out with `data-lenis-prevent`.
  *
@@ -22,6 +24,7 @@ export function useSmoothScroll(enabled = true): void {
 
   useEffect(() => {
     if (!enabled || reducedMotion) return
+    if (window.matchMedia('(hover: none), (pointer: coarse)').matches) return
     const lenis = new Lenis({
       autoRaf: true,
       smoothWheel: true,

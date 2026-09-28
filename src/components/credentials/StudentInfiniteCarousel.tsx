@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import { useInView } from '@/hooks/useInView'
 import type { CredentialMember } from '@/data/credentials'
 import { StudentCircuitCard } from './StudentCircuitCard'
 import './StudentInfiniteCarousel.css'
@@ -18,6 +19,9 @@ export function StudentInfiniteCarousel({ items }: StudentInfiniteCarouselProps)
   const [activeIndex, setActiveIndex] = useState(baseIndex)
   const [enableTransition, setEnableTransition] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
+  const rootRef = useRef<HTMLDivElement>(null)
+  // Auto-loop only while on screen (off screen it would restyle every card for nothing).
+  const inView = useInView(rootRef)
   const touchStartX = useRef<number | null>(null)
   const touchDeltaX = useRef<number>(0)
 
@@ -63,14 +67,14 @@ export function StudentInfiniteCarousel({ items }: StudentInfiniteCarouselProps)
 
   // Unstoppable 2s Auto-Loop (never pauses on mouse hover, keeps moving continuously)
   useEffect(() => {
-    if (n === 0) return
+    if (n === 0 || !inView) return
 
     const timer = setTimeout(() => {
       setActiveIndex((prev) => prev + 1)
     }, AUTO_DELAY_MS)
 
     return () => clearTimeout(timer)
-  }, [activeIndex, n])
+  }, [activeIndex, n, inView])
 
   // Silent Modulo Normalization:
   // When drifting outside middle buffer range, silently normalize activeIndex to middle set
@@ -200,6 +204,7 @@ export function StudentInfiniteCarousel({ items }: StudentInfiniteCarouselProps)
 
   return (
     <div
+      ref={rootRef}
       className="infinite-carousel-container"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
