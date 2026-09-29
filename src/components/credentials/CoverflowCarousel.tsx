@@ -27,6 +27,10 @@ interface CoverflowCarouselProps<T> {
   /** Dim side cards with brightness (as the students do) or opacity only (cheaper for big cards). */
   dimWith?: 'brightness' | 'opacity'
   labels: { prev: string; next: string; dots: string; dot: (label: string) => string }
+  /** Optional callback notified whenever the active centered item changes */
+  onActiveChange?: (realIndex: number, item: T) => void
+  /** Optional class name generator per item container */
+  getItemClassName?: (item: T, state: { isActive: boolean; index: number }) => string
 }
 
 const REPEAT_SETS = 5 // 5 cloned sets for uninterrupted infinite traversal
@@ -44,6 +48,8 @@ export function CoverflowCarousel<T>({
   rewindWhenHidden = false,
   dimWith = 'brightness',
   labels,
+  onActiveChange,
+  getItemClassName,
 }: CoverflowCarouselProps<T>) {
   const n = items.length
   const baseIndex = BASE_SET * n
@@ -88,6 +94,12 @@ export function CoverflowCarousel<T>({
     const timer = setTimeout(() => setActiveIndex((prev) => prev + 1), autoDelayMs)
     return () => clearTimeout(timer)
   }, [activeIndex, n, inView, autoDelayMs])
+
+  useEffect(() => {
+    if (n === 0) return
+    const currentReal = ((activeIndex % n) + n) % n
+    onActiveChange?.(currentReal, items[currentReal])
+  }, [activeIndex, n, onActiveChange, items])
 
   // Silent modulo normalisation back into the middle set.
   useEffect(() => {
@@ -222,7 +234,7 @@ export function CoverflowCarousel<T>({
               key={globalIndex}
               className={`infinite-carousel-item ${enableTransition ? 'infinite-carousel-item--animated' : ''} ${
                 isCenter ? 'infinite-carousel-item--active' : ''
-              }`}
+              }${getItemClassName ? ` ${getItemClassName(item, { isActive: isCenter, index: originalIndex + 1 })}` : ''}`}
               style={getCardStyle(offset)}
               data-active={isCenter}
               onClickCapture={(e) => {

@@ -10,7 +10,7 @@ import type { SiteSection } from '@/types/navigation'
 export const siteSections: SiteSection[] = [
   { slug: 'events', title: 'Events', shortLabel: 'Events', order: 1, summary: 'Competitions, workshops, and sessions at CYBERSENTINEL 2K26.' },
   { slug: 'timeline', title: 'Timeline', shortLabel: 'Timeline', order: 2, summary: 'The schedule across the symposium.' },
-  { slug: 'about', title: 'About', shortLabel: 'About', order: 3, summary: 'About Vel Tech High Tech, CyberSentinel 2K26, Hackathon Club, and College Leadership.' },
+  { slug: 'about', title: 'About', shortLabel: 'About', order: 3, summary: 'About Vel Tech High Tech, CyberSentinel 2K26, Hackathon Club, College Leadership, and Convenors.' },
   {
     slug: 'transportation',
     title: 'Transportation & Campus Navigation',
@@ -18,6 +18,6 @@ export const siteSections: SiteSection[] = [
     order: 4,
     summary: 'College Bus Transit, Government MTC Bus Routes, Campus Directions & Live Tactical Nav Grid',
   },
-  { slug: 'credentials', title: 'Credentials', shortLabel: 'Credentials', order: 5, summary: 'Convenors, Co-Convenors, Student Coordinators, Editing Experts, and Designers.' },
+  { slug: 'credentials', title: 'Coordinators', shortLabel: 'Coordinators', order: 5, summary: 'Student Coordinators, Developers, Editing Experts, and Designers.' },
   { slug: 'contact', title: 'Contact', shortLabel: 'Contact', order: 6, summary: 'Reach the organizing team.' },
 ]

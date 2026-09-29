@@ -71,40 +71,17 @@ export const frontendDevelopersData: FrontendDeveloperMember[] = [
     role: 'Lead UI/UX & Frontend Engineer',
     description:
       'I chase ideas where imagination meets the screen, shaping raw thoughts into visual poetry. With every pixel, I build a little universe—where colors whisper, shapes breathe, and creativity takes form. ',
-    linkedinUrl: 'www.linkedin.com/in/jeevadharani-venkatesan-916173332',
+    linkedinUrl: 'https://www.linkedin.com/in/jeevadharani-venkatesan-916173332',
     githubUrl: 'https://github.com/Jeevadharani2403',
   },
 ]
 
 export const backendDevelopersData: DeveloperMember[] = [
   {
-    id: 'dev-hemal-ramm-s',
-    name: 'HEMAL RAMM S',
-    role: 'Web Developer',
-    codename: 'DEV_01 // SYSTEM_CORE',
-    badgeShape: 'triangle-yellow',
-    themeColor: 'yellow',
-    accentHex: '#facc15',
-    secondaryHex: '#a855f7',
-    avatar: '/assets/developers/backend_hemal_ramm_s.webp',
-    slogan: 'Think it. Code it. Launch it.',
-    sloganLines: ['Think it.', 'Code it.', 'Launch it.'],
-    description:
-      'Crafting pixels & logic into powerful web experiences. Proficient Web Developer | Think it. Code it. Launch it. Need something cool? Let’s connect.',
-    skills: ['Web Development', 'JavaScript', 'REST APIs', 'Supabase', 'Deployment'],
-    metrics: [
-      { label: 'LATENCY', value: '<18ms' },
-      { label: 'UPTIME', value: '99.9%' },
-      { label: 'LEVEL', value: 'L5 CORE' },
-    ],
-    linkedin: 'https://www.linkedin.com/in/hemal-ramm-s-65a821336/',
-    instagram: 'https://www.instagram.com/__hemal_ramm__/',
-  },
-  {
     id: 'dev-hariharan-ramesh',
     name: 'HARIHARAN RAMESH',
     role: 'Full-Stack Web Developer',
-    codename: 'DEV_02 // CYBER_DEFENSE',
+    codename: 'DEV_01 // CYBER_DEFENSE',
     badgeShape: 'hexagon-green',
     themeColor: 'green',
     accentHex: '#10b981',
@@ -122,6 +99,29 @@ export const backendDevelopersData: DeveloperMember[] = [
     ],
     linkedin: 'https://www.linkedin.com/in/hariharan-ramesh-788267361/',
     instagram: 'https://www.instagram.com/hari_intro_x21/',
+  },
+  {
+    id: 'dev-hemal-ramm-s',
+    name: 'HEMAL RAMM S',
+    role: 'Web Developer',
+    codename: 'DEV_02 // SYSTEM_CORE',
+    badgeShape: 'triangle-yellow',
+    themeColor: 'yellow',
+    accentHex: '#facc15',
+    secondaryHex: '#a855f7',
+    avatar: '/assets/developers/backend_hemal_ramm_s.webp',
+    slogan: 'Think it. Code it. Launch it.',
+    sloganLines: ['Think it.', 'Code it.', 'Launch it.'],
+    description:
+      'Crafting pixels & logic into powerful web experiences. Proficient Web Developer | Think it. Code it. Launch it. Need something cool? Let’s connect.',
+    skills: ['Web Development', 'JavaScript', 'REST APIs', 'Supabase', 'Deployment'],
+    metrics: [
+      { label: 'LATENCY', value: '<18ms' },
+      { label: 'UPTIME', value: '99.9%' },
+      { label: 'LEVEL', value: 'L5 CORE' },
+    ],
+    linkedin: 'https://www.linkedin.com/in/hemal-ramm-s-65a821336/',
+    instagram: 'https://www.instagram.com/__hemal_ramm__/',
   },
   {
     id: 'dev-yuvaraj-g',

@@ -58,12 +58,13 @@ export const hackathonClubData = {
     "Hackathon Club is a dynamic community of tech enthusiasts, developers, and innovators who come together to solve real-world problems through coding and collaboration. We organize hackathons, coding challenges, and workshops to enhance technical skills and creativity. Our club fosters teamwork, networking, and mentorship opportunities with industry experts. Whether you're a beginner or an experienced coder, there's a place for you to learn and grow.",
   logoSrc: '/assets/branding/hackathon_club_logo.webp',
   members: [
-    { name: 'Hirikaran M', role: 'President', color: 'cyan' },
-    { name: 'Bhagya B', role: 'Vice President', color: 'pink' },
-    { name: 'Sharath A R', role: 'Secretary', color: 'green' },
-    { name: 'Abishek D', role: 'Joint Secretary', color: 'orange' },
-    { name: 'Nihitha T', role: 'Treasury', color: 'yellow' },
-    { name: 'Prathish M', role: 'Treasury', color: 'purple' },
+    { name: 'DEVANAND V', role: 'President', color: 'cyan' },
+    { name: 'Nihitha T', role: 'Vice President', color: 'orange' },
+    { name: 'Prathish M', role: 'Secretary', color: 'green' },
+    { name: 'Hari Ganesh', role: 'Joint Secretary', color: 'orange' },
+    { name: 'Neha M', role: 'Joint Secretary', color: 'pink' },
+    { name: 'Akshaya M', role: 'Treasury', color: 'yellow' },
+    { name: 'Rishikesh', role: 'Treasury', color: 'purple' },
   ] as ClubMember[],
 }
 

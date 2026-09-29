@@ -5,8 +5,14 @@ import {
   chiefPatrons,
   patrons,
 } from '@/data/about'
+import {
+  convenorsData,
+  coConvenorsData,
+} from '@/data/credentials'
 import { CyberNeonCard } from './CyberNeonCard'
 import { PatronNeonCard } from './PatronNeonCard'
+import { ConvenorHudCard } from '@/components/credentials/ConvenorHudCard'
+import { CoConvenorMechaCard } from '@/components/credentials/CoConvenorMechaCard'
 import './AboutSection.css'
 
 export function AboutSection() {
@@ -263,35 +269,38 @@ export function AboutSection() {
                       <span className="club-operatives-header__beacon" />
                       <span className="club-operatives-header__title">COUNCIL ARCHITECTURE // CORE OPERATIVES</span>
                     </div>
-                    <span className="club-operatives-header__count">[06 PODS ACTIVE]</span>
+                    <span className="club-operatives-header__count">[{String(hackathonClubData.members.length).padStart(2, '0')} PODS ACTIVE]</span>
                   </div>
 
                   <div className="club-members-grid">
-                    {hackathonClubData.members.map((member) => (
-                      <div
-                        key={member.name}
-                        className={`club-member-card club-member-card--${member.color} bldg-pod`}
-                      >
-                        {/* Heading as their role */}
-                        <div className="bldg-pod__roof">
-                          <div className="bldg-pod__beacon">
-                            <span className={`bldg-pod__dot bldg-pod__dot--${member.color}`} />
-                            <span className={`bldg-pod__role-heading bldg-pod__role-heading--${member.color}`}>{member.role}</span>
+                    {hackathonClubData.members.map((member) => {
+                      const isPresident = member.role.toLowerCase() === 'president';
+                      return (
+                        <div
+                          key={member.name}
+                          className={`club-member-card club-member-card--${member.color} bldg-pod ${isPresident ? 'club-member-card--president' : ''}`}
+                        >
+                          {/* Heading as their role */}
+                          <div className="bldg-pod__roof">
+                            <div className="bldg-pod__beacon">
+                              <span className={`bldg-pod__dot bldg-pod__dot--${member.color}`} />
+                              <span className={`bldg-pod__role-heading bldg-pod__role-heading--${member.color}`}>{member.role}</span>
+                            </div>
+                          </div>
+
+                          {/* Structural Corner Reticles */}
+                          <div className={`bldg-pod__corner bldg-pod__corner--tl bldg-pod__corner--${member.color}`} />
+                          <div className={`bldg-pod__corner bldg-pod__corner--tr bldg-pod__corner--${member.color}`} />
+                          <div className={`bldg-pod__corner bldg-pod__corner--bl bldg-pod__corner--${member.color}`} />
+                          <div className={`bldg-pod__corner bldg-pod__corner--br bldg-pod__corner--${member.color}`} />
+
+                          {/* Operative Name */}
+                          <div className="club-member-card__details">
+                            <h4 className="club-member-card__name">{member.name}</h4>
                           </div>
                         </div>
-
-                        {/* Structural Corner Reticles */}
-                        <div className={`bldg-pod__corner bldg-pod__corner--tl bldg-pod__corner--${member.color}`} />
-                        <div className={`bldg-pod__corner bldg-pod__corner--tr bldg-pod__corner--${member.color}`} />
-                        <div className={`bldg-pod__corner bldg-pod__corner--bl bldg-pod__corner--${member.color}`} />
-                        <div className={`bldg-pod__corner bldg-pod__corner--br bldg-pod__corner--${member.color}`} />
-
-                        {/* Operative Name */}
-                        <div className="club-member-card__details">
-                          <h4 className="club-member-card__name">{member.name}</h4>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -384,6 +393,50 @@ export function AboutSection() {
                     <p className="patron-card__designation">{patron.designation}</p>
                   </div>
                 </PatronNeonCard>
+              ))}
+            </div>
+          </div>
+
+          {/* Convenors */}
+          <div id="convenors" className="leadership-group leadership-group--convenors">
+            <div className="leadership-header">
+              <div className="leadership-header__tag leadership-header__tag--cyan">
+                <span className="leadership-header__dot leadership-header__dot--cyan" />
+                <span>SYMPOSIUM CONVENORS</span>
+              </div>
+              <h3 className="leadership-header__title leadership-header__title--cyan">CONVENORS</h3>
+              <p className="leadership-header__desc">Academic stewardship and departmental governance powering CyberSentinel 2K26</p>
+            </div>
+
+            <div className="convenors-grid">
+              {convenorsData.map((conv, idx) => (
+                <ConvenorHudCard
+                  key={conv.id}
+                  member={conv}
+                  nodeCode={idx === 1 ? 'HOD_COMMAND // CSE' : 'ACAD_COMMAND // DEAN'}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Co-Convenors (Faculty Coordinators) */}
+          <div id="co-convenors" className="leadership-group leadership-group--coconvenors">
+            <div className="leadership-header">
+              <div className="leadership-header__tag leadership-header__tag--cyan">
+                <span className="leadership-header__dot leadership-header__dot--cyan" />
+                <span>FACULTY COORDINATION</span>
+              </div>
+              <h3 className="leadership-header__title leadership-header__title--cyan">CO-CONVENORS</h3>
+              <p className="leadership-header__desc">Faculty event coordinators driving execution, technical oversight, and logistics</p>
+            </div>
+
+            <div className="coconvenors-grid">
+              {coConvenorsData.map((fac, idx) => (
+                <CoConvenorMechaCard
+                  key={fac.id}
+                  member={fac}
+                  index={idx + 1}
+                />
               ))}
             </div>
           </div>

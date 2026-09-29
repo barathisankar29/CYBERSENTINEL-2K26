@@ -1,66 +1,93 @@
-import React from 'react'
-import { frontendDevelopersData, backendDevelopersData } from '@/data/developers'
+import React, { useState } from 'react'
+import {
+  frontendDevelopersData,
+  backendDevelopersData,
+  type FrontendDeveloperMember,
+  type DeveloperMember,
+} from '@/data/developers'
 import { CoverflowCarousel } from '@/components/credentials/CoverflowCarousel'
 import { FrontendDeveloperCard } from './FrontendDeveloperCard'
 import { DeveloperGlitchCard } from './DeveloperGlitchCard'
 import './DevelopersSection.css'
 
-// Both teams use the student coordinators' cover-flow carousel (same
-// transition), each with its own card design and spacing.
+export type UnifiedDeveloper =
+  | { type: 'frontend'; data: FrontendDeveloperMember }
+  | { type: 'backend'; data: DeveloperMember }
+
+const hariharan = backendDevelopersData.find((d) => d.id === 'dev-hariharan-ramesh')!
+const hemal = backendDevelopersData.find((d) => d.id === 'dev-hemal-ramm-s')!
+const yuvaraj = backendDevelopersData.find((d) => d.id === 'dev-yuvaraj-g')!
+
+const barathi = frontendDevelopersData.find((d) => d.id === 'fed-barathi-sankar')!
+const pranith = frontendDevelopersData.find((d) => d.id === 'fed-pranith-l')!
+const jeevadharani = frontendDevelopersData.find((d) => d.id === 'fed-jeevadharani')!
+
+// Alternating order: Backend -> Frontend -> Backend -> Frontend -> Backend -> Frontend
+const allDevelopers: UnifiedDeveloper[] = [
+  { type: 'backend', data: hariharan },
+  { type: 'frontend', data: barathi },
+  { type: 'backend', data: hemal },
+  { type: 'frontend', data: pranith },
+  { type: 'backend', data: yuvaraj },
+  { type: 'frontend', data: jeevadharani },
+]
+
 export const DevelopersSection: React.FC = () => {
+  const [activeDev, setActiveDev] = useState<UnifiedDeveloper>(allDevelopers[0])
+
   return (
     <div id="developers" className="cred-group developers-section">
-      {/* 1. WEB DESIGNERS AND FRONTEND DEVELOPERS */}
       <div className="developers-section__subgroup">
         <div className="developers-section__header">
-          <h3 className="cred-group-title cred-group-title--pink developers-section__title">
-            <span className="developers-section__title-white">WEB DESIGNERS AND</span>{' '}
-            <span className="developers-section__title-neon">FRONTEND DEVELOPERS</span>
+          {/* Main Title: Meet Our Developers */}
+          <h3 className="cred-group-title developers-section__title">
+            <span className="developers-section__title-white">MEET OUR</span>{' '}
+            <span className="developers-section__title-neon">DEVELOPERS</span>
           </h3>
+
+          {/* Dynamic Second Title: switches between "Backend Team" and "Frontend Team" */}
+          <div className="developers-section__subtitle-wrap" aria-live="polite">
+            <h4
+              className={`developers-section__subtitle developers-section__subtitle--${activeDev.type}`}
+            >
+              <span className="developers-section__subtitle-dot" />
+              <span className="developers-section__subtitle-text">
+                {activeDev.type === 'backend' ? 'Backend Team' : 'Frontend Team'}
+              </span>
+            </h4>
+          </div>
         </div>
 
-        {/* Barathi (first entry) is always the card showing when this scrolls into view. */}
+        {/* Unified Coverflow Carousel combining both Backend and Frontend Developers */}
         <CoverflowCarousel
-          items={frontendDevelopersData}
-          getKey={(dev) => dev.id}
-          getLabel={(dev) => dev.name}
-          renderItem={(dev) => <FrontendDeveloperCard developer={dev} />}
-          autoDelayMs={7000}
-          xStep={{ desktop: (vw) => Math.min(620, vw * 0.43), mobile: 88 }}
-          variant="infinite-carousel--frontend"
+          items={allDevelopers}
+          getKey={(dev) => dev.data.id}
+          getLabel={(dev) => dev.data.name}
+          getItemClassName={(dev) =>
+            dev.type === 'frontend'
+              ? 'infinite-carousel-item--frontend'
+              : 'infinite-carousel-item--backend'
+          }
+          renderItem={(dev, { isActive }) =>
+            dev.type === 'frontend' ? (
+              <FrontendDeveloperCard developer={dev.data} />
+            ) : (
+              <DeveloperGlitchCard developer={dev.data} isActive={isActive} />
+            )
+          }
+          onActiveChange={(_idx, dev) => setActiveDev(dev)}
+          autoDelayMs={4500}
+          xStep={{
+            desktop: 270,
+            mobile: 88,
+          }}
+          variant={`infinite-carousel--developers infinite-carousel--developers-${activeDev.type}`}
           rewindWhenHidden
           dimWith="opacity"
           labels={{
             prev: 'Previous developer',
             next: 'Next developer',
-            dots: 'Web designers and frontend developers',
-            dot: (name) => `Show ${name}`,
-          }}
-        />
-      </div>
-
-      {/* 2. BACKEND DEVELOPERS */}
-      <div className="developers-section__subgroup developers-section__subgroup--backend">
-        <div className="developers-section__header">
-          <h3 className="cred-group-title cred-group-title--cyan developers-section__title">
-            <span className="developers-section__title-white">MEET OUR</span>{' '}
-            <span className="developers-section__title-neon developers-section__title-neon--cyan">BACKEND DEVELOPERS</span>
-          </h3>
-        </div>
-
-        <CoverflowCarousel
-          items={backendDevelopersData}
-          getKey={(dev) => dev.id}
-          getLabel={(dev) => dev.name}
-          renderItem={(dev, { isActive }) => <DeveloperGlitchCard developer={dev} isActive={isActive} />}
-          autoDelayMs={3000}
-          xStep={{ desktop: 270, mobile: 88 }}
-          variant="infinite-carousel--backend"
-          dimWith="opacity"
-          labels={{
-            prev: 'Previous developer',
-            next: 'Next developer',
-            dots: 'Backend developers',
+            dots: 'Developers team',
             dot: (name) => `Show ${name}`,
           }}
         />

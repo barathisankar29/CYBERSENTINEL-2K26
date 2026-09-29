@@ -99,12 +99,12 @@
    * On phones the branding strip is two rows (college lockup + badges, see
    * BrandingStrip.css), so instead of vertically centering, the block starts
    * just below the strip's bottom edge. The calc mirrors the strip's own
-   * mobile sizing: top offset + lockup height (min(62vw, 250px) at the
+   * mobile sizing: top offset + lockup height (min(46vw, 180px) at the
    * 482x300 aspect) + badge row + row gap + strip padding + breathing room.
    */
   .identity-layer__center {
     justify-content: flex-start;
-    padding-top: calc(clamp(0.75rem, 4vh, 2.25rem) + min(62vw, 250px) * 0.6224 + 40px + 0.55rem + 1rem + 0.8rem);
+    padding-top: calc(clamp(0.75rem, 4vh, 2.25rem) + min(46vw, 180px) * 0.6224 + 40px + 0.55rem + 1rem + 0.8rem);
     padding-bottom: 0;
     gap: 0.3rem;
   }
