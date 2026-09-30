@@ -1,0 +1,224 @@
+/* Cybersentinel Mascot / Pet Container */
+/* Step aside while a popup that needs every tap is open (the registration
+   pack pickers), so the mascot and its bubble never cover their buttons. */
+html[data-mascot-hidden] .mascot-system-layer {
+  display: none;
+}
+
+.mascot-system-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.mascot-pet {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+  user-select: none;
+  touch-action: none;
+  cursor: grab;
+  will-change: transform;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: filter 0.2s ease;
+}
+
+.mascot-pet:active,
+.mascot-pet--dragging {
+  cursor: grabbing !important;
+}
+
+/* Smooth Relocation Transition when Obstruction Detected (Part 5 & 18) */
+.mascot-pet--relocating {
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.mascot-pet__sprite-wrapper {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Subtle Idle Floating (4-6px, slow, smooth) */
+.mascot-pet--idle .mascot-pet__sprite-wrapper {
+  animation: mascot-float 3.4s ease-in-out infinite;
+}
+
+@keyframes mascot-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Disable floating while dragging, falling, sleeping, relocating, or in reduced motion */
+.mascot-pet--dragging .mascot-pet__sprite-wrapper,
+.mascot-pet--falling .mascot-pet__sprite-wrapper,
+.mascot-pet--sleeping .mascot-pet__sprite-wrapper,
+.mascot-pet--relocating .mascot-pet__sprite-wrapper {
+  animation: none !important;
+}
+
+.mascot-pet__image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 4px 12px rgba(124, 58, 237, 0.45)) drop-shadow(0 0 16px rgba(34, 211, 238, 0.25));
+  transition: transform 0.15s ease;
+  pointer-events: none;
+}
+
+/* Drag reaction: subtle tilt and glow */
+/* Mirror the sprite so pointing poses point left (independent `scale`,
+   so it composes with the transform-based drag/land effects). */
+.mascot-pet--face-left .mascot-pet__image {
+  scale: -1 1;
+}
+
+.mascot-pet--dragging .mascot-pet__image {
+  transform: scale(1.06) rotate(-3deg);
+  filter: drop-shadow(0 6px 18px rgba(255, 62, 165, 0.6)) drop-shadow(0 0 20px rgba(34, 211, 238, 0.5));
+}
+
+/* Falling tilt */
+.mascot-pet--falling .mascot-pet__image {
+  transform: scale(0.98) translateY(2px);
+}
+
+/* Landing squash */
+.mascot-pet--landing .mascot-pet__image {
+  transform: scaleX(1.18) scaleY(0.85);
+}
+
+/* Celebration bounce */
+.mascot-pet--celebrate .mascot-pet__sprite-wrapper {
+  animation: mascot-celebrate 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes mascot-celebrate {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-8px) scale(1.05); }
+}
+
+/* Sleeping subtle breathing */
+.mascot-pet--sleeping .mascot-pet__sprite-wrapper {
+  animation: mascot-sleep 4.2s ease-in-out infinite;
+  opacity: 0.88;
+}
+
+@keyframes mascot-sleep {
+  0%, 100% { transform: translateY(0px) scale(0.98); }
+  50% { transform: translateY(3px) scale(1); }
+}
+
+/* Companion Cyber Badge / Mini Menu Trigger */
+.mascot-pet__badge {
+  position: absolute;
+  bottom: -4px;
+  right: -2px;
+  width: 22px;
+  height: 22px;
+  background: rgba(11, 10, 26, 0.9);
+  border: 1px solid var(--city-cyan);
+  border-radius: 50%;
+  color: var(--city-cyan);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Silkscreen', monospace;
+  font-size: 10px;
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+  transition: transform 0.15s, background 0.15s, border-color 0.15s;
+  pointer-events: auto;
+}
+
+.mascot-pet__badge:hover {
+  transform: scale(1.15);
+  background: var(--city-violet);
+  border-color: var(--city-pink);
+  color: #ffffff;
+}
+
+/* Companion Quick Menu */
+.mascot-quick-menu {
+  position: absolute;
+  bottom: 115px;
+  right: 0;
+  background: rgba(11, 10, 26, 0.95);
+  border: 1px solid var(--city-violet-soft);
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.4), inset 0 0 8px rgba(34, 211, 238, 0.2);
+  padding: 6px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 140px;
+  animation: mascot-speech-pop 0.2s ease-out;
+  pointer-events: auto;
+}
+
+.mascot-quick-menu__btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #cbd5e1;
+  font-family: 'Silkscreen', monospace;
+  font-size: 9px;
+  padding: 5px 8px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.12s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mascot-quick-menu__btn:hover {
+  background: rgba(124, 58, 237, 0.35);
+  border-color: var(--city-cyan);
+  color: #ffffff;
+}
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  .mascot-pet__sprite-wrapper {
+    width: 80px;
+    height: 80px;
+  }
+  .mascot-pet__badge {
+    width: 18px;
+    height: 18px;
+    font-size: 8px;
+    bottom: -2px;
+    right: -2px;
+  }
+  .mascot-quick-menu {
+    bottom: 85px;
+    min-width: 125px;
+  }
+}
+/* Accessibility: prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .mascot-pet--idle .mascot-pet__sprite-wrapper,
+  .mascot-pet--celebrate .mascot-pet__sprite-wrapper,
+  .mascot-pet--sleeping .mascot-pet__sprite-wrapper {
+    animation: none !important;
+  }
+  .mascot-pet__image {
+    transition: none !important;
+  }
+}

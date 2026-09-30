@@ -31,7 +31,7 @@ export const navigationBuildings: NavigationBuilding[] = [
   {
     id: 'credentials',
     sectionSlug: 'credentials',
-    label: 'Credentials',
+    label: 'Coordinators',
     description: 'Team & Credits',
     assetPath: '/assets/buildings/credentials-building.webp',
     assetWidth: 1254,

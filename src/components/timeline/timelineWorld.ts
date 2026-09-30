@@ -1,5 +1,3 @@
-import type { DayKey } from '@/types/timeline'
-
 /**
  * The three background frames that together form ONE continuous bridge
  * world (Frame 01 -> 02 -> 03). Each is rendered at the same height (the
@@ -149,24 +147,18 @@ function frameLocalToWorld(frame: 1 | 2 | 3, localPosition: number): number {
 const SAFE_START_FRACTION = 0.1
 const SAFE_END_FRACTION = 0.9
 
-const DAY1_START_WORLD = frameLocalToWorld(1, SAFE_START_FRACTION)
-const DAY1_END_WORLD = frameLocalToWorld(3, SAFE_END_FRACTION)
-
-/** Day 1 runs Frame01 -> Frame03 (left-to-right); Day 2 reuses the exact
- * same world in reverse (Frame03 -> Frame01), never a second bridge. */
-export function journeyBoundsFor(day: DayKey): { start: number; end: number } {
-  return day === 'day1'
-    ? { start: DAY1_START_WORLD, end: DAY1_END_WORLD }
-    : { start: DAY1_END_WORLD, end: DAY1_START_WORLD }
+/** The single continuous journey — Day 1 flowing straight into Day 2 —
+ * always runs Frame01 -> Frame03, left-to-right. There is no reverse leg. */
+export const JOURNEY_BOUNDS: { start: number; end: number } = {
+  start: frameLocalToWorld(1, SAFE_START_FRACTION),
+  end: frameLocalToWorld(3, SAFE_END_FRACTION),
 }
 
 /**
  * Progress-space (0-1) threshold at which the train's NOSE — its leading
- * edge in the current direction of travel, offset by `noseOffset`
- * world-normalized units from the train's center — reaches an event's
- * world position. Generalizes the single-bridge activation math to a
- * journey that can run in either world-position direction (Day 1
- * increasing, Day 2 decreasing) using one shared formula.
+ * edge in the direction of travel, offset by `noseOffset` world-normalized
+ * units from the train's center — reaches a stop's world position. (Kept
+ * direction-agnostic; the journey itself only runs left-to-right.)
  */
 export function activationThreshold(
   eventWorldPos: number,

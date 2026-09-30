@@ -1,12 +1,8 @@
 import {
-  convenorsData,
-  coConvenorsData,
   studentCoordinatorsData,
   editorsData,
   designersData,
 } from '@/data/credentials'
-import { ConvenorHudCard } from './ConvenorHudCard'
-import { CoConvenorMechaCard } from './CoConvenorMechaCard'
 import { StudentInfiniteCarousel } from './StudentInfiniteCarousel'
 import { EditorExpertCard } from './EditorExpertCard'
 import { DesignerTeamCard } from './DesignerTeamCard'
@@ -16,7 +12,7 @@ import './CredentialsSection.css'
 export function CredentialsSection() {
 
   return (
-    <section id="credentials" className="credentials-section" aria-label="Credentials & Committee">
+    <section id="credentials" className="credentials-section" aria-label="Student Coordinators">
       {/* Background Graphic: User's Cyberpunk Campus Corridor Image */}
       <div className="credentials-section__bg-wrap" aria-hidden="true">
         <div className="credentials-section__bg-image" />
@@ -39,65 +35,24 @@ export function CredentialsSection() {
         <header className="credentials-header">
 
           <h2 className="credentials-header__title">
-            <span className="credentials-header__title-gradient">EVENT</span>{' '}
-            <span className="credentials-header__title-neon">CREDENTIALS</span>
+            <span className="credentials-header__title-gradient">STUDENT</span>{' '}
+            <span className="credentials-header__title-neon">COORDINATORS</span>
           </h2>
 
           <p className="credentials-header__subtitle">
-            The visionary faculty leadership, creative syndicate, and dedicated student operatives powering the National Level Extravaganza.
+            Meet our talented team of student coordinators, developers, and creative syndicate powering the National Level Extravaganza.
           </p>
         </header>
 
-        {/* 1. CONVENORS SECTION */}
-        <div id="convenors" className="cred-group">
-          <h3 className="cred-group-title cred-group-title--cyan">
-            CONVENORS
-          </h3>
-
-          <div className="convenors-grid">
-            {convenorsData.map((conv, idx) => (
-              <ConvenorHudCard
-                key={conv.id}
-                member={conv}
-                nodeCode={idx === 1 ? 'HOD_COMMAND // CSE' : 'ACAD_COMMAND // DEAN'}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* 2. CO-CONVENORS (FACULTY COORDINATORS) */}
-        <div id="co-convenors" className="cred-group">
-          <h3 className="cred-group-title cred-group-title--cyan">
-            CO-CONVENORS
-          </h3>
-
-          <div className="coconvenors-grid">
-            {coConvenorsData.map((fac, idx) => (
-              <CoConvenorMechaCard
-                key={fac.id}
-                member={fac}
-                index={idx + 1}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* 3. MEET OUR DEVELOPERS (3D COVERFLOW INFINITE CAROUSEL) */}
-        <DevelopersSection />
-
-        {/* 4. STUDENT COORDINATORS (INTERACTIVE CAROUSEL) */}
+        {/* 1. STUDENT COORDINATORS (INTERACTIVE CAROUSEL) */}
         <div id="students" className="cred-group">
-          <h3 className="cred-group-title cred-group-title--pink">
-            STUDENT COORDINATORS
-          </h3>
-          <p className="cred-group-desc">
-            Meet our talented team of student coordinators who work behind the scenes to make our events successful
-          </p>
-
           <StudentInfiniteCarousel items={studentCoordinatorsData} />
         </div>
 
-        {/* 4. OUR EDITING EXPERTS */}
+        {/* 2. MEET OUR DEVELOPERS (3D COVERFLOW INFINITE CAROUSEL) */}
+        <DevelopersSection />
+
+        {/* 3. OUR EDITING EXPERTS */}
         <div id="editors" className="cred-group">
           <h3 className="cred-group-title cred-group-title--cyan">
             <span className="cred-group-title__slash">OUR EDITING EXPERTS</span>
@@ -114,10 +69,10 @@ export function CredentialsSection() {
           </div>
         </div>
 
-        {/* 5. MEET OUR DESIGNERS */}
+        {/* 4. POSTER DESIGNERS */}
         <div id="designers" className="cred-group">
           <h3 className="cred-group-title cred-group-title--violet">
-            <span className="cred-group-title__slash">MEET OUR DESIGNERS</span>
+            <span className="cred-group-title__slash">POSTER DESIGNERS</span>
           </h3>
 
           <div className="crew-grid crew-grid--5">

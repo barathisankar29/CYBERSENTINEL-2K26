@@ -21,22 +21,31 @@ export interface MetroStation {
 export type DayKey = 'day1' | 'day2'
 
 /**
- * A single schedule entry on the Timeline page's three-frame bridge world
- * — the two-day event schedule rendered as a train crossing a continuous
- * bridge spanning Frame 01 -> 02 -> 03 (see
+ * What a stop represents on the journey (all are programme stages — the
+ * individual competitions live on the Events page, not the timeline):
+ * - `stage`       — a programme stage (registration, sessions, day
+ *                   opening/closing, cultural programme)
+ * - `milestone`   — a ceremony (inauguration, valedictory)
+ * - `destination` — the journey's final stop (prize distribution)
+ */
+export type StationKind = 'stage' | 'milestone' | 'destination'
+
+/**
+ * One stage of the Timeline page's single continuous journey — the
+ * symposium programme, registration to prize distribution, rendered as a
+ * train crossing the three-frame bridge (see
  * src/components/timeline/TimelineJourney.tsx and ./timelineWorld.ts).
- * Distinct from MetroStation above: this drives the day1/day2 journey,
- * not the metro system.
+ * Distinct from MetroStation above. Stops carry programme ORDER only — no
+ * times.
  */
 export interface TimelineEvent {
   id: string
+  /** Which day of the symposium this stop belongs to (labels + accents). */
   day: DayKey
-  /** Normalized position (0-1) across the COMPLETE three-frame world (not
-   * local to a single frame). Day 1 traverses these positions
-   * left-to-right; Day 2 reuses the exact same coordinates right-to-left
-   * — the same physical stations on the same bridge, never a second set. */
+  kind: StationKind
+  /** Normalized position (0-1) across the COMPLETE three-frame world, in
+   * travel order (the journey only ever runs left-to-right). */
   position: number
-  time: string
   title: string
   description: string
 }

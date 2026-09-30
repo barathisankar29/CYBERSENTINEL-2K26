@@ -1,4 +1,4 @@
-import React, { useRef, memo, type CSSProperties } from 'react'
+import React, { type CSSProperties, memo } from 'react'
 import type { DeveloperMember } from '@/data/developers'
 import './DeveloperGlitchCard.css'
 
@@ -13,35 +13,13 @@ export const DeveloperGlitchCard: React.FC<DeveloperGlitchCardProps> = memo(({
   isActive = false,
   onClick,
 }) => {
-  const cardRef = useRef<HTMLDivElement>(null)
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current || !isActive) return
-    const rect = cardRef.current.getBoundingClientRect()
-    const x = e.clientX - rect.left - rect.width / 2
-    const y = e.clientY - rect.top - rect.height / 2
-    const tiltX = (y / (rect.height / 2)) * -5
-    const tiltY = (x / (rect.width / 2)) * 5
-    cardRef.current.style.setProperty('--tilt-x', `${tiltX.toFixed(2)}deg`)
-    cardRef.current.style.setProperty('--tilt-y', `${tiltY.toFixed(2)}deg`)
-  }
-
-  const handleMouseLeave = () => {
-    if (!cardRef.current) return
-    cardRef.current.style.setProperty('--tilt-x', '0deg')
-    cardRef.current.style.setProperty('--tilt-y', '0deg')
-  }
-
   const themeVars = {
     '--dev-accent': developer.accentHex,
     '--dev-secondary': developer.secondaryHex,
   } as CSSProperties
 
-  const sloganLines = developer.sloganLines || [developer.slogan || 'Built to Be Seen.']
-
   return (
     <div
-      ref={cardRef}
       className={`dev-card dev-card--${developer.themeColor} ${isActive ? 'is-active' : ''}`}
       style={themeVars}
       onClick={onClick}
@@ -51,8 +29,6 @@ export const DeveloperGlitchCard: React.FC<DeveloperGlitchCardProps> = memo(({
           onClick?.()
         }
       }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
       role="button"
       tabIndex={0}
       aria-label={`${developer.name} - ${developer.role}`}
@@ -110,15 +86,6 @@ export const DeveloperGlitchCard: React.FC<DeveloperGlitchCardProps> = memo(({
           <span className="dev-card__slice dev-card__slice--5" />
           <span className="dev-card__slice dev-card__slice--6" />
         </div>
-
-        {/* 3D Angled Extruded Slogan Typography */}
-        <div className="dev-card__slogan-3d" aria-hidden="true">
-          {sloganLines.map((line, idx) => (
-            <span key={idx} className={`dev-card__slogan-line dev-card__slogan-line--${idx}`}>
-              {line}
-            </span>
-          ))}
-        </div>
       </div>
 
       {/* Developer Credentials Body with Description & Skills */}
@@ -166,4 +133,3 @@ export const DeveloperGlitchCard: React.FC<DeveloperGlitchCardProps> = memo(({
     </div>
   )
 })
-

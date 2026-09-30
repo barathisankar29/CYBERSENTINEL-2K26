@@ -19,19 +19,19 @@ const IDENTITY_Z_INDEX = 9
  * The hero's own scroll distance, driving its own internal cinematic reveal.
  * Sticky-pin math: the sticky viewport stays pinned for (this value -
  * 100vh) of scroll; the reveal (progress 0->1) uses the first
- * HERO_COMPLETE_AT of that span — 300vh = ~3 viewport-height scrolls of
+ * HERO_COMPLETE_AT of that span — ~210vh = ~2 viewport-height scrolls of
  * progressive assembly — and the remainder is a hold. Every reveal window (cityLayers.config.ts,
  * identityReveal.config.ts) is expressed as a 0-1 fraction of that span, so
  * shortening it keeps every stage and their relative pacing intact.
  */
-const HERO_SCROLL_VH = 475
+const HERO_SCROLL_VH = 360
 
 /**
  * The reveal finishes at this fraction of the hero's scroll; the rest is a
  * hold on the fully-assembled scene so the hero visibly ends before the
- * navigation city scrolls in. 300vh of reveal / 0.8 = 375vh of scroll
- * (HERO_SCROLL_VH - 100vh), i.e. the reveal keeps its original pacing and
- * gains a ~75vh hold at the end.
+ * navigation city scrolls in. 260vh of scroll (HERO_SCROLL_VH - 100vh) x
+ * 0.8 = ~210vh of reveal (quicker than the original 300vh, same stages and
+ * relative pacing) plus a ~50vh hold at the end.
  */
 const HERO_COMPLETE_AT = 0.8
 

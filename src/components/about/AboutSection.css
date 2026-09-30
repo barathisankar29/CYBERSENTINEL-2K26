@@ -32,8 +32,11 @@
   top: 0;
   left: 0;
   width: 100%;
+  /* lvh, not dvh: the LARGE viewport (address bar hidden) is fixed, so this
+     never resizes mid-scroll when the phone's address bar slides away —
+     dvh lagged behind it and flashed a black band at the bottom. */
   height: 100%;
-  height: 100dvh;
+  height: 100lvh;
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
@@ -49,7 +52,7 @@
   background-image: 
     radial-gradient(ellipse at 50% 30%, rgba(5, 4, 10, 0.15) 0%, rgba(5, 4, 10, 0.48) 60%, rgba(5, 4, 10, 0.92) 100%),
     linear-gradient(180deg, rgba(5, 4, 10, 0.82) 0%, rgba(5, 4, 10, 0.22) 18%, rgba(5, 4, 10, 0.3) 65%, rgba(5, 4, 10, 0.9) 100%),
-    url('/assets/about/about-bg.jpg');
+    url('/assets/about/about-bg.webp');
   background-size: cover;
   background-position: center 25%;
   background-repeat: no-repeat;
@@ -987,6 +990,8 @@
 .club-member-card__details {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
   gap: 0.45rem;
   position: relative;
   z-index: 2;
@@ -1000,7 +1005,7 @@
   color: #ffffff;
   margin: 0;
   line-height: 1.25;
-  margin: 0 auto;
+  text-align: center;
 }
 
 .club-member-card__role-pill {
@@ -1055,6 +1060,76 @@
 .bldg-pod__corner--cyan { border-color: #22d3ee; }
 .bldg-pod__pillar--cyan { background: linear-gradient(180deg, transparent, #22d3ee, transparent); }
 .club-member-card__role-pill--cyan { background: rgba(34, 211, 238, 0.12); border: 1px solid rgba(34, 211, 238, 0.5); color: #22d3ee; }
+
+/* President Card: Centered Hero Pod & Highlight */
+.club-member-card--president {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: 100%;
+  max-width: 340px;
+  background: radial-gradient(circle at 50% 30%, rgba(34, 211, 238, 0.16) 0%, rgba(11, 10, 26, 0.95) 75%);
+  border-color: #22d3ee;
+  box-shadow:
+    0 8px 24px rgba(5, 4, 10, 0.85),
+    0 0 22px rgba(34, 211, 238, 0.35),
+    inset 0 0 16px rgba(34, 211, 238, 0.14);
+}
+
+.club-member-card--president:hover {
+  border-color: #38bdf8;
+  transform: translateY(-4px) scale(1.03);
+  box-shadow:
+    0 16px 42px rgba(5, 4, 10, 0.95),
+    0 0 32px rgba(34, 211, 238, 0.55),
+    inset 0 0 20px rgba(34, 211, 238, 0.22);
+}
+
+.club-member-card--president .bldg-pod__roof {
+  justify-content: center;
+  border-bottom-color: rgba(34, 211, 238, 0.4);
+}
+
+.club-member-card--president .bldg-pod__beacon {
+  justify-content: center;
+}
+
+.club-member-card--president .bldg-pod__dot--cyan {
+  width: 7px;
+  height: 7px;
+  background: #38bdf8;
+  box-shadow: 0 0 10px #38bdf8, 0 0 20px rgba(56, 189, 248, 0.8);
+}
+
+.club-member-card--president .bldg-pod__role-heading--cyan {
+  font-size: clamp(0.62rem, 1.1vw, 0.74rem);
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  color: #38bdf8;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
+}
+
+.club-member-card--president .club-member-card__name {
+  font-size: clamp(1.02rem, 1.35vw, 1.22rem);
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  text-align: center;
+  text-shadow:
+    0 0 10px rgba(34, 211, 238, 0.85),
+    0 0 22px rgba(34, 211, 238, 0.45);
+}
+
+.club-member-card--president .bldg-pod__corner--cyan {
+  width: 12px;
+  height: 12px;
+  border-width: 2px;
+  filter: drop-shadow(0 0 5px #22d3ee);
+}
+
+.club-member-card--president:hover .bldg-pod__corner--cyan {
+  width: 15px;
+  height: 15px;
+}
 
 /* Pink (Vice President) */
 .club-member-card--pink { border-color: rgba(255, 62, 165, 0.5); }
@@ -1822,6 +1897,14 @@
     word-break: break-word;
   }
 
+  .club-member-card--president {
+    max-width: 280px;
+  }
+
+  .club-member-card--president .club-member-card__name {
+    font-size: clamp(0.86rem, 3.6vw, 1.02rem);
+  }
+
   /* Leadership & Patrons */
   .leadership-section {
     gap: 2rem;
@@ -1979,5 +2062,88 @@
 
 .patron-neon-card .patron-card__corner {
   display: none;
+}
+
+/* ==========================================================================
+   Convenors and Co-Convenors Grids (Leadership Section)
+   ========================================================================== */
+.convenors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 460px));
+  justify-content: center;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.coconvenors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
+  gap: clamp(1.2rem, 2vw, 1.8rem);
+  width: 100%;
+  justify-content: center;
+}
+
+@media (max-width: 900px) {
+  .convenors-grid {
+    grid-template-columns: 1fr;
+    max-width: 360px;
+    margin: 0 auto;
+    gap: 1.8rem;
+  }
+
+  .coconvenors-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  [data-page='about'] :is(
+      .coconvenor-mecha-card,
+      .convenor-hud-card
+    ) {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  [data-page='about'] :is(
+      .coconvenor-mecha-card__scanner-line,
+      .convenor-hud-card__scanner-line
+    ) {
+    animation: none;
+    opacity: 0;
+  }
+
+  [data-page='about'] :is(.mecha-vent-stripe, .hud-reticle) {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .coconvenors-grid {
+    grid-template-columns: 1fr;
+    max-width: 320px;
+    margin: 0 auto;
+    gap: 1.4rem;
+  }
+
+  .convenors-grid {
+    max-width: 385px;
+    width: 100%;
+    margin: 0 auto;
+    gap: 1.8rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .convenors-grid {
+    max-width: 345px;
+  }
+
+  .coconvenors-grid {
+    max-width: 290px;
+  }
 }
 

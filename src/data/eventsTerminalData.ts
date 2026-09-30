@@ -25,7 +25,7 @@ const coordinator = (name: string, year: string, mobile?: string): Coordinator =
 /**
  * Event details from the organizers' official sheet
  * (CYBERSENTINEL2K26_SYMPOSIUM_EVENT_DETAILS.pdf): descriptions, timings,
- * cash prizes, rules and coordinators. `quote`, `chipLabel` and `chipSub`
+ * rules and coordinators. `quote`, `chipLabel` and `chipSub`
  * are the terminal design's decorative flavour text only.
  */
 export const ALL_EVENTS: EventSpec[] = [
@@ -44,7 +44,6 @@ export const ALL_EVENTS: EventSpec[] = [
     date: 'DAY 01',
     time: '10:30 AM - 02:00 PM',
     teamSize: 'UP TO 4 MEMBERS',
-    prizes: ['₹1200', '₹1000', '₹800'],
     coordinators: [
       coordinator('Dhanalakshmi', '4TH', '9345758749'),
       coordinator('Mohammed Sameer', '4TH', '6379532756'),
@@ -78,7 +77,6 @@ export const ALL_EVENTS: EventSpec[] = [
     date: 'DAY 01',
     time: '10:30 AM - 11:30 AM',
     teamSize: '2 MEMBERS',
-    prizes: ['₹1000', '₹800', '₹600'],
     coordinators: [
       coordinator('Rysha', '4TH', '9976753919'),
       coordinator('Jaya Swetha', '4TH', '8098037604'),
@@ -107,7 +105,6 @@ export const ALL_EVENTS: EventSpec[] = [
     date: 'DAY 01',
     time: '11:30 AM - 12:30 PM',
     teamSize: '2 MEMBERS',
-    prizes: ['₹1000', '₹800', '₹600'],
     coordinators: [
       coordinator('Yogesh D', '4TH', '8667221703'),
       coordinator('Santhiya', '4TH', '8778719518'),
@@ -140,7 +137,6 @@ export const ALL_EVENTS: EventSpec[] = [
     date: 'DAY 01',
     time: '01:15 PM - 02:15 PM',
     teamSize: 'SOLO OR TEAM',
-    prizes: ['₹1000', '₹800', '₹600'],
     coordinators: [
       coordinator('Sai Guru', '4TH', '7550177315'),
       coordinator('Aswathy', '4TH', '9566052452'),
@@ -173,7 +169,6 @@ export const ALL_EVENTS: EventSpec[] = [
     date: 'DAY 01',
     time: '02:15 PM - 03:15 PM',
     teamSize: '1 MEMBER',
-    prizes: ['₹1000', '₹800', '₹500'],
     coordinators: [
       coordinator('Tarun', '4TH', '7200997939'),
       coordinator('Mahesh', '4TH', '7558132727'),
@@ -210,7 +205,6 @@ export const ALL_EVENTS: EventSpec[] = [
     date: 'DAY 02',
     time: '10:30 AM - 03:30 PM',
     teamSize: '4 - 8 MEMBERS',
-    prizes: ['₹1400', '₹1100', '₹900'],
     coordinators: [
       coordinator('Amretha A K', '4TH', '9176447166'),
       coordinator('Dravidraju', '4TH', '9487957125'),
@@ -243,7 +237,6 @@ export const ALL_EVENTS: EventSpec[] = [
     date: 'DAY 02',
     time: '10:30 AM - 03:30 PM',
     teamSize: '1 MEMBER',
-    prizes: ['₹1000', '₹800', '₹500'],
     coordinators: [
       coordinator('Monika Prasad', '4TH', '7305628273'),
       coordinator('Ribaya', '4TH', '6383496073'),
@@ -278,7 +271,6 @@ export const ALL_EVENTS: EventSpec[] = [
     date: 'DAY 02',
     time: '10:30 AM - 11:30 AM',
     teamSize: '2 - 3 MEMBERS',
-    prizes: ['₹1000', '₹800', '₹500'],
     coordinators: [
       coordinator('Arun R', '4TH', '8015064450'),
       coordinator('Lakshanika', '4TH', '7305872675'),
@@ -309,7 +301,6 @@ export const ALL_EVENTS: EventSpec[] = [
     date: 'DAY 02',
     time: '11:30 AM - 12:30 PM',
     teamSize: '2 - 3 MEMBERS',
-    prizes: ['₹1000', '₹800', '₹500'],
     coordinators: [
       coordinator('Dipika G', '4TH', '9080505979'),
       coordinator('Vilfin', '4TH', '6369534894'),
@@ -341,7 +332,6 @@ export const ALL_EVENTS: EventSpec[] = [
     date: 'DAY 02',
     time: '01:15 PM - 02:15 PM',
     teamSize: '3 MEMBERS',
-    prizes: ['₹1000', '₹800', '₹500'],
     coordinators: [
       coordinator('Ahamed Bassam', '4TH', '9043058272'),
       coordinator('Prathish', '4TH', '7708832955'),
@@ -376,7 +366,6 @@ export const ALL_EVENTS: EventSpec[] = [
     date: 'DAY 02',
     time: '02:15 PM - 03:15 PM',
     teamSize: '2 - 3 MEMBERS',
-    prizes: ['₹1000', '₹800', '₹500'],
     coordinators: [
       coordinator('Vishnuram', '4TH', '8122647340'),
       coordinator('Karthik D', '4TH', '8015134123'),
@@ -396,6 +385,28 @@ export const ALL_EVENTS: EventSpec[] = [
       'Each correct answer will be awarded points.',
       'The team with the highest score will be declared the winner.',
       'The decision of the organizers/judges will be final and binding.'
+    ]
+  },
+  {
+    // Mystery event: included in the Day 2 pass; game, format, timing and
+    // coordinators not decided yet (backend row: code ES, 1-player placeholder).
+    id: 'e_sports',
+    moduleId: 'firmware',
+    day: 2,
+    track: 'non_technical',
+    title: 'E-SPORTS',
+    quote: '"THE ARENA IS SET. THE GAME IS A SECRET."',
+    description:
+      'E-Sports is the mystery event of Day 2. The game, format and team size will be revealed soon. It is included with every Day 2 and combo pass.',
+    date: 'DAY 02',
+    time: 'TO BE ANNOUNCED',
+    teamSize: 'TO BE ANNOUNCED',
+    coordinators: [],
+    chipLabel: 'MYSTERY',
+    chipSub: '???',
+    protocols: [
+      'The game, format and team size will be announced soon.',
+      'Included with every Day 2 and combo pass; no separate fee.'
     ]
   },
   {

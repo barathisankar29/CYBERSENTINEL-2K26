@@ -11,7 +11,7 @@ export const DevelopersSection: React.FC = () => {
       <div className="developers-section__subgroup">
         <div className="developers-section__header">
           <h3 className="cred-group-title cred-group-title--pink developers-section__title">
-            <span className="developers-section__title-white">MEET OUR</span>{' '}
+            <span className="developers-section__title-white">WEB DESIGNERS AND</span>{' '}
             <span className="developers-section__title-neon">FRONTEND DEVELOPERS</span>
           </h3>
         </div>

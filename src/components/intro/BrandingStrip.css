@@ -100,6 +100,6 @@
 
   [data-logo-id='vel-tech'] .branding-strip__logo {
     height: auto;
-    width: min(62vw, 250px);
+    width: min(46vw, 180px);
   }
 }

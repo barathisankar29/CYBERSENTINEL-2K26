@@ -1,108 +1,47 @@
 /**
- * Utility for managing intro video seen state across user sessions.
- * Stores state in cookies (with fallback to localStorage & sessionStorage)
- * so that new users see the cinematic intro clip once, while returning users
- * jump directly to the opening initializing transition.
+ * Intro video state: the cinematic intro plays on EVERY visit — each fresh
+ * open or reload of the site. Only moving around inside the site (e.g.
+ * coming back to the home page from another page) skips it, so it is
+ * tracked in memory for the current page load, never persisted.
  */
 
-const INTRO_COOKIE_KEY = 'cybersentinel_intro_seen'
-// 7 days cookie lifespan (in seconds)
-const COOKIE_MAX_AGE_SECONDS = 7 * 24 * 60 * 60
+// Earlier builds remembered the intro for 7 days (cookie + storage); those
+// flags are cleared so they can't keep skipping it for returning visitors.
+const LEGACY_KEY = 'cybersentinel_intro_seen'
 
-/**
- * Checks if the user has already seen the intro clip.
- * Reads from document.cookie, with localStorage and sessionStorage fallbacks.
- */
+let playedThisLoad = false
+
+function clearLegacyFlags(): void {
+  if (typeof document === 'undefined') return
+  try {
+    document.cookie = `${LEGACY_KEY}=; path=/; max-age=0; SameSite=Lax`
+  } catch {
+    // ignore
+  }
+  try {
+    localStorage.removeItem(LEGACY_KEY)
+  } catch {
+    // ignore
+  }
+  try {
+    sessionStorage.removeItem(LEGACY_KEY)
+  } catch {
+    // ignore
+  }
+}
+clearLegacyFlags()
+
+/** Whether the intro already played (or was skipped) during this page load. */
 export function hasSeenIntro(): boolean {
-  if (typeof document === 'undefined') return false
-
-  // 1. Check cookies
-  try {
-    const cookies = document.cookie.split(';')
-    for (const rawCookie of cookies) {
-      const trimmed = rawCookie.trim()
-      const [key, val] = trimmed.split('=')
-      if (key === INTRO_COOKIE_KEY && val === 'true') {
-        return true
-      }
-    }
-  } catch {
-    // Ignore cookie read error
-  }
-
-  // 2. Fallback check localStorage
-  try {
-    if (localStorage.getItem(INTRO_COOKIE_KEY) === 'true') {
-      return true
-    }
-  } catch {
-    // Ignore localStorage error
-  }
-
-  // 3. Fallback check sessionStorage
-  try {
-    if (sessionStorage.getItem(INTRO_COOKIE_KEY) === 'true') {
-      return true
-    }
-  } catch {
-    // Ignore sessionStorage error
-  }
-
-  return false
+  return playedThisLoad
 }
 
-/**
- * Marks the intro clip as seen in cookies, localStorage, and sessionStorage.
- */
+/** Marks the intro as done for the rest of this page load. */
 export function markIntroAsSeen(): void {
-  if (typeof document === 'undefined') return
-
-  // 1. Store in document.cookie
-  try {
-    document.cookie = `${INTRO_COOKIE_KEY}=true; path=/; max-age=${COOKIE_MAX_AGE_SECONDS}; SameSite=Lax`
-  } catch {
-    // Ignore cookie write error
-  }
-
-  // 2. Store in localStorage
-  try {
-    localStorage.setItem(INTRO_COOKIE_KEY, 'true')
-  } catch {
-    // Ignore localStorage error
-  }
-
-  // 3. Store in sessionStorage
-  try {
-    sessionStorage.setItem(INTRO_COOKIE_KEY, 'true')
-  } catch {
-    // Ignore sessionStorage error
-  }
+  playedThisLoad = true
 }
 
-/**
- * Resets the intro seen state so the user can replay the intro.
- */
+/** Lets the intro play again (e.g. a "replay intro" control). */
 export function resetIntroSeen(): void {
-  if (typeof document === 'undefined') return
-
-  // 1. Clear cookie
-  try {
-    document.cookie = `${INTRO_COOKIE_KEY}=; path=/; max-age=0; SameSite=Lax`
-  } catch {
-    // Ignore
-  }
-
-  // 2. Clear localStorage
-  try {
-    localStorage.removeItem(INTRO_COOKIE_KEY)
-  } catch {
-    // Ignore
-  }
-
-  // 3. Clear sessionStorage
-  try {
-    sessionStorage.removeItem(INTRO_COOKIE_KEY)
-  } catch {
-    // Ignore sessionStorage error
-  }
+  playedThisLoad = false
 }

@@ -52,7 +52,7 @@ export function CharacterProfile({ character, registration }: CharacterProfilePr
         <footer className="profile-footer">
           <div className="profile-footer__left">
             <img
-              src={character?.crestImage || '/assets/characters/cyber-crest.png'}
+              src={character?.crestImage || '/assets/characters/cyber-crest.webp'}
               alt="Bureau Crest"
               className="profile-footer__crest"
               aria-hidden="true"

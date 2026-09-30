@@ -6,6 +6,9 @@ import { RetroNav } from './RetroNav';
 import { sound } from './sound';
 import { RegistrationPortalPage, type RegistrationPortalInitialData } from './RegistrationPortalPage';
 import { RegisterModal } from './RegisterModal';
+import { RegistrationComingSoon } from './RegistrationComingSoon';
+import { isRegistrationOpen, registrationOpensAt } from '@/config/registrationLaunch';
+import { useMascot } from '@/components/mascot';
 import './eventsTerminal.css';
 
 // Screens reachable from RetroNav. The reference project also ships
@@ -56,6 +59,7 @@ export function EventsTerminalApp({
   startWithRegistration = false,
   onStartRegistrationClose
 }: EventsTerminalAppProps = {}) {
+  const { dispatchMascotEvent } = useMascot();
   const [activeModule, setActiveModule] = useState<ModuleId>(initialModule);
   // The event the user picked on the EVENTS grid (card, KNOW MORE or
   // REGISTER). Starts empty so no card is highlighted until one is chosen;
@@ -73,7 +77,10 @@ export function EventsTerminalApp({
     }
   });
   const [portalData, setPortalData] = useState<RegistrationPortalInitialData | null>(null);
-  const [packChooserOpen, setPackChooserOpen] = useState(startWithRegistration);
+  // Until registration launches (src/config/registrationLaunch.ts) the whole
+  // terminal sits blurred and inert under the "opens soon" overlay.
+  const [registrationLocked, setRegistrationLocked] = useState(() => !isRegistrationOpen());
+  const [packChooserOpen, setPackChooserOpen] = useState(() => startWithRegistration && isRegistrationOpen());
   // True while the registration flow was opened by the /register route
   // itself; dismissing it then leaves /register for the event terminal.
   const [flowFromRoute, setFlowFromRoute] = useState(startWithRegistration);
@@ -129,11 +136,13 @@ export function EventsTerminalApp({
   const handleSelectEvent = (event: EventSpec) => {
     setSelectedEvent(event);
     setActiveModule('firmware');
+    dispatchMascotEvent('MASCOT_EVENT_OPEN', { message: `Here's everything you need to know about ${event.title}.` });
   };
 
   const handleNavigateToEvents = (tab: EventsTab = 'all') => {
     setEventsTab(tab);
     setActiveModule('compete');
+    dispatchMascotEvent('MASCOT_DAY_SELECTED', { day: tab });
   };
 
   const handlePortalNavigateToRegistrations = () => {
@@ -201,94 +210,105 @@ export function EventsTerminalApp({
   const activeFrameTheme = frameThemes[activeModule];
 
   return (
-    <div
-      className={`cft-root min-h-screen bg-black flex flex-col justify-between items-center p-3 sm:p-6 transition-colors duration-150 ${
-        settings.scanlines ? 'scanlines' : ''
-      } ${settings.crtFlicker ? 'crt-flicker' : ''}`}
-      style={
-        {
-          '--theme-border': activeFrameTheme.border,
-          '--theme-glow': activeFrameTheme.glow,
-          '--theme-cta': '#ff007f'
-        } as React.CSSProperties
-      }
-    >
-      {/* Way back to the main CyberSentinel site (the reference is a closed
-          single-page app), styled in the terminal's own pixel language. */}
-      <Link
-        to="/#buildings"
-        onClick={() => sound.playNavClick()}
-        className="self-start mb-2 px-2.5 py-1 font-silkscreen text-[10px] text-gray-400 border border-[#333] hover:text-white hover:border-[#ff007f] transition-colors"
-        title="Exit terminal, return to CyberSentinel city"
-      >
-        ‹ EXIT TO CITY
-      </Link>
-
-      <RetroNav activeModule={activeModule} onSelectModule={setActiveModule} />
-
-      <main
-        className="w-full max-w-6xl pixel-window-frame bg-black relative p-4 sm:p-7 my-auto transition-all"
+    <>
+      <div
+        inert={registrationLocked}
+        aria-hidden={registrationLocked || undefined}
+        className={`cft-root min-h-screen bg-black flex flex-col justify-between items-center p-3 sm:p-6 transition-colors duration-150 ${
+          settings.scanlines ? 'scanlines' : ''
+        } ${settings.crtFlicker ? 'crt-flicker' : ''}`}
         style={
           {
             '--theme-border': activeFrameTheme.border,
             '--theme-glow': activeFrameTheme.glow,
-            '--dither-bg': activeFrameTheme.ditherBg
+            '--theme-cta': '#ff007f'
           } as React.CSSProperties
         }
-        data-purpose="main-screen-container"
       >
-        {activeModule === 'firmware' && (
-          <FirmwareScreen
-            event={detailEvent}
-            onBookmarkToggle={handleBookmarkToggle}
-            isBookmarked={bookmarkedIds.includes(detailEvent.id)}
-            onSelectModule={setActiveModule}
-            onProceedToPortal={openPortal}
+        {/* Way back to the main CyberSentinel site (the reference is a closed
+            single-page app), styled in the terminal's own pixel language. */}
+        <Link
+          to="/#buildings"
+          onClick={() => sound.playNavClick()}
+          className="self-start mb-2 px-2.5 py-1 font-silkscreen text-[10px] text-gray-400 border border-[#333] hover:text-white hover:border-[#ff007f] transition-colors"
+          title="Exit terminal, return to CyberSentinel city"
+        >
+          ‹ EXIT TO CITY
+        </Link>
+
+        <RetroNav activeModule={activeModule} onSelectModule={setActiveModule} />
+
+        <main
+          className="w-full max-w-6xl pixel-window-frame bg-black relative p-4 sm:p-7 my-auto transition-all"
+          style={
+            {
+              '--theme-border': activeFrameTheme.border,
+              '--theme-glow': activeFrameTheme.glow,
+              '--dither-bg': activeFrameTheme.ditherBg
+            } as React.CSSProperties
+          }
+          data-purpose="main-screen-container"
+        >
+          {activeModule === 'firmware' && (
+            <FirmwareScreen
+              event={detailEvent}
+              onBookmarkToggle={handleBookmarkToggle}
+              isBookmarked={bookmarkedIds.includes(detailEvent.id)}
+              onSelectModule={setActiveModule}
+              onProceedToPortal={openPortal}
+            />
+          )}
+
+          {activeModule === 'home' && (
+            <HomeScreen onSelectModule={setActiveModule} onNavigateToEvents={handleNavigateToEvents} />
+          )}
+
+          {activeModule === 'compete' && (
+            <CompeteScreen
+              onSelectEvent={handleSelectEvent}
+              onHighlightEvent={setSelectedEvent}
+              selectedEventId={selectedEvent?.id}
+              initialTab={eventsTab}
+              onTabChange={(tab) => {
+              setEventsTab(tab)
+              dispatchMascotEvent('MASCOT_DAY_SELECTED', { day: tab })
+            }}
+              onProceedToPortal={openPortal}
+            />
+          )}
+
+          {activeModule === 'favorites' && (
+            <FavoritesScreen onSelectModule={setActiveModule} onNavigateToTeamCreation={handleNavigateToTeamCreation} />
+          )}
+
+          {activeModule === 'team' && (
+            <TeamCreationScreen
+              key={teamCreationTarget.regId ?? 'manual'}
+              selectedRegId={teamCreationTarget.regId}
+              selectedEventName={teamCreationTarget.eventName}
+              onSelectModule={setActiveModule}
+            />
+          )}
+        </main>
+
+        {/* Route-opened "Choose your player" (the /register page) */}
+        {packChooserOpen && (
+          <RegisterModal event={null} isOpen onClose={handlePackChooserClose} onProceedToPortal={openPortal} />
+        )}
+
+        {/* Full-screen registration portal (submits to the Supabase backend) */}
+        {portalData && (
+          <RegistrationPortalPage
+            initialData={portalData}
+            onClose={handlePortalClose}
+            onNavigateToRegistrations={handlePortalNavigateToRegistrations}
           />
         )}
+      </div>
 
-        {activeModule === 'home' && (
-          <HomeScreen onSelectModule={setActiveModule} onNavigateToEvents={handleNavigateToEvents} />
-        )}
-
-        {activeModule === 'compete' && (
-          <CompeteScreen
-            onSelectEvent={handleSelectEvent}
-            onHighlightEvent={setSelectedEvent}
-            selectedEventId={selectedEvent?.id}
-            initialTab={eventsTab}
-            onTabChange={setEventsTab}
-            onProceedToPortal={openPortal}
-          />
-        )}
-
-        {activeModule === 'favorites' && (
-          <FavoritesScreen onSelectModule={setActiveModule} onNavigateToTeamCreation={handleNavigateToTeamCreation} />
-        )}
-
-        {activeModule === 'team' && (
-          <TeamCreationScreen
-            key={teamCreationTarget.regId ?? 'manual'}
-            selectedRegId={teamCreationTarget.regId}
-            selectedEventName={teamCreationTarget.eventName}
-            onSelectModule={setActiveModule}
-          />
-        )}
-      </main>
-
-      {/* Route-opened "Choose your player" (the /register page) */}
-      {packChooserOpen && (
-        <RegisterModal event={null} isOpen onClose={handlePackChooserClose} onProceedToPortal={openPortal} />
+      {registrationLocked && (
+        <RegistrationComingSoon opensAt={registrationOpensAt()} onOpen={() => setRegistrationLocked(false)} />
       )}
-
-      {/* Full-screen registration portal (submits to the Supabase backend) */}
-      {portalData && (
-        <RegistrationPortalPage
-          initialData={portalData}
-          onClose={handlePortalClose}
-          onNavigateToRegistrations={handlePortalNavigateToRegistrations}
-        />
-      )}
-    </div>
+    </>
   );
 }

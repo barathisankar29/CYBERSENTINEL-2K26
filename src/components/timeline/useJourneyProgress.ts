@@ -1,10 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type { DayKey } from '@/types/timeline'
 
-// Keep in sync with the CSS transition duration on `.is-repositioning` in
-// TimelineJourney.css — this is how long the short cinematic slide to a
-// new day's start takes before the automatic journey begins.
-const REPOSITION_MS = 600
 // How long the train dwells at each station before continuing (autoplay only).
 const SETTLE_MS = 550
 // Cinematic pace: a full, uninterrupted 0-1 journey would take this long.
@@ -27,40 +22,37 @@ function easeInOutCubic(t: number): number {
 export type JourneyMode = 'idle' | 'auto' | 'manual'
 
 interface UseJourneyProgressArgs {
-  activeDay: DayKey | null
-  /** Sorted, deduped progress-space thresholds for the CURRENT day,
-   * always including 0 and 1 as the first/last entries — each entry is a
-   * "stop" the train can rest at; index i (for 1 <= i <= stations.length)
-   * corresponds to that day's i-th station in visit order. */
+  /** False until the visitor starts the journey (intro screen). */
+  active: boolean
+  /** Sorted, deduped progress-space thresholds, starting with 0 (the
+   * departure point, before the first stop). Index i (1 <= i <=
+   * stops.length) is the i-th stop in travel order; the LAST entry is the
+   * final destination, so the journey ends parked at it. */
   breakpoints: number[]
   reducedMotion: boolean
 }
 
 /**
- * The Timeline's single canonical progress value (0-1), now stepped
+ * The Timeline's single canonical progress value (0-1), stepped
  * station-to-station rather than scrubbed continuously:
  *
  *   journeyProgress -> train world position -> camera pan
  *                    -> current station index -> active card -> HUD
  *
- * Selecting a day starts the automatic journey, walking every station in
- * order with a settle pause at each. The instant the user scrolls, swipes,
- * or presses a nav key, autoplay stops and that gesture becomes the first
- * manual step — every gesture after that moves exactly one station
- * forward or back (see `step` below), never a continuous scrub. Switching
- * days cancels whichever driver is running, snaps progress to the new
- * day's start (0) so a short CSS transition (`.is-repositioning`, timed to
- * REPOSITION_MS) can carry the train and world across, then restarts the
- * automatic journey for the new day — never a replay of the previous
- * day's journey.
+ * One continuous journey (Day 1 flows straight into Day 2). Starting it
+ * runs the automatic journey, walking every stop in order with a settle
+ * pause at each, and ending parked at the final destination. The instant
+ * the user scrolls, swipes, or presses a nav key, autoplay stops and that
+ * gesture becomes the first manual step — every gesture after that moves
+ * exactly one stop forward or back (see `step` below). `jumpTo` (the HUD's
+ * DAY 01 / DAY 02 buttons) rides the train along the track to a stop; it
+ * never teleports.
  */
-export function useJourneyProgress({ activeDay, breakpoints, reducedMotion }: UseJourneyProgressArgs) {
+export function useJourneyProgress({ active, breakpoints, reducedMotion }: UseJourneyProgressArgs) {
   const [progress, setProgress] = useState(0)
   const [stepIndex, setStepIndex] = useState(0)
-  const [isRepositioning, setIsRepositioning] = useState(false)
 
   const runIdRef = useRef(0)
-  const prevDayRef = useRef<DayKey | null>(null)
   const breakpointsRef = useRef(breakpoints)
   breakpointsRef.current = breakpoints
   const rafRef = useRef<number | null>(null)
@@ -124,7 +116,7 @@ export function useJourneyProgress({ activeDay, breakpoints, reducedMotion }: Us
   // the next, then a brief settle dwell before continuing — so the train
   // visibly arrives at, pauses at, and departs each station rather than
   // sweeping past all of them in one motion. Stops the moment `mode`
-  // leaves 'auto' (see the day-select effect and `step` below).
+  // leaves 'auto' (see the start effect and `step` below).
   const modeRef = useRef<JourneyMode>('idle')
   const runAutoJourney = useCallback(
     (runId: number) => {
@@ -151,16 +143,13 @@ export function useJourneyProgress({ activeDay, breakpoints, reducedMotion }: Us
     [animateProgressTo],
   )
 
-  // Drives day selection / day switching.
+  // Starts the automatic journey once, when the visitor begins it.
   useEffect(() => {
-    if (!activeDay) {
-      prevDayRef.current = null
+    if (!active) {
       modeRef.current = 'idle'
       return
     }
 
-    const isSwitch = prevDayRef.current !== null && prevDayRef.current !== activeDay
-    prevDayRef.current = activeDay
     stopTimers()
     runIdRef.current += 1
     const runId = runIdRef.current
@@ -172,30 +161,14 @@ export function useJourneyProgress({ activeDay, breakpoints, reducedMotion }: Us
     setStepIndex(0)
 
     if (reducedMotion) {
-      setIsRepositioning(false)
       modeRef.current = 'manual'
       return stopTimers
     }
 
-    if (isSwitch) {
-      // Short cinematic repositioning slide directly to the new day's
-      // start (CSS-driven — see .is-repositioning) — never a replay of
-      // the previous day's journey across the bridge.
-      setIsRepositioning(true)
-      timeoutRef.current = window.setTimeout(() => {
-        if (runIdRef.current !== runId) return
-        setIsRepositioning(false)
-        modeRef.current = 'auto'
-        runAutoJourney(runId)
-      }, REPOSITION_MS)
-    } else {
-      setIsRepositioning(false)
-      modeRef.current = 'auto'
-      runAutoJourney(runId)
-    }
-
+    modeRef.current = 'auto'
+    runAutoJourney(runId)
     return stopTimers
-  }, [activeDay, reducedMotion, stopTimers, runAutoJourney])
+  }, [active, reducedMotion, stopTimers, runAutoJourney])
 
   // Moves exactly one stop forward (`direction: 1`) or back (`direction:
   // -1`). Called by the gesture listeners below. If autoplay is still
@@ -205,7 +178,7 @@ export function useJourneyProgress({ activeDay, breakpoints, reducedMotion }: Us
   // finish first.
   const step = useCallback(
     (direction: 1 | -1) => {
-      if (!activeDay) return
+      if (!active) return
       const bps = breakpointsRef.current
       const target = stepIndexRef.current + direction
       if (target < 0 || target > bps.length - 1) return
@@ -224,12 +197,12 @@ export function useJourneyProgress({ activeDay, breakpoints, reducedMotion }: Us
         if (pendingTargetRef.current === target) pendingTargetRef.current = null
       })
     },
-    [activeDay, stopTimers, animateProgressTo],
+    [active, stopTimers, animateProgressTo],
   )
 
   const jumpTo = useCallback(
     (targetIndex: number) => {
-      if (!activeDay) return
+      if (!active) return
       const bps = breakpointsRef.current
       const target = Math.max(0, Math.min(bps.length - 1, targetIndex))
       if (pendingTargetRef.current === target) return
@@ -242,7 +215,7 @@ export function useJourneyProgress({ activeDay, breakpoints, reducedMotion }: Us
         if (pendingTargetRef.current === target) pendingTargetRef.current = null
       })
     },
-    [activeDay, stopTimers, animateProgressTo],
+    [active, stopTimers, animateProgressTo],
   )
 
   // Every wheel notch, swipe, or nav key press moves exactly one station —
@@ -251,7 +224,7 @@ export function useJourneyProgress({ activeDay, breakpoints, reducedMotion }: Us
   // TimelinePage.tsx) and prevents default throughout so the page itself
   // never scrolls out from under the journey.
   useEffect(() => {
-    if (!activeDay) return
+    if (!active) return
 
     let touchStartY: number | null = null
 
@@ -328,9 +301,9 @@ export function useJourneyProgress({ activeDay, breakpoints, reducedMotion }: Us
       window.removeEventListener('touchend', onTouchEnd)
       window.removeEventListener('keydown', onKeyDown)
     }
-  }, [activeDay, step, jumpTo])
+  }, [active, step, jumpTo])
 
   useEffect(() => stopTimers, [stopTimers])
 
-  return { progress, stepIndex, isRepositioning }
+  return { progress, stepIndex, jumpTo }
 }

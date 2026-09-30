@@ -11,7 +11,9 @@ interface TimelinePointProps {
  * here — a single floating card follows the train instead (see
  * TimelineActiveCard in TimelineJourney.tsx) — so this is just the small
  * glowing dot marking where each station sits along the bridge, lit up
- * only for whichever station the train is currently at.
+ * only for whichever station the train is currently at. Programme
+ * milestones and the final destination get their own marker treatment
+ * (`timeline-point--milestone` / `--destination`).
  *
  * Memoized because `progress` (and therefore the parent's render) changes
  * up to 60x/second during the journey, but any given marker's own props
@@ -20,7 +22,7 @@ interface TimelinePointProps {
  */
 function TimelinePointImpl({ point, isCurrent }: TimelinePointProps) {
   return (
-    <div className="timeline-point" style={{ left: `${point.position * 100}%` }}>
+    <div className={`timeline-point timeline-point--${point.kind}`} style={{ left: `${point.position * 100}%` }}>
       <span className={`timeline-point__glow ${isCurrent ? 'is-active' : ''}`} aria-hidden="true" />
       <span className={`timeline-point__marker ${isCurrent ? 'is-active' : ''}`} />
     </div>

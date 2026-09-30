@@ -64,7 +64,8 @@ const PACK_CONFIGS: Record<string, CharacterConfig> = {
       { id: 'ruelle-2', name: 'Find the BGM', day: 'DAY 2', originalEventId: 'bgm' },
       { id: 'ruelle-3', name: 'Lost in Lyrics', day: 'DAY 2', originalEventId: 'lyrics' },
       { id: 'ruelle-4', name: 'Mixed Signals', day: 'DAY 2', originalEventId: 'mixed_signals' },
-      { id: 'ruelle-5', name: 'Spotlight', day: 'DAY 2', originalEventId: 'talent_show' }
+      { id: 'ruelle-5', name: 'Spotlight', day: 'DAY 2', originalEventId: 'talent_show' },
+      { id: 'ruelle-6', name: 'E-Sports', day: 'DAY 2', originalEventId: 'e_sports' }
     ]
   },
   'DR. DACRE': {
@@ -106,7 +107,8 @@ const PACK_CONFIGS: Record<string, CharacterConfig> = {
       { id: 'cosma-7', name: 'Find the BGM', day: 'DAY 2', originalEventId: 'bgm' },
       { id: 'cosma-8', name: 'Lost in Lyrics', day: 'DAY 2', originalEventId: 'lyrics' },
       { id: 'cosma-9', name: 'Mixed Signals', day: 'DAY 2', originalEventId: 'mixed_signals' },
-      { id: 'cosma-10', name: 'Spotlight', day: 'DAY 2', originalEventId: 'talent_show' }
+      { id: 'cosma-10', name: 'Spotlight', day: 'DAY 2', originalEventId: 'talent_show' },
+      { id: 'cosma-11', name: 'E-Sports', day: 'DAY 2', originalEventId: 'e_sports' }
     ]
   }
 };
@@ -184,6 +186,15 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, modalState, onClose]);
 
+  // Keep the site mascot out of the way while a pack popup is open. An
+  // attribute on <html> (not a body:has() rule, which re-checks the whole
+  // page on every style change).
+  useEffect(() => {
+    if (!isOpen) return;
+    document.documentElement.setAttribute('data-mascot-hidden', '');
+    return () => document.documentElement.removeAttribute('data-mascot-hidden');
+  }, [isOpen]);
+
   // Lock body scroll to prevent duplicate background scrollbars
   useEffect(() => {
     if (isOpen) {
@@ -244,8 +255,11 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
     setModalState(null);
   };
 
+  // Every pack's checklist is selectable. Day passes keep their fixed day fee
+  // (the backend registers the whole day); the ticked events are what the
+  // visitor plans to play and are saved to their profile.
   const toggleEvent = (eventId: string) => {
-    if (!modalState || !PACK_CONFIGS[modalState.characterKey]?.isPerEventPricing) return;
+    if (!modalState) return;
     sound.playBlip();
     setModalState((prev) => {
       if (!prev) return null;
@@ -865,9 +879,6 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                       {modalState.selectedEventIds.length}/{activeConfig.events.length}
                     </span>
                   </div>
-                  {!activeConfig.isPerEventPricing ? (
-                    <span className="font-arcade text-[8px] sm:text-[9px] text-zinc-400">[ALL INCLUDED]</span>
-                  ) : (
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
@@ -884,8 +895,12 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                       [CLEAR]
                     </button>
                   </div>
-                  )}
                 </div>
+                {!activeConfig.isPerEventPricing && (
+                  <p className="font-pixel text-[10px] text-zinc-400 pt-1.5">
+                    The pass price covers every event on its day — tick the ones you&apos;ll play.
+                  </p>
+                )}
 
                 {/* Event Checkboxes List */}
                 <div className="my-3 space-y-1.5">
@@ -896,11 +911,9 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                         type="button"
                         key={ev.id}
                         onClick={() => toggleEvent(ev.id)}
-                        aria-pressed={isChecked}
-                        aria-disabled={!activeConfig.isPerEventPricing}
-                        className={`w-full text-left flex items-center justify-between p-2 border select-none transition-all ${
-                          activeConfig.isPerEventPricing ? 'cursor-pointer' : 'cursor-default'
-                        } ${
+                        role="checkbox"
+                        aria-checked={isChecked}
+                        className={`w-full text-left flex items-center justify-between p-2 border select-none transition-all cursor-pointer ${
                           isChecked
                             ? 'bg-zinc-950 text-white'
                             : 'bg-black/60 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300'

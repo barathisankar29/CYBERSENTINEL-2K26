@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { NavigationBuilding } from '@/types/navigation'
+import { useMascot } from '@/components/mascot'
 import './Building.css'
 
 /**
@@ -102,6 +103,7 @@ interface BuildingProps {
  */
 export function Building({ building, revealed, isMobile }: BuildingProps) {
   const navigate = useNavigate()
+  const { dispatchMascotEvent } = useMascot()
   const position = isMobile ? building.position.mobile : building.position.desktop
   const scale = position.scale ?? 1
   const aspectRatio = building.assetWidth / building.assetHeight
@@ -154,9 +156,14 @@ export function Building({ building, revealed, isMobile }: BuildingProps) {
     <button
       type="button"
       className="nav-building"
+      data-building-id={building.id}
       style={wrapperStyle}
       aria-label={building.label}
+      onPointerEnter={() => {
+        dispatchMascotEvent('MASCOT_HOVER_BUILDING', { buildingId: building.id })
+      }}
       onClick={() => {
+        dispatchMascotEvent('MASCOT_CLICK_BUILDING', { buildingId: building.id })
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
         navigate(`/${building.sectionSlug}`)
       }}

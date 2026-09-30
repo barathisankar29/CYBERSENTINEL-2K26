@@ -5,8 +5,11 @@
 .city-scene__viewport {
   position: sticky;
   top: 0;
+  /* lvh, not dvh: the LARGE viewport (address bar hidden) is fixed, so this
+     never resizes mid-scroll when the phone's address bar slides away —
+     dvh lagged behind it and flashed a black band at the bottom. */
   height: 100vh;
-  height: 100dvh;
+  height: 100lvh;
   overflow: hidden;
   background: var(--city-black);
 }

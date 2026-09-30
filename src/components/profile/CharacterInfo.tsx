@@ -20,7 +20,7 @@ export function CharacterInfo({ character, registration }: CharacterInfoProps) {
   const bloodType = character?.bloodType || 'O'
   const gender = character?.gender || 'MALE'
   const quote = character?.quote || '"PEOPLE BREAK SYSTEMS. I FIX BOTH."____'
-  const shortImage = character?.shortImage || '/assets/characters/short_nico.jpeg'
+  const shortImage = character?.shortImage || '/assets/characters/short_nico.webp'
 
   return (
     <section className="profile-panel profile-panel--id-card" aria-label="Personnel Identification">
@@ -96,7 +96,7 @@ export function CharacterInfo({ character, registration }: CharacterInfoProps) {
           {/* Cyber Winged Crest Sigil */}
           <div className="profile-id-crest-wrap">
             <img
-              src={character?.crestImage || '/assets/characters/cyber-crest.png'}
+              src={character?.crestImage || '/assets/characters/cyber-crest.webp'}
               alt={`${displayName} Sigil`}
               className="profile-id-crest-img"
               draggable={false}
