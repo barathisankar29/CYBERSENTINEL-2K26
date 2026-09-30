@@ -6,6 +6,7 @@ import { IdentityLayer, REGISTER_CTA_INTERACTIVE_PROGRESS } from '@/components/i
 import { ScrollIndicator } from '@/components/ui/ScrollIndicator'
 import { CityLayer } from './CityLayer'
 import { ParticleField } from './ParticleField'
+import { RainEffect } from './RainEffect'
 import { cityLayers } from './cityLayers.config'
 import './CityScene.css'
 
@@ -77,6 +78,8 @@ export function CityScene({ introCompleted = true }: CitySceneProps) {
         {cityLayers.map((layer) => (
           <CityLayer key={layer.id} layer={layer} isMobile={isMobile} />
         ))}
+        {/* Over the city layers (z 1-7), under the logo/identity (z 9). */}
+        <RainEffect zIndex={PARTICLE_Z_INDEX} />
         <ParticleField zIndex={PARTICLE_Z_INDEX} reducedMotion={reducedMotion} isMobile={isMobile} />
         <IdentityLayer zIndex={IDENTITY_Z_INDEX} ctaInteractive={ctaInteractive} />
         <ScrollIndicator scrolledPast={scrolledPast} visible={introCompleted} />

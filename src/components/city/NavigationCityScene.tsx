@@ -7,6 +7,7 @@ import { CityLayer } from './CityLayer'
 import { navigationCityEnvironmentLayers, NAVIGATION_REVEAL_PROGRESS } from './navigationCityEnvironment.config'
 import { Building } from './buildings/Building'
 import { NavigationCityMobile } from './NavigationCityMobile'
+import { RainEffect } from './RainEffect'
 import { useWarmBuildingsImages } from './useWarmBuildingsImages'
 import { ProfileAccessBadge } from '@/components/ui/ProfileAccessBadge'
 import { RegisterNowButton } from '@/components/ui/RegisterNowButton'
@@ -94,6 +95,8 @@ export function NavigationCityScene() {
         <div className="navigation-city-scene__grid-pattern" aria-hidden="true" />
         <div className="navigation-city-scene__atmosphere-blend" aria-hidden="true" />
         <div className="navigation-city-scene__depth-veil" aria-hidden="true" />
+        {/* Above the mist/veil (z 3-5), under the buildings (z 12). */}
+        <RainEffect zIndex={6} />
         <ProfileAccessBadge />
         <RegisterNowButton />
         <div className="navigation-city-scene__buildings" style={{ zIndex: BUILDINGS_Z_INDEX }}>

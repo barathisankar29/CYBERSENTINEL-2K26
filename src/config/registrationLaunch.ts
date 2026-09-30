@@ -28,6 +28,8 @@ export function registrationOpensAt(): Date | null {
 }
 
 export function isRegistrationOpen(now: number = Date.now()): boolean {
+  // Local dev server only: skip the overlay. Always false in production builds.
+  if (import.meta.env.DEV) return true
   if (REGISTRATION_LAUNCH.open) return true
   const opensAt = registrationOpensAt()
   return opensAt !== null && now >= opensAt.getTime()

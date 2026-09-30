@@ -156,8 +156,13 @@
 }
 
 @media (max-width: 767px) {
+  /* Centered horizontally. Not left:50% + translateX(-50%): this element's
+     transform is owned by the scroll reveal (IdentityLayer.tsx). */
   .identity-layer__mascot {
-    right: 0.5rem;
+    left: 0;
+    right: 0;
+    width: fit-content;
+    margin-inline: auto;
     top: auto;
     /* Parked low, clear of the countdown card above it. */
     bottom: 0.4rem;
