@@ -139,31 +139,38 @@
 /* Floating Hero Mascot Companion Slot */
 .identity-layer__mascot {
   position: absolute;
-  right: clamp(1.5rem, 5vw, 6.5rem);
+  right: clamp(2rem, 5.5vw, 6.5rem);
   top: auto;
-  bottom: clamp(2rem, 5.5vh, 4.5rem);
+  bottom: clamp(2.5rem, 6vh, 5.5rem);
   pointer-events: auto;
-  z-index: 25;
+  z-index: 45;
 }
 
 @media (max-width: 1024px) {
   .identity-layer__mascot {
-    right: 1.25rem;
+    right: clamp(1.2rem, 3.5vw, 2.5rem);
     top: auto;
-    bottom: clamp(1.8rem, 5vh, 4rem);
-    z-index: 30;
+    bottom: clamp(2rem, 5vh, 4rem);
+    z-index: 45;
   }
 }
 
 @media (max-width: 767px) {
   .identity-layer__mascot {
-    right: 0.5rem;
+    right: 0.65rem;
     top: auto;
-    /* Parked low, clear of the countdown card above it. */
-    bottom: 0.4rem;
-    display: block !important;
+    bottom: clamp(0.6rem, 1.8vh, 1.25rem);
+    display: flex !important;
     visibility: visible !important;
-    z-index: 35;
+    z-index: 45;
+  }
+}
+
+@media (max-width: 480px) {
+  .identity-layer__mascot {
+    right: 0.35rem;
+    bottom: clamp(0.45rem, 1.5vh, 0.9rem);
+    z-index: 45;
   }
 }
 
