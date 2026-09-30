@@ -123,28 +123,6 @@ export const backendDevelopersData: DeveloperMember[] = [
     linkedin: 'https://www.linkedin.com/in/hemal-ramm-s-65a821336/',
     instagram: 'https://www.instagram.com/__hemal_ramm__/',
   },
-  {
-    id: 'dev-yuvaraj-g',
-    name: 'YUVARAJ G',
-    role: 'Core Systems & Backend Dev',
-    codename: 'DEV_03 // CLOUD_ENGINE',
-    badgeShape: 'diamond-purple',
-    themeColor: 'purple',
-    accentHex: '#c084fc',
-    secondaryHex: '#7c3aed',
-    avatar: '/assets/developers/backend_yuvaraj_g.webp',
-    slogan: 'Purpose Meets Aesthetic',
-    sloganLines: ['Purpose', 'Meets', 'Aesthetic'],
-    description:
-      'Engineered backend integration, real-time event verification APIs, registration state machines, and high-security credential validation.',
-    skills: ['Node.js', 'Express', 'Cloudflare', 'REST APIs', 'Supabase'],
-    metrics: [
-      { label: 'QPS', value: '10K+' },
-      { label: 'CACHE HIT', value: '99.4%' },
-      { label: 'PRECISION', value: 'ACID' },
-    ],
-    linkedin: 'https://www.linkedin.com/in/yuvaraj-g-53a1a827b/',
-  },
 ]
 
 export const developersData: DeveloperMember[] = [

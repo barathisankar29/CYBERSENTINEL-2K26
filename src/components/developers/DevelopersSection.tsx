@@ -14,22 +14,19 @@ export type UnifiedDeveloper =
   | { type: 'frontend'; data: FrontendDeveloperMember }
   | { type: 'backend'; data: DeveloperMember }
 
-const hariharan = backendDevelopersData.find((d) => d.id === 'dev-hariharan-ramesh')!
-const hemal = backendDevelopersData.find((d) => d.id === 'dev-hemal-ramm-s')!
-const yuvaraj = backendDevelopersData.find((d) => d.id === 'dev-yuvaraj-g')!
-
 const barathi = frontendDevelopersData.find((d) => d.id === 'fed-barathi-sankar')!
-const pranith = frontendDevelopersData.find((d) => d.id === 'fed-pranith-l')!
+const hariharan = backendDevelopersData.find((d) => d.id === 'dev-hariharan-ramesh')!
 const jeevadharani = frontendDevelopersData.find((d) => d.id === 'fed-jeevadharani')!
+const hemal = backendDevelopersData.find((d) => d.id === 'dev-hemal-ramm-s')!
+const pranith = frontendDevelopersData.find((d) => d.id === 'fed-pranith-l')!
 
-// Alternating order: Backend -> Frontend -> Backend -> Frontend -> Backend -> Frontend
+// Specified order: 1. Barathi Sankar -> 2. Hariharan Ramesh -> 3. Jeevadharani -> 4. Hemal -> 5. Pranith
 const allDevelopers: UnifiedDeveloper[] = [
-  { type: 'backend', data: hariharan },
   { type: 'frontend', data: barathi },
+  { type: 'backend', data: hariharan },
+  { type: 'frontend', data: jeevadharani },
   { type: 'backend', data: hemal },
   { type: 'frontend', data: pranith },
-  { type: 'backend', data: yuvaraj },
-  { type: 'frontend', data: jeevadharani },
 ]
 
 export const DevelopersSection: React.FC = () => {
