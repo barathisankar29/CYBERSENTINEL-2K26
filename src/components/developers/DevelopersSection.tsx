@@ -1,7 +1,7 @@
 import React from 'react'
 import { frontendDevelopersData, backendDevelopersData } from '@/data/developers'
 import { DeveloperMascotPushCarousel } from './DeveloperMascotPushCarousel'
-import { Developer3DCarousel } from './Developer3DCarousel'
+import { BackendDevelopersCarousel } from './BackendDevelopersCarousel'
 import './DevelopersSection.css'
 
 export const DevelopersSection: React.FC = () => {
@@ -19,7 +19,7 @@ export const DevelopersSection: React.FC = () => {
         <DeveloperMascotPushCarousel developers={frontendDevelopersData} />
       </div>
 
-      {/* 2. BACKEND DEVELOPERS (3D CYBERNETIC CYLINDER HOLO-MATRIX CAROUSEL) */}
+      {/* 2. BACKEND DEVELOPERS (FAST LIGHTWEIGHT CAROUSEL) */}
       <div className="developers-section__subgroup developers-section__subgroup--backend">
         <div className="developers-section__header">
           <h3 className="cred-group-title cred-group-title--cyan developers-section__title">
@@ -28,7 +28,7 @@ export const DevelopersSection: React.FC = () => {
           </h3>
         </div>
 
-        <Developer3DCarousel developers={backendDevelopersData} />
+        <BackendDevelopersCarousel developers={backendDevelopersData} />
       </div>
     </div>
   )
