@@ -69,6 +69,7 @@ export const frontendDevelopersData: FrontendDeveloperMember[] = [
     textColor: '#FF007F', // Vibrant neon pink / magenta
     image: '/assets/developers/frontend_jeevadharani.webp',
     role: 'Lead UI/UX & Frontend Engineer',
+    description:
       'I chase ideas where imagination meets the screen, shaping raw thoughts into visual poetry. With every pixel, I build a little universe—where colors whisper, shapes breathe, and creativity takes form. ',
     linkedinUrl: 'https://www.linkedin.com/in/jeevadharani-venkatesan-916173332',
     githubUrl: 'https://github.com/Jeevadharani2403',
