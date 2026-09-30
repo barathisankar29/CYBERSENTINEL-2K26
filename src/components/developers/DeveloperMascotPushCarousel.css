@@ -21,15 +21,16 @@
   position: absolute;
   top: 15%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateZ(0);
   width: 90%;
   max-width: 950px;
   height: 480px;
-  filter: blur(90px);
+  filter: blur(80px);
   pointer-events: none;
   z-index: 0;
-  transition: background 0.7s ease;
+  transition: opacity 0.5s ease;
   border-radius: 50%;
+  will-change: transform;
 }
 
 /* Main Card Stage Viewport */
@@ -71,14 +72,17 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  transition: transform 0.65s cubic-bezier(0.18, 0.89, 0.32, 1), opacity 0.65s ease, filter 0.65s ease;
+  transition: transform 0.65s cubic-bezier(0.18, 0.89, 0.32, 1), opacity 0.65s ease;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 .mascot-card-slot.is-current {
   position: relative;
   z-index: 20;
   opacity: 1;
-  transform: translateX(0) scale(1);
+  transform: translate3d(0, 0, 0) scale(1);
   filter: drop-shadow(0 20px 45px rgba(0, 0, 0, 0.85));
 }
 
@@ -89,6 +93,8 @@
   right: 0;
   z-index: 15;
   pointer-events: none;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .mascot-card-slot.is-exiting--next {
@@ -108,27 +114,27 @@
 }
 
 @keyframes cardExitRight {
-  0% { transform: translateX(0) scale(1) rotate(0deg); opacity: 1; filter: blur(0px); }
-  40% { transform: translateX(110px) scale(0.96) rotate(3deg); opacity: 0.8; }
-  100% { transform: translateX(700px) scale(0.8) rotate(12deg); opacity: 0; filter: blur(6px); }
+  0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: 1; }
+  40% { transform: translate3d(110px, 0, 0) scale(0.96) rotate(3deg); opacity: 0.85; }
+  100% { transform: translate3d(650px, 0, 0) scale(0.8) rotate(12deg); opacity: 0; }
 }
 
 @keyframes cardExitLeft {
-  0% { transform: translateX(0) scale(1) rotate(0deg); opacity: 1; filter: blur(0px); }
-  40% { transform: translateX(-110px) scale(0.96) rotate(-3deg); opacity: 0.8; }
-  100% { transform: translateX(-700px) scale(0.8) rotate(-12deg); opacity: 0; filter: blur(6px); }
+  0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: 1; }
+  40% { transform: translate3d(-110px, 0, 0) scale(0.96) rotate(-3deg); opacity: 0.85; }
+  100% { transform: translate3d(-650px, 0, 0) scale(0.8) rotate(-12deg); opacity: 0; }
 }
 
 @keyframes cardEnterLeft {
-  0% { transform: translateX(-650px) scale(0.85) rotate(-8deg); opacity: 0; filter: blur(6px); }
-  60% { transform: translateX(20px) scale(1.02) rotate(1deg); opacity: 1; filter: blur(0px); }
-  100% { transform: translateX(0) scale(1) rotate(0deg); opacity: 1; }
+  0% { transform: translate3d(-600px, 0, 0) scale(0.85) rotate(-8deg); opacity: 0; }
+  60% { transform: translate3d(20px, 0, 0) scale(1.02) rotate(1deg); opacity: 1; }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: 1; }
 }
 
 @keyframes cardEnterRight {
-  0% { transform: translateX(650px) scale(0.85) rotate(8deg); opacity: 0; filter: blur(6px); }
-  60% { transform: translateX(-20px) scale(1.02) rotate(-1deg); opacity: 1; filter: blur(0px); }
-  100% { transform: translateX(0) scale(1) rotate(0deg); opacity: 1; }
+  0% { transform: translate3d(600px, 0, 0) scale(0.85) rotate(8deg); opacity: 0; }
+  60% { transform: translate3d(-20px, 0, 0) scale(1.02) rotate(-1deg); opacity: 1; }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: 1; }
 }
 
 /* ==========================================================================
@@ -142,6 +148,9 @@
   align-items: center;
   pointer-events: none;
   transition: transform 0.65s cubic-bezier(0.18, 0.89, 0.32, 1.15), left 0.65s ease, right 0.65s ease, top 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 /* Hovering / Resting State (Floating on LEFT shoulder of the card) */
@@ -155,10 +164,10 @@
 
 @keyframes mascotFloatLeft {
   0%, 100% {
-    transform: translateY(0) rotate(-2deg);
+    transform: translate3d(0, 0, 0) rotate(-2deg);
   }
   50% {
-    transform: translateY(-8px) rotate(2deg);
+    transform: translate3d(0, -8px, 0) rotate(2deg);
   }
 }
 
@@ -173,19 +182,19 @@
 
 @keyframes mascotPushDashNext {
   0% {
-    transform: translateX(0) scale(1) rotate(0deg);
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
   }
   25% {
-    transform: translateX(-35px) scale(1.1) rotate(-8deg);
+    transform: translate3d(-35px, 0, 0) scale(1.1) rotate(-8deg);
   }
   50% {
-    transform: translateX(115px) scale(1.18) rotate(12deg);
+    transform: translate3d(115px, 0, 0) scale(1.18) rotate(12deg);
   }
   75% {
-    transform: translateX(25px) scale(1.04) rotate(4deg);
+    transform: translate3d(25px, 0, 0) scale(1.04) rotate(4deg);
   }
   100% {
-    transform: translateX(0) scale(1) rotate(0deg);
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
   }
 }
 
@@ -200,19 +209,19 @@
 
 @keyframes mascotPushDashPrev {
   0% {
-    transform: scaleX(-1) translateX(0) rotate(0deg);
+    transform: scaleX(-1) translate3d(0, 0, 0) rotate(0deg);
   }
   25% {
-    transform: scaleX(-1) translateX(35px) scale(1.1) rotate(8deg);
+    transform: scaleX(-1) translate3d(35px, 0, 0) scale(1.1) rotate(8deg);
   }
   50% {
-    transform: scaleX(-1) translateX(-115px) scale(1.18) rotate(-12deg);
+    transform: scaleX(-1) translate3d(-115px, 0, 0) scale(1.18) rotate(-12deg);
   }
   75% {
-    transform: scaleX(-1) translateX(-25px) scale(1.04) rotate(-4deg);
+    transform: scaleX(-1) translate3d(-25px, 0, 0) scale(1.04) rotate(-4deg);
   }
   100% {
-    transform: scaleX(-1) translateX(0) scale(1) rotate(0deg);
+    transform: scaleX(-1) translate3d(0, 0, 0) scale(1) rotate(0deg);
   }
 }
 

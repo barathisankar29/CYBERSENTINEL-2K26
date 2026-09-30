@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import type { FrontendDeveloperMember } from '@/data/developers'
 import { NeonSplatterCard } from './NeonSplatterCard'
 import './FrontendDeveloperCard.css'
@@ -7,7 +7,7 @@ interface FrontendDeveloperCardProps {
   developer: FrontendDeveloperMember
 }
 
-export const FrontendDeveloperCard: React.FC<FrontendDeveloperCardProps> = ({ developer }) => {
+export const FrontendDeveloperCard: React.FC<FrontendDeveloperCardProps> = memo(({ developer }) => {
   return (
     <NeonSplatterCard>
       {/* Left Column: Graphic / Artwork with Transparent Background */}
@@ -92,4 +92,4 @@ export const FrontendDeveloperCard: React.FC<FrontendDeveloperCardProps> = ({ de
       </div>
     </NeonSplatterCard>
   )
-}
+})

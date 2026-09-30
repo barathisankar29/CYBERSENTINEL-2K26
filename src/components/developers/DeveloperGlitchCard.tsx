@@ -1,4 +1,4 @@
-import React, { useRef, useState, type CSSProperties } from 'react'
+import React, { useRef, memo, type CSSProperties } from 'react'
 import type { DeveloperMember } from '@/data/developers'
 import './DeveloperGlitchCard.css'
 
@@ -8,13 +8,12 @@ interface DeveloperGlitchCardProps {
   onClick?: () => void
 }
 
-export const DeveloperGlitchCard: React.FC<DeveloperGlitchCardProps> = ({
+export const DeveloperGlitchCard: React.FC<DeveloperGlitchCardProps> = memo(({
   developer,
   isActive = false,
   onClick,
 }) => {
   const cardRef = useRef<HTMLDivElement>(null)
-  const [tilt, setTilt] = useState({ x: 0, y: 0 })
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current || !isActive) return
@@ -23,11 +22,14 @@ export const DeveloperGlitchCard: React.FC<DeveloperGlitchCardProps> = ({
     const y = e.clientY - rect.top - rect.height / 2
     const tiltX = (y / (rect.height / 2)) * -5
     const tiltY = (x / (rect.width / 2)) * 5
-    setTilt({ x: tiltX, y: tiltY })
+    cardRef.current.style.setProperty('--tilt-x', `${tiltX.toFixed(2)}deg`)
+    cardRef.current.style.setProperty('--tilt-y', `${tiltY.toFixed(2)}deg`)
   }
 
   const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0 })
+    if (!cardRef.current) return
+    cardRef.current.style.setProperty('--tilt-x', '0deg')
+    cardRef.current.style.setProperty('--tilt-y', '0deg')
   }
 
   const themeVars = {
@@ -41,13 +43,7 @@ export const DeveloperGlitchCard: React.FC<DeveloperGlitchCardProps> = ({
     <div
       ref={cardRef}
       className={`dev-card dev-card--${developer.themeColor} ${isActive ? 'is-active' : ''}`}
-      style={{
-        ...themeVars,
-        transform:
-          isActive && (tilt.x !== 0 || tilt.y !== 0)
-            ? `perspective(800px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`
-            : undefined,
-      }}
+      style={themeVars}
       onClick={onClick}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -169,5 +165,5 @@ export const DeveloperGlitchCard: React.FC<DeveloperGlitchCardProps> = ({
       </div>
     </div>
   )
-}
+})
 

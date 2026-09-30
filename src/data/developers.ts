@@ -39,7 +39,7 @@ export const frontendDevelopersData: FrontendDeveloperMember[] = [
     name: 'PRANITH L',
     nameColor: '#FF0088', // Vibrant hot magenta / pink
     textColor: '#00B4FF', // Electric neon cyan / blue
-    image: '/assets/developers/frontend_pranith.png',
+    image: '/assets/developers/frontend_pranith.webp',
     role: 'Lead Architect & Tech Director',
     description:
       'CHIEF ARCHITECT ORCHESTRATING THE REACTIVE STATE ECOSYSTEM, 3D VIEWPORT PIPELINES, AND HIGH-OCTANE CYBERPUNK USER EXPERIENCE OF CYBERSENTINEL 2K26. CODE CREATE INNOVATE.',
@@ -51,7 +51,7 @@ export const frontendDevelopersData: FrontendDeveloperMember[] = [
     name: 'JEEVADHARANI',
     nameColor: '#FFAE00', // Amber / golden yellow-orange
     textColor: '#FF007F', // Vibrant neon pink / magenta
-    image: '/assets/developers/frontend_jeevadharani.png',
+    image: '/assets/developers/frontend_jeevadharani.webp',
     role: 'Lead UI/UX & Frontend Engineer',
     description:
       'CRAFTING THE CYBERPUNK HOLOGRAPHIC HUD SYSTEMS, FLUID MICRO-INTERACTIONS, RESPONSIVE MATRIX GRIDS, AND NEON AESTHETICS WHERE SCREENS SPEAK DESIGN.',
@@ -63,7 +63,7 @@ export const frontendDevelopersData: FrontendDeveloperMember[] = [
     name: 'BARATHI SANKAR',
     nameColor: '#FFEE00', // Bright neon yellow
     textColor: '#C800FF', // Vivid neon purple/violet
-    image: '/assets/developers/frontend_barathi.png',
+    image: '/assets/developers/frontend_barathi.webp',
     role: 'Frontend & Motion Engineer',
     description:
       'WEAVING PURPOSEFUL ENGINEERING WITH FUTURISTIC VISUAL DEPTH, DYNAMIC PARALLAX VIEWPORTS, AND FLUID STATELESS NAVIGATION PIPELINES. PURPOSE MEETS AESTHETIC.',
@@ -157,7 +157,7 @@ export const developersData: DeveloperMember[] = [
     themeColor: 'cyan',
     accentHex: '#00f0ff',
     secondaryHex: '#3b82f6',
-    avatar: '/assets/developers/frontend_pranith.png',
+    avatar: '/assets/developers/frontend_pranith.webp',
     slogan: 'Built to Be Seen.',
     sloganLines: ['Built to', 'Be Seen.'],
     description:

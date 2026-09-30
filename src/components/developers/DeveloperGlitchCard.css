@@ -39,6 +39,10 @@
     0 0 55px color-mix(in srgb, var(--dev-secondary, #7c3aed) 40%, transparent);
 }
 
+.dev-card.is-active {
+  transform: perspective(800px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+}
+
 /* ==========================================================================
    OUTER RUNNING STITCH SEAM
    ========================================================================== */

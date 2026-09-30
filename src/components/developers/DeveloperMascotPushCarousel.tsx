@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import type { FrontendDeveloperMember } from '@/data/developers'
-import { MASCOT_SPRITES, type MascotExpression } from '@/data/mascot'
+import { MASCOT_SPRITES, mascotAudio, type MascotExpression } from '@/data/mascot'
 import { FrontendDeveloperCard } from './FrontendDeveloperCard'
 import './DeveloperMascotPushCarousel.css'
 
@@ -8,7 +8,7 @@ interface DeveloperMascotPushCarouselProps {
   developers: FrontendDeveloperMember[]
 }
 
-const HOLD_DURATION_MS = 3000
+const HOLD_DURATION_MS = 4000
 const PUSH_ANIMATION_MS = 750
 
 export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselProps> = ({ developers }) => {
@@ -17,34 +17,58 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
   const [isPushing, setIsPushing] = useState(false)
   const [pushDirection, setPushDirection] = useState<'next' | 'prev'>('next')
   const [isPaused, setIsPaused] = useState(false)
-  const [progress, setProgress] = useState(0)
+  const [mascotPose, setMascotPose] = useState<MascotExpression>('float')
   const [touchStartX, setTouchStartX] = useState<number | null>(null)
 
-  const timerRef = useRef<number | null>(null)
-  const startTimeRef = useRef<number>(Date.now())
+  const isPushingRef = useRef(false)
+  isPushingRef.current = isPushing
+
   const total = developers.length
+
+  // Preload all mascot sprites and developer portraits for instant zero-stutter rendering
+  useEffect(() => {
+    Object.values(MASCOT_SPRITES).forEach((sprite) => {
+      const img = new Image()
+      img.src = sprite.src
+    })
+    developers.forEach((dev) => {
+      const img = new Image()
+      img.src = dev.image
+    })
+  }, [developers])
 
   // Trigger push transition to a specific index
   const triggerPush = useCallback(
     (targetIndex: number, direction: 'next' | 'prev') => {
-      if (isPushing) return
+      if (isPushingRef.current || total <= 1) return
       const normalizedTarget = ((targetIndex % total) + total) % total
       if (normalizedTarget === activeIndex) return
 
       setIncomingIndex(normalizedTarget)
       setPushDirection(direction)
       setIsPushing(true)
-      setProgress(0)
+      setMascotPose(direction === 'next' ? 'dash2' : 'fly')
 
-      // Transition completes
+      try {
+        mascotAudio.playPushWhoosh()
+      } catch {
+        // Audio policy or silent mode fallback
+      }
+
+      // Transition completes cleanly on timer
       setTimeout(() => {
         setActiveIndex(normalizedTarget)
         setIncomingIndex(null)
         setIsPushing(false)
-        startTimeRef.current = Date.now()
+        setMascotPose('cheer')
+
+        // Return to natural waving/happy pose after celebration
+        setTimeout(() => {
+          setMascotPose((prev) => (prev === 'cheer' ? (normalizedTarget % 2 === 0 ? 'wave' : 'happy') : prev))
+        }, 1100)
       }, PUSH_ANIMATION_MS)
     },
-    [activeIndex, isPushing, total]
+    [activeIndex, total]
   )
 
   const pushNext = useCallback(() => {
@@ -68,45 +92,24 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [pushPrev, pushNext])
 
-  // Timer loop for auto-push (3.5 to 5s delay requested by user)
+  // Discrete auto-advance timer: zero re-renders between slides!
   useEffect(() => {
-    if (isPaused || isPushing) {
-      if (timerRef.current) cancelAnimationFrame(timerRef.current)
-      return
-    }
+    if (isPaused || isPushing) return
 
-    startTimeRef.current = Date.now() - (progress / 100) * HOLD_DURATION_MS
+    // Mascot gets ready (anticipation lean) 600ms before push
+    const anticipationTimer = setTimeout(() => {
+      setMascotPose('dash1')
+    }, Math.max(HOLD_DURATION_MS - 600, 1000))
 
-    const tick = () => {
-      const elapsed = Date.now() - startTimeRef.current
-      const pct = Math.min((elapsed / HOLD_DURATION_MS) * 100, 100)
-      setProgress(pct)
-
-      if (pct >= 100) {
-        pushNext()
-      } else {
-        timerRef.current = requestAnimationFrame(tick)
-      }
-    }
-
-    timerRef.current = requestAnimationFrame(tick)
+    const pushTimer = setTimeout(() => {
+      pushNext()
+    }, HOLD_DURATION_MS)
 
     return () => {
-      if (timerRef.current) cancelAnimationFrame(timerRef.current)
+      clearTimeout(anticipationTimer)
+      clearTimeout(pushTimer)
     }
-  }, [isPaused, isPushing, progress, pushNext])
-
-  // Choose mascot pose based on state
-  let mascotPose: MascotExpression = 'float'
-  if (isPushing) {
-    mascotPose = pushDirection === 'next' ? 'dash2' : 'fly'
-  } else if (progress > 85) {
-    mascotPose = 'dash1' // Leaning into push position anticipation!
-  } else if (progress < 25) {
-    mascotPose = 'cheer' // Celebrating after landing new card!
-  } else {
-    mascotPose = activeIndex % 2 === 0 ? 'wave' : 'happy'
-  }
+  }, [activeIndex, isPaused, isPushing, pushNext])
 
   const activeDev = developers[activeIndex]
   const incomingDev = incomingIndex !== null ? developers[incomingIndex] : null
@@ -149,7 +152,7 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
 
       {/* Main Card Stage Viewport */}
       <div className="mascot-carousel__stage">
-        {/* Navigation Arrow Flank: Left (Crisp White Solid Triangle from Image 1) */}
+        {/* Navigation Arrow Flank: Left (Crisp White Solid Triangle) */}
         <button
           type="button"
           className="mascot-carousel__nav-btn mascot-carousel__nav-btn--prev"
@@ -194,9 +197,11 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
 
             {/* Mascot Image Sprite */}
             <img
-              src={MASCOT_SPRITES[mascotPose].src}
+              src={MASCOT_SPRITES[mascotPose]?.src || MASCOT_SPRITES.float.src}
               alt="Mascot Pusher"
               className="mascot-pusher__sprite"
+              loading="eager"
+              decoding="async"
             />
 
             {/* Push Energy Impact Rings */}
@@ -229,7 +234,7 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
           )}
         </div>
 
-        {/* Navigation Arrow Flank: Right (Crisp White Solid Triangle from Image 1) */}
+        {/* Navigation Arrow Flank: Right (Crisp White Solid Triangle) */}
         <button
           type="button"
           className="mascot-carousel__nav-btn mascot-carousel__nav-btn--next"
