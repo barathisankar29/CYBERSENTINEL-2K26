@@ -215,12 +215,10 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
           </button>
 
           {/* Active Developer Card Container */}
-          <div
-            className={`mascot-carousel__card-wrapper mascot-carousel__card-wrapper--${activeDev.type}`}
-          >
+          <div className="mascot-carousel__card-wrapper">
             {/* Animated Mascot Pusher Actor anchored directly to card shoulder */}
             <div
-              className={`mascot-pusher mascot-pusher--${activeDev.type} ${
+              className={`mascot-pusher ${
                 isPushing ? `is-pushing is-pushing--${pushDirection}` : 'is-hovering'
               }`}
               aria-hidden="true"
