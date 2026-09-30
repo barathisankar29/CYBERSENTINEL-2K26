@@ -89,8 +89,8 @@ export function HomePage() {
         <FuturisticTransition onComplete={handleTransitionComplete} />
       )}
       <CityScene introCompleted={introStage === 'completed'} />
-      <NavigationCityScene />
-      <SiteFooter />
+      {introStage !== 'intro' && <NavigationCityScene />}
+      {introStage !== 'intro' && <SiteFooter />}
     </main>
   )
 }
