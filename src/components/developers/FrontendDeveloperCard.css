@@ -16,8 +16,8 @@
 .frontend-dev-card__img-container {
   position: relative;
   width: 100%;
-  max-width: 275px;
-  height: 200px;
+  max-width: 295px;
+  height: 220px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -31,7 +31,7 @@
   background: transparent !important;
   border: none !important;
   outline: none !important;
-  transform: scale(1.1);
+  transform: scale(1.24);
   filter: drop-shadow(0 14px 30px rgba(0, 240, 255, 0.4)) drop-shadow(0 6px 14px rgba(255, 0, 128, 0.3));
   user-select: none;
   pointer-events: auto;

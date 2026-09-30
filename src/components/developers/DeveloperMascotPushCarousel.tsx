@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react'
 import type { FrontendDeveloperMember, DeveloperMember } from '@/data/developers'
-import { MASCOT_SPRITES, mascotAudio, type MascotExpression } from '@/data/mascot'
+import { MASCOT_SPRITES, type MascotExpression } from '@/data/mascot'
 import { FrontendDeveloperCard } from './FrontendDeveloperCard'
 import { DeveloperGlitchCard } from './DeveloperGlitchCard'
 import './DeveloperMascotPushCarousel.css'
@@ -65,12 +65,6 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
 
         // Notify parent immediately so subtitle updates smoothly
         onActiveChange?.(developers[normalizedTarget])
-
-        try {
-          mascotAudio.playPushWhoosh()
-        } catch {
-          // Audio policy or silent mode fallback
-        }
 
         // Transition completes cleanly on timer
         setTimeout(() => {
