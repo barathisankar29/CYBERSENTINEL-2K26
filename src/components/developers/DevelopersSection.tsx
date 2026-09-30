@@ -1,34 +1,57 @@
-import React from 'react'
-import { frontendDevelopersData, backendDevelopersData } from '@/data/developers'
-import { DeveloperMascotPushCarousel } from './DeveloperMascotPushCarousel'
-import { BackendDevelopersCarousel } from './BackendDevelopersCarousel'
+import React, { useState } from 'react'
+import {
+  frontendDevelopersData,
+  backendDevelopersData,
+} from '@/data/developers'
+import { DeveloperMascotPushCarousel, type UnifiedDeveloper } from './DeveloperMascotPushCarousel'
 import './DevelopersSection.css'
 
+const barathi = frontendDevelopersData.find((d) => d.id === 'fed-barathi-sankar')!
+const hariharan = backendDevelopersData.find((d) => d.id === 'dev-hariharan-ramesh')!
+const jeevadharani = frontendDevelopersData.find((d) => d.id === 'fed-jeevadharani')!
+const hemal = backendDevelopersData.find((d) => d.id === 'dev-hemal-ramm-s')!
+const pranith = frontendDevelopersData.find((d) => d.id === 'fed-pranith-l')!
+
+// Specified order by team: 1. Barathi Sankar -> 2. Hariharan Ramesh -> 3. Jeevadharani -> 4. Hemal -> 5. Pranith
+const allDevelopers: UnifiedDeveloper[] = [
+  { type: 'frontend', data: barathi },
+  { type: 'backend', data: hariharan },
+  { type: 'frontend', data: jeevadharani },
+  { type: 'backend', data: hemal },
+  { type: 'frontend', data: pranith },
+]
+
 export const DevelopersSection: React.FC = () => {
+  const [activeDev, setActiveDev] = useState<UnifiedDeveloper>(allDevelopers[0])
+
   return (
     <div id="developers" className="cred-group developers-section">
-      {/* 1. FRONTEND DEVELOPERS (MASCOT PUSHING CAROUSEL WITH SIGNATURE NEON SPLATTER CARD) */}
       <div className="developers-section__subgroup">
         <div className="developers-section__header">
-          <h3 className="cred-group-title cred-group-title--pink developers-section__title">
-            <span className="developers-section__title-white">WEB DESIGNERS AND</span>{' '}
-            <span className="developers-section__title-neon">FRONTEND DEVELOPERS</span>
-          </h3>
-        </div>
-
-        <DeveloperMascotPushCarousel developers={frontendDevelopersData} />
-      </div>
-
-      {/* 2. BACKEND DEVELOPERS (FAST LIGHTWEIGHT CAROUSEL) */}
-      <div className="developers-section__subgroup developers-section__subgroup--backend">
-        <div className="developers-section__header">
-          <h3 className="cred-group-title cred-group-title--cyan developers-section__title">
+          {/* Main Title: Meet Our Developers */}
+          <h3 className="cred-group-title developers-section__title">
             <span className="developers-section__title-white">MEET OUR</span>{' '}
-            <span className="developers-section__title-neon developers-section__title-neon--cyan">BACKEND DEVELOPERS</span>
+            <span className="developers-section__title-neon">DEVELOPERS</span>
           </h3>
+
+          {/* Dynamic Second Title: switches between "Backend Team" and "Frontend Team" */}
+          <div className="developers-section__subtitle-wrap" aria-live="polite">
+            <h4
+              className={`developers-section__subtitle developers-section__subtitle--${activeDev.type}`}
+            >
+              <span className="developers-section__subtitle-dot" />
+              <span className="developers-section__subtitle-text">
+                {activeDev.type === 'backend' ? 'Backend Team' : 'Frontend Team'}
+              </span>
+            </h4>
+          </div>
         </div>
 
-        <BackendDevelopersCarousel developers={backendDevelopersData} />
+        {/* Unified Mascot Pushing Carousel with all 5 Operatives */}
+        <DeveloperMascotPushCarousel
+          developers={allDevelopers}
+          onActiveChange={setActiveDev}
+        />
       </div>
     </div>
   )
