@@ -202,6 +202,86 @@ export function AboutSection() {
                 </div>
               </div>
             </div>
+
+            {/* Legacy Organizing Team Showcase */}
+            {cyberSentinelData.legacyTeam && (
+              <div className="cyber-team-showcase">
+                <div className="cyber-team-showcase__divider" aria-hidden="true">
+                  <span className="cyber-team-showcase__divider-line" />
+                  <span className="cyber-team-showcase__divider-badge">
+                    <span className="cyber-team-showcase__dot" />
+                    ORGANIZING SYNDICATE • LEGACY OF EXCELLENCE
+                  </span>
+                  <span className="cyber-team-showcase__divider-line" />
+                </div>
+
+                <div className="cyber-team-showcase__frame">
+                  {/* Tactical Status Bar */}
+                  <div className="cyber-team-showcase__bar">
+                    <div className="cyber-team-showcase__bar-tag">
+                      <span className="cyber-team-showcase__dot" />
+                      <span>MISSION ARCHIVE // CONVENTION GRAND STAGE</span>
+                    </div>
+                    <div className="cyber-team-showcase__bar-status">
+                      <span>STATUS: </span>
+                      <span className="cyber-team-showcase__status-highlight">SUCCESSFULLY EXECUTED ✦</span>
+                    </div>
+                  </div>
+
+                  {/* Photo with Cyberpunk Corner Accents */}
+                  <div className="cyber-team-showcase__img-box">
+                    <img
+                      src={cyberSentinelData.legacyTeam.imageSrc}
+                      alt="CyberSentinel Organizing Team on Grand Stage"
+                      className="cyber-team-showcase__img"
+                      width={1024}
+                      height={460}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div className="cyber-team-showcase__corner cyber-team-showcase__corner--tl" />
+                    <div className="cyber-team-showcase__corner cyber-team-showcase__corner--tr" />
+                    <div className="cyber-team-showcase__corner cyber-team-showcase__corner--bl" />
+                    <div className="cyber-team-showcase__corner cyber-team-showcase__corner--br" />
+                  </div>
+
+                  {/* High-Tech Caption */}
+                  <div className="cyber-team-showcase__caption-wrap">
+                    <p className="cyber-team-showcase__caption-main">
+                      {cyberSentinelData.legacyTeam.caption}
+                    </p>
+                    <p className="cyber-team-showcase__caption-sub">
+                      {cyberSentinelData.legacyTeam.subCaption}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Team Story & Success Highlights */}
+                <div className="cyber-team-showcase__narrative">
+                  <div className="cyber-team-showcase__narrative-content">
+                    <div className="cyber-card__badge-row">
+                      <span className="cyber-badge cyber-badge--pink">THE SQUAD BEHIND THE TRIUMPH</span>
+                      <span className="cyber-badge cyber-badge--cyan">STUDENT & FACULTY SYNDICATE</span>
+                    </div>
+                    <h4 className="cyber-team-showcase__title">
+                      United by Passion. Engineered for Grand Success.
+                    </h4>
+                    <p className="cyber-team-showcase__desc">
+                      {cyberSentinelData.legacyTeam.description}
+                    </p>
+                  </div>
+
+                  <div className="cyber-team-showcase__stats-grid">
+                    {cyberSentinelData.legacyTeam.highlights.map((item, idx) => (
+                      <div key={idx} className="cyber-team-stat-card">
+                        <div className="cyber-team-stat-card__val">{item.value}</div>
+                        <div className="cyber-team-stat-card__lbl">{item.label}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </CyberNeonCard>
 
         {/* 3. Hackathon Club Section */}
