@@ -283,8 +283,8 @@
     display: flex !important;
     visibility: visible !important;
     opacity: 1 !important;
-    transform: scale(0.78);
-    transform-origin: bottom right;
+    transform: scale(0.88);
+    transform-origin: bottom center;
   }
 
   .hero-mascot__bubble {
@@ -313,8 +313,8 @@
     display: flex !important;
     visibility: visible !important;
     opacity: 1 !important;
-    transform: scale(0.68);
-    transform-origin: bottom right;
+    transform: scale(0.8);
+    transform-origin: bottom center;
   }
 
   .hero-mascot__avatar-stage {

@@ -6,6 +6,7 @@ import { ProfileAccessBadge } from '@/components/ui/ProfileAccessBadge'
 import { useMascot } from '@/components/mascot'
 import { MASCOT_SPRITES, type MascotExpression } from '@/data/mascot'
 import { MOBILE_NAVIGATION_BG } from './useWarmBuildingsImages'
+import { RainEffect } from './RainEffect'
 import './NavigationCityMobile.css'
 
 const BG_SRC = MOBILE_NAVIGATION_BG
@@ -63,6 +64,7 @@ export function NavigationCityMobile() {
 
         {/* Same atmospheric handoff treatment as desktop */}
         <div className="mobile-nav-scene__atmosphere-blend" aria-hidden="true" />
+        <RainEffect zIndex={1} />
         <ProfileAccessBadge placement="bottom" />
 
         <svg

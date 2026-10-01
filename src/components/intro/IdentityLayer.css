@@ -156,10 +156,15 @@
 }
 
 @media (max-width: 767px) {
+  /* Centered horizontally. Not left:50% + translateX(-50%): this element's
+     transform is owned by the scroll reveal (IdentityLayer.tsx). */
   .identity-layer__mascot {
-    right: 0.65rem;
+    left: 0;
+    right: 0;
+    width: fit-content;
+    margin-inline: auto;
     top: auto;
-    bottom: clamp(0.6rem, 1.8vh, 1.25rem);
+    bottom: clamp(0.4rem, 1.5vh, 1rem);
     display: flex !important;
     visibility: visible !important;
     z-index: 45;
@@ -168,8 +173,11 @@
 
 @media (max-width: 480px) {
   .identity-layer__mascot {
-    right: 0.35rem;
-    bottom: clamp(0.45rem, 1.5vh, 0.9rem);
+    left: 0;
+    right: 0;
+    width: fit-content;
+    margin-inline: auto;
+    bottom: clamp(0.35rem, 1.2vh, 0.8rem);
     z-index: 45;
   }
 }

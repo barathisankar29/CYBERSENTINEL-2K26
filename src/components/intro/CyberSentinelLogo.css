@@ -7,3 +7,151 @@
     drop-shadow(0 10px 30px rgba(0, 0, 0, 0.6))
     drop-shadow(0 0 64px rgba(0, 0, 0, 0.4));
 }
+
+/* Sized exactly like the logo (same max-width vars as .brand-logo) and
+   carries the scroll-driven reveal. */
+.cyber-sentinel-logo-wrap {
+  width: 100%;
+  max-width: var(--brand-logo-max-width, 100%);
+  will-change: transform, opacity;
+}
+
+@media (max-width: 767px) {
+  .cyber-sentinel-logo-wrap {
+    max-width: var(--brand-logo-max-width-mobile, var(--brand-logo-max-width, 100%));
+  }
+}
+
+.cyber-sentinel-logo-wrap .brand-logo {
+  will-change: auto;
+}
+
+/*
+ * Glitch timing: one 4.5s cycle, still for ~90% of it, then a ~0.4s burst.
+ * steps(1, end) makes every keyframe a hard cut — a real glitch snaps
+ * between states rather than easing, and it means the browser only
+ * repaints at those few cuts instead of every frame, so it never reads as
+ * the page stuttering.
+ */
+.cyber-sentinel-logo-glitch {
+  position: relative;
+  animation: cs-logo-jitter 4.5s steps(1, end) infinite;
+}
+
+.cyber-sentinel-logo-split {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-mask: var(--cs-logo-mask) center / 100% 100% no-repeat;
+  mask: var(--cs-logo-mask) center / 100% 100% no-repeat;
+  animation: 4.5s steps(1, end) infinite;
+}
+
+.cyber-sentinel-logo-split--pink {
+  background: #ff3ea5;
+  animation-name: cs-logo-split-pink;
+}
+
+.cyber-sentinel-logo-split--cyan {
+  background: #22d3ee;
+  animation-name: cs-logo-split-cyan;
+}
+
+@keyframes cs-logo-jitter {
+  0%,
+  89.9%,
+  91.6%,
+  93.4%,
+  96%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  90% {
+    transform: translate3d(-4px, 0, 0) skewX(-6deg);
+  }
+  91% {
+    transform: translate3d(3px, 1px, 0);
+  }
+  92.5% {
+    transform: translate3d(-2px, -1px, 0);
+  }
+  94.5% {
+    transform: translate3d(5px, 0, 0) skewX(4deg);
+  }
+}
+
+@keyframes cs-logo-split-pink {
+  0%,
+  89.9%,
+  96%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+    clip-path: inset(0 0 0 0);
+  }
+  90% {
+    opacity: 0.8;
+    transform: translate3d(-7px, 0, 0);
+    clip-path: inset(12% 0 58% 0);
+  }
+  91% {
+    opacity: 0.7;
+    transform: translate3d(-4px, 0, 0);
+    clip-path: inset(55% 0 20% 0);
+  }
+  92.5% {
+    opacity: 0;
+  }
+  93.5% {
+    opacity: 0.75;
+    transform: translate3d(-9px, 0, 0);
+    clip-path: inset(30% 0 45% 0);
+  }
+  94.5% {
+    opacity: 0.6;
+    transform: translate3d(-3px, 0, 0);
+    clip-path: inset(0 0 70% 0);
+  }
+}
+
+@keyframes cs-logo-split-cyan {
+  0%,
+  89.9%,
+  96%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+    clip-path: inset(0 0 0 0);
+  }
+  90% {
+    opacity: 0.8;
+    transform: translate3d(7px, 0, 0);
+    clip-path: inset(60% 0 8% 0);
+  }
+  91% {
+    opacity: 0.7;
+    transform: translate3d(5px, 0, 0);
+    clip-path: inset(20% 0 55% 0);
+  }
+  92.5% {
+    opacity: 0;
+  }
+  93.5% {
+    opacity: 0.75;
+    transform: translate3d(8px, 0, 0);
+    clip-path: inset(70% 0 5% 0);
+  }
+  94.5% {
+    opacity: 0.6;
+    transform: translate3d(3px, 0, 0);
+    clip-path: inset(40% 0 35% 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cyber-sentinel-logo-glitch,
+  .cyber-sentinel-logo-split {
+    animation: none;
+  }
+}
