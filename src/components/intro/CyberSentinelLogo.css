@@ -49,7 +49,12 @@
   inset: 0;
   opacity: 0;
   pointer-events: none;
-  animation: 4.5s steps(1, end) infinite;
+  /* Longhands on purpose: a name-less `animation` shorthand gets minified
+     to `animation: none`, which silently killed these layers in production.
+     Each modifier class below sets the animation-name. */
+  animation-duration: 4.5s;
+  animation-timing-function: steps(1, end);
+  animation-iteration-count: infinite;
 }
 
 .cyber-sentinel-logo-split {

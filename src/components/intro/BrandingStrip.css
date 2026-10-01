@@ -14,7 +14,7 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: clamp(0.9rem, 3.2vw, 2.75rem);
-  padding: 1rem clamp(1.25rem, 4vw, 2.5rem);
+  padding: var(--hero-strip-pad, 1rem) clamp(1.25rem, 4vw, 2.5rem);
   max-width: min(96vw, 72rem);
   will-change: transform, opacity;
 }
@@ -48,7 +48,9 @@
 
 .branding-strip__logo {
   display: block;
-  height: 56px;
+  /* Heights come from IdentityLayer.css so the centered hero block below
+     always knows exactly where this strip ends. */
+  height: var(--hero-badge-h, 56px);
   width: auto;
   object-fit: contain;
 }
@@ -60,17 +62,7 @@
 /* The college lockup is the hero of this strip — a tall 1.6:1 neon mark,
    so it gets roughly twice the badge height to stay legible. */
 [data-logo-id='vel-tech'] .branding-strip__logo {
-  height: 104px;
-}
-
-@media (min-width: 1024px) {
-  .branding-strip__logo {
-    height: 76px;
-  }
-
-  [data-logo-id='vel-tech'] .branding-strip__logo {
-    height: 140px;
-  }
+  height: var(--hero-lockup-h, 104px);
 }
 
 /*
