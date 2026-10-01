@@ -56,7 +56,7 @@ export const frontendDevelopersData: FrontendDeveloperMember[] = [
     name: 'PRANITH L',
     nameColor: '#FF0088', // Vibrant hot magenta / pink
     textColor: '#00B4FF', // Electric neon cyan / blue
-    image: '/assets/developers/frontend_pranith.webp',
+    image: '/assets/developers/frontend_pranith_v2.webp',
     role: 'Lead Architect & Tech Director',
     description:
       'I see design as a mix of logic, creativity, and curiosity. I enjoy turning simple ideas into thoughtful interfaces where every detail has a reason and every screen has a little personality.',
@@ -141,7 +141,7 @@ export const developersData: DeveloperMember[] = [
     themeColor: 'cyan',
     accentHex: '#00f0ff',
     secondaryHex: '#3b82f6',
-    avatar: '/assets/developers/frontend_pranith.webp',
+    avatar: '/assets/developers/frontend_pranith_v2.webp',
     slogan: 'Built to Be Seen.',
     sloganLines: ['Built to', 'Be Seen.'],
     description:
