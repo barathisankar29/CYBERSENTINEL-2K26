@@ -6,17 +6,14 @@
 
 .dev-card {
   position: relative;
-  width: 100%;
-  max-width: 345px;
-  height: 445px;
+  width: 345px;
   min-height: 445px;
   background: linear-gradient(180deg, rgba(14, 11, 28, 0.96) 0%, rgba(7, 5, 16, 0.99) 100%);
   border-radius: 20px;
-  padding: 1.15rem 1rem 1rem;
+  padding: 1.25rem 1.15rem 1.15rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   text-align: center;
   border: 1px solid color-mix(in srgb, var(--dev-accent, #00f0ff) 35%, rgba(255, 255, 255, 0.12));
   box-shadow: 
@@ -34,16 +31,6 @@
   .dev-card {
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-  }
-}
-
-@media (max-width: 768px) {
-  .dev-card {
-    width: 100%;
-    max-width: min(345px, calc(100vw - 56px));
-    height: 445px;
-    min-height: 445px;
-    padding: 1rem 0.95rem 0.85rem;
   }
 }
 

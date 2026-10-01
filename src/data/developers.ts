@@ -1,6 +1,8 @@
 export interface DeveloperMember {
   id: string
   name: string
+  nameColor?: string
+  textColor?: string
   role: string
   codename: string
   badgeShape: 'diamond-magenta' | 'triangle-yellow' | 'triangle-cyan' | 'diamond-purple' | 'hexagon-green' | 'shard-crimson'
@@ -80,6 +82,8 @@ export const backendDevelopersData: DeveloperMember[] = [
   {
     id: 'dev-hariharan-ramesh',
     name: 'HARIHARAN RAMESH',
+    nameColor: '#00F0FF', // Bright electric cyan
+    textColor: '#A78BFA', // Soft neon violet
     role: 'Full-Stack Web Developer',
     codename: 'DEV_01 // CYBER_DEFENSE',
     badgeShape: 'hexagon-green',
@@ -103,6 +107,8 @@ export const backendDevelopersData: DeveloperMember[] = [
   {
     id: 'dev-hemal-ramm-s',
     name: 'HEMAL RAMM S',
+    nameColor: '#FACC15', // Vibrant cyber yellow / gold
+    textColor: '#C084FC', // Electric purple / lavender
     role: 'Web Developer',
     codename: 'DEV_02 // SYSTEM_CORE',
     badgeShape: 'triangle-yellow',

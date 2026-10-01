@@ -62,7 +62,7 @@
 .mascot-carousel__card-wrapper {
   position: relative;
   width: 100%;
-  max-width: 345px;
+  max-width: 360px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -382,10 +382,6 @@
 
   .mascot-carousel__stage {
     min-height: auto;
-  }
-
-  .mascot-carousel__card-wrapper {
-    max-width: min(345px, calc(100vw - 56px));
   }
 
   .mascot-pusher {

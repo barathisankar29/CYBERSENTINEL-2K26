@@ -39,19 +39,14 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
       }
     }, [developers, onActiveChange])
 
-    // Preload only active carousel mascot sprites and developer portraits asynchronously
+    // Preload all mascot sprites and developer portraits for instant zero-stutter rendering
     useEffect(() => {
-      const carouselPoses: MascotExpression[] = ['float', 'dash1', 'dash2', 'fly', 'cheer', 'wave', 'happy']
-      carouselPoses.forEach((pose) => {
-        const sprite = MASCOT_SPRITES[pose]
-        if (!sprite) return
+      Object.values(MASCOT_SPRITES).forEach((sprite) => {
         const img = new Image()
-        img.decoding = 'async'
         img.src = sprite.src
       })
       developers.forEach((dev) => {
         const img = new Image()
-        img.decoding = 'async'
         img.src = dev.type === 'frontend' ? dev.data.image : dev.data.avatar
       })
     }, [developers])

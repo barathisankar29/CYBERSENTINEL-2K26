@@ -8,12 +8,11 @@
   position: relative;
   width: 100%;
   max-width: 345px;
-  height: 445px;
   min-height: 445px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.4rem;
+  padding: 0.45rem;
   user-select: none;
   box-sizing: border-box;
 }
@@ -34,13 +33,13 @@
   height: 100%;
   min-height: 435px;
   background: #0b0827;
-  border-radius: 20px;
-  padding: 1rem 0.95rem 0.85rem;
+  border-radius: 22px;
+  padding: 1.15rem 1rem 0.95rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  gap: 0.4rem;
+  gap: 0.5rem;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
   overflow: hidden;
   box-sizing: border-box;
@@ -48,18 +47,15 @@
 
 @media (max-width: 768px) {
   .neon-splatter-card {
-    width: 100%;
-    max-width: min(345px, calc(100vw - 56px));
-    height: 445px;
-    min-height: 445px;
+    max-width: min(270px, 78vw);
     padding: 0.35rem;
+    min-height: auto;
   }
 
   .neon-splatter-card__inner {
-    height: 100%;
-    min-height: 435px;
-    padding: 0.95rem 0.85rem 0.85rem;
-    gap: 0.35rem;
+    min-height: auto;
+    padding: 1rem 0.85rem 0.85rem;
+    gap: 0.45rem;
   }
 }
 

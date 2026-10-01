@@ -123,7 +123,7 @@ export function VideoIntro({
           ref={videoRef}
           className="video-intro__video"
           src={activeVideoSrc}
-          preload={isMobile ? 'metadata' : 'auto'}
+          preload="auto"
           playsInline
           autoPlay
           muted={isMuted}
