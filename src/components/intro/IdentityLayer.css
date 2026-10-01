@@ -75,8 +75,12 @@
   gap: 0.4rem;
 }
 
-/* Countdown card sits a touch below the Register Now CTA. */
+/* Countdown card sits a touch below the logo; Register Now follows it. */
 .identity-layer__countdown {
+  margin-top: 0.35rem;
+}
+
+.identity-layer__cta {
   margin-top: 0.35rem;
 }
 
@@ -119,19 +123,20 @@
     margin-top: 0.35rem;
   }
 
-  .identity-layer__center .register-now-hero {
+  .identity-layer__countdown {
     margin-top: 0.55rem;
   }
 
-  .identity-layer__countdown {
-    margin-top: 0.2rem;
+  .identity-layer__cta {
+    margin-top: 0.3rem;
   }
 }
 
-/* The countdown stacks above the floating mascot, so wherever the two meet
-   on a small phone the mascot tucks behind the glass instead of covering
-   the digits. */
-.identity-layer__countdown {
+/* The countdown and Register Now stack above the floating mascot, so
+   wherever they meet on a small phone the mascot tucks behind them instead
+   of covering the digits or the button. */
+.identity-layer__countdown,
+.identity-layer__cta {
   position: relative;
   z-index: 40;
 }

@@ -88,10 +88,10 @@ export async function submitRegistration(input: PublicRegisterInput): Promise<Pu
   form.append('college', input.college.trim())
   form.append('department', input.department.trim())
   form.append('year', input.year.trim())
-  form.append('utr', input.utr.trim())
+  if (input.utr?.trim()) form.append('utr', input.utr.trim())
   form.append('selected_day', input.selectedDay)
   form.append('special_event_codes', JSON.stringify(input.specialEventCodes))
-  form.append('payment_screenshot', input.paymentScreenshot)
+  if (input.paymentScreenshot) form.append('payment_screenshot', input.paymentScreenshot)
   return send<PublicRegisterResponse>(
     functionUrl('public-register'),
     { method: 'POST', body: form },

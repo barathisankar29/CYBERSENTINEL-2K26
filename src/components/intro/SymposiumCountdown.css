@@ -23,8 +23,8 @@
     0 10px 32px rgba(4, 1, 10, 0.95),
     inset 0 1px 0 rgba(255, 180, 230, 0.25),
     inset 0 0 16px rgba(168, 85, 247, 0.12);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  /* No backdrop-filter: the chassis is ~98% opaque, so a blur would be
+     invisible yet re-rendered on every frame of the rain canvas below. */
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
@@ -217,8 +217,6 @@
     background:
       radial-gradient(ellipse at 50% -10%, rgba(255, 62, 165, 0.2) 0%, rgba(168, 85, 247, 0.14) 45%, transparent 70%),
       linear-gradient(180deg, rgba(20, 9, 32, 0.98) 0%, rgba(10, 5, 18, 0.99) 100%);
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
   }
 
   .symposium-countdown__header {

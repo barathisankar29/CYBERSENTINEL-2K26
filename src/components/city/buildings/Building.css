@@ -600,3 +600,24 @@
     font-size: 0.55rem;
   }
 }
+
+/*
+ * Touch devices: the glass cards sit above the rain canvas, so a live
+ * backdrop blur would be re-rendered on every rain frame — the main source
+ * of scroll jank on phones. A denser tint keeps the frosted look for free.
+ */
+@media (hover: none), (pointer: coarse) {
+  .nav-building__card-glass,
+  .nav-building__card--prominent .nav-building__card-glass {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background:
+      linear-gradient(168deg, rgba(255, 255, 255, 0.17) 0%, rgba(255, 255, 255, 0.045) 26%, transparent 54%),
+      linear-gradient(
+        200deg,
+        color-mix(in srgb, var(--city-violet) 40%, var(--city-black)) 0%,
+        color-mix(in srgb, var(--city-deep-indigo) 82%, transparent) 48%,
+        color-mix(in srgb, var(--city-black) 88%, transparent) 100%
+      );
+  }
+}

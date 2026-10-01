@@ -33,10 +33,12 @@ export interface PublicRegisterInput {
   college: string
   department: string
   year: string
-  utr: string
+  /** No longer collected by the site; sent only if provided. */
+  utr?: string
   selectedDay: RegistrationDay
   specialEventCodes: string[]
-  paymentScreenshot: File
+  /** No longer collected by the site; sent only if provided. */
+  paymentScreenshot?: File
 }
 
 export interface PublicRegisterResponse {

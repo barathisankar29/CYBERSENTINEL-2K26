@@ -22,7 +22,7 @@
 /* Neon Speech Bubble */
 .hero-mascot__bubble {
   position: relative;
-  background: rgba(14, 11, 28, 0.88);
+  background: rgba(14, 11, 28, 0.94);
   border: 1px solid rgba(0, 240, 255, 0.45);
   box-shadow: 
     0 0 15px rgba(0, 240, 255, 0.2),
@@ -32,8 +32,8 @@
   margin-bottom: 0.6rem;
   max-width: 240px;
   text-align: left;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  /* Solid instead of a backdrop blur: it floats over the rain canvas, and a
+     blur there is recomputed on every rain frame. */
   animation: bubbleFloat 4s ease-in-out infinite;
 }
 

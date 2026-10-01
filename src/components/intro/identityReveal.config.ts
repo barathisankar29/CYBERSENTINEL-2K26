@@ -48,13 +48,12 @@ export const identityReveal = {
   presents: { start: 0.61, end: 0.68, depthPx: 10 } satisfies RevealWindow,
   symposium: { start: 0.72, end: 0.9, depthPx: 28 } satisfies RevealWindow,
   info: { start: 0.85, end: 0.98, depthPx: 18 } satisfies RevealWindow,
-  // Hero Register Now CTA (see IdentityLayer.tsx) — arrives together with
-  // the CyberSentinel logo (same start) over a short window, so it snaps in
-  // solid instead of creeping in at the very end of the hero.
-  registerCta: { start: 0.72, end: 0.76, depthPx: 18 } satisfies RevealWindow,
-  // Symposium countdown card, right under the Register Now CTA — follows it
-  // in a beat later so the two don't pop at once.
-  countdown: { start: 0.75, end: 0.82, depthPx: 18 } satisfies RevealWindow,
+  // Symposium countdown card, directly under the CyberSentinel identity —
+  // arrives together with the logo over a short window so it snaps in solid.
+  countdown: { start: 0.72, end: 0.76, depthPx: 18 } satisfies RevealWindow,
+  // Hero Register Now CTA (see IdentityLayer.tsx), right under the countdown
+  // — follows it in a beat later so the two don't pop at once.
+  registerCta: { start: 0.75, end: 0.8, depthPx: 18 } satisfies RevealWindow,
 }
 
 /**

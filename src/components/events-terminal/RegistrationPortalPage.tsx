@@ -36,7 +36,6 @@ const DAY_CHARACTER: Record<RegistrationDay, CharacterId> = {
 };
 
 /** Matches the public-register Edge Function's limit. */
-const MAX_SCREENSHOT_BYTES = 5 * 1024 * 1024;
 
 /**
  * Full-screen registration portal from the events-terminal design, submitting
@@ -66,11 +65,6 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
   const [selectedSpecialCodes, setSelectedSpecialCodes] = useState<string[]>(
     initialData?.dayType === 'SPECIAL' ? initialData.specialEventCodes ?? [] : []
   );
-
-  // Payment fields
-  const [utr, setUtr] = useState('');
-  const [screenshotFile, setScreenshotFile] = useState<File | null>(null);
-  const [fileInputKey, setFileInputKey] = useState(0);
 
   // Alert & submission state
   const [alertInfo, setAlertInfo] = useState<{ type: 'error' | 'success'; message: string; regId?: string } | null>(null);
@@ -102,10 +96,6 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
   const feeAmount = getFeeAmount();
   const feeDisplay = feeAmount === null ? '—' : formatRupees(feeAmount);
 
-  const handleScreenshotChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setScreenshotFile(e.target.files?.[0] ?? null);
-  };
-
   const toggleSpecialEvent = (code: string) => {
     setSelectedSpecialCodes((prev) => (prev.includes(code) ? prev.filter((item) => item !== code) : [...prev, code]));
   };
@@ -129,9 +119,6 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
     if (!department.trim()) return showError('Department is required.');
     if (selectedDay === 'SPECIAL' && selectedSpecialCodes.length === 0)
       return showError('Please select at least one Special Event to register.');
-    if (!utr.trim()) return showError('UTR / Transaction ID is required for payment verification.');
-    if (!screenshotFile) return showError('Please upload your UPI Payment Screenshot.');
-    if (screenshotFile.size > MAX_SCREENSHOT_BYTES) return showError('Payment screenshot must be 5 MB or smaller.');
 
     setIsSubmitting(true);
     setAlertInfo(null);
@@ -144,10 +131,8 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
         college,
         department,
         year,
-        utr,
         selectedDay,
-        specialEventCodes: selectedDay === 'SPECIAL' ? selectedSpecialCodes : [],
-        paymentScreenshot: screenshotFile
+        specialEventCodes: selectedDay === 'SPECIAL' ? selectedSpecialCodes : []
       });
 
       // Same lookup record the backend team's client keeps (used by My Registrations / Create Team).
@@ -196,9 +181,6 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
       setCollege('');
       setDepartment('');
       setYear('');
-      setUtr('');
-      setScreenshotFile(null);
-      setFileInputKey((key) => key + 1);
     } catch (error) {
       showError(error instanceof Error ? error.message : 'Registration failed.');
     } finally {
@@ -276,7 +258,7 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
           </span>
           <h1 className="font-pixel text-2xl sm:text-4xl text-white tracking-wide mb-2">Register for CyberSentinel</h1>
           <p className="text-gray-400 text-xs sm:text-sm font-body leading-relaxed max-w-2xl">
-            Select your symposium day, make the official UPI payment, enter the UTR and upload your payment screenshot. You receive your final QR only after payment verification.
+            Select your symposium day, fill in your details and submit. You receive your final QR only after payment verification.
           </p>
         </section>
 
@@ -448,7 +430,7 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
               <span>Payment</span>
             </h3>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 gap-5">
               <div>
                 <span className="block text-xs font-silkscreen text-gray-300 mb-1.5">Official College Payment QR</span>
                 {/* TODO: official UPI QR image — the backend package ships only a placeholder here too. */}
@@ -464,35 +446,6 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="utr" className="block text-xs font-silkscreen text-gray-300 mb-1.5">UTR / Transaction ID *</label>
-                  <input id="utr" type="text" required value={utr} onChange={(e) => setUtr(e.target.value)} placeholder="e.g. 324109842101" className={`${inputClass} font-mono`} />
-                  <p className="text-gray-400 text-[10px] font-body mt-1">Enter the exact UTR shown in your UPI/bank app.</p>
-                </div>
-
-                <div>
-                  <label htmlFor="paymentScreenshot" className="block text-xs font-silkscreen text-gray-300 mb-1.5">Payment Screenshot *</label>
-                  <input
-                    key={fileInputKey}
-                    id="paymentScreenshot"
-                    type="file"
-                    accept="image/*"
-                    required
-                    onChange={handleScreenshotChange}
-                    className="w-full bg-[#11061f] border border-[#3b1752] focus:border-[#00ffff] text-white px-3 py-2 text-xs outline-none file:mr-3 file:py-1 file:px-3 file:border file:border-[#ff007f] file:bg-[#ff007f20] file:text-[#ff007f] file:font-pixel file:text-xs cursor-pointer"
-                  />
-                  <p className="text-gray-400 text-[10px] font-body mt-1">
-                    Maximum size: 5 MB. The screenshot is stored privately for payment verification.
-                  </p>
-                  {screenshotFile && (
-                    <div className="mt-2 flex items-center gap-2">
-                      <span className="text-[10px] font-mono text-[#34d399]">✓ File attached:</span>
-                      <span className="text-[10px] font-mono text-gray-300 truncate max-w-xs">{screenshotFile.name}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
             </div>
           </div>
 
