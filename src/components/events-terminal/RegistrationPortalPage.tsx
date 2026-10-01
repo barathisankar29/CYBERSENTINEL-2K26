@@ -1,7 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import type { CharacterId } from '@/types/characterProfile';
 import { characterProfiles } from '@/data/characterProfiles';
-import { saveLastRegistration, submitRegistration, type RegistrationDay } from '@/services/registration';
+import {
+  getActiveEvents,
+  saveLastRegistration,
+  submitRegistration,
+  submitToPaymentProcess,
+  type ActiveEvent,
+  type RegistrationDay
+} from '@/services/registration';
 import { recordBackendRegistration } from '@/utils/eventRegistration';
 import { sound } from './sound';
 import { formatRupees, useLiveRegistrationData } from './useLiveRegistrationData';
@@ -35,14 +42,44 @@ const DAY_CHARACTER: Record<RegistrationDay, CharacterId> = {
   SPECIAL: 'dacre'
 };
 
-/** Matches the public-register Edge Function's limit. */
+const EVENT_DAYS = ['DAY_1', 'DAY_2'] as const;
+
+const normalizeName = (value: string) => value.toLowerCase().replace(/[^a-z0-9]/g, '');
 
 /**
- * Full-screen registration portal from the events-terminal design, submitting
- * to the backend team's `public-register` Supabase Edge Function. Fields,
- * client checks and payload are exactly those of their reference client
- * (register2/registration/index.html); the Edge Function does all
- * authoritative validation (duplicates, UTR reuse, fee calculation).
+ * Backend event ids for the events handed over by the pack chooser / event
+ * page, matched by name against the live ACTIVE events (exact name first,
+ * then ignoring spacing and punctuation), so nothing here hardcodes the
+ * backend's event list or ids.
+ */
+function matchActiveEventIds(
+  wanted: RegistrationPortalInitialData['selectedEvents'],
+  activeEvents: ActiveEvent[]
+): string[] {
+  const ids = new Set<string>();
+  for (const item of wanted ?? []) {
+    const day = item.day?.replace(/\s+/g, '_').toUpperCase();
+    const candidates = activeEvents.filter((event) => !day || event.day === day);
+    const match =
+      candidates.find((event) => event.name.toLowerCase() === item.name.toLowerCase()) ??
+      candidates.find((event) => normalizeName(event.name) === normalizeName(item.name));
+    if (match) ids.add(match.id);
+  }
+  return [...ids];
+}
+
+/**
+ * Full-screen registration portal from the events-terminal design, wired to
+ * the backend team's register2 registration client (registration.js) —
+ * same endpoints, payload and client checks, re-presented in the terminal's
+ * visual language:
+ *   - fees: functions/v1/get-registration-fees; special events:
+ *     rest/v1/rpc/get_special_events; day events: rest/v1/events (ACTIVE)
+ *   - submit: functions/v1/public-register (multipart) with selected_day,
+ *     selected_event_ids and special_event_codes
+ *   - then the browser is handed to the college payment process with
+ *     email, day and the registration_fee public-register returned.
+ * The Edge Function does all authoritative validation.
  */
 export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
   initialData,
@@ -65,6 +102,44 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
   const [selectedSpecialCodes, setSelectedSpecialCodes] = useState<string[]>(
     initialData?.dayType === 'SPECIAL' ? initialData.specialEventCodes ?? [] : []
   );
+
+  // Day events (rest/v1/events, ACTIVE only) and the participant's picks.
+  const [activeEvents, setActiveEvents] = useState<ActiveEvent[]>([]);
+  const [eventsReady, setEventsReady] = useState(false);
+  const [eventsError, setEventsError] = useState(false);
+  const [selectedEventIds, setSelectedEventIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    getActiveEvents()
+      .then((events) => {
+        if (cancelled) return;
+        setActiveEvents(events);
+        // Preselect what the visitor picked on the event page / pack.
+        setSelectedEventIds(matchActiveEventIds(initialData?.selectedEvents, events));
+        setEventsReady(true);
+      })
+      .catch(() => {
+        if (!cancelled) setEventsError(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [initialData]);
+
+  const eventsByDay = useMemo(
+    () => ({
+      DAY_1: activeEvents.filter((event) => event.day === 'DAY_1'),
+      DAY_2: activeEvents.filter((event) => event.day === 'DAY_2')
+    }),
+    [activeEvents]
+  );
+  const visibleEventDays = EVENT_DAYS.filter((day) => selectedDay === day || selectedDay === 'BOTH');
+
+  const toggleDayEvent = (id: string) => {
+    sound.playBlip();
+    setSelectedEventIds((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
+  };
 
   // Alert & submission state
   const [alertInfo, setAlertInfo] = useState<{ type: 'error' | 'success'; message: string; regId?: string } | null>(null);
@@ -117,8 +192,22 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
     if (!phone.trim()) return showError('Phone Number is required.');
     if (!college.trim()) return showError('College name is required.');
     if (!department.trim()) return showError('Department is required.');
+
+    // register2 registration.js checks, in its order.
+    if (selectedDay !== 'SPECIAL' && !eventsReady) return showError('Events are still loading. Please try again.');
+    const submittedEventIds = selectedEventIds.filter((id) => {
+      const event = activeEvents.find((item) => item.id === id);
+      return Boolean(event) && (selectedDay === 'BOTH' || event?.day === selectedDay);
+    });
+    const requiredDays: string[] = selectedDay === 'BOTH' ? [...EVENT_DAYS] : selectedDay === 'SPECIAL' ? [] : [selectedDay];
+    if (
+      requiredDays.some(
+        (day) => !submittedEventIds.some((id) => activeEvents.some((event) => event.id === id && event.day === day))
+      )
+    )
+      return showError('Please select at least one event for each selected day.');
     if (selectedDay === 'SPECIAL' && selectedSpecialCodes.length === 0)
-      return showError('Please select at least one Special Event to register.');
+      return showError('Please select at least one special event.');
 
     setIsSubmitting(true);
     setAlertInfo(null);
@@ -132,6 +221,7 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
         department,
         year,
         selectedDay,
+        selectedEventIds: submittedEventIds,
         specialEventCodes: selectedDay === 'SPECIAL' ? selectedSpecialCodes : []
       });
 
@@ -147,15 +237,13 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
         const eventNames =
           selectedDay === 'SPECIAL'
             ? specialEvents.filter((ev) => selectedSpecialCodes.includes(ev.code)).map((ev) => ev.name)
-            : fromPack && initialData?.selectedEvents?.length
-              ? initialData.selectedEvents.map((ev) => ev.name)
-              : character.packs[0]?.events ?? [];
+            : activeEvents.filter((ev) => submittedEventIds.includes(ev.id)).map((ev) => ev.name);
         recordBackendRegistration(
           characterId,
           {
             id: `${characterId}-${selectedDay.toLowerCase()}`,
             label: (fromPack && initialData?.packLabel) || selectedDay.replace('_', ' '),
-            price: feeAmount ?? 0,
+            price: result.registration_fee ?? feeAmount ?? 0,
             events: eventNames
           },
           result.registration_code,
@@ -166,21 +254,16 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
 
       sound.playSuccess();
       dispatchMascotEvent('MASCOT_REGISTRATION_SUCCESS', {
-        message: `Mission complete! Registration ID: ${result.registration_code}. You're in!`,
+        message: `Registration ${result.registration_code} created. Taking you to payment.`,
       });
       setAlertInfo({
         type: 'success',
-        message: `Registration submitted successfully. Registration ID: ${result.registration_code}. Payment status: ${result.status}. You will receive your final QR after payment verification.`,
+        message: `Registration ID: ${result.registration_code}. Redirecting you to the official payment page...`,
         regId: result.registration_code
       });
 
-      // Reset like the reference client does after a successful submit.
-      setFullName('');
-      setEmail('');
-      setPhone('');
-      setCollege('');
-      setDepartment('');
-      setYear('');
+      // Hand off to the college payment process exactly as register2 does.
+      submitToPaymentProcess({ email: email.trim(), day: selectedDay, registrationFee: result.registration_fee });
     } catch (error) {
       showError(error instanceof Error ? error.message : 'Registration failed.');
     } finally {
@@ -225,15 +308,15 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
       className="fixed inset-0 z-50 bg-[#05010a] text-gray-200 overflow-y-auto selection:bg-[#ff007f] selection:text-white flex flex-col justify-between"
       data-purpose="fullscreen-registration-portal"
     >
-      <header className="w-full bg-[#0a0314] border-b-2 border-[#2d123d] px-4 sm:px-8 py-3.5 flex items-center justify-between sticky top-0 z-40 backdrop-blur-md">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-[#9333ea] border border-[#c084fc] flex items-center justify-center font-silkscreen text-white font-bold text-sm shadow-[0_0_10px_rgba(147,51,234,0.5)]">
+      <header className="w-full bg-[#0a0314] border-b-2 border-[#2d123d] px-3 sm:px-8 py-3.5 flex items-center justify-between gap-2 sticky top-0 z-40 backdrop-blur-md">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <div className="shrink-0 w-8 h-8 bg-[#9333ea] border border-[#c084fc] flex items-center justify-center font-silkscreen text-white font-bold text-sm shadow-[0_0_10px_rgba(147,51,234,0.5)]">
             CS
           </div>
-          <span className="font-pixel text-lg sm:text-xl text-white tracking-wider">CyberSentinel</span>
+          <span className="font-pixel text-sm sm:text-xl text-white tracking-wider truncate">CyberSentinel</span>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 shrink-0">
           <span className="hidden sm:inline-block px-3 py-1 bg-[#1a082b] border border-[#a855f7] text-[#c084fc] font-silkscreen text-[11px] tracking-wider uppercase">
             Participant Registration
           </span>
@@ -370,6 +453,63 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
               {dayOption('SPECIAL', 'special', 'Special Events', 'Premium events', 'border-[#34d399] bg-[#34d39915] text-white shadow-[0_0_12px_rgba(52,211,153,0.3)]')}
             </div>
 
+            {selectedDay !== 'SPECIAL' && (
+              <div id="eventChoices" className="mb-4 space-y-3">
+                {eventsError && (
+                  <p className="p-3 border border-[#ef4444] bg-[#290a17] text-[#fecaca] text-xs font-body" role="alert">
+                    Events are temporarily unavailable. Please try again later.
+                  </p>
+                )}
+                {!eventsError && !eventsReady && (
+                  <p className="text-[11px] font-mono text-gray-400">Loading events...</p>
+                )}
+                {eventsReady &&
+                  visibleEventDays.map((day) => (
+                    <fieldset key={day} className="p-3 bg-[#11061f] border border-[#3b1752] min-w-0">
+                      <legend className="px-1 font-silkscreen text-[11px] text-[#00ffff] uppercase">
+                        {day === 'DAY_1' ? 'Day 1 events' : 'Day 2 events'} - pick at least one
+                      </legend>
+                      {eventsByDay[day].length === 0 ? (
+                        <p className="text-[11px] font-mono text-gray-400">No events are currently available for this day.</p>
+                      ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          {eventsByDay[day].map((event) => {
+                            const checked = selectedEventIds.includes(event.id);
+                            return (
+                              <label
+                                key={event.id}
+                                className={`flex items-center gap-3 p-2.5 border cursor-pointer min-w-0 transition-colors ${
+                                  checked ? 'bg-[#00ffff14] border-[#00ffff] text-white' : 'bg-black/40 border-zinc-800 text-gray-400 hover:border-zinc-600'
+                                }`}
+                              >
+                                <input
+                                  type="checkbox"
+                                  name="selected_event"
+                                  value={event.id}
+                                  data-day={day}
+                                  checked={checked}
+                                  onChange={() => toggleDayEvent(event.id)}
+                                  className="sr-only"
+                                />
+                                <span className="shrink-0 w-4 h-4 border border-zinc-600 flex items-center justify-center font-bold text-xs bg-black" aria-hidden="true">
+                                  {checked ? '✓' : ''}
+                                </span>
+                                <span className="flex flex-col min-w-0">
+                                  <span className="font-pixel text-xs text-white uppercase break-words">
+                                    {event.code} · {event.name}
+                                  </span>
+                                  <span className="text-[10px] font-mono text-gray-400">{event.event_type || 'Event'}</span>
+                                </span>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </fieldset>
+                  ))}
+              </div>
+            )}
+
             {selectedDay === 'SPECIAL' && (
               <div id="specialEvents" className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 p-3 bg-[#11061f] border border-[#3b1752]">
                 {specialEvents.length === 0 && (
@@ -420,32 +560,6 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
                 <small className="block text-[10px] font-silkscreen text-gray-400 uppercase mb-0.5">QR</small>
                 <strong className="block text-sm sm:text-base font-body text-[#34d399]">After verification</strong>
               </div>
-            </div>
-          </div>
-
-          {/* Section 3: Payment */}
-          <div className="border-b border-[#2d123d] pb-6">
-            <h3 className="font-pixel text-lg sm:text-xl text-[#38bdf8] tracking-wider mb-4 flex items-center gap-2">
-              <span>◆</span>
-              <span>Payment</span>
-            </h3>
-
-            <div className="grid grid-cols-1 gap-5">
-              <div>
-                <span className="block text-xs font-silkscreen text-gray-300 mb-1.5">Official College Payment QR</span>
-                {/* TODO: official UPI QR image — the backend package ships only a placeholder here too. */}
-                <div className="bg-[#11061f] border border-[#3b1752] p-4 flex flex-col items-center justify-center text-center">
-                  <div
-                    className="w-32 h-32 bg-black border-2 border-[#9333ea] flex items-center justify-center text-[#c084fc] font-mono select-none shadow-[0_0_15px_rgba(147,51,234,0.3)]"
-                    style={{ fontSize: '70px', lineHeight: 1 }}
-                    aria-hidden="true"
-                  >
-                    ▦
-                  </div>
-                  <p className="text-gray-400 text-[11px] font-body mt-3">Official UPI payment QR will be shown here.</p>
-                </div>
-              </div>
-
             </div>
           </div>
 

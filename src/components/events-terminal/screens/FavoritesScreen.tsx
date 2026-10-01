@@ -3,10 +3,12 @@ import type { ModuleId } from '@/types/eventsTerminal';
 import {
   checkRegistration,
   getLastRegistration,
+  resolvePaymentAmount,
+  submitToPaymentProcess,
   type CheckRegistrationResponse
 } from '@/services/registration';
 import { sound } from '../sound';
-import { Check, Copy, Download, ExternalLink, Search, ShieldCheck, Users } from 'lucide-react';
+import { Check, Copy, CreditCard, Download, Printer, QrCode, Search, ShieldCheck, Users } from 'lucide-react';
 
 interface FavoritesScreenProps {
   onSelectModule?: (mod: ModuleId) => void;
@@ -27,6 +29,99 @@ function statusTone(status?: string) {
 }
 
 /**
+ * Official entry QR, drawn from the backend's `qr_url` (only present once
+ * payment is VERIFIED and the registration CONFIRMED — the backend decides).
+ * Download renders the same entry-pass PNG as register2's checking.js.
+ * The QR library is loaded only when a QR is actually shown.
+ */
+const EntryQr: React.FC<{ url: string; code: string; day: string }> = ({ url, code, day }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    import('qrcode')
+      .then(({ default: QRCode }) => {
+        if (!cancelled && canvasRef.current) return QRCode.toCanvas(canvasRef.current, url, { width: 200, margin: 2 });
+      })
+      .catch(() => {
+        if (!cancelled) setFailed(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [url]);
+
+  const downloadPass = () => {
+    const qr = canvasRef.current;
+    if (!qr) return;
+    sound.playNavClick();
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    canvas.width = 1000;
+    canvas.height = 1220;
+    ctx.fillStyle = '#081522';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#5ee7ff';
+    ctx.fillRect(0, 0, canvas.width, 14);
+    ctx.fillStyle = '#f3f8ff';
+    ctx.font = '800 42px Arial';
+    ctx.fillText('CYBER SENTINEL', 70, 100);
+    ctx.fillStyle = '#91a6bd';
+    ctx.font = '24px Arial';
+    ctx.fillText('OFFICIAL ENTRY PASS', 70, 142);
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(70, 190, 860, 790);
+    const size = 640;
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(qr, (canvas.width - size) / 2, 265, size, size);
+    // checking.js draws the code in the background colour, so it never shows; light text here.
+    ctx.fillStyle = '#f3f8ff';
+    ctx.font = '800 32px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(code, 500, 1050);
+    ctx.font = '28px Arial';
+    ctx.fillStyle = '#5ee7ff';
+    ctx.fillText(day, 500, 1100);
+    ctx.font = '20px Arial';
+    ctx.fillStyle = '#91a6bd';
+    ctx.fillText('Present this QR at the assigned attendance desk', 500, 1160);
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png');
+    link.download = `${code}-${day}-QR.png`;
+    link.click();
+  };
+
+  return (
+    <div className="border-2 border-[#00ff66] bg-[#03140a] p-4 flex flex-col sm:flex-row items-center gap-4" data-purpose="entry-qr">
+      <div className="bg-white p-2 shrink-0">
+        <canvas ref={canvasRef} width={200} height={200} aria-label={`Entry QR for ${code}`} className="block w-[200px] h-[200px]" />
+      </div>
+      <div className="flex flex-col gap-2 text-center sm:text-left min-w-0">
+        <h4 className="font-pixel text-sm text-[#00ff66] tracking-wider flex items-center justify-center sm:justify-start gap-1.5">
+          <QrCode className="w-4 h-4" /> OFFICIAL ENTRY QR
+        </h4>
+        <p className="text-[11px] font-mono text-gray-300">
+          This QR contains only a secure verification link. Show it to the Admin desk or the relevant event coordinator.
+        </p>
+        {failed ? (
+          <p className="text-[11px] font-mono text-[#ff8fa3]">Unable to draw the QR. Please reload and try again.</p>
+        ) : (
+          <button
+            type="button"
+            onClick={downloadPass}
+            className="inline-flex items-center justify-center gap-1.5 w-full sm:w-fit px-3 py-2 bg-[#00ff66] text-black hover:bg-[#5dff9b] font-pixel text-[10px] tracking-wider cursor-pointer"
+          >
+            <Download className="w-3.5 h-3.5" /> DOWNLOAD QR
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+/**
  * "My Registrations" — the participant's real record from the backend's
  * `check-registration` Edge Function (secure email + phone lookup). Nothing
  * here is stored or invented client-side: payment status, team and QR all
@@ -40,6 +135,9 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [record, setRecord] = useState<CheckRegistrationResponse | null>(null);
+  // The email the shown record was looked up with — what checking.js sends to the payment process.
+  const [recordEmail, setRecordEmail] = useState('');
+  const [paying, setPaying] = useState(false);
   const [copied, setCopied] = useState(false);
   const copyTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -48,6 +146,7 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
     setLoading(true);
     try {
       setRecord(await checkRegistration(lookupEmail, lookupPhone));
+      setRecordEmail(lookupEmail);
     } catch (err) {
       setRecord(null);
       setError(err instanceof Error ? err.message : 'Unable to check registration.');
@@ -90,6 +189,21 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
   const paymentStatus = record?.payment?.status ?? 'PENDING';
   const isVerified = record?.payment?.status === 'VERIFIED' && record.registration.status === 'CONFIRMED';
   const canCreateTeam = isVerified && record?.registration.selected_day !== 'SPECIAL' && !record?.team;
+
+  // register2 checking.js "Pay Payment": shown until payment is VERIFIED.
+  const handlePay = async () => {
+    if (!record || paying) return;
+    sound.playNavClick();
+    setPaying(true);
+    try {
+      const registrationFee = await resolvePaymentAmount(record);
+      submitToPaymentProcess({ email: recordEmail, day: record.registration.selected_day, registrationFee });
+    } catch (err) {
+      sound.playError();
+      setError(err instanceof Error ? err.message : 'Unable to determine the payment amount.');
+      setPaying(false);
+    }
+  };
 
   const triggerReceiptDownload = () => {
     if (!record) return;
@@ -293,7 +407,7 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
                 )}
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 text-xs font-mono">
                 <div>
                   <span className="text-gray-500 text-[9px] block">NAME</span>
                   <span className="text-white break-words">{record.participant.name}</span>
@@ -301,6 +415,10 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
                 <div>
                   <span className="text-gray-500 text-[9px] block">COLLEGE</span>
                   <span className="text-gray-300 break-words">{record.participant.college}</span>
+                </div>
+                <div>
+                  <span className="text-gray-500 text-[9px] block">DEPARTMENT</span>
+                  <span className="text-gray-300 break-words">{record.participant.department}</span>
                 </div>
                 <div>
                   <span className="text-gray-500 text-[9px] block">AMOUNT</span>
@@ -314,7 +432,7 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
 
               {!isVerified && paymentStatus !== 'REJECTED' && (
                 <p className="text-[11px] font-mono text-gray-400">
-                  Your payment is being verified by the organizers. Your entry QR and team creation unlock once it is verified.
+                  Your QR will appear after payment verification. If you have not completed payment yet, use Pay Payment below.
                 </p>
               )}
               {paymentStatus === 'REJECTED' && (
@@ -323,16 +441,38 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
                 </p>
               )}
 
-              {record.qr_url && (
-                <a
-                  href={record.qr_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 w-fit px-3 py-1.5 border border-[#00ff66] text-[#00ff66] hover:bg-[#00ff66] hover:text-black font-pixel text-[10px] tracking-wider"
+              {paymentStatus !== 'VERIFIED' && (
+                <button
+                  type="button"
+                  onClick={() => void handlePay()}
+                  disabled={paying}
+                  className="inline-flex items-center justify-center gap-1.5 w-full sm:w-fit px-4 py-2 bg-[#ff007f] hover:bg-[#ff3399] text-white font-pixel text-[10px] tracking-wider cursor-pointer disabled:opacity-50 shadow-[0_0_10px_rgba(255,0,127,0.4)]"
+                  data-purpose="pay-payment-btn"
                 >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  <span>OPEN ENTRY QR PASS</span>
-                </a>
+                  <CreditCard className="w-3.5 h-3.5" />
+                  <span>{paying ? 'PREPARING PAYMENT...' : 'PAY PAYMENT'}</span>
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={() => {
+                  sound.playNavClick();
+                  window.print();
+                }}
+                className="inline-flex items-center justify-center gap-1.5 w-full sm:w-fit px-4 py-2 bg-black border border-zinc-600 hover:border-[#c084fc] text-gray-300 hover:text-white font-pixel text-[10px] tracking-wider cursor-pointer"
+                data-purpose="print-confirmation-btn"
+              >
+                <Printer className="w-3.5 h-3.5" />
+                <span>PRINT CONFIRMATION</span>
+              </button>
+
+              {record.qr_url && (
+                <EntryQr
+                  url={record.qr_url}
+                  code={record.registration.registration_code}
+                  day={record.registration.selected_day}
+                />
               )}
             </div>
 

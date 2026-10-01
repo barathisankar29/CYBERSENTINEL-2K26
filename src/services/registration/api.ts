@@ -1,6 +1,8 @@
 import { functionUrl, registrationConfig, rpcUrl } from './config'
 import type {
+  ActiveEvent,
   CheckRegistrationResponse,
+  PaymentProcessInput,
   PublicRegisterInput,
   PublicRegisterResponse,
   RegistrationFees,
@@ -79,7 +81,33 @@ export async function getSpecialEvents(): Promise<SpecialEvent[]> {
   return Array.isArray(data) ? (data as SpecialEvent[]) : []
 }
 
-/** POST functions/v1/public-register (multipart/form-data) */
+/**
+ * GET rest/v1/events — ACTIVE events, the same query register2's
+ * registration.js runs to build the per-day event checklist.
+ */
+export async function getActiveEvents(): Promise<ActiveEvent[]> {
+  let response: Response
+  assertConfigured()
+  try {
+    response = await fetch(
+      `${registrationConfig.supabaseUrl}/rest/v1/events?select=id,code,name,day,event_type,status&status=eq.ACTIVE&order=day,code`,
+      { headers: { apikey: registrationConfig.anonKey, Authorization: `Bearer ${registrationConfig.anonKey}` } },
+    )
+  } catch {
+    throw new RegistrationApiError('Events are temporarily unavailable. Please try again later.', 0)
+  }
+  const data: unknown = await response.json().catch(() => null)
+  if (!response.ok) {
+    const message = (data as { message?: string } | null)?.message || 'Unable to load events.'
+    throw new RegistrationApiError(message, response.status)
+  }
+  return Array.isArray(data) ? (data as ActiveEvent[]) : []
+}
+
+/**
+ * POST functions/v1/public-register (multipart/form-data). Field names,
+ * trimming and JSON-encoded arrays are exactly register2's registration.js.
+ */
 export async function submitRegistration(input: PublicRegisterInput): Promise<PublicRegisterResponse> {
   const form = new FormData()
   form.append('name', input.name.trim())
@@ -88,15 +116,63 @@ export async function submitRegistration(input: PublicRegisterInput): Promise<Pu
   form.append('college', input.college.trim())
   form.append('department', input.department.trim())
   form.append('year', input.year.trim())
-  if (input.utr?.trim()) form.append('utr', input.utr.trim())
   form.append('selected_day', input.selectedDay)
+  form.append('selected_event_ids', JSON.stringify(input.selectedEventIds))
   form.append('special_event_codes', JSON.stringify(input.specialEventCodes))
-  if (input.paymentScreenshot) form.append('payment_screenshot', input.paymentScreenshot)
   return send<PublicRegisterResponse>(
     functionUrl('public-register'),
     { method: 'POST', body: form },
     'Registration failed.',
   )
+}
+
+/** The college's payment process that register2 hands every registration to. */
+export const PAYMENT_PROCESS_URL = 'https://apps.veltech.edu.in/clique/CybersentinelProcess'
+
+/**
+ * Leaves the site for the payment process exactly as register2 does: a
+ * top-level multipart POST form with email, day and registration_fee.
+ */
+export function submitToPaymentProcess({ email, day, registrationFee }: PaymentProcessInput): void {
+  const fields: [string, string][] = [
+    ['email', email],
+    ['day', day],
+    ['registration_fee', String(registrationFee)],
+  ]
+  const form = document.createElement('form')
+  form.method = 'POST'
+  form.action = PAYMENT_PROCESS_URL
+  form.enctype = 'multipart/form-data'
+  for (const [name, value] of fields) {
+    const input = document.createElement('input')
+    input.type = 'hidden'
+    input.name = name
+    input.value = value
+    form.append(input)
+  }
+  document.body.append(form)
+  form.submit()
+}
+
+/**
+ * Amount for the "Pay Payment" button on a found registration — register2's
+ * checking.js logic: the recorded payment amount, else the special events'
+ * fees (SPECIAL), else the configured day fee(s).
+ */
+export async function resolvePaymentAmount(record: CheckRegistrationResponse): Promise<number> {
+  let amount = record.payment?.amount == null ? Number.NaN : Number(record.payment.amount)
+  if (!Number.isFinite(amount)) {
+    const day = record.registration.selected_day
+    if (day === 'SPECIAL') {
+      if (!record.special_events.length) throw new RegistrationApiError('Unable to determine the special-event payment amount.', 0)
+      amount = record.special_events.reduce((total, event) => total + Number(event.fee || 0), 0)
+    } else {
+      const fees = await getRegistrationFees()
+      amount = day === 'BOTH' ? fees.DAY_1 + fees.DAY_2 : fees[day]
+    }
+  }
+  if (!Number.isFinite(amount)) throw new RegistrationApiError('Unable to determine the payment amount.', 0)
+  return amount
 }
 
 /** POST functions/v1/check-registration */

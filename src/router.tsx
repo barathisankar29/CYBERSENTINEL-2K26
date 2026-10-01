@@ -84,6 +84,9 @@ export function AppRoutes() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/register" element={<RegistrationPage />} />
         <Route path="/register/status" element={<RegistrationStatusPage />} />
+        {/* The college payment gateway returns participants here after paying
+            (route matching is case-insensitive, so /checkstatus works too). */}
+        <Route path="/checkStatus" element={<RegistrationStatusPage />} />
         <Route path="/register/team" element={<CreateTeamPage />} />
         <Route path="/:slug" element={<SectionPage />} />
         <Route path="*" element={<NotFoundPage />} />

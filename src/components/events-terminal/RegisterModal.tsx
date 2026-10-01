@@ -115,8 +115,8 @@ const PACK_CONFIGS: Record<string, CharacterConfig> = {
 
 /**
  * Live price for a pack, from the backend. Day packs are the per-day
- * registration fee (a day pass covers every event that day — the backend
- * registers the whole day on confirmation); Dr. Dacre is the sum of the
+ * registration fee (the same fee whichever of that day's events are
+ * chosen); Dr. Dacre is the sum of the
  * selected special events. Null until the backend has answered.
  */
 function livePackPrice(config: CharacterConfig, live: LiveRegistrationData, selectedIds?: string[]): number | null {
@@ -218,10 +218,19 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
     const config = PACK_CONFIGS[characterKey];
     if (!config) return;
 
+    // The event the visitor came from (event page REGISTER), if this pack has it.
+    const fromEvent = event
+      ? config.events.find(
+          (e) => e.originalEventId === event.id || e.name.toLowerCase() === event.title.toLowerCase()
+        )
+      : undefined;
+
     let initialSelected: string[] = [];
     if (!config.isPerEventPricing) {
-      // A day pass covers every event on its day(s); nothing to pick.
-      initialSelected = config.events.map((e) => e.id);
+      // Day passes charge the day fee; the ticked events become the
+      // registration's selected events (public-register selected_event_ids).
+      // Coming from an event page, start with just that event.
+      initialSelected = fromEvent ? [fromEvent.id] : config.events.map((e) => e.id);
     } else if (initialEventId) {
       initialSelected = [initialEventId];
     } else {
@@ -255,9 +264,9 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
     setModalState(null);
   };
 
-  // Every pack's checklist is selectable. Day passes keep their fixed day fee
-  // (the backend registers the whole day); the ticked events are what the
-  // visitor plans to play and are saved to their profile.
+  // Every pack's checklist is selectable. Day passes keep their fixed day fee;
+  // the ticked events are carried into the registration form, where they are
+  // matched to the backend's active events and submitted as the selection.
   const toggleEvent = (eventId: string) => {
     if (!modalState) return;
     sound.playBlip();

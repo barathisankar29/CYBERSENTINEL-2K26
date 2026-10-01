@@ -25,7 +25,17 @@ export interface SpecialEvent {
   fee: number
 }
 
-/** public-register (multipart/form-data) */
+/** rest/v1/events?status=eq.ACTIVE — the events a day registration chooses from */
+export interface ActiveEvent {
+  id: string
+  code: string
+  name: string
+  day: TeamDay
+  event_type: string | null
+  status: string
+}
+
+/** public-register (multipart/form-data) — fields of register2/js/registration.js */
 export interface PublicRegisterInput {
   name: string
   email: string
@@ -33,18 +43,26 @@ export interface PublicRegisterInput {
   college: string
   department: string
   year: string
-  /** No longer collected by the site; sent only if provided. */
-  utr?: string
   selectedDay: RegistrationDay
+  /** events.id values; required (at least one per day) unless SPECIAL */
+  selectedEventIds: string[]
+  /** special_events.code values; SPECIAL only */
   specialEventCodes: string[]
-  /** No longer collected by the site; sent only if provided. */
-  paymentScreenshot?: File
 }
 
 export interface PublicRegisterResponse {
   success: true
   registration_code: string
   status: 'UNDER_REVIEW'
+  /** Amount charged — forwarded to the payment process as registration_fee */
+  registration_fee: number
+}
+
+/** Fields posted to the Vel Tech payment process (register2 registration.js / checking.js) */
+export interface PaymentProcessInput {
+  email: string
+  day: RegistrationDay
+  registrationFee: number
 }
 
 /** check-registration */
