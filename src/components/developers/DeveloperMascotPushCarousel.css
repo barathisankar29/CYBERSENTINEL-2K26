@@ -369,36 +369,56 @@
    ========================================================================== */
 @media (max-width: 1024px) {
   .mascot-pusher {
-    top: 10px;
-    left: -65px;
+    top: 12px;
+    left: -68px;
     transform: scale(0.92);
   }
 }
 
 @media (max-width: 768px) {
   .mascot-carousel {
-    padding-top: 4.8rem;
+    padding-top: 2rem;
   }
 
   .mascot-carousel__stage {
     min-height: auto;
+    overflow: visible;
+    gap: 0.35rem;
   }
 
+  .mascot-carousel__card-wrapper {
+    max-width: min(calc(100vw - 72px), 340px);
+  }
+
+  /* Mascot placed strictly on the LEFT side of the card, pushing directly into the left edge (like laptop) */
   .mascot-pusher {
-    top: -65px;
-    left: 8px;
+    top: 12px;
+    left: -48px;
     z-index: 45;
+    transform-origin: center right;
+  }
+
+  .mascot-pusher.is-hovering {
+    animation: mascotFloatLeftMobile 3.2s ease-in-out infinite;
+  }
+
+  .mascot-pusher.is-pushing--next {
+    animation: mascotPushDashNextMobile 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+
+  .mascot-pusher.is-pushing--prev {
+    animation: mascotPushDashPrevMobile 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   }
 
   .mascot-pusher__sprite {
-    width: 82px;
-    height: 92px;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.7));
+    width: 72px;
+    height: 82px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.75));
   }
 
   .mascot-pusher__callout {
-    top: -20px;
-    left: 30px;
+    top: -24px;
+    left: 2px;
     padding: 3px 8px;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
@@ -408,17 +428,96 @@
   .mascot-pusher__callout-msg {
     font-size: 0.65rem;
   }
+
+  .mascot-carousel__nav-btn {
+    padding: 0.25rem;
+  }
+
+  .mascot-carousel__arrow-svg {
+    width: 20px;
+    height: 32px;
+  }
 }
 
 @media (max-width: 480px) {
   .mascot-carousel {
-    padding-top: 4.5rem;
+    padding-top: 1.8rem;
   }
 
+  .mascot-carousel__card-wrapper {
+    max-width: min(calc(100vw - 64px), 315px);
+  }
+
+  /* Mascot placed firmly on the left shoulder/flank */
   .mascot-pusher {
-    top: -60px;
-    left: 4px;
-    transform: scale(0.85);
+    top: 10px;
+    left: -42px;
+    z-index: 45;
+  }
+
+  .mascot-pusher__sprite {
+    width: 66px;
+    height: 76px;
+  }
+
+  .mascot-pusher__callout {
+    top: -22px;
+    left: 0;
+    padding: 2px 7px;
+  }
+
+  .mascot-pusher__callout-msg {
+    font-size: 0.58rem;
+  }
+
+  .mascot-carousel__arrow-svg {
+    width: 18px;
+    height: 28px;
+  }
+}
+
+@keyframes mascotFloatLeftMobile {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(0.84) rotate(-2deg);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0) scale(0.84) rotate(2deg);
+  }
+}
+
+@keyframes mascotPushDashNextMobile {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.84) rotate(0deg);
+  }
+  25% {
+    transform: translate3d(-16px, 0, 0) scale(0.9) rotate(-6deg);
+  }
+  50% {
+    transform: translate3d(60px, 0, 0) scale(0.96) rotate(10deg);
+  }
+  75% {
+    transform: translate3d(10px, 0, 0) scale(0.86) rotate(3deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(0.84) rotate(0deg);
+  }
+}
+
+@keyframes mascotPushDashPrevMobile {
+  0% {
+    transform: scaleX(-1) translate3d(0, 0, 0) scale(0.84) rotate(0deg);
+  }
+  25% {
+    transform: scaleX(-1) translate3d(16px, 0, 0) scale(0.9) rotate(6deg);
+  }
+  50% {
+    transform: scaleX(-1) translate3d(-60px, 0, 0) scale(0.96) rotate(-10deg);
+  }
+  75% {
+    transform: scaleX(-1) translate3d(-10px, 0, 0) scale(0.86) rotate(-3deg);
+  }
+  100% {
+    transform: scaleX(-1) translate3d(0, 0, 0) scale(0.84) rotate(0deg);
   }
 }
 
