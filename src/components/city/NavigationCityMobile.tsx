@@ -1,48 +1,21 @@
-import { useState, useEffect, type CSSProperties } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { navigationBuildings } from '@/data/navigation'
 import { mobileNavigationLayout } from '@/data/navigationMobile'
 import { ProfileAccessBadge } from '@/components/ui/ProfileAccessBadge'
 import { useMascot } from '@/components/mascot'
-import { MASCOT_SPRITES, type MascotExpression } from '@/data/mascot'
 import { MOBILE_NAVIGATION_BG } from './useWarmBuildingsImages'
 import { RainEffect } from './RainEffect'
 import './NavigationCityMobile.css'
 
 const BG_SRC = MOBILE_NAVIGATION_BG
 
-const MOBILE_MASCOT_DIALOGUES: { text: string; pose: MascotExpression }[] = [
-  { text: '✨ TAP ANY BUILDING TO EXPLORE CYBERSENTINEL 2K26!', pose: 'happy' },
-  { text: '⚡ EVENTS: CODING, WEBLICA, BGM & TALENT SHOWS!', pose: 'cheer' },
-  { text: '⏳ TIMELINE: DAY 1 & 2 ROUND SCHEDULES & TIMINGS!', pose: 'fly' },
-  { text: '🕶️ COORDINATORS: MEET STUDENT LEADS & DEVELOPERS!', pose: 'wave' },
-  { text: '🚌 TRANSPORT: COLLEGE BUS ROUTES & PICKUP TIMINGS!', pose: 'curious' },
-  { text: '📞 CONTACT: CALL OR REACH OUT TO OUR ORGANIZERS!', pose: 'happy' },
-  { text: '🏛️ ABOUT: DISCOVER VEL TECH HIGH TECH INSTITUTION!', pose: 'float' },
-]
 
 export function NavigationCityMobile() {
   const navigate = useNavigate()
   const { dispatchMascotEvent } = useMascot()
   const [activeId, setActiveId] = useState<string | null>(null)
-  const [mascotIdx, setMascotIdx] = useState(0)
-
   const clearActive = (id: string) => setActiveId((current) => (current === id ? null : current))
-
-  const handleNextDialogue = () => {
-    setMascotIdx((prev) => (prev + 1) % MOBILE_MASCOT_DIALOGUES.length)
-  }
-
-  // Smoothly rotate dialogue tips every 4.0s
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setMascotIdx((prev) => (prev + 1) % MOBILE_MASCOT_DIALOGUES.length)
-    }, 4000)
-    return () => clearInterval(timer)
-  }, [])
-
-  const currentDialogue = MOBILE_MASCOT_DIALOGUES[mascotIdx]
-  const currentSprite = MASCOT_SPRITES[currentDialogue.pose] || MASCOT_SPRITES.float
 
   return (
     <section className="mobile-nav-section" id="buildings">
@@ -160,42 +133,6 @@ export function NavigationCityMobile() {
           )
         })}
 
-        {/* Mobile Mascot Companion Stationed in the Open Plaza Courtyard Space */}
-        <div
-          className="mobile-nav-mascot"
-          style={{ left: '68%', top: '70%' }}
-          role="region"
-          aria-label="Tap mascot companion for navigation hints"
-        >
-          <div
-            className="mobile-nav-mascot__bubble"
-            onClick={handleNextDialogue}
-            role="button"
-            tabIndex={0}
-            title="Tap for next hint"
-            aria-label="Guide tip. Tap for next hint"
-          >
-            <div className="mobile-nav-mascot__bubble-beak" aria-hidden="true" />
-            <span className="mobile-nav-mascot__speech">{currentDialogue.text}</span>
-          </div>
-
-          <div
-            className="mobile-nav-mascot__actor"
-            onClick={handleNextDialogue}
-            role="button"
-            tabIndex={0}
-            title="Click mascot for next guide hint"
-          >
-            <div className="mobile-nav-mascot__glow" aria-hidden="true" />
-            <img
-              src={currentSprite.src}
-              alt="CyberSentinel Mobile Guide"
-              className="mobile-nav-mascot__img"
-              draggable={false}
-            />
-            <div className="mobile-nav-mascot__badge">GUIDE</div>
-          </div>
-        </div>
       </div>
     </section>
   )
