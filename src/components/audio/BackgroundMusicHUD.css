@@ -1,0 +1,283 @@
+/* ==========================================================================
+   SITE BACKGROUND MUSIC HUD (FUTURISTIC CYBER AUDIO CONTROL)
+   Matches the Intro Video Audio Control HUD Design
+   ========================================================================== */
+
+.site-bg-music-hud {
+  position: fixed;
+  top: clamp(1rem, 2.5vw, 1.5rem);
+  right: clamp(1rem, 2.5vw, 1.5rem);
+  z-index: 999;
+  pointer-events: auto;
+  user-select: none;
+  transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s ease;
+}
+
+.site-bg-music-hud--hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-10px);
+  visibility: hidden;
+}
+
+.site-audio-ctrl {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.site-audio-ctrl:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.site-audio-ctrl:active {
+  transform: translateY(0) scale(0.96);
+}
+
+/* Upper Control Box (Square with Cyber Reticle Grid) */
+.site-audio-ctrl__box {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 13px;
+  background: linear-gradient(145deg, #0a0718 0%, #030208 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Attract Pulse when button is hovered */
+.site-audio-ctrl:hover .site-audio-ctrl__box {
+  transform: translateY(-2px);
+}
+
+/* AUDIO ON: Intense Electric Cyan & Violet Glowing Halo */
+.site-audio-ctrl--on .site-audio-ctrl__box {
+  border: 1.5px solid #00f0ff;
+  box-shadow:
+    0 0 18px rgba(0, 240, 255, 0.65),
+    0 0 35px rgba(124, 58, 237, 0.4),
+    inset 0 0 14px rgba(0, 240, 255, 0.22);
+}
+
+.site-audio-ctrl--on:hover .site-audio-ctrl__box {
+  box-shadow:
+    0 0 25px rgba(0, 240, 255, 0.85),
+    0 0 50px rgba(124, 58, 237, 0.6),
+    inset 0 0 20px rgba(0, 240, 255, 0.35);
+}
+
+/* AUDIO OFF: Deep Dark Obsidian with Attractive Glowing Cyber-Magenta Halo */
+.site-audio-ctrl--off .site-audio-ctrl__box {
+  border: 1.5px solid rgba(217, 38, 201, 0.75);
+  box-shadow:
+    0 0 16px rgba(217, 38, 201, 0.42),
+    0 0 30px rgba(124, 58, 237, 0.3),
+    inset 0 0 12px rgba(217, 38, 201, 0.18);
+  animation: hudAttractPulse 3s infinite ease-in-out;
+}
+
+.site-audio-ctrl--off:hover .site-audio-ctrl__box {
+  border-color: #ff3ea5;
+  box-shadow:
+    0 0 24px rgba(255, 62, 165, 0.7),
+    0 0 45px rgba(124, 58, 237, 0.5),
+    inset 0 0 16px rgba(255, 62, 165, 0.25);
+  animation: none;
+}
+
+@keyframes hudAttractPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 14px rgba(217, 38, 201, 0.35),
+      0 0 28px rgba(124, 58, 237, 0.25),
+      inset 0 0 10px rgba(217, 38, 201, 0.14);
+  }
+  50% {
+    box-shadow:
+      0 0 22px rgba(217, 38, 201, 0.65),
+      0 0 38px rgba(124, 58, 237, 0.45),
+      inset 0 0 16px rgba(217, 38, 201, 0.25);
+  }
+}
+
+/* 3x3 Radar Grid lines overlay */
+.site-audio-ctrl__grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.65;
+}
+
+/* Status Indicator LED (Top Right Corner) */
+.site-audio-ctrl__led {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  z-index: 3;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Bright Cyan/Green glow dot when ON */
+.site-audio-ctrl--on .site-audio-ctrl__led {
+  background-color: #00ffaa;
+  box-shadow:
+    0 0 10px #00ffaa,
+    0 0 3px #ffffff;
+}
+
+/* Pulsing Radiant Magenta glow dot when OFF (Attracts attention) */
+.site-audio-ctrl--off .site-audio-ctrl__led {
+  background-color: #ff2a85;
+  box-shadow:
+    0 0 10px #ff2a85,
+    0 0 3px #ffffff;
+  animation: ledBeacon 1.8s infinite ease-in-out;
+}
+
+@keyframes ledBeacon {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.18);
+    box-shadow:
+      0 0 14px #ff2a85,
+      0 0 4px #ffffff;
+  }
+}
+
+/* Center Glowing Speaker Icon */
+.site-audio-ctrl__icon {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #00f0ff;
+  filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.95));
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.site-audio-ctrl--off .site-audio-ctrl__icon {
+  color: #d8b4fe;
+  filter: drop-shadow(0 0 6px rgba(217, 38, 201, 0.75));
+}
+
+.site-audio-ctrl:hover .site-audio-ctrl__icon {
+  transform: scale(1.1);
+}
+
+.site-audio-ctrl__svg {
+  display: block;
+}
+
+/* Sound wave animation when playing */
+.site-audio-ctrl--on .site-audio-ctrl__wave-1 {
+  animation: audioPulseWave 1.4s infinite ease-in-out;
+}
+
+.site-audio-ctrl--on .site-audio-ctrl__wave-2 {
+  animation: audioPulseWave 1.4s infinite ease-in-out 0.25s;
+}
+
+@keyframes audioPulseWave {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+/* Bottom Status Pill Badge */
+.site-audio-ctrl__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 9px;
+  border-radius: 7px;
+  background: #040209;
+  border: 1px solid #00f0ff;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.45);
+  white-space: nowrap;
+  transition: all 0.25s ease;
+}
+
+.site-audio-ctrl--off .site-audio-ctrl__badge {
+  border-color: rgba(217, 38, 201, 0.7);
+  box-shadow: 0 0 10px rgba(217, 38, 201, 0.35);
+}
+
+.site-audio-ctrl__text {
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+/* Cyan text when ON */
+.site-audio-ctrl--on .site-audio-ctrl__text {
+  color: #00f0ff;
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.95);
+}
+
+/* Magenta/Violet text when OFF */
+.site-audio-ctrl--off .site-audio-ctrl__text {
+  color: #ff66c4;
+  text-shadow: 0 0 8px rgba(255, 102, 196, 0.85);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 767px) {
+  .site-bg-music-hud {
+    top: calc(0.65rem + env(safe-area-inset-top, 0px));
+    right: calc(0.65rem + env(safe-area-inset-right, 0px));
+  }
+
+  .site-audio-ctrl__box {
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+  }
+
+  .site-audio-ctrl__led {
+    top: 5px;
+    right: 5px;
+    width: 6px;
+    height: 6px;
+  }
+
+  .site-audio-ctrl__badge {
+    padding: 2px 7px;
+  }
+
+  .site-audio-ctrl__text {
+    font-size: 8px;
+  }
+}
