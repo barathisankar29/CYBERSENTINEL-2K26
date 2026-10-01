@@ -232,7 +232,7 @@
   position: absolute;
   right: clamp(2rem, 5.5vw, 6.5rem);
   top: auto;
-  bottom: clamp(2.5rem, 6vh, 5.5rem);
+  bottom: clamp(1.2rem, 3.8vh, 3.8rem);
   pointer-events: auto;
   z-index: 45;
 }
@@ -241,7 +241,7 @@
   .identity-layer__mascot {
     right: clamp(1.2rem, 3.5vw, 2.5rem);
     top: auto;
-    bottom: clamp(2rem, 5vh, 4rem);
+    bottom: clamp(0.8rem, 2.5vh, 2.4rem);
     z-index: 45;
   }
 }
@@ -263,6 +263,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: clamp(0.35rem, 1.2vh, 0.8rem);
+    padding-bottom: clamp(0.25rem, 1vh, 0.75rem);
     container-type: size;
     container-name: hero-mascot-slot;
     pointer-events: none;
