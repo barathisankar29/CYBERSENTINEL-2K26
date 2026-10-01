@@ -1,7 +1,8 @@
-import React, { memo } from 'react'
+import React, { memo, type CSSProperties } from 'react'
 import type { DeveloperMember } from '@/data/developers'
 import { NeonSplatterCard } from './NeonSplatterCard'
 import './FrontendDeveloperCard.css'
+import './DeveloperGlitchCard.css'
 
 interface DeveloperGlitchCardProps {
   developer: DeveloperMember
@@ -15,18 +16,66 @@ export const DeveloperGlitchCard: React.FC<DeveloperGlitchCardProps> = memo(({
   const nameColor = developer.nameColor || developer.accentHex || '#00f0ff'
   const textColor = developer.textColor || developer.secondaryHex || '#38bdf8'
 
+  const themeVars = {
+    '--dev-accent': developer.accentHex || nameColor,
+    '--dev-secondary': developer.secondaryHex || textColor,
+  } as CSSProperties
+
   return (
     <NeonSplatterCard>
-      {/* Top Column: Graphic / Artwork with Transparent Background */}
-      <div className="frontend-dev-card__graphic-col">
+      {/* Top Column: Cyberpunk Geometric Stitch Art Showcase matching frontend badges */}
+      <div className="frontend-dev-card__graphic-col" style={themeVars}>
         <div className="frontend-dev-card__img-container">
-          <img
-            src={developer.avatar}
-            alt={developer.name}
-            className="frontend-dev-card__img"
-            loading="eager"
-            decoding="async"
-          />
+          <div className="dev-card__art-stage">
+            {/* Layer 1: Geometric Stitched Facets Behind Avatar */}
+            <div className="dev-card__geo-wrap" aria-hidden="true">
+              {/* Main Tilted Polygonal Shield */}
+              <div className="dev-card__geo-shape dev-card__geo-shape--primary" />
+
+              {/* Running Stitches on the Geometric Polygon (SVG with neon dash) */}
+              <svg className="dev-card__geo-stitch-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <polygon
+                  points="10,22 88,8 78,92 12,80"
+                  className="dev-card__polygon-stitch"
+                />
+                <polygon
+                  points="18,28 80,18 72,84 20,74"
+                  className="dev-card__polygon-stitch-inner"
+                />
+              </svg>
+
+              {/* Secondary Intersecting Angle Shard with Dashed Seam */}
+              <div className="dev-card__geo-shape dev-card__geo-shape--secondary" />
+            </div>
+
+            {/* Top-Right Energy Ray Burst Spikes */}
+            <div className="dev-card__burst-sparks" aria-hidden="true">
+              <span className="dev-card__burst-ray dev-card__burst-ray--1" />
+              <span className="dev-card__burst-ray dev-card__burst-ray--2" />
+              <span className="dev-card__burst-ray dev-card__burst-ray--3" />
+            </div>
+
+            {/* Developer Cutout Avatar */}
+            <div className="dev-card__avatar-wrap">
+              <img
+                src={developer.avatar}
+                alt={developer.name}
+                className="dev-card__avatar-img"
+                loading="eager"
+                decoding="async"
+              />
+            </div>
+
+            {/* Horizontal Speed & Glitch Slice Bars (Slicing across lower torso & sides) */}
+            <div className="dev-card__speed-slices" aria-hidden="true">
+              <span className="dev-card__slice dev-card__slice--1" />
+              <span className="dev-card__slice dev-card__slice--2" />
+              <span className="dev-card__slice dev-card__slice--3" />
+              <span className="dev-card__slice dev-card__slice--4" />
+              <span className="dev-card__slice dev-card__slice--5" />
+              <span className="dev-card__slice dev-card__slice--6" />
+            </div>
+          </div>
         </div>
       </div>
 
