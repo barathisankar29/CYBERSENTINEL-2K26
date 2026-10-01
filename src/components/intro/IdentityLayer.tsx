@@ -111,12 +111,15 @@ export function IdentityLayer({ zIndex, ctaInteractive }: IdentityLayerProps) {
         >
           <RegisterNowButton variant="hero" />
         </div>
+        {/* Hero mascot. Desktop/tablet: floats bottom-right (absolute, so it
+            ignores this column). Phones: the last item in the column, sized
+            to the space left under Register Now and hidden when there is
+            none — it can never cover the content above it. */}
+        <div className="identity-layer__mascot" style={mascotStyle}>
+          <HeroMascotCompanion />
+        </div>
       </div>
 
-      {/* Floating Hero Cyber Mascot Companion */}
-      <div className="identity-layer__mascot" style={mascotStyle}>
-        <HeroMascotCompanion />
-      </div>
     </div>
   )
 }
