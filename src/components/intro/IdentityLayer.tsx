@@ -81,8 +81,8 @@ interface IdentityLayerProps {
  * now reveals directly above the CyberSentinel logo — see
  * PresentedByGroup.tsx.
  *
- * The Register Now CTA reveals last, directly under the CyberSentinel
- * identity.
+ * Under the CyberSentinel identity the symposium countdown reveals first,
+ * then the Register Now CTA right below it.
  */
 export function IdentityLayer({ zIndex, ctaInteractive }: IdentityLayerProps) {
   return (
@@ -102,14 +102,14 @@ export function IdentityLayer({ zIndex, ctaInteractive }: IdentityLayerProps) {
           presentsStyle={presentsStyle}
         />
         <SymposiumIdentity nameStyle={symposiumStyle} taglineStyle={symposiumStyle} infoStyle={infoStyle} />
+        <div className="identity-layer__countdown" style={countdownStyle}>
+          <SymposiumCountdown />
+        </div>
         <div
           className="identity-layer__cta"
           style={{ ...registerCtaStyle, pointerEvents: ctaInteractive ? 'auto' : 'none' }}
         >
           <RegisterNowButton variant="hero" />
-        </div>
-        <div className="identity-layer__countdown" style={countdownStyle}>
-          <SymposiumCountdown />
         </div>
       </div>
 

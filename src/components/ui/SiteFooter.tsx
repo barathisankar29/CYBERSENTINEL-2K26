@@ -24,6 +24,8 @@ export function SiteFooter() {
                 {section.shortLabel.toUpperCase()}
               </Link>
             ))}
+          {/* Admin panel page is not built yet — /admin falls through to the generic /:slug page until it is. */}
+          <Link to="/admin">ADMIN PANEL</Link>
         </nav>
 
         <div className="site-footer__meta">

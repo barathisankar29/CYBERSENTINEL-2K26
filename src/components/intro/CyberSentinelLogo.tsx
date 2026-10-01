@@ -22,10 +22,11 @@ const MAX_WIDTH_MOBILE = 'min(86vw, 30rem)'
  * visible mark. Separation from the busy city behind it comes from a soft
  * drop-shadow that hugs the artwork's own silhouette — not a card/panel.
  *
- * Glitch: the logo sits still most of the time, then fires a short burst
- * of jitter plus pink/cyan RGB-split slices (see CyberSentinelLogo.css).
- * The split copies are flat colour masked by the logo image itself, so no
- * extra download. All scroll motion comes from `style`, computed from
+ * Glitch: the logo itself never moves — it only flickers. During a burst,
+ * thin horizontal slices of the artwork tear sideways and pink/cyan
+ * RGB-split ghosts snap in and out (see CyberSentinelLogo.css). Slices
+ * reuse the same image as a background and the ghosts are flat colour
+ * masked by it, so there is no extra download. All scroll motion comes from `style`, computed from
  * scroll progress by IdentityLayer, and is applied to the wrapper so the
  * glitch copies reveal together with the logo.
  */
@@ -50,6 +51,8 @@ export function CyberSentinelLogo({ style }: CyberSentinelLogoProps) {
         />
         <span className="cyber-sentinel-logo-split cyber-sentinel-logo-split--pink" aria-hidden="true" />
         <span className="cyber-sentinel-logo-split cyber-sentinel-logo-split--cyan" aria-hidden="true" />
+        <span className="cyber-sentinel-logo-slice cyber-sentinel-logo-slice--a" aria-hidden="true" />
+        <span className="cyber-sentinel-logo-slice cyber-sentinel-logo-slice--b" aria-hidden="true" />
       </div>
     </div>
   )
