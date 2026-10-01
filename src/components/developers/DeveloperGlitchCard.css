@@ -6,14 +6,17 @@
 
 .dev-card {
   position: relative;
-  width: 345px;
+  width: 100%;
+  max-width: 345px;
+  height: 445px;
   min-height: 445px;
   background: linear-gradient(180deg, rgba(14, 11, 28, 0.96) 0%, rgba(7, 5, 16, 0.99) 100%);
   border-radius: 20px;
-  padding: 1.25rem 1.15rem 1.15rem;
+  padding: 1.15rem 1rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   text-align: center;
   border: 1px solid color-mix(in srgb, var(--dev-accent, #00f0ff) 35%, rgba(255, 255, 255, 0.12));
   box-shadow: 
@@ -32,22 +35,28 @@
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
   }
-
-  .dev-card.is-active {
-    transform: perspective(800px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
-  }
 }
 
 @media (max-width: 768px) {
   .dev-card {
-    will-change: auto;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.8), 0 0 16px color-mix(in srgb, var(--dev-accent, #00f0ff) 20%, transparent);
+    width: 100%;
+    max-width: min(345px, calc(100vw - 56px));
+    height: 445px;
+    min-height: 445px;
+    padding: 1rem 0.95rem 0.85rem;
   }
+}
 
-  .dev-card.is-active {
-    transform: none;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.85), 0 0 20px color-mix(in srgb, var(--dev-accent, #00f0ff) 40%, transparent);
-  }
+.dev-card.is-active {
+  border-color: color-mix(in srgb, var(--dev-accent, #00f0ff) 80%, transparent);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.9),
+    0 0 32px color-mix(in srgb, var(--dev-accent, #00f0ff) 60%, transparent),
+    0 0 55px color-mix(in srgb, var(--dev-secondary, #7c3aed) 40%, transparent);
+}
+
+.dev-card.is-active {
+  transform: perspective(800px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
 }
 
 /* ==========================================================================

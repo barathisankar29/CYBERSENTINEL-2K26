@@ -25,22 +25,12 @@
   width: 90%;
   max-width: 950px;
   height: 480px;
+  filter: blur(80px);
   pointer-events: none;
   z-index: 0;
   transition: opacity 0.5s ease;
   border-radius: 50%;
-}
-
-@media (min-width: 769px) {
-  .mascot-carousel__flare {
-    filter: blur(40px);
-  }
-}
-
-@media (max-width: 768px) {
-  .mascot-carousel__flare {
-    filter: none;
-  }
+  will-change: transform;
 }
 
 /* Main Card Stage Viewport */
@@ -72,7 +62,7 @@
 .mascot-carousel__card-wrapper {
   position: relative;
   width: 100%;
-  max-width: 360px;
+  max-width: 345px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -392,6 +382,10 @@
 
   .mascot-carousel__stage {
     min-height: auto;
+  }
+
+  .mascot-carousel__card-wrapper {
+    max-width: min(345px, calc(100vw - 56px));
   }
 
   .mascot-pusher {
