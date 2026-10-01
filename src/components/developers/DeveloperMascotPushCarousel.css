@@ -37,7 +37,7 @@
 .mascot-carousel__stage {
   position: relative;
   width: 100%;
-  min-height: 520px;
+  min-height: 535px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -62,7 +62,7 @@
 .mascot-carousel__card-wrapper {
   position: relative;
   width: 100%;
-  max-width: 360px;
+  max-width: 395px;
   display: flex;
   justify-content: center;
   align-items: center;
