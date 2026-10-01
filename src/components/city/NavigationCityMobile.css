@@ -558,14 +558,4 @@
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95), 0 0 8px #00f0ff;
 }
 
-.mobile-nav-mascot__action-hint {
-  display: block;
-  font-family: var(--font-display, 'Orbitron', monospace);
-  font-size: 0.5rem;
-  font-weight: 800;
-  color: #00f0ff;
-  letter-spacing: 0.08em;
-  margin-top: 0.3rem;
-  text-shadow: 0 0 6px rgba(0, 240, 255, 0.75);
-}
 

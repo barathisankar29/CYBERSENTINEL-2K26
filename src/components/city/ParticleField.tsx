@@ -1,11 +1,8 @@
 import { memo, useMemo } from 'react'
 import type { CSSProperties } from 'react'
+import { getDevicePerfInfo } from '@/utils/devicePerf'
 import './ParticleField.css'
 
-const PARTICLE_COUNT = 28
-// Phones get a sparser field: each particle is its own animated compositor
-// layer, and low-end mobile GPUs feel that cost first.
-const PARTICLE_COUNT_MOBILE = 16
 const PARTICLE_COLORS = ['var(--city-violet-soft)', 'var(--city-cyan)', 'var(--city-pink)']
 
 interface Particle {
@@ -45,8 +42,11 @@ interface ParticleFieldProps {
  */
 // memo: CityScene re-renders on every scroll frame, but nothing here depends
 // on scroll progress — skip re-rendering the whole field each frame.
-export const ParticleField = memo(function ParticleField({ zIndex, reducedMotion, isMobile }: ParticleFieldProps) {
-  const particles = useMemo(() => createParticles(isMobile ? PARTICLE_COUNT_MOBILE : PARTICLE_COUNT), [isMobile])
+export const ParticleField = memo(function ParticleField({ zIndex, reducedMotion }: ParticleFieldProps) {
+  const particles = useMemo(() => {
+    const perf = getDevicePerfInfo()
+    return createParticles(perf.particleCount)
+  }, [])
 
   return (
     <div className="particle-field" style={{ zIndex }} aria-hidden="true">

@@ -35,6 +35,50 @@
     background: var(--city-black);
     color: white;
     font-family: var(--font-body);
+    overflow-x: hidden;
+    max-width: 100vw;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Hardware memory efficiency rules for budget Android & iOS devices (2GB-4GB RAM) */
+  @media (max-width: 768px) {
+    /* Prevent memory-expensive nested composite blurs on phone GPUs */
+    .mobile-nav-card__glass,
+    .hero-mascot__bubble,
+    .cyber-back-btn,
+    .profile-access-badge,
+    .replay-intro-btn {
+      backdrop-filter: blur(4px) !important;
+      -webkit-backdrop-filter: blur(4px) !important;
+    }
+  }
+
+  /* When device has <= 4GB RAM, bypass backdrop-filter in favor of rich opaque cyber glass */
+  html.is-low-ram * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  html.is-low-ram .mobile-nav-card__glass {
+    background: rgba(12, 10, 26, 0.94) !important;
+  }
+
+  html.is-low-ram .hero-mascot__bubble {
+    background: rgba(12, 10, 26, 0.95) !important;
+  }
+
+  html.is-low-ram .cyber-back-btn,
+  html.is-low-ram .profile-access-badge,
+  html.is-low-ram .replay-intro-btn {
+    background: rgba(14, 11, 28, 0.95) !important;
+  }
+
+  html.is-low-ram .mobile-nav-item__glow,
+  html.is-low-ram .mobile-nav-card__aura {
+    filter: blur(4px) !important;
+    opacity: 0.45 !important;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -48,3 +92,4 @@
     }
   }
 }
+

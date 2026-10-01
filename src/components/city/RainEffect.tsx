@@ -1,15 +1,15 @@
 import { memo, useEffect, useRef } from 'react'
 import { useReducedMotion } from '@/animation/useReducedMotion'
+import { getDevicePerfInfo } from '@/utils/devicePerf'
 import './RainEffect.css'
 
-// Drops per 10,000 CSS px² of canvas — scales with the section's size, so a
-// phone draws far fewer streaks than a wide desktop.
-const DENSITY = 1.9
-const MAX_DROPS = 520
-// Rendering above 1.5x is invisible on thin streaks but costs fill rate.
-const MAX_DPR = 1.5
+// Drops per 10,000 CSS px² of canvas — scales with the section's size
+const DEFAULT_DENSITY = 1.9
+const DEFAULT_MAX_DROPS = 520
+const DEFAULT_MAX_DPR = 1.5
 // Slight wind slant: horizontal px per vertical px.
 const SLANT = 0.18
+
 
 // Lightning: one strike every STRIKE_INTERVAL ms while the section is on screen.
 const STRIKE_INTERVAL = 4000
@@ -152,6 +152,12 @@ export const RainEffect = memo(function RainEffect({ zIndex }: RainEffectProps) 
     const ctx = canvas?.getContext('2d')
     if (!canvas || !ctx) return
 
+    const perf = getDevicePerfInfo()
+    const maxDrops = perf.rainDropCap ?? DEFAULT_MAX_DROPS
+    const density = perf.rainDensity ?? DEFAULT_DENSITY
+    const maxDpr = perf.dprCap ?? DEFAULT_MAX_DPR
+    const strikeInterval = perf.isLowRam ? 6500 : STRIKE_INTERVAL
+
     let width = 0
     let height = 0
     let drops: Drop[] = []
@@ -159,12 +165,12 @@ export const RainEffect = memo(function RainEffect({ zIndex }: RainEffectProps) 
     let last = 0
     let inView = false
     // Time since the last strike, advanced only while animating.
-    let sinceStrike = STRIKE_INTERVAL - 1500
+    let sinceStrike = strikeInterval - 1500
     let bolt: number[][] = []
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect()
-      const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR)
+      const dpr = Math.min(window.devicePixelRatio || 1, maxDpr)
       width = rect.width
       height = rect.height
       canvas.width = Math.round(width * dpr)
@@ -172,7 +178,7 @@ export const RainEffect = memo(function RainEffect({ zIndex }: RainEffectProps) 
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
       ctx.lineCap = 'round'
       ctx.lineJoin = 'round'
-      const count = Math.min(MAX_DROPS, Math.round(((width * height) / 10000) * DENSITY))
+      const count = Math.min(maxDrops, Math.round(((width * height) / 10000) * density))
       drops = Array.from({ length: count }, () => createDrop(width, height, true))
     }
 
@@ -197,16 +203,19 @@ export const RainEffect = memo(function RainEffect({ zIndex }: RainEffectProps) 
       const dt = ms / 1000
       last = now
       sinceStrike += ms
-      if (sinceStrike >= STRIKE_INTERVAL) {
+      if (sinceStrike >= strikeInterval) {
         sinceStrike = 0
         bolt = createBolt(width, height)
-        thunder.play(0.25 + Math.random() * 0.35)
+        if (!perf.isLowRam) {
+          thunder.play(0.25 + Math.random() * 0.35)
+        }
       }
 
       ctx.clearRect(0, 0, width, height)
 
       const flash = flashIntensity(sinceStrike)
-      if (flash > 0) {
+      // Skip full canvas fill on low-RAM phones to prevent GPU fill-rate exhaustion
+      if (flash > 0 && !perf.isLowRam) {
         ctx.fillStyle = `rgba(190, 210, 255, ${0.16 * flash})`
         ctx.fillRect(0, 0, width, height)
       }
