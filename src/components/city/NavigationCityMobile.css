@@ -516,14 +516,22 @@
 
 .mobile-nav-mascot__bubble {
   position: relative;
-  width: 145px;
-  background: rgba(10, 8, 24, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-top: 1px solid rgba(255, 255, 255, 0.38);
-  border-radius: 11px;
-  padding: 0.45rem 0.65rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 240, 255, 0.2);
+  width: max-content;
+  max-width: min(78vw, 215px);
+  min-width: 150px;
+  background: rgba(10, 8, 24, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-top: 1px solid rgba(0, 240, 255, 0.5);
+  border-radius: 12px;
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.75), 0 0 14px rgba(0, 240, 255, 0.25);
   text-align: center;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.mobile-nav-mascot__bubble:active {
+  transform: scale(0.97);
+  border-color: #00f0ff;
 }
 
 .mobile-nav-mascot__bubble-beak {
@@ -533,9 +541,9 @@
   margin-left: -5px;
   width: 9px;
   height: 9px;
-  background: rgba(10, 8, 24, 0.75);
-  border-right: 1px solid rgba(255, 255, 255, 0.22);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(10, 8, 24, 0.88);
+  border-right: 1px solid rgba(255, 255, 255, 0.25);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
   transform: rotate(45deg);
 }
 
@@ -545,8 +553,19 @@
   font-size: 0.58rem;
   font-weight: 800;
   color: #ffffff;
-  line-height: 1.38;
+  line-height: 1.4;
   letter-spacing: 0.025em;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95), 0 0 8px #00f0ff;
+}
+
+.mobile-nav-mascot__action-hint {
+  display: block;
+  font-family: var(--font-display, 'Orbitron', monospace);
+  font-size: 0.5rem;
+  font-weight: 800;
+  color: #00f0ff;
+  letter-spacing: 0.08em;
+  margin-top: 0.3rem;
+  text-shadow: 0 0 6px rgba(0, 240, 255, 0.75);
 }
 

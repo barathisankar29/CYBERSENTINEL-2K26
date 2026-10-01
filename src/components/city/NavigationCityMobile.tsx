@@ -11,13 +11,20 @@ import './NavigationCityMobile.css'
 
 const BG_SRC = MOBILE_NAVIGATION_BG
 
-const MOBILE_MASCOT_DIALOGUES: { text: string; pose: MascotExpression }[] = [
-  { text: '⚡ TAP ANY BUILDING TO ENTER!', pose: 'happy' },
-  { text: '🎮 15+ HACKS & ESPORTS ARENA!', pose: 'cheer' },
-  { text: '⏳ SKYRAIL HAS ALL ROUND TIMINGS!', pose: 'fly' },
-  { text: '🕶️ MEET OUR TEAM IN CREDENTIALS!', pose: 'wave' },
-  { text: '🚀 BUS ROUTES IN TRANSPORT HUB!', pose: 'curious' },
-  { text: '🏛️ EXPLORE DEPT ARCHIVES IN ABOUT!', pose: 'float' },
+interface MobileMascotDialogue {
+  text: string
+  pageSlug?: string
+  pose: MascotExpression
+}
+
+const MOBILE_MASCOT_DIALOGUES: MobileMascotDialogue[] = [
+  { text: '✨ TAP ANY BUILDING TO EXPLORE CYBERSENTINEL 2K26!', pose: 'happy' },
+  { text: '⚡ EVENTS: CODING, WEBLICA, BGM & TALENT SHOWS!', pageSlug: 'events', pose: 'cheer' },
+  { text: '⏳ TIMELINE: DAY 1 & 2 ROUND SCHEDULES & TIMINGS!', pageSlug: 'timeline', pose: 'fly' },
+  { text: '🕶️ COORDINATORS: MEET STUDENT LEADS & DEVELOPERS!', pageSlug: 'credentials', pose: 'wave' },
+  { text: '🚌 TRANSPORT: COLLEGE BUS ROUTES & PICKUP TIMINGS!', pageSlug: 'transport', pose: 'curious' },
+  { text: '📞 CONTACT: CALL OR REACH OUT TO OUR ORGANIZERS!', pageSlug: 'contact', pose: 'happy' },
+  { text: '🏛️ ABOUT: DISCOVER VEL TECH HIGH TECH INSTITUTION!', pageSlug: 'about', pose: 'float' },
 ]
 
 export function NavigationCityMobile() {
@@ -30,6 +37,18 @@ export function NavigationCityMobile() {
 
   const handleNextDialogue = () => {
     setMascotIdx((prev) => (prev + 1) % MOBILE_MASCOT_DIALOGUES.length)
+  }
+
+  const handleBubbleClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    const current = MOBILE_MASCOT_DIALOGUES[mascotIdx]
+    if (current?.pageSlug) {
+      dispatchMascotEvent('MASCOT_CLICK_BUILDING', { buildingId: current.pageSlug })
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+      navigate(`/${current.pageSlug}`)
+    } else {
+      handleNextDialogue()
+    }
   }
 
   // Smoothly rotate dialogue tips every 4.0s
@@ -163,17 +182,29 @@ export function NavigationCityMobile() {
         <div
           className="mobile-nav-mascot"
           style={{ left: '68%', top: '70%' }}
-          onClick={handleNextDialogue}
-          role="button"
-          tabIndex={0}
+          role="region"
           aria-label="Tap mascot companion for navigation hints"
         >
-          <div className="mobile-nav-mascot__bubble">
+          <div
+            className="mobile-nav-mascot__bubble"
+            onClick={handleBubbleClick}
+            style={{ cursor: currentDialogue.pageSlug ? 'pointer' : 'default' }}
+            title={currentDialogue.pageSlug ? `Tap to visit ${currentDialogue.pageSlug}` : 'Tap for next hint'}
+          >
             <div className="mobile-nav-mascot__bubble-beak" aria-hidden="true" />
             <span className="mobile-nav-mascot__speech">{currentDialogue.text}</span>
+            {currentDialogue.pageSlug && (
+              <span className="mobile-nav-mascot__action-hint">TAP TO OPEN ➔</span>
+            )}
           </div>
 
-          <div className="mobile-nav-mascot__actor">
+          <div
+            className="mobile-nav-mascot__actor"
+            onClick={handleNextDialogue}
+            role="button"
+            tabIndex={0}
+            title="Click mascot for next guide hint"
+          >
             <div className="mobile-nav-mascot__glow" aria-hidden="true" />
             <img
               src={currentSprite.src}
