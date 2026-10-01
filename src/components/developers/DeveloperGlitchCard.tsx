@@ -1,5 +1,7 @@
-import React, { type CSSProperties } from 'react'
+import React, { memo, type CSSProperties } from 'react'
 import type { DeveloperMember } from '@/data/developers'
+import { NeonSplatterCard } from './NeonSplatterCard'
+import './FrontendDeveloperCard.css'
 import './DeveloperGlitchCard.css'
 
 interface DeveloperGlitchCardProps {
@@ -8,130 +10,169 @@ interface DeveloperGlitchCardProps {
   onClick?: () => void
 }
 
-export const DeveloperGlitchCard: React.FC<DeveloperGlitchCardProps> = ({
+export const DeveloperGlitchCard: React.FC<DeveloperGlitchCardProps> = memo(({
   developer,
-  isActive = false,
-  onClick,
 }) => {
+  const nameColor = developer.nameColor || developer.accentHex || '#00f0ff'
+  const textColor = developer.textColor || developer.secondaryHex || '#38bdf8'
+
   const themeVars = {
-    '--dev-accent': developer.accentHex,
-    '--dev-secondary': developer.secondaryHex,
+    '--dev-accent': developer.accentHex || nameColor,
+    '--dev-secondary': developer.secondaryHex || textColor,
   } as CSSProperties
 
-
   return (
-    <div
-      className={`dev-card dev-card--${developer.themeColor} ${isActive ? 'is-active' : ''}`}
-      style={themeVars}
-      onClick={onClick}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          onClick?.()
-        }
-      }}
-      role="button"
-      tabIndex={0}
-      aria-label={`${developer.name} - ${developer.role}`}
-    >
-      {/* Sleek Outer Stitch Border */}
-      <div className="dev-card__stitch-frame" aria-hidden="true" />
+    <NeonSplatterCard>
+      {/* Top Column: Cyberpunk Geometric Stitch Art Showcase matching frontend badges */}
+      <div className="frontend-dev-card__graphic-col" style={themeVars}>
+        <div className="frontend-dev-card__img-container">
+          <div className="dev-card__art-stage">
+            {/* Layer 1: Geometric Stitched Facets Behind Avatar */}
+            <div className="dev-card__geo-wrap" aria-hidden="true">
+              {/* Main Tilted Polygonal Shield */}
+              <div className="dev-card__geo-shape dev-card__geo-shape--primary" />
 
-      {/* Cyberpunk Geometric Stitch Art Showcase */}
-      <div className="dev-card__art-stage">
-        {/* Layer 1: Geometric Stitched Facets Behind Avatar */}
-        <div className="dev-card__geo-wrap" aria-hidden="true">
-          {/* Main Tilted Polygonal Shield */}
-          <div className="dev-card__geo-shape dev-card__geo-shape--primary" />
+              {/* Running Stitches on the Geometric Polygon (SVG with neon dash) */}
+              <svg className="dev-card__geo-stitch-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <polygon
+                  points="10,22 88,8 78,92 12,80"
+                  className="dev-card__polygon-stitch"
+                />
+                <polygon
+                  points="18,28 80,18 72,84 20,74"
+                  className="dev-card__polygon-stitch-inner"
+                />
+              </svg>
 
-          {/* Running Stitches on the Geometric Polygon (SVG with neon dash) */}
-          <svg className="dev-card__geo-stitch-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <polygon
-              points="10,22 88,8 78,92 12,80"
-              className="dev-card__polygon-stitch"
-            />
-            <polygon
-              points="18,28 80,18 72,84 20,74"
-              className="dev-card__polygon-stitch-inner"
-            />
-          </svg>
+              {/* Secondary Intersecting Angle Shard with Dashed Seam */}
+              <div className="dev-card__geo-shape dev-card__geo-shape--secondary" />
+            </div>
 
-          {/* Secondary Intersecting Angle Shard with Dashed Seam */}
-          <div className="dev-card__geo-shape dev-card__geo-shape--secondary" />
-        </div>
+            {/* Top-Right Energy Ray Burst Spikes */}
+            <div className="dev-card__burst-sparks" aria-hidden="true">
+              <span className="dev-card__burst-ray dev-card__burst-ray--1" />
+              <span className="dev-card__burst-ray dev-card__burst-ray--2" />
+              <span className="dev-card__burst-ray dev-card__burst-ray--3" />
+            </div>
 
-        {/* Top-Right Energy Ray Burst Spikes */}
-        <div className="dev-card__burst-sparks" aria-hidden="true">
-          <span className="dev-card__burst-ray dev-card__burst-ray--1" />
-          <span className="dev-card__burst-ray dev-card__burst-ray--2" />
-          <span className="dev-card__burst-ray dev-card__burst-ray--3" />
-        </div>
+            {/* Developer Cutout Avatar */}
+            <div className="dev-card__avatar-wrap">
+              <img
+                src={developer.avatar}
+                alt={developer.name}
+                className="dev-card__avatar-img"
+                loading="eager"
+                decoding="async"
+              />
+            </div>
 
-        {/* Developer Cutout Avatar (No background, overlapping geometric facets) */}
-        <div className="dev-card__avatar-wrap">
-          <img
-            src={developer.avatar}
-            alt={developer.name}
-            className="dev-card__avatar-img"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-
-        {/* Horizontal Speed & Glitch Slice Bars (Slicing across lower torso & sides) */}
-        <div className="dev-card__speed-slices" aria-hidden="true">
-          <span className="dev-card__slice dev-card__slice--1" />
-          <span className="dev-card__slice dev-card__slice--2" />
-          <span className="dev-card__slice dev-card__slice--3" />
-          <span className="dev-card__slice dev-card__slice--4" />
-          <span className="dev-card__slice dev-card__slice--5" />
-          <span className="dev-card__slice dev-card__slice--6" />
+            {/* Horizontal Speed & Glitch Slice Bars (Slicing across lower torso & sides) */}
+            <div className="dev-card__speed-slices" aria-hidden="true">
+              <span className="dev-card__slice dev-card__slice--1" />
+              <span className="dev-card__slice dev-card__slice--2" />
+              <span className="dev-card__slice dev-card__slice--3" />
+              <span className="dev-card__slice dev-card__slice--4" />
+              <span className="dev-card__slice dev-card__slice--5" />
+              <span className="dev-card__slice dev-card__slice--6" />
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Developer Credentials Body with Description & Skills */}
-      <div className="dev-card__info">
-        <h4 className="dev-card__name">{developer.name}</h4>
-        <p className="dev-card__role">{developer.role}</p>
+      {/* Bottom Column: Name, Description, and Social Links */}
+      <div className="frontend-dev-card__info-col">
+        {/* Developer Name in stylized Bangers font */}
+        <h2
+          className="frontend-dev-card__name"
+          style={{
+            color: nameColor,
+            textShadow: `0 2px 14px rgba(0, 0, 0, 0.8), 0 0 25px ${nameColor}44`,
+          }}
+        >
+          {developer.name}
+        </h2>
 
-        {/* Developer Biography Description */}
-        <p className="dev-card__desc">{developer.description}</p>
+        {/* Description Paragraph in Share Tech Mono font */}
+        <p
+          className="frontend-dev-card__desc"
+          style={{
+            color: textColor,
+            textShadow: `0 0 12px ${textColor}33`,
+          }}
+        >
+          {developer.description}
+        </p>
 
-        {/* Social Links (LinkedIn & Instagram only) */}
-        <div className="dev-card__socials">
+        {/* Social Icons */}
+        <div className="frontend-dev-card__socials">
+          {/* LinkedIn Icon */}
           {developer.linkedin && (
             <a
               href={developer.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="dev-card__social-link dev-card__social-link--linkedin"
-              title="LinkedIn"
+              aria-label={`${developer.name}'s LinkedIn Profile`}
+              className="frontend-dev-card__social-link frontend-dev-card__social-link--linkedin"
+              title="LinkedIn Profile"
               onClick={(e) => e.stopPropagation()}
-              aria-label={`${developer.name} LinkedIn`}
             >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+              <svg
+                className="frontend-dev-card__social-svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z" />
               </svg>
             </a>
           )}
+
+          {/* GitHub Icon */}
+          {developer.github && (
+            <a
+              href={developer.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${developer.name}'s GitHub Profile`}
+              className="frontend-dev-card__social-link frontend-dev-card__social-link--github"
+              title="GitHub Profile"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <svg
+                className="frontend-dev-card__social-svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                />
+              </svg>
+            </a>
+          )}
+
+          {/* Instagram Icon */}
           {developer.instagram && (
             <a
               href={developer.instagram}
               target="_blank"
               rel="noopener noreferrer"
-              className="dev-card__social-link dev-card__social-link--insta"
-              title="Instagram"
+              aria-label={`${developer.name}'s Instagram Profile`}
+              className="frontend-dev-card__social-link frontend-dev-card__social-link--instagram"
+              title="Instagram Profile"
               onClick={(e) => e.stopPropagation()}
-              aria-label={`${developer.name} Instagram`}
             >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+              <svg
+                className="frontend-dev-card__social-svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.054 1.805.249 2.227.413.56.218.96.478 1.38.898.42.42.68.82.898 1.38.164.422.36 1.057.413 2.227.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.054 1.17-.249 1.805-.413 2.227-.218.56-.478.96-.898 1.38-.42.42-.82.68-1.38.898-.422.164-1.057.36-2.227.413-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.054-1.805-.249-2.227-.413a3.71 3.71 0 0 1-1.38-.898 3.71 3.71 0 0 1-.898-1.38c-.164-.422-.36-1.057-.413-2.227-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.054-1.17.249-1.805.413-2.227.218-.56.478-.96.898-1.38.42-.42.82-.68 1.38-.898.422-.164 1.057-.36 2.227-.413 1.266-.058 1.646-.07 4.85-.07zM12 0C8.741 0 8.333.014 7.053.072 5.775.13 4.902.333 4.14.63a5.88 5.88 0 0 0-2.126 1.384A5.88 5.88 0 0 0 .63 4.14C.333 4.902.13 5.775.072 7.053.014 8.333 0 8.741 0 12s.014 3.667.072 4.947c.058 1.278.261 2.15.558 2.913a5.88 5.88 0 0 0 1.384 2.126A5.88 5.88 0 0 0 4.14 23.37c.763.297 1.635.5 2.913.558C8.333 23.986 8.741 24 12 24s3.667-.014 4.947-.072c1.278-.058 2.15-.261 2.913-.558a5.88 5.88 0 0 0 2.126-1.384 5.88 5.88 0 0 0 1.384-2.126c.297-.763.5-1.635.558-2.913.058-1.28.072-1.688.072-4.947s-.014-3.667-.072-4.947c-.058-1.278-.261-2.15-.558-2.913a5.88 5.88 0 0 0-1.384-2.126A5.88 5.88 0 0 0 19.86.63C19.097.333 18.225.13 16.947.072 15.667.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z" />
               </svg>
             </a>
           )}
         </div>
       </div>
-    </div>
+    </NeonSplatterCard>
   )
-}
-
+})

@@ -317,7 +317,7 @@ export function TimelineJourney() {
           <div
             className="timeline-world"
             ref={worldRef}
-            style={{ transform: `translate3d(${-cameraPx}px, -50%, 0)` }}
+            style={{ transform: `translate3d(${Math.round(-cameraPx)}px, -50%, 0)` }}
           >
             {frameLayer}
             {seamHazeLayer}
@@ -329,7 +329,7 @@ export function TimelineJourney() {
 
             <div
               className={`timeline-train ${started ? `timeline-train--${journeyDay}` : 'timeline-train--standby'}`}
-              style={{ transform: `translate3d(${trainScreenX}px, 0, 0) translate(-50%, -50%)` }}
+              style={{ transform: `translate3d(${Math.round(trainScreenX)}px, 0, 0) translate(-50%, -50%)` }}
               ref={trainRef}
             >
               <img src={TRAIN_SRC} alt="" draggable={false} className="timeline-train__img" fetchPriority="low" />
@@ -339,7 +339,7 @@ export function TimelineJourney() {
               <div
                 className="timeline-active-card-anchor"
                 style={{
-                  transform: `translate3d(${trainScreenX + cardShiftPx}px, ${-(trainHeight / 2 + CARD_TRAIN_GAP_PX)}px, 0) translate(-50%, -100%)`,
+                  transform: `translate3d(${Math.round(trainScreenX + cardShiftPx)}px, ${Math.round(-(trainHeight / 2 + CARD_TRAIN_GAP_PX))}px, 0) translate(-50%, -100%)`,
                 }}
               >
                 {activeCard}

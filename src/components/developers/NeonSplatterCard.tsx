@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { memo } from 'react'
 import './NeonSplatterCard.css'
 
 interface NeonSplatterCardProps {
   children: React.ReactNode
 }
 
-export const NeonSplatterCard: React.FC<NeonSplatterCardProps> = ({ children }) => {
+export const NeonSplatterCard: React.FC<NeonSplatterCardProps> = memo(({ children }) => {
   return (
     <div className="neon-splatter-card">
       {/* Outer Splatter & Glow Layer (SVG vector splatter border matching template) */}
@@ -215,4 +215,4 @@ export const NeonSplatterCard: React.FC<NeonSplatterCardProps> = ({ children }) 
       </div>
     </div>
   )
-}
+})

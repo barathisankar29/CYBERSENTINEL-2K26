@@ -283,28 +283,28 @@
     display: flex !important;
     visibility: visible !important;
     opacity: 1 !important;
-    transform: scale(0.95);
+    transform: scale(0.88);
     transform-origin: bottom center;
   }
 
   .hero-mascot__bubble {
-    max-width: 190px;
-    padding: 0.4rem 0.75rem;
-    margin-bottom: 0.4rem;
+    max-width: 165px;
+    padding: 0.35rem 0.65rem;
+    margin-bottom: 0.35rem;
   }
 
   .hero-mascot__bubble-text {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
   }
 
   .hero-mascot__avatar-stage {
-    width: 145px;
-    height: 160px;
+    width: 115px;
+    height: 125px;
   }
 
   .hero-mascot__img {
-    max-width: 130px;
-    max-height: 145px;
+    max-width: 105px;
+    max-height: 115px;
   }
 }
 
@@ -313,18 +313,18 @@
     display: flex !important;
     visibility: visible !important;
     opacity: 1 !important;
-    transform: scale(0.88);
+    transform: scale(0.8);
     transform-origin: bottom center;
   }
 
   .hero-mascot__avatar-stage {
-    width: 135px;
-    height: 150px;
+    width: 95px;
+    height: 105px;
   }
 
   .hero-mascot__img {
-    max-width: 120px;
-    max-height: 135px;
+    max-width: 85px;
+    max-height: 95px;
   }
 }
 

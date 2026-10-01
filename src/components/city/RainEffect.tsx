@@ -1,28 +1,26 @@
 import { memo, useEffect, useRef } from 'react'
 import { useReducedMotion } from '@/animation/useReducedMotion'
+import { getDevicePerfInfo } from '@/utils/devicePerf'
 import './RainEffect.css'
 
 /**
- * Two quality tiers. Phones, touch tablets and low-core / low-memory
- * machines start on LOW (fewer drops, 1x canvas, 30fps — rain streaks read
- * identically at 30fps). Everything else starts on HIGH and drops to LOW
- * by itself if the device can't actually hold the frame rate.
- * Density is drops per 10,000 CSS px² of canvas, so a phone draws far
- * fewer streaks than a wide desktop.
+ * Two quality tiers. Devices flagged by devicePerf (phones, low-RAM /
+ * low-core machines, data saver) start on LOW: devicePerf's own drop cap,
+ * density and canvas DPR, plus a 30fps cap (rain streaks read identically
+ * at 30fps). Everything else starts on HIGH and drops to LOW by itself if
+ * it can't actually hold the frame rate. Density is drops per 10,000 CSS
+ * px² of canvas, so a phone draws far fewer streaks than a wide desktop.
  */
-const QUALITY = {
-  high: { density: 1.6, maxDrops: 420, maxDpr: 1.25, frameMs: 0 },
-  low: { density: 0.9, maxDrops: 170, maxDpr: 1, frameMs: 1000 / 30 },
-} as const
-type Quality = keyof typeof QUALITY
-
-function initialQuality(): Quality {
-  const nav = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } }
-  const coarse = window.matchMedia('(pointer: coarse)').matches
-  const fewCores = (nav.hardwareConcurrency ?? 8) <= 4
-  const lowMemory = (nav.deviceMemory ?? 8) <= 4
-  return coarse || fewCores || lowMemory || nav.connection?.saveData ? 'low' : 'high'
+interface QualitySettings {
+  density: number
+  maxDrops: number
+  maxDpr: number
+  frameMs: number
 }
+type Quality = 'high' | 'low'
+
+const HIGH_QUALITY: QualitySettings = { density: 1.6, maxDrops: 420, maxDpr: 1.25, frameMs: 0 }
+const LOW_FRAME_MS = 1000 / 30
 
 // Adaptive downgrade: if the average frame gap over this many frames is
 // above SLOW_FRAME_MS (i.e. well under ~45fps), switch HIGH -> LOW.
@@ -162,7 +160,7 @@ interface RainEffectProps {
  * included) only runs while the section is on screen and the tab is
  * visible. It starts once the browser is idle (never competing with the
  * first paint), runs at a device-appropriate quality and frame rate (see
- * QUALITY) and steps itself down if frames run slow. Off entirely under
+ * settings) and steps itself down if frames run slow. Off entirely under
  * prefers-reduced-motion.
  */
 export const RainEffect = memo(function RainEffect({ zIndex }: RainEffectProps) {
@@ -175,7 +173,19 @@ export const RainEffect = memo(function RainEffect({ zIndex }: RainEffectProps) 
     const ctx = canvas?.getContext('2d')
     if (!canvas || !ctx) return
 
-    let quality: Quality = initialQuality()
+    const perf = getDevicePerfInfo()
+    const settings: Record<Quality, QualitySettings> = {
+      high: HIGH_QUALITY,
+      low: {
+        density: Math.min(perf.rainDensity, 0.9),
+        maxDrops: Math.min(perf.rainDropCap, 170),
+        maxDpr: Math.min(perf.dprCap, 1),
+        frameMs: LOW_FRAME_MS,
+      },
+    }
+    let quality: Quality = perf.isLowRam || perf.isMobile ? 'low' : 'high'
+    const strikeInterval = perf.isLowRam ? 6500 : STRIKE_INTERVAL
+
     let width = 0
     let height = 0
     const drops: Drop[] = []
@@ -186,11 +196,11 @@ export const RainEffect = memo(function RainEffect({ zIndex }: RainEffectProps) 
     let sampleCount = 0
     let sampleTotal = 0
     // Time since the last strike, advanced only while animating.
-    let sinceStrike = STRIKE_INTERVAL - 1500
+    let sinceStrike = strikeInterval - 1500
     let bolt: number[][] = []
 
     const fitDrops = () => {
-      const { density, maxDrops } = QUALITY[quality]
+      const { density, maxDrops } = settings[quality]
       const count = Math.min(maxDrops, Math.round(((width * height) / 10000) * density))
       if (drops.length > count) drops.length = count
       while (drops.length < count) drops.push(createDrop(width, height, true))
@@ -198,7 +208,7 @@ export const RainEffect = memo(function RainEffect({ zIndex }: RainEffectProps) 
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect()
-      const dpr = Math.min(window.devicePixelRatio || 1, QUALITY[quality].maxDpr)
+      const dpr = Math.min(window.devicePixelRatio || 1, settings[quality].maxDpr)
       const nextWidth = Math.round(rect.width * dpr)
       const nextHeight = Math.round(rect.height * dpr)
       // Skip no-op resizes (e.g. observer firing on scroll) — reallocating
@@ -241,7 +251,7 @@ export const RainEffect = memo(function RainEffect({ zIndex }: RainEffectProps) 
 
     const tick = (now: number) => {
       frame = requestAnimationFrame(tick)
-      const { frameMs } = QUALITY[quality]
+      const { frameMs } = settings[quality]
       // Frame cap on LOW: skip rAF callbacks until a full frame slot has passed.
       if (frameMs && now - last < frameMs - 2) return
 
@@ -257,16 +267,19 @@ export const RainEffect = memo(function RainEffect({ zIndex }: RainEffectProps) 
       }
 
       sinceStrike += ms
-      if (sinceStrike >= STRIKE_INTERVAL) {
+      if (sinceStrike >= strikeInterval) {
         sinceStrike = 0
         bolt = createBolt(width, height)
-        thunder.play(0.25 + Math.random() * 0.35)
+        if (!perf.isLowRam) {
+          thunder.play(0.25 + Math.random() * 0.35)
+        }
       }
 
       ctx.clearRect(0, 0, width, height)
 
       const flash = flashIntensity(sinceStrike)
-      if (flash > 0) {
+      // Skip full canvas fill on low-RAM phones to prevent GPU fill-rate exhaustion
+      if (flash > 0 && !perf.isLowRam) {
         ctx.fillStyle = `rgba(190, 210, 255, ${0.16 * flash})`
         ctx.fillRect(0, 0, width, height)
       }

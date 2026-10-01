@@ -127,9 +127,22 @@ export function VideoIntro({
           playsInline
           autoPlay
           muted={isMuted}
+          controls={false}
+          disablePictureInPicture
+          disableRemotePlayback
+          {...{
+            'webkit-playsinline': 'true',
+            controlsList: 'nodownload nofullscreen noremoteplayback',
+          }}
           onTimeUpdate={handleTimeUpdate}
           onLoadedMetadata={handleLoadedMetadata}
           onEnded={handleFinish}
+          onPause={() => {
+            // Guard against iOS or system pausing the video prematurely
+            if (!hasTriggeredFinish.current && videoRef.current) {
+              videoRef.current.play().catch(() => {})
+            }
+          }}
         >
           {/* Music/SFX only — no dialogue — so the track describes the sound. */}
           <track kind="captions" src={INTRO_CAPTIONS_SRC} srcLang="en" label="English" />
