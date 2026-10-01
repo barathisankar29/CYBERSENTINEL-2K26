@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef, useCallback, memo } from 'react'
+import React, { useState, useEffect, useRef, useCallback, memo, useMemo } from 'react'
 import type { FrontendDeveloperMember, DeveloperMember } from '@/data/developers'
 import { MASCOT_SPRITES, type MascotExpression } from '@/data/mascot'
+import { getDevicePerfInfo } from '@/utils/devicePerf'
 import { FrontendDeveloperCard } from './FrontendDeveloperCard'
 import { DeveloperGlitchCard } from './DeveloperGlitchCard'
 import './DeveloperMascotPushCarousel.css'
@@ -14,11 +15,15 @@ export interface DeveloperMascotPushCarouselProps {
   onActiveChange?: (dev: UnifiedDeveloper) => void
 }
 
-const HOLD_DURATION_MS = 4500
-const PUSH_ANIMATION_MS = 750
+const BASE_PUSH_ANIMATION_MS = 750
 
 export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselProps> = memo(
-  ({ developers, onActiveChange }) => {
+  function DeveloperMascotPushCarousel({ developers, onActiveChange }) {
+    // Device-adaptive timings: low-RAM phones hold longer (fewer GPU flushes)
+    // and animate faster (less time mid-animation).
+    const { carouselHoldMs, isLowRam } = useMemo(() => getDevicePerfInfo(), [])
+    const HOLD_DURATION_MS = carouselHoldMs
+    const PUSH_ANIMATION_MS = isLowRam ? 550 : BASE_PUSH_ANIMATION_MS
     const [activeIndex, setActiveIndex] = useState(0)
     const [incomingIndex, setIncomingIndex] = useState<number | null>(null)
     const [isPushing, setIsPushing] = useState(false)
@@ -81,7 +86,7 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
           }, 1100)
         }, PUSH_ANIMATION_MS)
       },
-      [activeIndex, total, developers, onActiveChange]
+      [activeIndex, total, developers, onActiveChange, PUSH_ANIMATION_MS]
     )
 
     const pushNext = useCallback(() => {
@@ -122,7 +127,7 @@ export const DeveloperMascotPushCarousel: React.FC<DeveloperMascotPushCarouselPr
         clearTimeout(anticipationTimer)
         clearTimeout(pushTimer)
       }
-    }, [activeIndex, isPaused, isPushing, pushNext])
+    }, [activeIndex, isPaused, isPushing, pushNext, HOLD_DURATION_MS])
 
     const activeDev = developers[activeIndex] || developers[0]
     const incomingDev = incomingIndex !== null ? developers[incomingIndex] : null

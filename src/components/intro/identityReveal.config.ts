@@ -43,9 +43,9 @@ export interface StageRevealWindow {
  */
 export const identityReveal = {
   brandingStrip: { start: 0.56, end: 0.75, depthPx: 8 } satisfies RevealWindow,
-  department: { start: 0.46, end: 0.56, depthPx: 16 } satisfies RevealWindow,
-  presentedBy: { start: 0.54, end: 0.63, depthPx: 14 } satisfies RevealWindow,
-  presents: { start: 0.61, end: 0.68, depthPx: 10 } satisfies RevealWindow,
+  department: { start: 0.46, end: 0.56, depthPx: 8 } satisfies RevealWindow,
+  presentedBy: { start: 0.54, end: 0.63, depthPx: 8 } satisfies RevealWindow,
+  presents: { start: 0.61, end: 0.68, depthPx: 8 } satisfies RevealWindow,
   symposium: { start: 0.72, end: 0.9, depthPx: 28 } satisfies RevealWindow,
   info: { start: 0.85, end: 0.98, depthPx: 18 } satisfies RevealWindow,
   // Symposium countdown card, directly under the CyberSentinel identity —

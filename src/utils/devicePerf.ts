@@ -6,11 +6,15 @@
 
 export interface DevicePerfInfo {
   isLowRam: boolean
+  /** Specifically 2GB or less — most aggressive cuts */
+  isVeryLowRam: boolean
   isMobile: boolean
   dprCap: number
   rainDropCap: number
   rainDensity: number
   particleCount: number
+  /** How long the carousel auto-advance should wait (ms) */
+  carouselHoldMs: number
 }
 
 let cachedPerfInfo: DevicePerfInfo | null = null
@@ -21,11 +25,13 @@ export function getDevicePerfInfo(): DevicePerfInfo {
   if (typeof window === 'undefined') {
     return {
       isLowRam: false,
+      isVeryLowRam: false,
       isMobile: false,
       dprCap: 1.5,
       rainDropCap: 520,
       rainDensity: 1.9,
       particleCount: 28,
+      carouselHoldMs: 4500,
     }
   }
 
@@ -41,8 +47,12 @@ export function getDevicePerfInfo(): DevicePerfInfo {
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
   const isSaveData = nav.connection?.saveData === true
 
+  // Very low RAM: 2GB or below (Oppo A3x, Redmi 13C, Galaxy A03 class)
+  const isVeryLowRam = (ram !== null && ram <= 2) || (isMobile && cores !== null && cores <= 2)
+
   // Low RAM: <= 4GB RAM or mobile with <= 4 cores or saveData enabled
   const isLowRam =
+    isVeryLowRam ||
     (ram !== null && ram <= 4) ||
     (isMobile && (ram === null || ram <= 4)) ||
     (cores !== null && cores <= 4) ||
@@ -50,11 +60,13 @@ export function getDevicePerfInfo(): DevicePerfInfo {
 
   const info: DevicePerfInfo = {
     isLowRam,
+    isVeryLowRam,
     isMobile,
-    dprCap: isLowRam ? 1.0 : isMobile ? 1.2 : 1.5,
-    rainDropCap: isLowRam ? 60 : isMobile ? 80 : 520,
-    rainDensity: isLowRam ? 0.5 : isMobile ? 0.75 : 1.9,
-    particleCount: isLowRam ? 8 : isMobile ? 14 : 28,
+    dprCap: isVeryLowRam ? 1.0 : isLowRam ? 1.0 : isMobile ? 1.2 : 1.5,
+    rainDropCap: isVeryLowRam ? 30 : isLowRam ? 60 : isMobile ? 80 : 520,
+    rainDensity: isVeryLowRam ? 0.25 : isLowRam ? 0.5 : isMobile ? 0.75 : 1.9,
+    particleCount: isVeryLowRam ? 0 : isLowRam ? 8 : isMobile ? 14 : 28,
+    carouselHoldMs: isVeryLowRam ? 6000 : isLowRam ? 5000 : 4500,
   }
 
   cachedPerfInfo = info
@@ -68,7 +80,7 @@ export function getDevicePerfInfo(): DevicePerfInfo {
 export function initDevicePerf(): void {
   if (typeof document === 'undefined') return
 
-  const { isMobile, isLowRam } = getDevicePerfInfo()
+  const { isMobile, isLowRam, isVeryLowRam } = getDevicePerfInfo()
   const root = document.documentElement
 
   if (isMobile) {
@@ -76,5 +88,8 @@ export function initDevicePerf(): void {
   }
   if (isLowRam) {
     root.classList.add('is-low-ram')
+  }
+  if (isVeryLowRam) {
+    root.classList.add('is-very-low-ram')
   }
 }
