@@ -81,6 +81,127 @@
     opacity: 0.45 !important;
   }
 
+  /* ===== DEVELOPER SECTION: Low-RAM optimizations ===== */
+
+  /* Kill the heavy 80px backdrop blur atmospheric flare entirely */
+  html.is-low-ram .mascot-carousel__flare {
+    display: none !important;
+  }
+
+  /* Mascot callout bubble: already stripped backdrop-filter by wildcard above;
+     make sure it gets an opaque dark background so it stays readable */
+  html.is-low-ram .mascot-pusher__callout {
+    background: rgba(10, 10, 25, 0.97) !important;
+  }
+
+  /* 3D card tilt is extremely expensive on budget GPUs — disable it */
+  html.is-low-ram .dev-card.is-active {
+    transform: none !important;
+    perspective: none !important;
+  }
+
+  /* Strip glow box-shadows from active dev card on low-RAM */
+  html.is-low-ram .dev-card.is-active {
+    box-shadow:
+      0 14px 32px rgba(0, 0, 0, 0.8),
+      0 0 12px color-mix(in srgb, var(--dev-accent, #00f0ff) 22%, transparent) !important;
+  }
+
+  /* Kill thruster flicker: runs at 0.15s = 6 paints/sec, very taxing */
+  html.is-low-ram .mascot-pusher.is-pushing .mascot-pusher__thruster {
+    animation: none !important;
+  }
+
+  /* Simplify card-slot drop-shadow on low-RAM (no blur > 20px) */
+  html.is-low-ram .mascot-card-slot.is-current {
+    filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.85)) !important;
+  }
+
+  /* Kill shockwave ring expansion — it forces a repaint on each frame */
+  html.is-low-ram .mascot-pusher__shockwave {
+    display: none !important;
+  }
+
+  /* Pagination dot box-shadow glows are continuous repaints */
+  html.is-low-ram .mascot-carousel__dot--frontend.is-active .mascot-carousel__dot-inner,
+  html.is-low-ram .mascot-carousel__dot--backend.is-active .mascot-carousel__dot-inner {
+    box-shadow: none !important;
+  }
+
+  /* Callout blink dot: reduce animation to a single slow pulse */
+  html.is-low-ram .mascot-pusher__callout-dot {
+    animation-duration: 2.5s !important;
+    box-shadow: none !important;
+  }
+
+  /* Float animation on mascot: slow down from 3.2s to 4s, smaller travel */
+  html.is-low-ram .mascot-pusher.is-hovering {
+    animation-duration: 4s !important;
+  }
+
+  /* ===== MOBILE (all phones, even 6GB+ RAM) ===== */
+  /* On mobile, limit card-slot animation duration slightly for smoother feel */
+  html.is-mobile .mascot-card-slot {
+    transition-duration: 0.45s !important;
+  }
+
+  html.is-mobile .mascot-card-slot.is-exiting--next,
+  html.is-mobile .mascot-card-slot.is-exiting--prev {
+    animation-duration: 0.55s !important;
+  }
+
+  html.is-mobile .mascot-card-slot.is-entering--next,
+  html.is-mobile .mascot-card-slot.is-entering--prev {
+    animation-duration: 0.55s !important;
+  }
+
+  html.is-mobile .mascot-pusher.is-pushing--next,
+  html.is-mobile .mascot-pusher.is-pushing--prev {
+    animation-duration: 0.55s !important;
+  }
+
+  /* Hero mascot companion: reduce float animation cost on all mobile */
+  html.is-mobile .hero-mascot-companion {
+    filter: none !important; /* drop-shadow over rain canvas = continuous repaint */
+  }
+
+  /* ===== VERY LOW RAM (2GB phones: Oppo A3x, Galaxy A03, Redmi 13C) ===== */
+  /* Disable ALL continuous animations on the mascot to free the GPU */
+  html.is-very-low-ram .mascot-pusher.is-hovering {
+    animation: none !important;
+  }
+
+  /* Skip particle field entirely — zero DOM nodes to composite */
+  html.is-very-low-ram .particle-field {
+    display: none !important;
+  }
+
+  /* Simplify geo shape box-shadows that cause GPU overdraw */
+  html.is-very-low-ram .dev-card__geo-shape--primary {
+    box-shadow: none !important;
+  }
+
+  /* Drop all text-shadow glows (expensive on tiny GPUs) */
+  html.is-very-low-ram .dev-card__name,
+  html.is-very-low-ram .dev-card__role {
+    text-shadow: none !important;
+  }
+
+  /* Disable the stitch polygon drop-shadow filter */
+  html.is-very-low-ram .dev-card__polygon-stitch {
+    filter: none !important;
+  }
+
+  /* Burst ray box-shadows */
+  html.is-very-low-ram .dev-card__burst-ray {
+    box-shadow: none !important;
+  }
+
+  /* Speed slice box-shadows */
+  html.is-very-low-ram .dev-card__slice {
+    box-shadow: none !important;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

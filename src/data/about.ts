@@ -49,6 +49,21 @@ export const cyberSentinelData = {
   ] as StatItem[],
   logoSrc: '/assets/branding/cybersentinel-logo.webp',
   shieldSrc: '/assets/about/cybersentinel-logo-2k26.webp',
+  legacyTeam: {
+    title: 'THE SQUAD BEHIND THE SUCCESS',
+    subtitle: 'Celebrating the Legacy & Triumphant Execution of Last Year’s CyberSentinel',
+    imageSrc: '/assets/about/cybersentinel-team-legacy.webp',
+    imageFallback: '/assets/about/cybersentinel-team-legacy.jpg',
+    caption: 'DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING • VEL TECH HIGH TECH',
+    subCaption: 'Faculty Dignitaries, Conveners & Student Organizers Celebrating the Grand Success of CyberSentinel',
+    description:
+      'Behind every exhilarating coding challenge, electrifying cultural performance, and seamless symposium experience is our passionate student organizing team, guided by our visionary faculty. Working tirelessly across logistics, tech infrastructure, event management, and stage coordination, this powerhouse collective delivered last year’s CyberSentinel to resounding acclaim and record-breaking participation.',
+    highlights: [
+      { value: '60+', label: 'STUDENT ORGANIZERS' },
+      { value: '1500+', label: 'COMPETITORS' },
+      { value: '100%', label: 'SUCCESS RATE' },
+    ],
+  },
 }
 
 export const hackathonClubData = {
