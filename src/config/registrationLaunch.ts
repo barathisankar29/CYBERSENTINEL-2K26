@@ -12,11 +12,11 @@
  *     e.g. '2026-10-01T10:00:00+05:30') and redeploy — the overlay shows a
  *     live countdown and unlocks by itself at that moment, no second deploy.
  *
- * With `open: false` and `opensAt: null` (the current state) the overlay
+ * With `open: false` and `opensAt: null` the overlay
  * says "coming soon" with no countdown and stays until changed.
  */
 export const REGISTRATION_LAUNCH: { open: boolean; opensAt: string | null } = {
-  open: false,
+  open: true,
   opensAt: null,
 }
 
