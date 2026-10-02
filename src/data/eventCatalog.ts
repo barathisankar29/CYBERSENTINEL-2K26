@@ -120,7 +120,7 @@ export const SPECIAL_EVENTS: CatalogEvent[] = [
     venue: 'Open Air Mega Stage',
     time: '04:30 PM - 07:00 PM',
     fee: '₹590 / Crew',
-    crew: '6-15 Members',
+    crew: '4-10 Members',
   },
   {
     id: 'thiruvizha-corner',

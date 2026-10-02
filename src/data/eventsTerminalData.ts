@@ -64,7 +64,7 @@ export const ALL_EVENTS: EventSpec[] = [
       'Use clear, well-organized slides or visuals to support your content.',
       'Maintain professional behavior: dress appropriately, use formal language, and avoid jargon.',
       'Be polite and professional when answering questions during the Q&A session.',
-      'The PPTs should be uploaded in the given drive link on or before 17th September.'
+      'The PPTs should be uploaded in the given drive link on or before 12th October.'
     ]
   },
   {
@@ -205,7 +205,7 @@ export const ALL_EVENTS: EventSpec[] = [
       '"Group Dance" is a vibrant event where rhythm, energy, and teamwork come together. Participants will showcase their creativity, synchronization, expressions, and unique choreography through an energetic team performance.',
     date: 'DAY 02',
     time: '10:30 AM - 03:30 PM',
-    teamSize: '4 - 8 MEMBERS',
+    teamSize: '4 - 10 MEMBERS',
     coordinators: [
       coordinator('Amretha K A', '4TH', '9176447166'),
       coordinator('Dravidraju', '4TH', '9487957125'),
@@ -218,7 +218,7 @@ export const ALL_EVENTS: EventSpec[] = [
     chipSub: 'SYNC-08',
     isSpecial: true,
     protocols: [
-      'Team Size: Minimum 4, Maximum 8 participants.',
+      'Team Size: Minimum 4, Maximum 10 participants.',
       'Time Limit: 4 to 7 minutes. Exceeding time leads to negative marking.',
       'The song should be strictly submitted 1 week before the day of the event. Bring a backup on a USB drive.',
       'Dress Code: Costumes should be decent and stage-appropriate. Vulgarity is not tolerated.',
