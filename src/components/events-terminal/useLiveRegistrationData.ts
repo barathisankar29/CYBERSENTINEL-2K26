@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { TEST_REGISTRATION_FEE } from '@/config/registrationTestFee';
 import {
   getRegistrationFees,
   getSpecialEvents,
@@ -102,7 +103,9 @@ export const GST_PERCENT = 18;
 
 /** A base amount as the payment process charges it: +18% GST (to the paisa), rounded up to the rupee. */
 export function withGst(base: number): number {
-  const gstPaise = Math.round((Math.round(Number(base) * 100) * (100 + GST_PERCENT)) / 100);
+  // TEMPORARY: while a test price is set, it is what the payment process receives.
+  const charged = TEST_REGISTRATION_FEE ?? Number(base);
+  const gstPaise = Math.round((Math.round(charged * 100) * (100 + GST_PERCENT)) / 100);
   return Math.ceil(gstPaise / 100);
 }
 
