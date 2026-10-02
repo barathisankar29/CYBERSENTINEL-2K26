@@ -59,10 +59,17 @@
   mix-blend-mode: multiply;
 }
 
-/* The college lockup is the hero of this strip — a tall 1.6:1 neon mark,
-   so it gets roughly twice the badge height to stay legible. */
+/* The college lockup is the hero of this strip — a wide 2.75:1 cyber HUD banner */
 [data-logo-id='vel-tech'] .branding-strip__logo {
-  height: var(--hero-lockup-h, 104px);
+  height: var(--hero-lockup-h, 92px);
+  max-width: 345px;
+  filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.4));
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+[data-logo-id='vel-tech'] .branding-strip__logo:hover {
+  transform: translateY(-1px) scale(1.02);
+  filter: drop-shadow(0 0 20px rgba(0, 229, 255, 0.65));
 }
 
 /*
@@ -88,12 +95,13 @@
   }
 
   .branding-strip__logo {
-    height: 40px;
+    height: 38px;
   }
 
   [data-logo-id='vel-tech'] .branding-strip__logo {
     height: auto;
-    width: min(46vw, 180px);
+    width: min(88vw, 340px);
+    max-width: 340px;
   }
 }
 

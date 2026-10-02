@@ -87,4 +87,9 @@ export interface RegistrationRecord {
   registeredAt: string
   /** Never claims a payment succeeded — see PaymentStatus. */
   paymentStatus: PaymentStatus
+  qrUrl?: string | null
+  isVerified?: boolean
+  selectedDay?: string
+  college?: string
+  department?: string
 }

@@ -77,11 +77,13 @@ export function AppRoutes() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/timeline" element={<TimelinePage />} />
         <Route path="/credentials" element={<CredentialsPage />} />
+        <Route path="/coordinators" element={<CredentialsPage />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/transportation" element={<TransportationPage />} />
         <Route path="/transport" element={<TransportationPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/contacts" element={<ContactPage />} />
         <Route path="/register" element={<RegistrationPage />} />
         <Route path="/register/status" element={<RegistrationStatusPage />} />
         {/* The college payment gateway returns participants here after paying

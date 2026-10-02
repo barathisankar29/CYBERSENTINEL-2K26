@@ -1,5 +1,9 @@
+import { useState, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { getRegistration } from '@/utils/eventRegistration'
+import { getLastRegistration } from '@/services/registration/storage'
+import { checkRegistration } from '@/services/registration/api'
+import type { CheckRegistrationResponse } from '@/services/registration/types'
 import { characterProfiles } from '@/data/characterProfiles'
 import type { CharacterId, RegistrationRecord } from '@/types/characterProfile'
 import { CharacterProfile } from '@/components/profile/CharacterProfile'
@@ -19,11 +23,26 @@ export function ProfilePage() {
   const [searchParams] = useSearchParams()
   const queryChar = (searchParams.get('char') || '').toLowerCase()
   const storedRegistration = getRegistration()
+  const lastReg = getLastRegistration()
+  const [backendRecord, setBackendRecord] = useState<CheckRegistrationResponse | null>(null)
+
+  // Query backend check-registration if user has a submitted registration
+  useEffect(() => {
+    if (lastReg?.email && lastReg?.phone) {
+      checkRegistration(lastReg.email, lastReg.phone)
+        .then((res) => {
+          setBackendRecord(res)
+        })
+        .catch((err) => {
+          console.warn('Backend registration check for profile:', err)
+        })
+    }
+  }, [lastReg?.email, lastReg?.phone])
 
   // If ?char= query param is provided and matches a character, preview that character
   const targetCharId = (queryChar in characterProfiles ? queryChar : storedRegistration?.characterId) as CharacterId | undefined
 
-  if (!storedRegistration && !targetCharId) {
+  if (!storedRegistration && !targetCharId && !lastReg) {
     return (
       <div className="profile-empty">
         <div className="profile-empty__card">
@@ -47,22 +66,34 @@ export function ProfilePage() {
     )
   }
 
-  const activeCharId = targetCharId || 'nico'
+  const activeCharId = targetCharId || 'dacre'
   const character = characterProfiles[activeCharId]
 
-  // If there's no stored registration for this specific character, create a mock preview record
-  const registration: RegistrationRecord = storedRegistration && storedRegistration.characterId === activeCharId
-    ? storedRegistration
-    : {
-        registrationId: `REG-${activeCharId.toUpperCase()}-7729`,
-        characterId: activeCharId as CharacterId,
-        packId: character.packs[0]?.id || 'day1',
-        events: character.packs[0]?.events || [],
-        username: `OPERATIVE_${activeCharId.toUpperCase()}`,
-        email: `${activeCharId}@cybersentinel.city`,
-        registeredAt: '2026-09-23T18:30:00.000Z',
-        paymentStatus: 'test_mode_unverified',
-      }
+  // Construct registration record merged with backend check data if available
+  const registrationId = backendRecord?.registration.registration_code ||
+    (storedRegistration?.registrationId ?? `REG-${activeCharId.toUpperCase()}-7729`)
+
+  const username = backendRecord?.participant.name ||
+    (storedRegistration?.username ?? `OPERATIVE_${activeCharId.toUpperCase()}`)
+
+  const email = backendRecord ? (lastReg?.email ?? `${activeCharId}@cybersentinel.city`) :
+    (storedRegistration?.email ?? `${activeCharId}@cybersentinel.city`)
+
+  const registration: RegistrationRecord = {
+    registrationId,
+    characterId: activeCharId as CharacterId,
+    packId: character.packs[0]?.id || 'day1',
+    events: character.packs[0]?.events || [],
+    username,
+    email,
+    registeredAt: storedRegistration?.registeredAt || new Date().toISOString(),
+    paymentStatus: storedRegistration?.paymentStatus ?? 'test_mode_unverified',
+    qrUrl: backendRecord?.qr_url || null,
+    isVerified: backendRecord?.payment?.status === 'VERIFIED',
+    selectedDay: backendRecord?.registration.selected_day,
+    college: backendRecord?.participant.college,
+    department: backendRecord?.participant.department,
+  }
 
   return <CharacterProfile character={character} registration={registration} />
 }
