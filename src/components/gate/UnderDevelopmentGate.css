@@ -1,0 +1,64 @@
+/* Full-screen, non-scrolling gate. `position: fixed; inset: 0` gives the
+   exact viewport on every device (no 100vh address-bar jump) and makes
+   horizontal overflow impossible. */
+.ud-gate {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #000;
+  padding: max(24px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
+    max(24px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+}
+
+/* Very faint atmosphere behind the artwork only — it sits under the image and
+   never covers it. */
+.ud-gate::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 38% at 50% 50%, rgb(168 40 200 / 0.1), transparent 70%),
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgb(40 90 220 / 0.05), transparent 75%);
+}
+
+.ud-gate::after {
+  /* Faint scanlines for texture; transparent between lines. */
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgb(255 255 255 / 0.018) 0 1px,
+    transparent 1px 3px
+  );
+}
+
+.ud-gate__art {
+  position: relative;
+  z-index: 1;
+  display: block;
+  /* Scale to the space left inside the padding, never past the artwork's
+     natural width, keeping its 2170:725 ratio. */
+  width: min(100%, 1400px);
+  height: auto;
+  max-height: 100%;
+  aspect-ratio: 2170 / 725;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+@media (min-width: 768px) {
+  .ud-gate {
+    padding: max(48px, env(safe-area-inset-top)) max(48px, env(safe-area-inset-right))
+      max(48px, env(safe-area-inset-bottom)) max(48px, env(safe-area-inset-left));
+  }
+
+  .ud-gate__art {
+    width: min(88%, 1400px);
+  }
+}
