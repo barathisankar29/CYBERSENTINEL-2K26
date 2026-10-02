@@ -9,9 +9,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3.5rem;
-  margin-top: clamp(4.5rem, 8vw, 8.5rem);
-  margin-bottom: clamp(4.5rem, 8vw, 8.5rem);
+  gap: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 0;
   padding-bottom: 0;
 }
 
@@ -20,11 +20,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 1.25rem;
 }
 
 .developers-section__subgroup--backend {
-  margin-top: clamp(2.5rem, 5vw, 5rem);
+  margin-top: 1rem;
 }
 
 .developers-section__header {
@@ -38,7 +38,14 @@
 
 .developers-section__title {
   margin: 0;
-  font-size: clamp(2rem, 4.2vw, 3rem);
+  font-size: clamp(1.2rem, 3.2vw, 2.4rem);
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  white-space: nowrap;
 }
 
 .developers-section__title-white {
@@ -61,7 +68,7 @@
 
 /* Dynamic Second Title ("Frontend Team" / "Backend Team") */
 .developers-section__subtitle-wrap {
-  margin-top: 1rem;
+  margin-top: 0.6rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -122,23 +129,25 @@
 
 @media (max-width: 768px) {
   .developers-section {
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin-top: 0;
+    margin-bottom: 0;
     padding-bottom: 0;
-    gap: 2.5rem;
+    gap: 1.25rem;
   }
 
   .developers-section__subgroup--backend {
-    margin-top: 1.5rem;
+    margin-top: 0.75rem;
   }
 
   .developers-section__title {
-    font-size: clamp(1.6rem, 6.5vw, 2.2rem);
+    font-size: clamp(0.95rem, 4.4vw, 1.45rem);
+    gap: 0.35rem;
+    white-space: nowrap;
   }
 
   .developers-section__subtitle {
-    font-size: 0.85rem;
-    padding: 0.35rem 1rem;
-    letter-spacing: 0.1em;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.9rem;
+    letter-spacing: 0.08em;
   }
 }
