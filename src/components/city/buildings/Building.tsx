@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { NavigationBuilding } from '@/types/navigation'
 import { useMascot } from '@/components/mascot'
+import { EventsCardSparkles } from '../EventsCardSparkles'
 import './Building.css'
 
 /**
@@ -174,13 +175,8 @@ export function Building({ building, revealed, isMobile }: BuildingProps) {
           <span className="nav-building__card-glass" aria-hidden="true" />
           <span className="nav-building__card-content">
             <span className="nav-building__card-title">{building.label}</span>
-            {building.description && (
-              <>
-                <span className="nav-building__card-rule" aria-hidden="true" />
-                <span className="nav-building__card-desc">{building.description}</span>
-              </>
-            )}
           </span>
+          {building.id === 'events' && <EventsCardSparkles />}
         </div>
         <span className="nav-building__marker" style={{ opacity: revealed ? 1 : 0 }} aria-hidden="true" />
       </div>

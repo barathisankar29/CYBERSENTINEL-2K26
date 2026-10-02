@@ -16,6 +16,15 @@ export function StudentInfiniteCarousel({ items }: StudentInfiniteCarouselProps)
       renderItem={(member, { isActive, index }) => (
         <StudentCircuitCard member={member} isActive={isActive} index={index} />
       )}
+      xStep={{
+        desktop: (viewportWidth) => {
+          if (viewportWidth >= 1200) return 305
+          if (viewportWidth >= 992) return 290
+          return 270
+        },
+        mobile: 100,
+      }}
+      rotY={{ desktop: 30, mobile: 22 }}
       labels={{
         prev: 'Previous Student Coordinator',
         next: 'Next Student Coordinator',

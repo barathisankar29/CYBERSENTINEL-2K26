@@ -219,15 +219,19 @@
 .mobile-nav-card {
   position: absolute;
   pointer-events: auto;
-  max-width: min(50vw, 250px);
-  min-width: 136px;
+  min-width: 142px;
+  max-width: min(52vw, 230px);
   background: none;
   border: none;
   margin: 0;
-  padding: 0.56rem 1rem 0.62rem;
+  padding: 1.55rem 1.45rem 1.1rem;
   font: inherit;
   cursor: pointer;
   text-align: center;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   -webkit-tap-highlight-color: transparent;
   transition:
     opacity 380ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -242,17 +246,17 @@
 
 .mobile-nav-card__aura {
   position: absolute;
-  inset: -12px -14px -16px;
+  inset: -8px -10px -10px;
   z-index: 0;
-  border-radius: 22px;
+  border-radius: 18px;
   background: radial-gradient(
-    ellipse 72% 72% at 50% 55%,
-    color-mix(in srgb, var(--building-accent, var(--city-cyan)) 32%, transparent) 0%,
-    color-mix(in srgb, var(--city-violet) 16%, transparent) 45%,
+    ellipse 75% 65% at 50% 50%,
+    rgba(255, 62, 165, 0.42) 0%,
+    rgba(147, 51, 234, 0.22) 45%,
     transparent 72%
   );
-  filter: blur(11px);
-  opacity: 0.7;
+  filter: blur(10px);
+  opacity: 0.65;
   pointer-events: none;
   transition: opacity 150ms ease, filter 150ms ease;
 }
@@ -262,172 +266,246 @@
   inset: 0;
   z-index: 1;
   box-sizing: border-box;
-  border-radius: 12px 12px 12px 4px;
-  overflow: hidden;
-  border: 1px solid color-mix(in srgb, white 24%, transparent);
-  background:
-    linear-gradient(168deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 26%, transparent 54%),
-    linear-gradient(
-      200deg,
-      color-mix(in srgb, var(--city-violet) 26%, transparent) 0%,
-      color-mix(in srgb, var(--city-deep-indigo) 62%, transparent) 48%,
-      color-mix(in srgb, var(--city-black) 70%, transparent) 100%
-    );
-  backdrop-filter: blur(10px) saturate(160%) brightness(1.05);
-  -webkit-backdrop-filter: blur(10px) saturate(160%) brightness(1.05);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.32),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
-    inset 3px 0 12px -7px color-mix(in srgb, var(--city-cyan) 90%, transparent),
-    inset -3px 0 12px -7px color-mix(in srgb, var(--city-magenta) 90%, transparent),
-    0 12px 22px -12px rgba(2, 1, 8, 0.85),
-    0 0 18px -6px color-mix(in srgb, var(--building-accent, var(--city-cyan)) 30%, transparent);
+  background-image: url('/assets/buildings/building_card_plate.webp');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: drop-shadow(0 0 8px rgba(255, 62, 165, 0.5)) drop-shadow(0 6px 14px rgba(0, 0, 0, 0.75));
   pointer-events: none;
-  transition: filter 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+  transition: filter 150ms ease;
 }
 
-.mobile-nav-card__glass::before {
-  content: '';
-  position: absolute;
-  top: -42%;
-  left: -16%;
-  width: 62%;
-  height: 125%;
-  background: radial-gradient(ellipse at center, color-mix(in srgb, var(--city-cyan) 40%, transparent) 0%, transparent 68%);
-  filter: blur(9px);
-  opacity: 0.5;
-}
-
-.mobile-nav-card__glass::after {
-  content: '';
-  position: absolute;
-  right: -13%;
-  bottom: -46%;
-  width: 56%;
-  height: 125%;
-  background: radial-gradient(ellipse at center, color-mix(in srgb, var(--city-magenta) 38%, transparent) 0%, transparent 70%);
-  filter: blur(10px);
-  opacity: 0.46;
-}
-
+.mobile-nav-card__glass::before,
+.mobile-nav-card__glass::after,
 .mobile-nav-card::before,
 .mobile-nav-card::after {
-  content: '';
-  position: absolute;
-  z-index: 3;
-  width: 7px;
-  height: 7px;
-  pointer-events: none;
-}
-
-.mobile-nav-card::before {
-  top: 4px;
-  left: 4px;
-  border-top: 1.5px solid color-mix(in srgb, var(--city-cyan) 82%, white 18%);
-  border-left: 1.5px solid color-mix(in srgb, var(--city-cyan) 82%, white 18%);
-  border-top-left-radius: 6px;
-  box-shadow: -1px -1px 6px -2px color-mix(in srgb, var(--city-cyan) 70%, transparent);
-}
-
-.mobile-nav-card::after {
-  right: 4px;
-  bottom: 4px;
-  border-right: 1.5px solid color-mix(in srgb, var(--city-magenta) 82%, white 18%);
-  border-bottom: 1.5px solid color-mix(in srgb, var(--city-magenta) 82%, white 18%);
-  border-bottom-right-radius: 6px;
-  box-shadow: 1px 1px 6px -2px color-mix(in srgb, var(--city-magenta) 70%, transparent);
+  display: none;
 }
 
 .mobile-nav-card__content {
   position: relative;
   z-index: 2;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.02rem;
+  justify-content: center;
+  width: 100%;
 }
 
 .mobile-nav-card__title {
   font-family: var(--font-display);
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: color-mix(in srgb, white 84%, var(--city-cyan) 16%);
-  text-shadow: 0 0 10px color-mix(in srgb, var(--city-cyan) 26%, transparent);
-}
-
-.mobile-nav-card__rule {
-  display: block;
-  width: 44%;
-  height: 1px;
-  margin: 0.18rem 0 0.14rem;
-  background: linear-gradient(to right, transparent, color-mix(in srgb, white 55%, var(--city-cyan) 45%), transparent);
-  box-shadow: 0 0 5px color-mix(in srgb, var(--city-cyan) 42%, transparent);
-}
-
-.mobile-nav-card__desc {
-  font-family: var(--font-body);
-  font-size: 0.58rem;
-  font-weight: 500;
-  letter-spacing: 0.03em;
-  color: color-mix(in srgb, white 62%, var(--city-cyan) 12%);
+  color: #ffffff;
+  text-shadow:
+    0 0 8px rgba(255, 255, 255, 0.75),
+    0 0 14px rgba(255, 62, 165, 0.85);
 }
 
 .mobile-nav-card--compact {
-  padding: 0.4rem 0.7rem 0.44rem;
+  min-width: 136px;
+  padding: 1.48rem 1.35rem 1.05rem;
 }
 
 .mobile-nav-card--compact .mobile-nav-card__title {
-  font-size: 0.6rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
 }
 
-.mobile-nav-card--compact .mobile-nav-card__desc {
-  font-size: 0.48rem;
-}
-
+/* Events on mobile — bolder, larger, brighter, and shining */
 .mobile-nav-card--prominent {
-  padding: 0.6rem 1.1rem 0.64rem;
+  min-width: 184px;
+  padding: 1.85rem 1.9rem 1.3rem;
+  z-index: 5;
 }
 
 .mobile-nav-card--prominent .mobile-nav-card__glass {
-  border-color: color-mix(in srgb, white 30%, transparent);
-  backdrop-filter: blur(12px) saturate(170%) brightness(1.07);
-  -webkit-backdrop-filter: blur(12px) saturate(170%) brightness(1.07);
+  filter:
+    brightness(1.28)
+    contrast(1.12)
+    drop-shadow(0 0 18px rgba(255, 62, 165, 1))
+    drop-shadow(0 0 34px rgba(255, 0, 127, 0.85))
+    drop-shadow(0 0 52px rgba(255, 105, 180, 0.65))
+    drop-shadow(0 8px 18px rgba(0, 0, 0, 0.85));
+  animation: eventsGlassShine 3.2s ease-in-out infinite alternate;
 }
 
 .mobile-nav-card--prominent .mobile-nav-card__aura {
-  opacity: 0.85;
+  inset: -14px -18px -16px;
+  border-radius: 24px;
+  opacity: 1;
+  filter: blur(16px);
+  background: radial-gradient(
+    ellipse 85% 75% at 50% 50%,
+    rgba(255, 62, 165, 0.85) 0%,
+    rgba(255, 0, 127, 0.6) 35%,
+    rgba(147, 51, 234, 0.4) 65%,
+    transparent 80%
+  );
+  animation: eventsAuraPulse 3.2s ease-in-out infinite alternate;
 }
 
 .mobile-nav-card--prominent .mobile-nav-card__title {
-  font-size: 0.76rem;
-  letter-spacing: 0.14em;
+  font-size: 0.96rem;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  color: #ffffff;
+  text-shadow:
+    0 0 6px #ffffff,
+    0 0 14px #ffffff,
+    0 0 24px rgba(255, 255, 255, 0.9),
+    0 0 35px rgba(255, 62, 165, 1),
+    0 0 55px rgba(255, 0, 127, 0.95),
+    0 0 75px rgba(236, 72, 153, 0.85);
 }
 
-.mobile-nav-card--prominent .mobile-nav-card__desc {
-  font-size: 0.58rem;
+/* Luminous shining gleam sweep across the Events banner */
+.mobile-nav-card--prominent::after {
+  content: '';
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.3) 47%,
+    rgba(255, 255, 255, 0.65) 50%,
+    rgba(255, 255, 255, 0.3) 53%,
+    transparent 80%
+  );
+  background-size: 250% 100%;
+  animation: eventsShineSweep 4.2s ease-in-out infinite;
+  mask-image: url('/assets/buildings/building_card_plate.webp');
+  -webkit-mask-image: url('/assets/buildings/building_card_plate.webp');
+  mask-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
 }
 
-/* Hover-capable devices only — quick, snappy intensify. Never applied on
-   pure-touch devices so a tapped card doesn't get "stuck" highlighted. */
+@keyframes eventsGlassShine {
+  0% {
+    filter:
+      brightness(1.22)
+      contrast(1.1)
+      drop-shadow(0 0 16px rgba(255, 62, 165, 0.95))
+      drop-shadow(0 0 30px rgba(255, 0, 127, 0.8))
+      drop-shadow(0 0 46px rgba(255, 105, 180, 0.55))
+      drop-shadow(0 8px 18px rgba(0, 0, 0, 0.85));
+  }
+  100% {
+    filter:
+      brightness(1.38)
+      contrast(1.16)
+      drop-shadow(0 0 24px rgba(255, 62, 165, 1))
+      drop-shadow(0 0 44px rgba(255, 0, 127, 1))
+      drop-shadow(0 0 65px rgba(255, 105, 180, 0.8))
+      drop-shadow(0 8px 22px rgba(0, 0, 0, 0.9));
+  }
+}
+
+@keyframes eventsAuraPulse {
+  0% {
+    opacity: 0.88;
+    filter: blur(15px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(22px);
+  }
+}
+
+@keyframes eventsShineSweep {
+  0%, 30% {
+    background-position: 150% 0;
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  65% {
+    opacity: 1;
+  }
+  75%, 100% {
+    background-position: -80% 0;
+    opacity: 0;
+  }
+}
+
+/*
+ * Luminous cyberpunk sparkle stars around the Events card
+ */
+.events-card-sparkles {
+  position: absolute;
+  inset: -12px -16px;
+  pointer-events: none;
+  z-index: 10;
+  overflow: visible;
+}
+
+.events-sparkle {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  display: block;
+  fill: #ffffff;
+  filter: drop-shadow(0 0 3px #ffffff) drop-shadow(0 0 8px #ff3ea5) drop-shadow(0 0 14px #00f0ff);
+  transform-origin: center center;
+  animation: sparkleTwinkle 2.4s ease-in-out infinite;
+}
+
+.events-sparkle--small {
+  width: 9px;
+  height: 9px;
+}
+
+.events-sparkle--large {
+  width: 18px;
+  height: 18px;
+}
+
+.events-sparkle.s1 { top: 6px; left: 14px; animation-delay: 0s; animation-duration: 2.2s; }
+.events-sparkle.s2 { top: -4px; right: 24px; animation-delay: 0.7s; animation-duration: 2.6s; }
+.events-sparkle.s3 { bottom: 6px; left: 22px; animation-delay: 1.3s; animation-duration: 2.0s; }
+.events-sparkle.s4 { bottom: -4px; right: 16px; animation-delay: 0.4s; animation-duration: 2.4s; }
+.events-sparkle.s5 { top: 16px; left: 48%; animation-delay: 1.8s; animation-duration: 2.5s; }
+.events-sparkle.s6 { top: 10px; right: 46px; animation-delay: 1.0s; animation-duration: 2.1s; }
+
+@keyframes sparkleTwinkle {
+  0%, 100% {
+    opacity: 0.15;
+    transform: scale(0.3) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25) rotate(90deg);
+  }
+}
+
+
+/* Hover-capable devices only */
 @media (hover: hover) {
   .mobile-nav-card:hover .mobile-nav-card__glass {
-    border-color: color-mix(in srgb, white 42%, transparent);
-    filter: brightness(1.14) saturate(1.12);
+    filter: drop-shadow(0 0 14px rgba(255, 62, 165, 0.85)) brightness(1.15);
   }
 
   .mobile-nav-card:hover .mobile-nav-card__aura {
-    opacity: 1;
-    filter: blur(13px);
+    opacity: 0.95;
+    filter: blur(14px);
+  }
+
+  .mobile-nav-card:hover .mobile-nav-card__title {
+    text-shadow: 0 0 10px #ffffff, 0 0 18px rgba(255, 62, 165, 1);
   }
 }
 
-/* Touch / focus / active — brief, responsive, no cinematic easing. */
+/* Touch / focus / active */
 .mobile-nav-card:active .mobile-nav-card__glass,
 .mobile-nav-card:focus-visible .mobile-nav-card__glass {
-  border-color: color-mix(in srgb, white 42%, transparent);
-  filter: brightness(1.22) saturate(1.15);
+  filter: drop-shadow(0 0 18px rgba(255, 62, 165, 1)) brightness(1.25);
   transition-duration: 90ms;
 }
 

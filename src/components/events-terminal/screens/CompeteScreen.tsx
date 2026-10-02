@@ -78,10 +78,38 @@ export const CompeteScreen: React.FC<CompeteScreenProps> = ({
       <div className="flex flex-wrap items-center justify-between gap-2.5 mb-5 font-silkscreen text-xs select-none">
         <div className="flex flex-wrap gap-2 items-center">
           {[
-            { id: 'all', label: `[ALL (${ALL_EVENTS.length})]`, activeBorder: '#db2777', activeBg: '#db2777' },
-            { id: 'day1', label: `[DAY 1 (${day1Events.length} EVENTS)]`, activeBorder: '#db2777', activeBg: '#db2777' },
-            { id: 'day2', label: `[DAY 2 (${day2Events.length} EVENTS)]`, activeBorder: '#db2777', activeBg: '#db2777' },
-            { id: 'special', label: `[SPECIAL EVENTS (${specialEvents.length}) ★]`, activeBorder: '#5fa07a', activeBg: '#5fa07a', isSpecialTab: true }
+            {
+              id: 'all',
+              label: `[ALL (${ALL_EVENTS.length})]`,
+              activeBorder: '#0891b2',
+              activeBg: '#0891b2',
+              activeGlow: '0 0 10px rgba(8, 145, 178, 0.35)',
+              inactiveClass: 'bg-[#090710] text-gray-300 border-[#261f33] hover:border-[#0891b2]'
+            },
+            {
+              id: 'day1',
+              label: `[DAY 1 (${day1Events.length} EVENTS)]`,
+              activeBorder: '#db2777',
+              activeBg: '#db2777',
+              activeGlow: '0 0 10px rgba(219, 39, 119, 0.4)',
+              inactiveClass: 'bg-[#0e0512] text-[#f472b6] border-[#db2777]/50 hover:border-[#db2777] hover:bg-[#db2777]/10'
+            },
+            {
+              id: 'day2',
+              label: `[DAY 2 (${day2Events.length} EVENTS)]`,
+              activeBorder: '#9333ea',
+              activeBg: '#9333ea',
+              activeGlow: '0 0 10px rgba(147, 51, 234, 0.4)',
+              inactiveClass: 'bg-[#0b0516] text-[#c084fc] border-[#9333ea]/50 hover:border-[#9333ea] hover:bg-[#9333ea]/10'
+            },
+            {
+              id: 'special',
+              label: `[SPECIAL EVENTS (${specialEvents.length}) ★]`,
+              activeBorder: '#5fa07a',
+              activeBg: '#5fa07a',
+              activeGlow: '0 0 10px rgba(95, 160, 122, 0.4)',
+              inactiveClass: 'bg-[#090b14] text-[#5fa07a] border-[#5fa07a]/50 hover:border-[#5fa07a] hover:bg-[#5fa07a]/10'
+            }
           ].map((tab) => {
             const isActive = activeTab === tab.id;
             return (
@@ -94,18 +122,12 @@ export const CompeteScreen: React.FC<CompeteScreenProps> = ({
                         borderColor: tab.activeBorder,
                         backgroundColor: tab.activeBg,
                         color: '#ffffff',
-                        boxShadow: tab.isSpecialTab
-                          ? '0 0 10px rgba(95, 160, 122, 0.4)'
-                          : '0 0 10px rgba(219, 39, 119, 0.35)'
+                        boxShadow: tab.activeGlow
                       }
                     : undefined
                 }
                 className={`px-3 py-1.5 border cursor-pointer whitespace-nowrap transition-all font-bold ${
-                  isActive
-                    ? ''
-                    : tab.isSpecialTab
-                    ? 'bg-[#090b14] text-[#5fa07a] border-[#5fa07a]/50 hover:border-[#5fa07a] hover:bg-[#5fa07a]/10'
-                    : 'bg-[#090710] text-gray-300 border-[#261f33] hover:border-[#db2777]'
+                  isActive ? '' : tab.inactiveClass
                 }`}
               >
                 {tab.label}
@@ -132,19 +154,55 @@ export const CompeteScreen: React.FC<CompeteScreenProps> = ({
         {filteredEvents.map((ev) => {
           const isSelected = selectedEventId === ev.id;
           const isSpecial = isSpecialEvent(ev);
+          const isDay1 = ev.day === 1 && !isSpecial;
+
+          let cardBorderClass = '';
+          let focusOutlineClass = '';
+          let headerBorderClass = '';
+          let headerTextClass = '';
+          let footerBorderClass = '';
+          let knowMoreClass = '';
+          let registerClass = '';
+
+          if (isSpecial) {
+            // GREEN BOX (Special Events)
+            cardBorderClass = isSelected
+              ? 'border-[#5fa07a] shadow-[0_0_14px_rgba(95,160,122,0.4)] ring-1 ring-[#5fa07a]'
+              : 'border-[#5fa07a]/70 shadow-[0_0_8px_rgba(95,160,122,0.2)] hover:border-[#5fa07a] hover:shadow-[0_0_12px_rgba(95,160,122,0.3)]';
+            focusOutlineClass = 'focus-visible:outline-[#5fa07a]';
+            headerBorderClass = 'border-[#5fa07a]/30';
+            headerTextClass = 'text-[#5fa07a]';
+            footerBorderClass = 'border-[#5fa07a]/25';
+            knowMoreClass = 'border-[#5fa07a] text-[#5fa07a] hover:bg-[#5fa07a]/15';
+            registerClass = 'bg-[#5fa07a] text-white hover:bg-[#4d8664] shadow-[0_0_6px_rgba(95,160,122,0.3)]';
+          } else if (isDay1) {
+            // PINK BOX (Day 1 Events)
+            cardBorderClass = isSelected
+              ? 'border-[#db2777] shadow-[0_0_14px_rgba(219,39,119,0.4)] ring-1 ring-[#db2777]'
+              : 'border-[#db2777]/70 shadow-[0_0_8px_rgba(219,39,119,0.2)] hover:border-[#db2777] hover:shadow-[0_0_12px_rgba(219,39,119,0.35)]';
+            focusOutlineClass = 'focus-visible:outline-[#db2777]';
+            headerBorderClass = 'border-[#db2777]/30';
+            headerTextClass = 'text-[#f472b6]';
+            footerBorderClass = 'border-[#db2777]/25';
+            knowMoreClass = 'border-[#db2777] text-[#db2777] hover:bg-[#db2777]/15';
+            registerClass = 'bg-[#db2777] text-white hover:bg-[#be185d] shadow-[0_0_6px_rgba(219,39,119,0.3)]';
+          } else {
+            // PURPLE BOX (Day 2 Events)
+            cardBorderClass = isSelected
+              ? 'border-[#9333ea] shadow-[0_0_14px_rgba(147,51,234,0.4)] ring-1 ring-[#9333ea]'
+              : 'border-[#9333ea]/70 shadow-[0_0_8px_rgba(147,51,234,0.2)] hover:border-[#9333ea] hover:shadow-[0_0_12px_rgba(147,51,234,0.35)]';
+            focusOutlineClass = 'focus-visible:outline-[#9333ea]';
+            headerBorderClass = 'border-[#9333ea]/30';
+            headerTextClass = 'text-[#c084fc]';
+            footerBorderClass = 'border-[#9333ea]/25';
+            knowMoreClass = 'border-[#9333ea] text-[#c084fc] hover:bg-[#9333ea]/15';
+            registerClass = 'bg-[#9333ea] text-white hover:bg-[#7e22ce] shadow-[0_0_6px_rgba(147,51,234,0.3)]';
+          }
 
           return (
             <div
               key={ev.id}
-              className={`relative border-2 bg-[#090710] p-3.5 flex flex-col justify-between transition-all shadow-sm ${
-                isSpecial
-                  ? isSelected
-                    ? 'border-[#5fa07a] shadow-[0_0_14px_rgba(95,160,122,0.4)] ring-1 ring-[#5fa07a]'
-                    : 'border-[#5fa07a]/70 shadow-[0_0_8px_rgba(95,160,122,0.2)] hover:border-[#5fa07a] hover:shadow-[0_0_12px_rgba(95,160,122,0.3)]'
-                  : isSelected
-                  ? 'border-[#db2777] shadow-[0_0_10px_rgba(219,39,119,0.25)] ring-1 ring-[#db2777]'
-                  : 'border-[#261f33] hover:border-[#db2777]/80'
-              }`}
+              className={`relative border-2 bg-[#090710] p-3.5 flex flex-col justify-between transition-all shadow-sm ${cardBorderClass}`}
             >
               {/* Clicking anywhere on the card selects it. A transparent
                   button stretched over the card (below the KNOW MORE /
@@ -158,25 +216,23 @@ export const CompeteScreen: React.FC<CompeteScreenProps> = ({
                 }}
                 aria-pressed={isSelected}
                 aria-label={`Select ${ev.title}`}
-                className={`absolute inset-0 z-10 cursor-pointer bg-transparent focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-4 ${
-                  isSpecial ? 'focus-visible:outline-[#5fa07a]' : 'focus-visible:outline-[#db2777]'
-                }`}
+                className={`absolute inset-0 z-10 cursor-pointer bg-transparent focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-4 ${focusOutlineClass}`}
               />
 
               <div>
                 <div
-                  className={`flex justify-between items-center text-[10px] font-silkscreen pb-2 border-b ${
-                    isSpecial ? 'border-[#5fa07a]/30 text-[#5fa07a]' : 'border-[#22162e] text-[#c084fc]'
-                  }`}
+                  className={`flex justify-between items-center text-[10px] font-silkscreen pb-2 border-b ${headerBorderClass} ${headerTextClass}`}
                 >
-                  <span className="flex items-center gap-1.5">
+                  <span className="flex items-center gap-1.5 font-bold">
                     {isSpecial ? (
                       <>
                         <span className="text-[#5fa07a]">★</span>
-                        <span className="text-[#5fa07a] font-bold">SPECIAL EVENT</span>
+                        <span>SPECIAL EVENT</span>
                       </>
+                    ) : isDay1 ? (
+                      'TRACK 01 // TECH (DAY 1)'
                     ) : (
-                      ev.track === 'technical' ? 'TRACK 01 // TECH' : 'TRACK 02 // NON-TECH'
+                      'TRACK 02 // NON-TECH (DAY 2)'
                     )}
                   </span>
                   {isPaidSpecialFeeEvent(ev) && liveSpecialFeeLabel(liveSpecialEvents, ev.id) && (
@@ -198,20 +254,14 @@ export const CompeteScreen: React.FC<CompeteScreenProps> = ({
               </div>
 
               <div
-                className={`relative z-20 flex gap-2 mt-4 pt-2.5 border-t ${
-                  isSpecial ? 'border-[#5fa07a]/25' : 'border-[#22162e]'
-                }`}
+                className={`relative z-20 flex gap-2 mt-4 pt-2.5 border-t ${footerBorderClass}`}
               >
                 <button
                   onClick={() => {
                     sound.playNavClick();
                     onSelectEvent(ev);
                   }}
-                  className={`flex-1 py-1.5 font-silkscreen text-[11px] border cursor-pointer transition-colors text-center ${
-                    isSpecial
-                      ? 'border-[#5fa07a] text-[#5fa07a] hover:bg-[#5fa07a]/15'
-                      : 'border-[#db2777] text-[#db2777] hover:bg-[#db2777]/15'
-                  }`}
+                  className={`flex-1 py-1.5 font-silkscreen text-[11px] border cursor-pointer transition-colors text-center ${knowMoreClass}`}
                   title={`Know more about ${ev.title}`}
                 >
                   KNOW MORE
@@ -222,11 +272,7 @@ export const CompeteScreen: React.FC<CompeteScreenProps> = ({
                     onHighlightEvent(ev);
                     setModalEvent(ev);
                   }}
-                  className={`flex-1 py-1.5 font-pixel text-xs cursor-pointer transition-all text-center font-bold ${
-                    isSpecial
-                      ? 'bg-[#5fa07a] text-white hover:bg-[#4d8664] shadow-[0_0_6px_rgba(95,160,122,0.3)]'
-                      : 'bg-[#db2777] text-white hover:bg-[#be185d] shadow-[0_0_6px_rgba(219,39,119,0.3)]'
-                  }`}
+                  className={`flex-1 py-1.5 font-pixel text-xs cursor-pointer transition-all text-center font-bold ${registerClass}`}
                 >
                   REGISTER
                 </button>

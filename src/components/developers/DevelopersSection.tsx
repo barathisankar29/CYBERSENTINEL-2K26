@@ -30,8 +30,8 @@ export const DevelopersSection: React.FC = () => {
         <div className="developers-section__header">
           {/* Main Title: Our Designers & Developers */}
           <h3 className="cred-group-title developers-section__title">
-            <span className="developers-section__title-neon">OUR DESIGNERS &</span>{' '}
-            <span className="developers-section__title-neon">DEVELOPERS</span>
+            <span className="developers-section__title-neon developers-section__title-part">OUR DESIGNERS &</span>{' '}
+            <span className="developers-section__title-neon developers-section__title-part">DEVELOPERS</span>
           </h3>
 
           {/* Dynamic Second Title: switches between "Backend Team" and "Frontend Team" */}

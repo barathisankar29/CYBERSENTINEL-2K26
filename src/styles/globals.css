@@ -45,7 +45,6 @@
   /* Hardware memory efficiency rules for budget Android & iOS devices (2GB-4GB RAM) */
   @media (max-width: 768px) {
     /* Prevent memory-expensive nested composite blurs on phone GPUs */
-    .mobile-nav-card__glass,
     .hero-mascot__bubble,
     .cyber-back-btn,
     .profile-access-badge,
@@ -59,10 +58,6 @@
   html.is-low-ram * {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-  }
-
-  html.is-low-ram .mobile-nav-card__glass {
-    background: rgba(12, 10, 26, 0.94) !important;
   }
 
   html.is-low-ram .hero-mascot__bubble {

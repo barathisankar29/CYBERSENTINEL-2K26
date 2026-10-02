@@ -6,6 +6,7 @@ import { ProfileAccessBadge } from '@/components/ui/ProfileAccessBadge'
 import { useMascot } from '@/components/mascot'
 import { MOBILE_NAVIGATION_BG } from './useWarmBuildingsImages'
 import { RainEffect } from './RainEffect'
+import { EventsCardSparkles } from './EventsCardSparkles'
 import './NavigationCityMobile.css'
 
 const BG_SRC = MOBILE_NAVIGATION_BG
@@ -23,8 +24,8 @@ export function NavigationCityMobile() {
         <img
           src={BG_SRC}
           alt=""
-          width={941}
-          height={1672}
+          width={897}
+          height={1600}
           loading="lazy"
           decoding="async"
           draggable={false}
@@ -71,6 +72,8 @@ export function NavigationCityMobile() {
           if (!layout) return null
 
           const cardTranslateX = layout.align === 'left' ? '0%' : layout.align === 'right' ? '-100%' : '-50%'
+          const isProminent = building.cardEmphasis === 'prominent'
+          const cardScale = isProminent ? ' scale(1.12)' : ''
           const cardClassName = building.cardEmphasis
             ? `mobile-nav-card mobile-nav-card--${building.cardEmphasis}`
             : 'mobile-nav-card'
@@ -96,7 +99,7 @@ export function NavigationCityMobile() {
                   {
                     left: `${layout.anchor.x}%`,
                     top: `${layout.anchor.y}%`,
-                    transform: `translate(${cardTranslateX}, -100%)`,
+                    transform: `translate(${cardTranslateX}, -100%)${cardScale}`,
                     '--building-accent': building.accentColor,
                   } as CSSProperties
                 }
@@ -121,13 +124,8 @@ export function NavigationCityMobile() {
                 <span className="mobile-nav-card__glass" aria-hidden="true" />
                 <span className="mobile-nav-card__content">
                   <span className="mobile-nav-card__title">{building.label}</span>
-                  {building.description && (
-                    <>
-                      <span className="mobile-nav-card__rule" aria-hidden="true" />
-                      <span className="mobile-nav-card__desc">{building.description}</span>
-                    </>
-                  )}
                 </span>
+                {building.id === 'events' && <EventsCardSparkles />}
               </button>
             </div>
           )

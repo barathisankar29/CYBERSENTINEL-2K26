@@ -17,7 +17,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectModule, onNaviga
     }
   };
 
-  const handleTrackClick = (tab: 'day1' | 'day2') => {
+  const handleTrackClick = (tab: 'day1' | 'day2' | 'special') => {
     sound.playNavClick();
     if (onNavigateToEvents) {
       onNavigateToEvents(tab);
@@ -129,26 +129,26 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectModule, onNaviga
             Cybersentinel 2K26 is a state level intercollegiate technical symposium by the Department of Computer Science and Engineering, bringing students together through technology, challenges, innovation, and creativity.
           </div>
 
-          {/* Track Buttons: Track 01 (Day 1) & Track 02 (Day 2) Navigation Buttons */}
-          <div className="space-y-2" data-purpose="two-tracks-container">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          {/* Track Buttons: Track 01 (Day 1), Track 02 (Day 2) & Track 03 (Special Events in Day 2) */}
+          <div className="space-y-2" data-purpose="tracks-container">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
               {/* TRACK 01 BUTTON */}
               <button
                 type="button"
                 id="btn-track-01"
                 onClick={() => handleTrackClick('day1')}
-                className="group border-2 border-[#ff007f] bg-[#0c0512] hover:bg-[#1a0820] p-4 flex flex-col justify-center items-center text-center shadow-[0_0_12px_rgba(255,0,127,0.2)] hover:shadow-[0_0_20px_rgba(255,0,127,0.5)] transition-all cursor-pointer active:translate-y-0.5"
+                className="group border-2 border-[#ff007f] bg-[#0c0512] hover:bg-[#1a0820] p-3 sm:p-3.5 flex flex-col justify-center items-center text-center shadow-[0_0_12px_rgba(255,0,127,0.2)] hover:shadow-[0_0_20px_rgba(255,0,127,0.5)] transition-all cursor-pointer active:translate-y-0.5"
                 data-purpose="track-01-button"
                 title="View Day 1 Technical Events"
               >
-                <span className="font-silkscreen text-[11px] text-[#c084fc] tracking-widest">
+                <span className="font-silkscreen text-[10px] sm:text-[11px] text-[#c084fc] tracking-widest">
                   TRACK 01 // DAY 1
                 </span>
-                <span className="font-pixel text-sm sm:text-base text-white group-hover:text-[#ff007f] tracking-wider mt-1 transition-colors font-bold">
+                <span className="font-pixel text-xs sm:text-sm text-white group-hover:text-[#ff007f] tracking-wider mt-1 transition-colors font-bold">
                   TECHNICAL
                 </span>
-                <span className="mt-2 font-silkscreen text-[9px] text-pink-400 group-hover:text-white flex items-center gap-1 border-t border-[#ff007f]/30 pt-1.5 w-full justify-center">
-                  [ VIEW DAY 1 EVENTS → ]
+                <span className="mt-2 font-silkscreen text-[8px] sm:text-[9px] text-pink-400 group-hover:text-white flex items-center gap-1 border-t border-[#ff007f]/30 pt-1.5 w-full justify-center">
+                  [ VIEW DAY 1 → ]
                 </span>
               </button>
 
@@ -157,18 +157,38 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectModule, onNaviga
                 type="button"
                 id="btn-track-02"
                 onClick={() => handleTrackClick('day2')}
-                className="group border-2 border-[#9333ea] bg-[#090514] hover:bg-[#180826] p-4 flex flex-col justify-center items-center text-center shadow-[0_0_12px_rgba(147,51,234,0.2)] hover:shadow-[0_0_20px_rgba(147,51,234,0.5)] transition-all cursor-pointer active:translate-y-0.5"
+                className="group border-2 border-[#9333ea] bg-[#090514] hover:bg-[#180826] p-3 sm:p-3.5 flex flex-col justify-center items-center text-center shadow-[0_0_12px_rgba(147,51,234,0.2)] hover:shadow-[0_0_20px_rgba(147,51,234,0.5)] transition-all cursor-pointer active:translate-y-0.5"
                 data-purpose="track-02-button"
                 title="View Day 2 Non-Technical Events"
               >
-                <span className="font-silkscreen text-[11px] text-[#ff007f] tracking-widest">
+                <span className="font-silkscreen text-[10px] sm:text-[11px] text-[#ff007f] tracking-widest">
                   TRACK 02 // DAY 2
                 </span>
-                <span className="font-pixel text-sm sm:text-base text-white group-hover:text-[#c084fc] tracking-wider mt-1 transition-colors font-bold">
+                <span className="font-pixel text-xs sm:text-sm text-white group-hover:text-[#c084fc] tracking-wider mt-1 transition-colors font-bold">
                   NON-TECHNICAL
                 </span>
-                <span className="mt-2 font-silkscreen text-[9px] text-purple-300 group-hover:text-white flex items-center gap-1 border-t border-[#9333ea]/30 pt-1.5 w-full justify-center">
-                  [ VIEW DAY 2 EVENTS → ]
+                <span className="mt-2 font-silkscreen text-[8px] sm:text-[9px] text-purple-300 group-hover:text-white flex items-center gap-1 border-t border-[#9333ea]/30 pt-1.5 w-full justify-center">
+                  [ VIEW DAY 2 → ]
+                </span>
+              </button>
+
+              {/* TRACK 03 BUTTON - SPECIAL EVENTS IN DAY 2 */}
+              <button
+                type="button"
+                id="btn-track-03"
+                onClick={() => handleTrackClick('special')}
+                className="group border-2 border-[#5fa07a] bg-[#06120b] hover:bg-[#0d2417] p-3 sm:p-3.5 flex flex-col justify-center items-center text-center shadow-[0_0_12px_rgba(95,160,122,0.2)] hover:shadow-[0_0_20px_rgba(95,160,122,0.5)] transition-all cursor-pointer active:translate-y-0.5"
+                data-purpose="track-03-button"
+                title="View Day 2 Special Events"
+              >
+                <span className="font-silkscreen text-[10px] sm:text-[11px] text-[#86efac] tracking-widest">
+                  TRACK 03 // DAY 2
+                </span>
+                <span className="font-pixel text-xs sm:text-sm text-white group-hover:text-[#5fa07a] tracking-wider mt-1 transition-colors font-bold">
+                  SPECIAL EVENTS
+                </span>
+                <span className="mt-2 font-silkscreen text-[8px] sm:text-[9px] text-[#5fa07a] group-hover:text-white flex items-center gap-1 border-t border-[#5fa07a]/30 pt-1.5 w-full justify-center">
+                  [ VIEW SPECIAL → ]
                 </span>
               </button>
             </div>

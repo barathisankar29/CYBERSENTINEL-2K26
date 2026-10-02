@@ -20,6 +20,8 @@ interface CoverflowCarouselProps<T> {
   autoDelayMs?: number
   /** Horizontal spacing between neighbouring cards (px), or a function of the viewport width. */
   xStep?: { desktop: number | ((viewportWidth: number) => number); mobile: number }
+  /** Rotation angle around Y axis for side cards (deg). */
+  rotY?: { desktop: number; mobile: number }
   /** Extra class for per-carousel sizing (e.g. 'infinite-carousel--frontend'). */
   variant?: string
   /** Rewind to the first card whenever the carousel scrolls out of view. */
@@ -43,7 +45,8 @@ export function CoverflowCarousel<T>({
   getLabel,
   renderItem,
   autoDelayMs = 2000,
-  xStep = { desktop: 225, mobile: 88 },
+  xStep = { desktop: 295, mobile: 95 },
+  rotY: customRotY,
   variant,
   rewindWhenHidden = false,
   dimWith = 'brightness',
@@ -152,22 +155,24 @@ export function CoverflowCarousel<T>({
   const getCardStyle = (offset: number): CSSProperties => {
     const absOffset = Math.abs(offset)
     const sign = Math.sign(offset)
+    const step = isMobile
+      ? xStep.mobile
+      : typeof xStep.desktop === 'function'
+        ? xStep.desktop(viewportWidth)
+        : xStep.desktop
     if (absOffset > maxSide) {
       return {
-        transform: `${CENTER}translateX(${sign * (isMobile ? xStep.mobile : 225) * 2.8}px) scale(0.4)`,
+        transform: `${CENTER}translateX(${sign * step * 2.8}px) scale(0.4)`,
         zIndex: 1,
         opacity: 0,
         pointerEvents: 'none',
         visibility: 'hidden',
       }
     }
-    const step = isMobile
-      ? xStep.mobile
-      : typeof xStep.desktop === 'function'
-        ? xStep.desktop(viewportWidth)
-        : xStep.desktop
     const zStep = isMobile ? -45 : -75
-    const rotY = isMobile ? 26 : 38
+    const rotY = isMobile
+      ? (customRotY?.mobile ?? 24)
+      : (customRotY?.desktop ?? 30)
     const dim = (brightness: number, opacity: number): CSSProperties =>
       dimWith === 'brightness' ? { opacity, filter: `brightness(${brightness})` } : { opacity: opacity * brightness }
 
