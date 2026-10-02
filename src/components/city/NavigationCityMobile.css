@@ -315,41 +315,176 @@
   letter-spacing: 0.1em;
 }
 
-/* Events on mobile — bolder, larger, and significantly more visible */
+/* Events on mobile — bolder, larger, brighter, and shining */
 .mobile-nav-card--prominent {
-  min-width: 168px;
-  padding: 1.72rem 1.7rem 1.22rem;
-  transform: scale(1.06);
+  min-width: 184px;
+  padding: 1.85rem 1.9rem 1.3rem;
+  z-index: 5;
 }
 
 .mobile-nav-card--prominent .mobile-nav-card__glass {
   filter:
-    drop-shadow(0 0 14px rgba(255, 62, 165, 0.95))
-    drop-shadow(0 0 24px rgba(255, 0, 127, 0.6))
+    brightness(1.28)
+    contrast(1.12)
+    drop-shadow(0 0 18px rgba(255, 62, 165, 1))
+    drop-shadow(0 0 34px rgba(255, 0, 127, 0.85))
+    drop-shadow(0 0 52px rgba(255, 105, 180, 0.65))
     drop-shadow(0 8px 18px rgba(0, 0, 0, 0.85));
+  animation: eventsGlassShine 3.2s ease-in-out infinite alternate;
 }
 
 .mobile-nav-card--prominent .mobile-nav-card__aura {
-  opacity: 0.95;
-  filter: blur(14px);
+  inset: -14px -18px -16px;
+  border-radius: 24px;
+  opacity: 1;
+  filter: blur(16px);
   background: radial-gradient(
-    ellipse 80% 70% at 50% 50%,
-    rgba(255, 62, 165, 0.65) 0%,
-    rgba(147, 51, 234, 0.3) 45%,
-    transparent 75%
+    ellipse 85% 75% at 50% 50%,
+    rgba(255, 62, 165, 0.85) 0%,
+    rgba(255, 0, 127, 0.6) 35%,
+    rgba(147, 51, 234, 0.4) 65%,
+    transparent 80%
   );
+  animation: eventsAuraPulse 3.2s ease-in-out infinite alternate;
 }
 
 .mobile-nav-card--prominent .mobile-nav-card__title {
-  font-size: 0.88rem;
+  font-size: 0.96rem;
   font-weight: 900;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.22em;
+  color: #ffffff;
   text-shadow:
-    0 0 4px #ffffff,
-    0 0 10px #ffffff,
-    0 0 20px rgba(255, 62, 165, 1),
-    0 0 32px rgba(255, 0, 127, 0.85);
+    0 0 6px #ffffff,
+    0 0 14px #ffffff,
+    0 0 24px rgba(255, 255, 255, 0.9),
+    0 0 35px rgba(255, 62, 165, 1),
+    0 0 55px rgba(255, 0, 127, 0.95),
+    0 0 75px rgba(236, 72, 153, 0.85);
 }
+
+/* Luminous shining gleam sweep across the Events banner */
+.mobile-nav-card--prominent::after {
+  content: '';
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.3) 47%,
+    rgba(255, 255, 255, 0.65) 50%,
+    rgba(255, 255, 255, 0.3) 53%,
+    transparent 80%
+  );
+  background-size: 250% 100%;
+  animation: eventsShineSweep 4.2s ease-in-out infinite;
+  mask-image: url('/assets/buildings/building_card_plate.webp');
+  -webkit-mask-image: url('/assets/buildings/building_card_plate.webp');
+  mask-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
+}
+
+@keyframes eventsGlassShine {
+  0% {
+    filter:
+      brightness(1.22)
+      contrast(1.1)
+      drop-shadow(0 0 16px rgba(255, 62, 165, 0.95))
+      drop-shadow(0 0 30px rgba(255, 0, 127, 0.8))
+      drop-shadow(0 0 46px rgba(255, 105, 180, 0.55))
+      drop-shadow(0 8px 18px rgba(0, 0, 0, 0.85));
+  }
+  100% {
+    filter:
+      brightness(1.38)
+      contrast(1.16)
+      drop-shadow(0 0 24px rgba(255, 62, 165, 1))
+      drop-shadow(0 0 44px rgba(255, 0, 127, 1))
+      drop-shadow(0 0 65px rgba(255, 105, 180, 0.8))
+      drop-shadow(0 8px 22px rgba(0, 0, 0, 0.9));
+  }
+}
+
+@keyframes eventsAuraPulse {
+  0% {
+    opacity: 0.88;
+    filter: blur(15px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(22px);
+  }
+}
+
+@keyframes eventsShineSweep {
+  0%, 30% {
+    background-position: 150% 0;
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  65% {
+    opacity: 1;
+  }
+  75%, 100% {
+    background-position: -80% 0;
+    opacity: 0;
+  }
+}
+
+/*
+ * Luminous cyberpunk sparkle stars around the Events card
+ */
+.events-card-sparkles {
+  position: absolute;
+  inset: -12px -16px;
+  pointer-events: none;
+  z-index: 10;
+  overflow: visible;
+}
+
+.events-sparkle {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  display: block;
+  fill: #ffffff;
+  filter: drop-shadow(0 0 3px #ffffff) drop-shadow(0 0 8px #ff3ea5) drop-shadow(0 0 14px #00f0ff);
+  transform-origin: center center;
+  animation: sparkleTwinkle 2.4s ease-in-out infinite;
+}
+
+.events-sparkle--small {
+  width: 9px;
+  height: 9px;
+}
+
+.events-sparkle--large {
+  width: 18px;
+  height: 18px;
+}
+
+.events-sparkle.s1 { top: 6px; left: 14px; animation-delay: 0s; animation-duration: 2.2s; }
+.events-sparkle.s2 { top: -4px; right: 24px; animation-delay: 0.7s; animation-duration: 2.6s; }
+.events-sparkle.s3 { bottom: 6px; left: 22px; animation-delay: 1.3s; animation-duration: 2.0s; }
+.events-sparkle.s4 { bottom: -4px; right: 16px; animation-delay: 0.4s; animation-duration: 2.4s; }
+.events-sparkle.s5 { top: 16px; left: 48%; animation-delay: 1.8s; animation-duration: 2.5s; }
+.events-sparkle.s6 { top: 10px; right: 46px; animation-delay: 1.0s; animation-duration: 2.1s; }
+
+@keyframes sparkleTwinkle {
+  0%, 100% {
+    opacity: 0.15;
+    transform: scale(0.3) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25) rotate(90deg);
+  }
+}
+
 
 /* Hover-capable devices only */
 @media (hover: hover) {

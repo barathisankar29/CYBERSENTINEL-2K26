@@ -62,11 +62,11 @@ const PACK_CONFIGS: Record<string, CharacterConfig> = {
     accessLevel: 'REGISTER FOR DAY 2',
     dayType: 'DAY_2',
     events: [
-      { id: 'ruelle-1', name: 'Connections', day: 'DAY 2', originalEventId: 'connections' },
-      { id: 'ruelle-2', name: 'Find the BGM', day: 'DAY 2', originalEventId: 'bgm' },
-      { id: 'ruelle-3', name: 'Lost in Lyrics', day: 'DAY 2', originalEventId: 'lyrics' },
+      { id: 'ruelle-1', name: 'Spotlight', day: 'DAY 2', originalEventId: 'talent_show' },
+      { id: 'ruelle-2', name: 'Connections', day: 'DAY 2', originalEventId: 'connections' },
+      { id: 'ruelle-3', name: 'Find the BGM', day: 'DAY 2', originalEventId: 'bgm' },
       { id: 'ruelle-4', name: 'Mixed Signals', day: 'DAY 2', originalEventId: 'mixed_signals' },
-      { id: 'ruelle-5', name: 'Spotlight', day: 'DAY 2', originalEventId: 'talent_show' },
+      { id: 'ruelle-5', name: 'Lost in Lyrics', day: 'DAY 2', originalEventId: 'lyrics' },
       { id: 'ruelle-6', name: 'E-Sports', day: 'DAY 2', originalEventId: 'e_sports' }
     ]
   },
@@ -105,11 +105,11 @@ const PACK_CONFIGS: Record<string, CharacterConfig> = {
       { id: 'cosma-3', name: 'Unsaid', day: 'DAY 1', originalEventId: 'unsaid' },
       { id: 'cosma-4', name: 'Weblica', day: 'DAY 1', originalEventId: 'weblica' },
       { id: 'cosma-5', name: 'XCoders', day: 'DAY 1', originalEventId: 'x_coders' },
-      { id: 'cosma-6', name: 'Connections', day: 'DAY 2', originalEventId: 'connections' },
-      { id: 'cosma-7', name: 'Find the BGM', day: 'DAY 2', originalEventId: 'bgm' },
-      { id: 'cosma-8', name: 'Lost in Lyrics', day: 'DAY 2', originalEventId: 'lyrics' },
+      { id: 'cosma-6', name: 'Spotlight', day: 'DAY 2', originalEventId: 'talent_show' },
+      { id: 'cosma-7', name: 'Connections', day: 'DAY 2', originalEventId: 'connections' },
+      { id: 'cosma-8', name: 'Find the BGM', day: 'DAY 2', originalEventId: 'bgm' },
       { id: 'cosma-9', name: 'Mixed Signals', day: 'DAY 2', originalEventId: 'mixed_signals' },
-      { id: 'cosma-10', name: 'Spotlight', day: 'DAY 2', originalEventId: 'talent_show' },
+      { id: 'cosma-10', name: 'Lost in Lyrics', day: 'DAY 2', originalEventId: 'lyrics' },
       { id: 'cosma-11', name: 'E-Sports', day: 'DAY 2', originalEventId: 'e_sports' }
     ]
   }
@@ -420,29 +420,15 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
             <div className="grow space-y-2 py-1">
               <div className="text-[9px] font-arcade text-zinc-400 border-b border-zinc-800 pb-1 flex justify-between">
                 <span>PROTOCOL INCLUSIONS</span>
-                <span>(5 EVENTS)</span>
+                <span>({PACK_CONFIGS.NICO.events.length} EVENTS)</span>
               </div>
               <ul className="space-y-1.5 font-vt text-base tracking-wide text-zinc-200">
-                <li className="flex items-center gap-1.5 bg-black/60 p-1 border-l-2 border-[#00d4ff]">
-                  <span className="text-[#00d4ff] font-arcade text-[9px]">01</span>
-                  <span>Paper Presentation</span>
-                </li>
-                <li className="flex items-center gap-1.5 bg-black/60 p-1 border-l-2 border-[#00d4ff]">
-                  <span className="text-[#00d4ff] font-arcade text-[9px]">02</span>
-                  <span>Cypher Coding</span>
-                </li>
-                <li className="flex items-center gap-1.5 bg-black/60 p-1 border-l-2 border-[#00d4ff]">
-                  <span className="text-[#00d4ff] font-arcade text-[9px]">03</span>
-                  <span>Unsaid</span>
-                </li>
-                <li className="flex items-center gap-1.5 bg-black/60 p-1 border-l-2 border-[#00d4ff]">
-                  <span className="text-[#00d4ff] font-arcade text-[9px]">04</span>
-                  <span>Weblica</span>
-                </li>
-                <li className="flex items-center gap-1.5 bg-black/60 p-1 border-l-2 border-[#00d4ff]">
-                  <span className="text-[#00d4ff] font-arcade text-[9px]">05</span>
-                  <span>X-Coders</span>
-                </li>
+                {PACK_CONFIGS.NICO.events.map((ev, idx) => (
+                  <li key={ev.id} className="flex items-center gap-1.5 bg-black/60 p-1 border-l-2 border-[#00d4ff]">
+                    <span className="text-[#00d4ff] font-arcade text-[9px]">{String(idx + 1).padStart(2, '0')}</span>
+                    <span>{ev.name}</span>
+                  </li>
+                ))}
               </ul>
             </div>
 
@@ -506,29 +492,15 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
             <div className="grow space-y-2 py-1">
               <div className="text-[9px] font-arcade text-zinc-400 border-b border-zinc-800 pb-1 flex justify-between">
                 <span>PROTOCOL INCLUSIONS</span>
-                <span>(5 EVENTS)</span>
+                <span>({PACK_CONFIGS.RUELLE.events.length} EVENTS)</span>
               </div>
               <ul className="space-y-1.5 font-vt text-base tracking-wide text-zinc-200">
-                <li className="flex items-center gap-1.5 bg-black/60 p-1 border-l-2 border-[#b026ff]">
-                  <span className="text-[#b026ff] font-arcade text-[9px]">01</span>
-                  <span>Connections</span>
-                </li>
-                <li className="flex items-center gap-1.5 bg-black/60 p-1 border-l-2 border-[#b026ff]">
-                  <span className="text-[#b026ff] font-arcade text-[9px]">02</span>
-                  <span>BGM</span>
-                </li>
-                <li className="flex items-center gap-1.5 bg-black/60 p-1 border-l-2 border-[#b026ff]">
-                  <span className="text-[#b026ff] font-arcade text-[9px]">03</span>
-                  <span>Lyrics</span>
-                </li>
-                <li className="flex items-center gap-1.5 bg-black/60 p-1 border-l-2 border-[#b026ff]">
-                  <span className="text-[#b026ff] font-arcade text-[9px]">04</span>
-                  <span>Mixed Signal</span>
-                </li>
-                <li className="flex items-center gap-1.5 bg-black/60 p-1 border-l-2 border-[#b026ff]">
-                  <span className="text-[#b026ff] font-arcade text-[9px]">05</span>
-                  <span>Talent Show</span>
-                </li>
+                {PACK_CONFIGS.RUELLE.events.map((ev, idx) => (
+                  <li key={ev.id} className="flex items-center gap-1.5 bg-black/60 p-1 border-l-2 border-[#b026ff]">
+                    <span className="text-[#b026ff] font-arcade text-[9px]">{String(idx + 1).padStart(2, '0')}</span>
+                    <span>{ev.name}</span>
+                  </li>
+                ))}
               </ul>
             </div>
 
@@ -725,43 +697,27 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
               </div>
             </div>
 
-            {/* All 10 Events List in Compact Grid Badges */}
+            {/* All Events List in Compact Grid Badges */}
             <div className="grow space-y-1.5 py-1">
               <div className="text-[9px] font-arcade text-zinc-400 border-b border-zinc-800 pb-1 flex justify-between">
-                <span>ALL 10 EVENTS INCLUDED</span>
+                <span>ALL {PACK_CONFIGS.COSMA.events.length} EVENTS INCLUDED</span>
                 <span style={{ color: '#ffd700' }}>DUAL PASS</span>
               </div>
               <div className="grid grid-cols-2 gap-1 font-vt text-[13px] text-zinc-200">
-                <span className="bg-black border px-1 py-0.5 truncate" style={{ borderColor: 'rgba(255, 215, 0, 0.35)' }} title="Paper Presentation">
-                  • Paper Pres.
-                </span>
-                <span className="bg-black border px-1 py-0.5 truncate" style={{ borderColor: 'rgba(255, 215, 0, 0.35)' }} title="Cypher Coding">
-                  • Cypher Code
-                </span>
-                <span className="bg-black border px-1 py-0.5 truncate" style={{ borderColor: 'rgba(255, 215, 0, 0.35)' }} title="Unsaid">
-                  • Unsaid
-                </span>
-                <span className="bg-black border px-1 py-0.5 truncate" style={{ borderColor: 'rgba(255, 215, 0, 0.35)' }} title="Weblica">
-                  • Weblica
-                </span>
-                <span className="bg-black border px-1 py-0.5 truncate" style={{ borderColor: 'rgba(255, 215, 0, 0.35)' }} title="X-Coders">
-                  • X-Coders
-                </span>
-                <span className="bg-black border px-1 py-0.5 truncate" style={{ borderColor: 'rgba(255, 215, 0, 0.35)' }} title="Connections">
-                  • Connections
-                </span>
-                <span className="bg-black border px-1 py-0.5 truncate" style={{ borderColor: 'rgba(255, 215, 0, 0.35)' }} title="BGM">
-                  • BGM
-                </span>
-                <span className="bg-black border px-1 py-0.5 truncate" style={{ borderColor: 'rgba(255, 215, 0, 0.35)' }} title="Lyrics">
-                  • Lyrics
-                </span>
-                <span className="bg-black border px-1 py-0.5 truncate" style={{ borderColor: 'rgba(255, 215, 0, 0.35)' }} title="Mixed Signal">
-                  • Mixed Signal
-                </span>
-                <span className="bg-black border px-1 py-0.5 truncate" style={{ borderColor: 'rgba(255, 215, 0, 0.35)' }} title="Talent Show">
-                  • Talent Show
-                </span>
+                {PACK_CONFIGS.COSMA.events.map((ev, idx) => (
+                  <span
+                    key={ev.id}
+                    className={`bg-black border px-1 py-0.5 truncate ${
+                      idx === PACK_CONFIGS.COSMA.events.length - 1 && PACK_CONFIGS.COSMA.events.length % 2 !== 0
+                        ? 'col-span-2 text-center'
+                        : ''
+                    }`}
+                    style={{ borderColor: 'rgba(255, 215, 0, 0.35)' }}
+                    title={ev.name}
+                  >
+                    • {ev.name}
+                  </span>
+                ))}
               </div>
             </div>
 

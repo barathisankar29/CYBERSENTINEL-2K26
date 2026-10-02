@@ -25,8 +25,8 @@ const specialDescriptions: Record<string, string> = Object.fromEntries(
 )
 
 const packageDescriptions: Record<string, string> = {
-  'DAY 1 PACK': 'Full access to every Day 1 event — Paper Presentation, Cypher Coding, Unsaid, Weblica, and X-Coders.',
-  'DAY 2 PACK': 'Full access to every Day 2 event — Connections, BGM, Lyrics, Mixed Signal, and Talent Show.',
+  'DAY 1 PACK': 'Full access to every Day 1 event — Paper Presentation, Cipher Coding, Unsaid, Weblica, and XCoders.',
+  'DAY 2 PACK': 'Full access to every Day 2 event — Spotlight, Connections, Find the BGM, Mixed Signals, Lost in Lyrics, and E-Sports.',
   'DAY 1 + DAY 2 PACK': 'Full access to every event across both days of CyberSentinel 2K26 — the complete symposium pass.',
 }
 

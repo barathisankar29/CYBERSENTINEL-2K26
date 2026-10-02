@@ -40,41 +40,38 @@ export const mobileNavigationLayout: Record<string, MobileNavCardLayout> = {
   // Upper-center, topmost — the primary landmark gets the top slot alone.
   events: {
     align: 'center',
-    anchor: { x: 50, y: 11 },
+    anchor: { x: 50, y: 15 },
     target: { x: 51, y: 28 },
   },
   // Upper-left, staggered a little lower than Events so the two don't
   // form a single flat row.
   about: {
     align: 'left',
-    anchor: { x: 5, y: 23 },
+    anchor: { x: 5, y: 27 },
     target: { x: 17, y: 41 },
   },
   // Upper-right, staggered a little lower than Events (mirrors About).
   transport: {
     align: 'right',
-    anchor: { x: 95, y: 25 },
+    anchor: { x: 95, y: 29 },
     target: { x: 86, y: 34 },
   },
   // Middle-left, well clear of About above it.
   credentials: {
     align: 'left',
-    anchor: { x: 4, y: 46 },
+    anchor: { x: 4, y: 49 },
     target: { x: 17, y: 56 },
   },
   // Middle-right, paired horizontally with Credentials.
   timeline: {
     align: 'right',
-    anchor: { x: 96, y: 47 },
+    anchor: { x: 96, y: 50 },
     target: { x: 84, y: 63 },
   },
-  // Lower-left/lower-middle — sits above the Website storefront. The
-  // Website building itself sits at bottom-CENTER of the composition (not
-  // left), so target.x is pulled in to its actual roofline/sign, not the
-  // empty plaza to the card's own lower-right.
+  // Lower-center — centered directly above the Website storefront landmark.
   contact: {
-    align: 'left',
-    anchor: { x: 10, y: 64 },
-    target: { x: 50, y: 70 },
+    align: 'center',
+    anchor: { x: 50, y: 68 },
+    target: { x: 50, y: 73 },
   },
 }
