@@ -394,7 +394,7 @@ export const ALL_EVENTS: EventSpec[] = [
     title: 'E-SPORTS',
     quote: '"THE ARENA IS SET. THE GAME IS A SECRET."',
     description:
-      'E-Sports is a special event of CyberSentinel 2K26. Registration is per team; the game format and schedule will be announced soon.',
+      'E-Sports is a special event of CyberSentinel 2K26 with two Free Fire tournaments: a Free Fire Clash Squad Tournament where 16 teams battle through 4 knockout rounds (16 → 8 → 4 → 2 → 1), and the Lord Esports Battle Royale Tournament where 24 teams compete across 2 rounds. Cash prizes are awarded to the Winner and Runner-up. Registration is per team.',
     date: 'DAY 02',
     time: 'TO BE ANNOUNCED',
     teamSize: 'PER TEAM',
@@ -403,9 +403,13 @@ export const ALL_EVENTS: EventSpec[] = [
     chipSub: 'ARENA',
     isSpecial: true,
     protocols: [
-      'Special event: registration and fee are per team.',
-      'Register through Special Events; it is not part of the Day 1 / Day 2 passes.',
-      'The game format and schedule will be announced soon.'
+      'Special event: registration and fee are per team. Register through Special Events; it is not part of the Day 1 / Day 2 passes.',
+      'FREE FIRE CLASH SQUAD TOURNAMENT: 16 teams across 4 knockout rounds (16 → 8 → 4 → 2 → 1); the final two teams compete for the championship.',
+      'Clash Squad rules: No Gun Attributes. No Character Skills. Unlimited Ammo. Bermuda Map.',
+      'Clash Squad: cash prizes awarded to 1st and 2nd place.',
+      'LORD ESPORTS – BATTLE ROYALE TOURNAMENT: 24 teams across 2 Battle Royale rounds.',
+      'Battle Royale format: the Top 10 teams after Round 1 qualify for the final round; the Top 2 teams after Round 2 are declared the winners.',
+      'Battle Royale: cash prizes awarded to 1st and 2nd place based on final standings.'
     ]
   },
   {

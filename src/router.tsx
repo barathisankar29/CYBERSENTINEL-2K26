@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom'
 import { HomePage } from '@/pages/HomePage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { RouteFallback } from '@/components/ui/RouteFallback'
+import { getDevicePerfInfo } from '@/utils/devicePerf'
 
 // Home is the landing experience and ships in the entry bundle; every other
 // page is its own chunk so the initial download only carries what Home needs.
@@ -31,33 +32,56 @@ const RegistrationPage = lazy(loadRegistrationPage)
 const RegistrationStatusPage = lazy(loadRegistrationStatusPage)
 const CreateTeamPage = lazy(loadCreateTeamPage)
 
-const routeLoaders = [
+// Light pages first; the heavy ones (events terminal ~140 KB, transport map
+// with Leaflet ~145 KB) last, so they can be skipped on weaker devices.
+const lightRouteLoaders = [
   loadAboutPage,
   loadTimelinePage,
   loadCredentialsPage,
-  loadEventsPage,
   loadProfilePage,
-  loadTransportationPage,
   loadContactPage,
   loadRegistrationPage,
   loadSectionPage,
 ]
 
 /**
- * Warm every route chunk (JS/CSS only — no page images) once the browser is
- * idle after the first load, so tapping a navigation building opens its page
- * immediately instead of waiting on a network round-trip. Idle-scheduled so
- * it never competes with the hero's own critical assets.
+ * Warm route chunks (JS/CSS only — no page images) once the browser is idle
+ * after the first load, so tapping a navigation building opens its page
+ * immediately. One chunk per idle slot (never a burst of downloads and
+ * parsing while the hero is animating). Phones skip the Leaflet map page;
+ * low-RAM / data-saver devices also skip the events terminal — anything
+ * skipped still loads normally when it is opened.
  */
 function usePrefetchRoutes() {
   useEffect(() => {
-    const prefetch = () => routeLoaders.forEach((load) => void load().catch(() => {}))
-    if (typeof window.requestIdleCallback === 'function') {
-      const id = window.requestIdleCallback(prefetch, { timeout: 4000 })
-      return () => window.cancelIdleCallback(id)
+    const { isLowRam, isMobile } = getDevicePerfInfo()
+    const queue = [
+      ...lightRouteLoaders,
+      ...(isLowRam ? [] : [loadEventsPage]),
+      ...(isMobile || isLowRam ? [] : [loadTransportationPage]),
+    ]
+    let cancelled = false
+    let handle: number | undefined
+    const idle = (cb: () => void) =>
+      typeof window.requestIdleCallback === 'function'
+        ? window.requestIdleCallback(cb, { timeout: 4000 })
+        : window.setTimeout(cb, 600)
+    const next = () => {
+      const load = queue.shift()
+      if (cancelled || !load) return
+      void load()
+        .catch(() => {})
+        .finally(() => {
+          if (!cancelled) handle = idle(next)
+        })
     }
-    const timeoutId = setTimeout(prefetch, 2500)
-    return () => clearTimeout(timeoutId)
+    handle = window.setTimeout(() => (handle = idle(next)), 1500)
+    return () => {
+      cancelled = true
+      if (handle === undefined) return
+      window.clearTimeout(handle)
+      if (typeof window.cancelIdleCallback === 'function') window.cancelIdleCallback(handle)
+    }
   }, [])
 }
 

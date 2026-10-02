@@ -10,54 +10,42 @@ interface BackgroundMusicHUDProps {
 export function BackgroundMusicHUD({ visible = true }: BackgroundMusicHUDProps = {}) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
-  const [isIntroActive, setIsIntroActive] = useState(() => !visible || !!document.querySelector('.video-intro'))
+  // HomePage passes visible={false} while the full-screen intro is showing,
+  // so no DOM watching is needed to know about the intro.
+  const isIntroActive = !visible
 
-  // Detect when full-screen VideoIntro is active on the homepage so we don't overlap with its controls
+  // Never play over the intro.
   useEffect(() => {
-    const checkIntro = () => {
-      const active = !!document.querySelector('.video-intro')
-      setIsIntroActive(active)
-      if (active && audioRef.current && !audioRef.current.paused) {
-        audioRef.current.pause()
-        setIsPlaying(false)
-      }
-    }
+    if (!visible && audioRef.current && !audioRef.current.paused) audioRef.current.pause()
+  }, [visible])
 
-    checkIntro()
-    const observer = new MutationObserver(checkIntro)
-    observer.observe(document.body, { childList: true, subtree: true })
-
-    return () => observer.disconnect()
-  }, [])
-
-  // Manage Audio Element
-  useEffect(() => {
+  // The 3 MB track is only fetched once someone actually presses play —
+  // never on page load, where it would compete with the hero images.
+  const getAudio = useCallback(() => {
+    if (audioRef.current) return audioRef.current
     const audio = new Audio(BG_MUSIC_SRC)
     audio.loop = true
     audio.volume = 0.55
     audio.preload = 'auto'
+    audio.addEventListener('play', () => setIsPlaying(true))
+    audio.addEventListener('pause', () => setIsPlaying(false))
+    audio.addEventListener('ended', () => setIsPlaying(false))
     audioRef.current = audio
-
-    const handlePlay = () => setIsPlaying(true)
-    const handlePause = () => setIsPlaying(false)
-    const handleEnded = () => setIsPlaying(false)
-
-    audio.addEventListener('play', handlePlay)
-    audio.addEventListener('pause', handlePause)
-    audio.addEventListener('ended', handleEnded)
-
-    return () => {
-      audio.removeEventListener('play', handlePlay)
-      audio.removeEventListener('pause', handlePause)
-      audio.removeEventListener('ended', handleEnded)
-      audio.pause()
-      audio.src = ''
-    }
+    return audio
   }, [])
 
+  useEffect(
+    () => () => {
+      const audio = audioRef.current
+      if (!audio) return
+      audio.pause()
+      audio.src = ''
+    },
+    []
+  )
+
   const toggleAudio = useCallback(() => {
-    const audio = audioRef.current
-    if (!audio) return
+    const audio = getAudio()
 
     if (isPlaying) {
       audio.pause()
@@ -74,7 +62,7 @@ export function BackgroundMusicHUD({ visible = true }: BackgroundMusicHUDProps =
           setIsPlaying(false)
         })
     }
-  }, [isPlaying])
+  }, [isPlaying, getAudio])
 
   // Only appear from starting to the hero section (disappear in buildings section & footer)
   const [isInHero, setIsInHero] = useState(() => {
@@ -84,30 +72,21 @@ export function BackgroundMusicHUD({ visible = true }: BackgroundMusicHUDProps =
     return true
   })
 
+  // IntersectionObserver instead of a scroll listener: no layout reads on
+  // every scroll frame. In view while the hero's bottom is more than 80px
+  // below the top of the viewport (same rule as before).
   useEffect(() => {
-    const checkHero = () => {
-      const heroEl = document.querySelector('.city-scene')
-      if (!heroEl) {
-        setIsInHero(false)
-        return
-      }
-      const rect = heroEl.getBoundingClientRect()
-      // Hero is in view as long as its bottom has not scrolled past the top of the viewport
-      const inView = rect.bottom > 80 && rect.top < window.innerHeight
-      setIsInHero(inView)
+    const heroEl = document.querySelector('.city-scene')
+    if (!heroEl) {
+      setIsInHero(false)
+      return
     }
-
-    checkHero()
-    window.addEventListener('scroll', checkHero, { passive: true })
-    window.addEventListener('resize', checkHero, { passive: true })
-    window.addEventListener('hashchange', checkHero, { passive: true })
-
-    return () => {
-      window.removeEventListener('scroll', checkHero)
-      window.removeEventListener('resize', checkHero)
-      window.removeEventListener('hashchange', checkHero)
-    }
-  }, [])
+    const observer = new IntersectionObserver(([entry]) => setIsInHero(entry.isIntersecting), {
+      rootMargin: '-80px 0px 0px 0px',
+    })
+    observer.observe(heroEl)
+    return () => observer.disconnect()
+  }, [visible])
 
   const isHidden = !visible || isIntroActive || !isInHero
 

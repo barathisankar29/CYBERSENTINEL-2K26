@@ -134,7 +134,7 @@ export const SPECIAL_EVENTS: CatalogEvent[] = [
   {
     id: 'e-sports',
     name: 'E-Sports',
-    description: 'Special event registered per team. The game format and schedule will be announced soon.',
+    description: 'Two Free Fire tournaments: Clash Squad (16 teams, 4 knockout rounds, Bermuda map) and Lord Esports Battle Royale (24 teams, 2 rounds). Cash prizes for 1st and 2nd place. Registered per team.',
     venue: 'To Be Announced',
     time: 'To Be Announced',
     fee: 'Per Team',
