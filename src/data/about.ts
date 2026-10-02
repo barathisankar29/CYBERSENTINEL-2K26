@@ -32,7 +32,7 @@ export const collegeData = {
     { label: 'GRADE', value: 'NAAC A' },
   ] as StatItem[],
   sealSrc: '/assets/about/vel-tech-seal.png',
-  bannerSrc: '/assets/branding/vel-tech-high-tech-logo-full.webp',
+  bannerSrc: '/assets/branding/vel-tech-high-tech-logo-full-v2.webp',
 }
 
 export const cyberSentinelData = {
