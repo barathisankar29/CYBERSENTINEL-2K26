@@ -9,4 +9,4 @@
  * Set back to `null` and redeploy to restore the real backend fees.
  * The backend itself is not changed; its records keep the real base fee.
  */
-export const TEST_REGISTRATION_FEE: number | null = 1
+export const TEST_REGISTRATION_FEE: number | null = null
