@@ -23,8 +23,8 @@ export function NavigationCityMobile() {
         <img
           src={BG_SRC}
           alt=""
-          width={941}
-          height={1672}
+          width={897}
+          height={1600}
           loading="lazy"
           decoding="async"
           draggable={false}
@@ -121,12 +121,6 @@ export function NavigationCityMobile() {
                 <span className="mobile-nav-card__glass" aria-hidden="true" />
                 <span className="mobile-nav-card__content">
                   <span className="mobile-nav-card__title">{building.label}</span>
-                  {building.description && (
-                    <>
-                      <span className="mobile-nav-card__rule" aria-hidden="true" />
-                      <span className="mobile-nav-card__desc">{building.description}</span>
-                    </>
-                  )}
                 </span>
               </button>
             </div>
