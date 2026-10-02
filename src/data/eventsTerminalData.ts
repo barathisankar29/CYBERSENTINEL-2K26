@@ -85,7 +85,7 @@ export const ALL_EVENTS: EventSpec[] = [
       coordinator('Kaaviya Shri', '3RD', '8124678783'),
       coordinator('Jayashree P', '2ND', '8870172622'),
       coordinator('Ranjeev', '2ND', '9789008691'),
-      coordinator('Prathish M')
+      coordinator('Prathish M', undefined, '7806816023')
     ],
     chipLabel: 'UNSAID',
     chipSub: 'MUTE-SIG',
