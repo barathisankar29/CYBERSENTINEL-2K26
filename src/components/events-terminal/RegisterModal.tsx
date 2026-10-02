@@ -66,8 +66,7 @@ const PACK_CONFIGS: Record<string, CharacterConfig> = {
       { id: 'ruelle-2', name: 'Connections', day: 'DAY 2', originalEventId: 'connections' },
       { id: 'ruelle-3', name: 'Find the BGM', day: 'DAY 2', originalEventId: 'bgm' },
       { id: 'ruelle-4', name: 'Mixed Signals', day: 'DAY 2', originalEventId: 'mixed_signals' },
-      { id: 'ruelle-5', name: 'Lost in Lyrics', day: 'DAY 2', originalEventId: 'lyrics' },
-      { id: 'ruelle-6', name: 'E-Sports', day: 'DAY 2', originalEventId: 'e_sports' }
+      { id: 'ruelle-5', name: 'Lost in Lyrics', day: 'DAY 2', originalEventId: 'lyrics' }
     ]
   },
   'DR. DACRE': {
@@ -87,7 +86,8 @@ const PACK_CONFIGS: Record<string, CharacterConfig> = {
     isPerEventPricing: true,
     events: [
       { id: 'dacre-dance', name: 'Group Dance', protocol: 'PROTOCOL_A', originalEventId: 'group_dance' },
-      { id: 'dacre-thiruvizha', name: 'Thiruvizha Corner', protocol: 'PROTOCOL_B', originalEventId: 'thiruvizha_corner' }
+      { id: 'dacre-thiruvizha', name: 'Thiruvizha Corner', protocol: 'PROTOCOL_B', originalEventId: 'thiruvizha_corner' },
+      { id: 'dacre-esports', name: 'E-Sports', protocol: 'PROTOCOL_C', originalEventId: 'e_sports' }
     ]
   },
   COSMA: {
@@ -109,8 +109,7 @@ const PACK_CONFIGS: Record<string, CharacterConfig> = {
       { id: 'cosma-7', name: 'Connections', day: 'DAY 2', originalEventId: 'connections' },
       { id: 'cosma-8', name: 'Find the BGM', day: 'DAY 2', originalEventId: 'bgm' },
       { id: 'cosma-9', name: 'Mixed Signals', day: 'DAY 2', originalEventId: 'mixed_signals' },
-      { id: 'cosma-10', name: 'Lost in Lyrics', day: 'DAY 2', originalEventId: 'lyrics' },
-      { id: 'cosma-11', name: 'E-Sports', day: 'DAY 2', originalEventId: 'e_sports' }
+      { id: 'cosma-10', name: 'Lost in Lyrics', day: 'DAY 2', originalEventId: 'lyrics' }
     ]
   }
 };
@@ -165,7 +164,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
   // Determine recommended pack based on selected event
   const recommendedPack = React.useMemo(() => {
     if (!event) return null;
-    if (event.id === 'group_dance' || event.id === 'thiruvizha_corner') return 'DR. DACRE';
+    if (event.id === 'group_dance' || event.id === 'thiruvizha_corner' || event.id === 'e_sports') return 'DR. DACRE';
     if (event.day === 1) return 'NICO';
     if (event.day === 2) return 'RUELLE';
     return 'COSMA';
@@ -634,6 +633,35 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                   type="button"
                 >
                   &gt;&gt; REGISTER THIRUVIZHA &lt;&lt;
+                </button>
+              </div>
+
+              {/* Sub-Card C: E-Sports (fee per team) */}
+              <div
+                className="bg-black border p-2 relative flex flex-col justify-between"
+                data-purpose="sub-event-esports"
+                style={{ borderColor: 'rgba(0, 255, 204, 0.5)' }}
+              >
+                <div className="flex items-start justify-between">
+                  <div>
+                    <span className="text-[9px] font-arcade block" style={{ color: 'rgba(0, 255, 204, 0.7)' }}>
+                      PROTOCOL_C
+                    </span>
+                    <span className="font-pixel text-xs sm:text-sm text-white font-bold">E-Sports</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="font-arcade text-xs" style={{ color: '#00ffcc' }}>
+                      {cardPrice('DR. DACRE', ['dacre-esports'])}
+                    </span>
+                    <span className="block font-vt text-[11px] text-zinc-400 leading-none">PER TEAM</span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleOpenRegister('DR. DACRE', 'E-SPORTS', 'PROTOCOL_C', 'dacre-esports')}
+                  className="mt-2 w-full py-1.5 px-1 bg-zinc-950 border border-[#00ffcc] text-[#00ffcc] font-arcade text-[8px] sm:text-[9px] transition-none active:translate-y-0.5 cursor-pointer hover:bg-[#00ffcc] hover:text-black"
+                  type="button"
+                >
+                  &gt;&gt; REGISTER E-SPORTS &lt;&lt;
                 </button>
               </div>
             </div>

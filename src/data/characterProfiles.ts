@@ -11,7 +11,7 @@ import type { CharacterConfig } from '@/types/characterProfile'
 // Official event names (see src/data/eventsTerminalData.ts). These are what a
 // participant's profile records for a Day 1 / Day 2 / combo pass.
 const DAY_1_EVENTS = ['Paper Presentation', 'Unsaid', 'Cipher Coding', 'Weblica', 'XCoders']
-const DAY_2_EVENTS = ['Spotlight', 'Connections', 'Find the BGM', 'Mixed Signals', 'Lost in Lyrics', 'E-Sports']
+const DAY_2_EVENTS = ['Spotlight', 'Connections', 'Find the BGM', 'Mixed Signals', 'Lost in Lyrics']
 
 export const characterProfiles: Record<string, CharacterConfig> = {
   nico: {

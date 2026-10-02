@@ -1024,3 +1024,20 @@
     background: rgba(9, 8, 20, 0.94) !important;
   }
 }
+
+/* Mobile: a small cue that the journey moves by swiping left / right. */
+.timeline-hud__swipe-hint {
+  margin-right: 0.6em;
+  color: rgb(125 211 252 / 0.75);
+  letter-spacing: 0.12em;
+  animation: timeline-swipe-hint 2.4s ease-in-out infinite;
+}
+
+@keyframes timeline-swipe-hint {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeline-hud__swipe-hint { animation: none; }
+}

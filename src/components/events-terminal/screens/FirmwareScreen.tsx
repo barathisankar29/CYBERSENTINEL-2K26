@@ -254,6 +254,17 @@ export const FirmwareScreen: React.FC<FirmwareScreenProps> = ({
             <span className="text-[10px] font-mono text-[#f472b6]">[ MANDATORY RULES ]</span>
           </div>
 
+          {/* Team size first, where the event asks for it */}
+          {event.teamSizeInProtocol && (
+            <div
+              className="mb-3 border-2 border-[#00ffff]/70 bg-[#00ffff]/5 px-3 py-2.5 flex items-center justify-between gap-3"
+              data-purpose="protocol-team-size"
+            >
+              <span className="font-silkscreen text-[10px] sm:text-xs text-[#67e8f9] tracking-wider">TEAM SIZE</span>
+              <span className="font-pixel text-sm sm:text-base text-white tracking-wider">{event.teamSize}</span>
+            </div>
+          )}
+
           {/* Box Heading */}
           <div className="mb-3 flex items-center gap-2">
             <span className="text-[#db2777]">►</span>

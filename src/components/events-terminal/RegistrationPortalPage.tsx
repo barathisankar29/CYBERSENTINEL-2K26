@@ -39,6 +39,8 @@ export interface RegistrationPortalInitialData {
 
 interface RegistrationPortalPageProps {
   initialData?: RegistrationPortalInitialData;
+  /** Primary back control text — "BACK TO EVENT" when opened from an event page. */
+  backLabel?: string;
   onClose: () => void;
   onNavigateToRegistrations: () => void;
 }
@@ -96,6 +98,7 @@ function matchActiveEventIds(
  */
 export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
   initialData,
+  backLabel = 'BACK TO EVENTS',
   onClose,
   onNavigateToRegistrations
 }) => {
@@ -400,7 +403,7 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
           <div className="shrink-0 w-8 h-8 bg-[#9333ea] border border-[#c084fc] flex items-center justify-center font-silkscreen text-white font-bold text-sm shadow-[0_0_10px_rgba(147,51,234,0.5)]">
             CS
           </div>
-          <span className="font-pixel text-sm sm:text-xl text-white tracking-wider truncate">CyberSentinel</span>
+          <span className="hidden sm:inline font-pixel text-xl text-white tracking-wider truncate">CyberSentinel</span>
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
@@ -413,10 +416,10 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
               sound.playNavClick();
               onClose();
             }}
-            className="px-3 py-1 bg-black border border-zinc-700 hover:border-[#ff007f] text-gray-300 hover:text-white font-mono text-xs cursor-pointer transition-colors"
-            title="Return to Event Matrix"
+            className="px-3 py-1.5 border-2 border-[#ff007f] bg-[#ff007f]/10 hover:bg-[#ff007f] text-[#ff007f] hover:text-white font-silkscreen text-[11px] sm:text-xs whitespace-nowrap cursor-pointer transition-colors shadow-[0_0_8px_rgba(255,0,127,0.35)]"
+            data-purpose="back-to-event"
           >
-            [✕ CLOSE]
+            ← {backLabel}
           </button>
         </div>
       </header>

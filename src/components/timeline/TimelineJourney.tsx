@@ -390,6 +390,11 @@ export function TimelineJourney() {
                 <div className="timeline-hud__progress-dot" />
               </div>
               <span className="timeline-hud__event-count">
+                {isMobile && (
+                  <span className="timeline-hud__swipe-hint" aria-hidden="true">
+                    ‹ SWIPE ›
+                  </span>
+                )}
                 STAGE {String(currentStationNumber).padStart(2, '0')} / {String(points.length).padStart(2, '0')}
               </span>
             </div>
