@@ -56,7 +56,7 @@ export const frontendDevelopersData: FrontendDeveloperMember[] = [
     name: 'PRANITH L',
     nameColor: '#FF0088', // Vibrant hot magenta / pink
     textColor: '#00B4FF', // Electric neon cyan / blue
-    image: '/assets/developers/frontend_pranith.webp',
+    image: '/assets/developers/frontend_pranith_v2.webp',
     role: 'Lead Architect & Tech Director',
     description:
       'I see design as a mix of logic, creativity, and curiosity. I enjoy turning simple ideas into thoughtful interfaces where every detail has a reason and every screen has a little personality.',
@@ -83,6 +83,8 @@ export const backendDevelopersData: DeveloperMember[] = [
   {
     id: 'dev-hariharan-ramesh',
     name: 'HARIHARAN RAMESH',
+    nameColor: '#00F0FF', // Bright electric cyan
+    textColor: '#A78BFA', // Soft neon violet
     role: 'Full-Stack Web Developer',
     codename: 'DEV_01 // CYBER_DEFENSE',
     badgeShape: 'hexagon-green',
@@ -106,6 +108,8 @@ export const backendDevelopersData: DeveloperMember[] = [
   {
     id: 'dev-hemal-ramm-s',
     name: 'HEMAL RAMM S',
+    nameColor: '#FACC15', // Vibrant cyber yellow / gold
+    textColor: '#C084FC', // Electric purple / lavender
     role: 'Web Developer',
     codename: 'DEV_02 // SYSTEM_CORE',
     badgeShape: 'triangle-yellow',
@@ -138,7 +142,7 @@ export const developersData: DeveloperMember[] = [
     themeColor: 'cyan',
     accentHex: '#00f0ff',
     secondaryHex: '#3b82f6',
-    avatar: '/assets/developers/frontend_pranith.webp',
+    avatar: '/assets/developers/frontend_pranith_v2.webp',
     slogan: 'Built to Be Seen.',
     sloganLines: ['Built to', 'Be Seen.'],
     description:
