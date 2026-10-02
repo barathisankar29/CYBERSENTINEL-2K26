@@ -425,7 +425,6 @@ export const ALL_EVENTS: EventSpec[] = [
     time: '10:30 AM - 03:30 PM',
     teamSize: 'UP TO 3 PER STALL',
     coordinators: [
-      coordinator('Nihitha T', '4TH', '9962328881'),
       coordinator('Devdharshan', '4TH', '8122126781'),
       coordinator('Ayaanar', '4TH', '8428679698'),
       coordinator('Suban', '3RD', '7358302865'),
