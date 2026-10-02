@@ -49,7 +49,7 @@ export const characterProfiles: Record<string, CharacterConfig> = {
     eventsLoreHtml: 'Multiple discrepancies found between submitted documents and external records. Suspected ties to unregistered networks. Capable of operating across jurisdictions without leaving identifiable traces. <span class="char-hl-amber">Level of cooperation: Uncertain.</span> <span class="char-hl-amber">Handle with discretion.</span>',
     intent: 'Intent of application is unknown. Will remain under careful observation, but was recruited due to exceptional analytical ability, systems manipulation, and information retrieval skills. His true objectives remain unverified. Continued monitoring is recommended.',
     packs: [
-      { id: 'nico-day1', label: 'DAY 1 PACK', price: 200, events: DAY_1_EVENTS },
+      { id: 'nico-day1', label: 'DAY 1 PACK', price: 201, events: DAY_1_EVENTS },
     ],
   },
   ruelle: {
@@ -87,7 +87,7 @@ export const characterProfiles: Record<string, CharacterConfig> = {
     eventsLoreHtml: 'Multiple unauthorized data traces linked to Ruelle across closed networks. Involved in high-risk <span class="char-hl">information extraction</span>, <span class="char-hl">memory recovery</span>, and anomaly-related cases. Suspected ties to independent operators. Capable of operating beyond jurisdictional boundaries without leaving identifiable traces. <span class="char-hl-amber">Level of cooperation: Uncertain.</span> <span class="char-hl-amber">Handle with discretion.</span>',
     intent: 'Grants full access to Day 2 of CyberSentinel 2K26 — the puzzle, music, reflex, and performance events that close out the symposium.',
     packs: [
-      { id: 'ruelle-day2', label: 'DAY 2 PACK', price: 200, events: DAY_2_EVENTS },
+      { id: 'ruelle-day2', label: 'DAY 2 PACK', price: 201, events: DAY_2_EVENTS },
     ],
   },
   dacre: {
@@ -125,8 +125,8 @@ export const characterProfiles: Record<string, CharacterConfig> = {
     eventsLoreHtml: 'Multiple confidential records indicate involvement in non-human biological studies, subject integration trials, and autonomous research outside standard regulation. Associated with several high-risk projects. Motives remain unclear, though results show <span class="char-hl">unprecedented success rates</span>. <span class="char-hl-amber">Level of cooperation: Uncertain.</span> <span class="char-hl-amber">Handle with discretion.</span>',
     intent: 'Two standalone showcase registrations — each independently selectable, not bundled into a day pack. Group Dance is the mega-stage crew battle; Thiruvizha Corner is the all-day carnival zone.',
     packs: [
-      { id: 'dacre-group-dance', label: 'GROUP DANCE', price: 696, events: ['Group Dance'] },
-      { id: 'dacre-thiruvizha', label: 'THIRUVIZHA CORNER', price: 590, events: ['Thiruvizha Corner'] },
+      { id: 'dacre-group-dance', label: 'GROUP DANCE', price: 590, events: ['Group Dance'] },
+      { id: 'dacre-thiruvizha', label: 'THIRUVIZHA CORNER', price: 696, events: ['Thiruvizha Corner'] },
     ],
   },
   cosma: {
@@ -164,7 +164,7 @@ export const characterProfiles: Record<string, CharacterConfig> = {
     eventsLoreHtml: 'Multiple discrepancies found between submitted documents and external records. Suspected ties to unregistered networks. Capable of operating across jurisdictions without leaving identifiable traces. <span class="char-hl-amber">Level of cooperation: Uncertain.</span> <span class="char-hl-amber">Handle with discretion.</span>',
     intent: 'Grants full access to both Day 1 and Day 2 of CyberSentinel 2K26 — every technical and non-technical event across the entire symposium in one registration.',
     packs: [
-      { id: 'cosma-full', label: 'DAY 1 + DAY 2 PACK', price: 400, events: [...DAY_1_EVENTS, ...DAY_2_EVENTS] },
+      { id: 'cosma-full', label: 'DAY 1 + DAY 2 PACK', price: 402, events: [...DAY_1_EVENTS, ...DAY_2_EVENTS] },
     ],
   },
 }

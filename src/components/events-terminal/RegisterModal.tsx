@@ -4,7 +4,9 @@ import { sound } from './sound';
 import type { RegistrationPortalInitialData } from './RegistrationPortalPage';
 import {
   findSpecialEvent,
+  dayDisplayPrice,
   formatRupees,
+  specialDisplayPrice,
   specialEventCodeFor,
   useLiveRegistrationData,
   type LiveRegistrationData
@@ -114,7 +116,8 @@ const PACK_CONFIGS: Record<string, CharacterConfig> = {
 };
 
 /**
- * Live price for a pack, from the backend. Day packs are the per-day
+ * Live price for a pack, from the backend's base fees shown GST-inclusive
+ * (see withGst in useLiveRegistrationData). Day packs are the per-day
  * registration fee (the same fee whichever of that day's events are
  * chosen); Dr. Dacre is the sum of the
  * selected special events. Null until the backend has answered.
@@ -122,13 +125,12 @@ const PACK_CONFIGS: Record<string, CharacterConfig> = {
 function livePackPrice(config: CharacterConfig, live: LiveRegistrationData, selectedIds?: string[]): number | null {
   if (config.isPerEventPricing) {
     const chosen = config.events.filter((e) => !selectedIds || selectedIds.includes(e.id));
-    const prices = chosen.map((e) => findSpecialEvent(live.specialEvents, e.id)?.fee);
-    if (!live.specialEvents.length || prices.some((p) => p === undefined)) return null;
-    return prices.reduce<number>((sum, p) => sum + Number(p), 0);
+    const specials = chosen.map((e) => findSpecialEvent(live.specialEvents, e.id));
+    if (!live.specialEvents.length || specials.some((s) => s === undefined)) return null;
+    return specialDisplayPrice(specials as { fee: number }[]);
   }
-  if (!live.fees) return null;
-  if (config.dayType === 'BOTH') return live.fees.DAY_1 + live.fees.DAY_2;
-  return config.dayType === 'DAY_1' ? live.fees.DAY_1 : live.fees.DAY_2;
+  if (!live.fees || config.dayType === 'SPECIAL') return null;
+  return dayDisplayPrice(live.fees, config.dayType);
 }
 
 function priceLabel(amount: number | null): string {
@@ -241,13 +243,9 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
             e.originalEventId === event.id ||
             e.name.toLowerCase() === event.title.toLowerCase()
         );
-        if (matched && characterKey === 'DR. DACRE') {
-          initialSelected = [matched.id];
-        } else {
-          initialSelected = config.events.map((e) => e.id);
-        }
+        initialSelected = [matched?.id ?? config.events[0].id];
       } else {
-        initialSelected = config.events.map((e) => e.id);
+        initialSelected = [config.events[0].id];
       }
     }
 
@@ -273,9 +271,13 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
     setModalState((prev) => {
       if (!prev) return null;
       const isSelected = prev.selectedEventIds.includes(eventId);
+      // Special events are registered one at a time (no combined special package).
+      const singleChoice = PACK_CONFIGS[prev.characterKey]?.isPerEventPricing;
       const nextSelected = isSelected
         ? prev.selectedEventIds.filter((id) => id !== eventId)
-        : [...prev.selectedEventIds, eventId];
+        : singleChoice
+          ? [eventId]
+          : [...prev.selectedEventIds, eventId];
       return {
         ...prev,
         selectedEventIds: nextSelected
@@ -888,7 +890,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                       {modalState.selectedEventIds.length}/{activeConfig.events.length}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className={`flex items-center gap-2 ${activeConfig.isPerEventPricing ? 'hidden' : ''}`}>
                     <button
                       type="button"
                       onClick={selectAll}

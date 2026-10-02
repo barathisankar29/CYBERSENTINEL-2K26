@@ -9,6 +9,7 @@ import { SITE_UNDER_DEVELOPMENT } from '@/config/siteGate'
 initDevicePerf()
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>{SITE_UNDER_DEVELOPMENT ? <UnderDevelopmentGate /> : <App />}</StrictMode>,
+  // The gate applies to builds only; the local dev server (npm run dev) always shows the full site.
+  <StrictMode>{SITE_UNDER_DEVELOPMENT && !import.meta.env.DEV ? <UnderDevelopmentGate /> : <App />}</StrictMode>,
 )
 

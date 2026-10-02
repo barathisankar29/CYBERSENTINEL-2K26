@@ -7,10 +7,13 @@
  * index.html also skips the city-background preload and Google Fonts
  * (see vite.config.ts).
  *
+ * Builds only: the local dev server (`npm run dev`) always shows the full
+ * site so it can be worked on.
+ *
  * To launch the full site: set this to `false` and redeploy. Everything
  * then loads exactly as it did before the gate existed.
  */
-export const SITE_UNDER_DEVELOPMENT: boolean = true
+export const SITE_UNDER_DEVELOPMENT: boolean = false
 
 /** The supplied artwork, served as-is from /public. */
 export const UNDER_DEVELOPMENT_IMAGE = '/assets/website_under_development.png'

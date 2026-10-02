@@ -13,8 +13,9 @@ import { SITE_UNDER_DEVELOPMENT, UNDER_DEVELOPMENT_IMAGE } from './src/config/si
 function underDevelopmentHtml(): Plugin {
   return {
     name: 'cybersentinel:under-development-html',
-    transformIndexHtml(html) {
-      if (!SITE_UNDER_DEVELOPMENT) return html
+    transformIndexHtml(html, ctx) {
+      // The dev server (npm run dev) shows the full site, so keep its index.html intact.
+      if (!SITE_UNDER_DEVELOPMENT || ctx.server) return html
       return html
         .replace(/\s*<link rel="preload" as="image" href="\/assets\/city\/[^>]*>/, '')
         .replace(/\s*<link rel="preconnect" href="https:\/\/fonts\.[^>]*>/g, '')
