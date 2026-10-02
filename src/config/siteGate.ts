@@ -10,7 +10,7 @@
  * To launch the full site: set this to `false` and redeploy. Everything
  * then loads exactly as it did before the gate existed.
  */
-export const SITE_UNDER_DEVELOPMENT: boolean = true
+export const SITE_UNDER_DEVELOPMENT: boolean = false
 
 /** The supplied artwork, served as-is from /public. */
 export const UNDER_DEVELOPMENT_IMAGE = '/assets/website_under_development.png'

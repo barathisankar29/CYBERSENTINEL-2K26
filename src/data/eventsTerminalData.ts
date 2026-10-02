@@ -457,7 +457,7 @@ export const FEST_INFO = {
   activeNodes: 2048,
   rules: [
     'OPERATORS MUST CARRY PHYSICAL OR DIGITAL MAINFRAME PASS AT CHECK-IN.',
-    'EVENTS ARE DIVIDED INTO TRACK 01 (TECHNICAL) AND TRACK 02 (NON-TECHNICAL).',
+    'EVENTS ARE DIVIDED INTO TRACK 01 (TECHNICAL), TRACK 02 (NON-TECHNICAL), AND TRACK 03 (SPECIAL EVENTS).',
     'COLLEGE ID CARD IS MANDATORY FOR ALL PARTICIPATING MEMBERS.',
     'FAIR PLAY, ETHICAL CONDUCT, AND CREATIVE SPIRIT ARE PARAMOUNT.',
     'DECISIONS OF THE JUDGES AND CHIEF OPERATORS ARE FINAL AND BINDING.'
@@ -480,6 +480,15 @@ export const FEST_INFO = {
         'Test your creativity, strategy, communication and thinking beyond the code.',
       accent: '#9333ea',
       tag: 'CREATIVE_STRAT'
+    },
+    {
+      id: 'track-03',
+      number: 'TRACK 03',
+      title: 'SPECIAL EVENTS',
+      description:
+        'Celebrate culture, stage performance, and traditional carnival vibes with our marquee special events.',
+      accent: '#5fa07a',
+      tag: 'SPECIAL_GRID'
     }
   ]
 };

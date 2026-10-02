@@ -1,8 +1,8 @@
 /** Modules mounted by EventsTerminalApp (the ones RetroNav can reach). */
 export type ModuleId =
   | 'home'       // Deep Violet
-  | 'compete'    // Neon Pink
-  | 'firmware'   // Purple
+  | 'compete'    // Cyan
+  | 'firmware'   // Neon Pink
   | 'favorites'  // My Registrations (radiance)
   | 'team';      // Team Creation (radiance)
 
