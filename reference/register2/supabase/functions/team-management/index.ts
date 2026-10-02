@@ -39,9 +39,10 @@ const packagesForDay = (events: EventRow[], day: string, selectedEventIds: strin
   return Array.from(groups.entries()).map(([key, group]) => ({
     id: `${day}:${key}`,
     day,
-    size: group[0].max_team_size,
-    events: group.map(event => ({ id: event.id, code: event.code, name: event.name }))
-  }));
+    min_size: Math.max(2, ...group.map(event => event.min_team_size)),
+    max_size: Math.min(3, group[0].max_team_size),
+    events: group.map(event => ({ id: event.id, code: event.code, name: event.name, min_team_size: event.min_team_size, max_team_size: event.max_team_size }))
+  })).filter(item => item.min_size <= item.max_size);
 };
 
 Deno.serve(async request => {
@@ -70,9 +71,12 @@ Deno.serve(async request => {
     if (!selectedPackage) throw new Error("Select a valid team event package.");
 
     if (action === "create") {
+      const teamSize = Number(body.team_size);
+      if (!Number.isInteger(teamSize) || teamSize < selectedPackage.min_size || teamSize > selectedPackage.max_size || teamSize < 2 || teamSize > 3) throw new Error(`Choose a team size between ${selectedPackage.min_size} and ${selectedPackage.max_size}.`);
+      if (selectedPackage.events.some(event => teamSize < event.min_team_size || teamSize > event.max_team_size)) throw new Error("The selected team size is not allowed for every event in this package.");
       const memberIdentities = Array.isArray(body.members) ? body.members.map((value: unknown) => String(value || "").trim()).filter(Boolean) : [];
       const uniqueIdentities = Array.from(new Set([identity, ...memberIdentities]));
-      if (uniqueIdentities.length !== selectedPackage.size) throw new Error(`This package requires exactly ${selectedPackage.size} verified members.`);
+      if (uniqueIdentities.length !== teamSize) throw new Error(`This team requires exactly ${teamSize} verified members.`);
       const members = [];
       for (const memberIdentity of uniqueIdentities) {
         const member = await verifiedRegistration(db, memberIdentity);
@@ -89,7 +93,7 @@ Deno.serve(async request => {
       }
       const teamName = String(body.team_name || "").trim();
       if (!teamName) throw new Error("Enter a team name.");
-      const { data: team, error: teamError } = await db.from("event_teams").insert({ event_id: selectedPackage.events[0].id, team_code: `${day}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`, team_name: teamName, leader_registration_id: registration.id, max_members: selectedPackage.size }).select("id,team_code,team_name").single();
+      const { data: team, error: teamError } = await db.from("event_teams").insert({ event_id: selectedPackage.events[0].id, team_code: `${day}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`, team_name: teamName, leader_registration_id: registration.id, max_members: teamSize }).select("id,team_code,team_name").single();
       if (teamError) throw teamError;
       const { error: packageError } = await db.from("event_team_packages").insert(selectedPackage.events.map(event => ({ team_id: team.id, event_id: event.id })));
       if (packageError) throw packageError;

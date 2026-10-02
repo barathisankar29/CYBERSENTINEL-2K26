@@ -4,17 +4,40 @@ const state = { identity: '', packages: { DAY_1: [], DAY_2: [] }, registration: 
 function esc(value) { return String(value ?? '').replace(/[&<>"']/g, character => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[character])); }
 function message(text, type = 'error') { const box = $('#teamMessage'); box.className = `alert show ${type}`; box.textContent = text; showFeedback(type === 'success' ? (mode === 'create' ? 'Team created' : 'Team joined') : 'Team request failed', text, type); }
 function selectedPackage() { return state.packages[$('#teamDay').value]?.find(item => item.id === $('#teamPackage').value); }
+function sizeLabel(item) { return item.min_size === item.max_size ? `${item.min_size} member${item.min_size === 1 ? '' : 's'}` : `${item.min_size}-${item.max_size} members`; }
 function renderPackages() {
   const day = $('#teamDay').value;
   const packages = state.packages[day] || [];
-  $('#teamPackage').innerHTML = packages.map(item => `<option value="${esc(item.id)}">${item.events.map(event => esc(event.name)).join(' + ')} · ${item.size} members</option>`).join('') || '<option value="">No team packages on this day</option>';
+  $('#teamPackage').innerHTML = packages.map(item => `<option value="${esc(item.id)}">${item.events.map(event => esc(event.name)).join(' + ')} · ${sizeLabel(item)}</option>`).join('') || (day ? '<option value="">No team packages on this day</option>' : '<option value="">Select a day first</option>');
   renderPackage();
 }
 function renderPackage() {
   const item = selectedPackage();
-  $('#packageNote').textContent = item ? `This team is applicable only for: ${item.events.map(event => event.name).join(' and ')}. Exactly ${item.size} members are required.` : 'Select a day and team package.';
+  $('#packageNote').textContent = item ? `This team is applicable only for: ${item.events.map(event => event.name).join(' and ')}. Choose ${sizeLabel(item)}.` : 'Select a day and team package.';
   if (mode !== 'create') return;
-  const count = item?.size || 0;
+  let sizeSelect = $('#teamSize');
+  if (!sizeSelect) {
+    const field = document.createElement('div');
+    field.innerHTML = '<label for="teamSize">Team size</label><select id="teamSize"></select>';
+    document.querySelector('#teamForm .grid').append(field);
+    sizeSelect = field.querySelector('#teamSize');
+    sizeSelect.addEventListener('change', renderMemberFields);
+  }
+  if (!item) {
+    sizeSelect.innerHTML = '';
+    $('#memberFields').innerHTML = '';
+    return;
+  }
+  const previousSize = Number(sizeSelect.value);
+  sizeSelect.innerHTML = Array.from({ length: item.max_size - item.min_size + 1 }, (_, index) => {
+    const size = item.min_size + index;
+    return `<option value="${size}">${size} members</option>`;
+  }).join('');
+  sizeSelect.value = String(previousSize >= item.min_size && previousSize <= item.max_size ? previousSize : item.min_size);
+  renderMemberFields();
+}
+function renderMemberFields() {
+  const count = Number($('#teamSize').value);
   $('#memberFields').innerHTML = count > 1 ? `<h3>Other verified members (${count - 1})</h3>${Array.from({ length: count - 1 }, (_, index) => `<div class="member-input"><label>Member ${index + 2} email or Registration ID</label><input class="member-identity" placeholder="Email or Registration ID"></div>`).join('')}` : '';
 }
 async function request(body) {
@@ -28,13 +51,14 @@ async function verifyMember() {
     const data = await request({ action: 'verify', identity });
     state.identity = identity; state.registration = data.registration; state.packages = data.packages;
     $('#memberStatus').innerHTML = `<strong>${esc(data.registration.participant_name)}</strong> · Registration ${esc(data.registration.registration_code)} · Payment verified`;
-    $('#teamForm').hidden = false; $('#teamForm').classList.remove('hidden'); $('#teamDay').value = data.registration.selected_day === 'BOTH' ? '' : data.registration.selected_day; $('#teamPackage').innerHTML = '<option value="">Select a day first</option>'; message('Member verified. Select a day and package.', 'success');
+    $('#teamForm').hidden = false; $('#teamForm').classList.remove('hidden'); $('#teamDay').value = data.registration.selected_day === 'BOTH' ? '' : data.registration.selected_day; renderPackages(); message('Member verified. Select a day and package.', 'success');
   } catch (error) { message(error.message); } finally { button.disabled = false; button.textContent = 'Verify member'; }
 }
 async function submitTeam() {
   const item = selectedPackage(); if (!item) return message('Select a valid day and event team package.');
+  const teamSize = Number($('#teamSize')?.value || 0);
   const members = Array.from(document.querySelectorAll('.member-identity')).map(input => input.value.trim());
-  if (mode === 'create' && members.some(value => !value)) return message(`Enter all ${item.size - 1} other team members.`);
+  if (mode === 'create' && members.some(value => !value)) return message(`Enter all ${teamSize - 1} other team members.`);
   const button = $('#submitTeam'); button.disabled = true; button.textContent = mode === 'create' ? 'Checking members...' : 'Joining...';
   try {
     if (mode === 'create') {
@@ -43,7 +67,7 @@ async function submitTeam() {
       const ineligible = registrations.find(data => data.registration.selected_day !== 'BOTH' && data.registration.selected_day !== selectedDay);
       if (ineligible) throw new Error(`${ineligible.registration.participant_name} is not registered for ${selectedDay.replace('_', ' ')}.`);
     }
-    const data = await request({ action: mode, identity: state.identity, members, day: $('#teamDay').value, package_id: item.id, team_name: $('#teamName')?.value.trim(), team_code: $('#teamCode')?.value.trim() });
+    const data = await request({ action: mode, identity: state.identity, members, day: $('#teamDay').value, package_id: item.id, team_size: teamSize, team_name: $('#teamName')?.value.trim(), team_code: $('#teamCode')?.value.trim() });
     message(data.message, 'success'); if (data.team?.team_code) $('#packageNote').textContent = `Team created. Share this code with your members: ${data.team.team_code}`;
   } catch (error) { message(error.message); } finally { button.disabled = false; button.textContent = mode === 'create' ? 'Create team' : 'Join team'; }
 }
@@ -58,4 +82,5 @@ $('#verifyBtn').onclick = verifyMember;
 $('#submitTeam').onclick = submitTeam;
 $('#teamDay').onchange = () => { renderPackages(); if (mode === 'join') loadTeams(); };
 $('#teamPackage').onchange = () => { renderPackage(); if (mode === 'join') loadTeams(); };
+$('#teamSize')?.addEventListener('change', renderMemberFields);
 $('#teamSearch')?.addEventListener('input', loadTeams);

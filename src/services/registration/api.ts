@@ -211,6 +211,7 @@ export function createTeam(input: TeamCreateInput): Promise<TeamCreateResponse> 
     members: input.members,
     day: input.day,
     package_id: input.packageId,
+    team_size: input.teamSize,
     team_name: input.teamName,
   })
 }
