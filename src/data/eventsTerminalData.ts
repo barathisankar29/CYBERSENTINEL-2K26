@@ -84,7 +84,8 @@ export const ALL_EVENTS: EventSpec[] = [
       coordinator('Carlin Stephen', '3RD', '7305953834'),
       coordinator('Kaaviya Shri', '3RD', '8124678783'),
       coordinator('Jayashree P', '2ND', '8870172622'),
-      coordinator('Ranjeev', '2ND', '9789008691')
+      coordinator('Ranjeev', '2ND', '9789008691'),
+      coordinator('Prathish M')
     ],
     chipLabel: 'UNSAID',
     chipSub: 'MUTE-SIG',
@@ -302,6 +303,7 @@ export const ALL_EVENTS: EventSpec[] = [
     teamSize: '2 - 3 MEMBERS',
     coordinators: [
       coordinator('Pandi Selvan'),
+      coordinator('Sahaya Vilfin', '4TH', '6369534894'),
       coordinator('Kurus Vinglin'),
       coordinator('Sudharshan', '3RD', '7010329140'),
       coordinator('Thoufiq Ahmed', '3RD', '8712334495'),
@@ -366,6 +368,7 @@ export const ALL_EVENTS: EventSpec[] = [
     time: '02:15 PM - 03:15 PM',
     teamSize: '2 - 3 MEMBERS',
     coordinators: [
+      coordinator('Vishnuram', '4TH', '8122647340'),
       coordinator('Lathika M', '3RD', '9498349379'),
       coordinator('Sezhiyan', '3RD', '9363342906'),
       coordinator('Maheshwaran', '2ND', '6382892862'),
