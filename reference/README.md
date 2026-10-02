@@ -1,7 +1,7 @@
 # reference/
 
 `register2/` is the backend team's registration package exactly as supplied
-(`register2 new.zip`, Oct 2026). It is the source of truth for the
+(`register222.zip`, Oct 2026 — adds leader-chosen team size). It is the source of truth for the
 registration contract and is **not** built, served or linted with the site.
 
 - Do not edit it. To take a newer version, replace the folder wholesale.

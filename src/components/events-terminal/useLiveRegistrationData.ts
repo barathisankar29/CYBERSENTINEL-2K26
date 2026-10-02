@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { TEST_REGISTRATION_FEE } from '@/config/registrationTestFee';
 import {
   getRegistrationFees,
   getSpecialEvents,
@@ -88,6 +89,36 @@ export function findSpecialEvent(specialEvents: SpecialEvent[], id: string): Spe
   return code ? specialEvents.find((event) => event.code === code) : undefined;
 }
 
+/**
+ * Customer-facing prices. The backend stores and charges BASE fees
+ * (registration_fees, special_events.fee) and the college payment process
+ * adds 18% GST and rounds UP to the rupee (observed: base 590 -> 696.20 ->
+ * charged 697). The site mirrors that exactly, on the same total the
+ * payment process receives as registration_fee:
+ *   one day 170 -> 201, both days 340 -> 402,
+ *   special 500 -> 590, special 589.83 -> 696.
+ * Display only — every payload keeps sending the backend's base amount.
+ */
+export const GST_PERCENT = 18;
+
+/** A base amount as the payment process charges it: +18% GST (to the paisa), rounded up to the rupee. */
+export function withGst(base: number): number {
+  // TEMPORARY: while a test price is set, it is what the payment process receives.
+  const charged = TEST_REGISTRATION_FEE ?? Number(base);
+  const gstPaise = Math.round((Math.round(charged * 100) * (100 + GST_PERCENT)) / 100);
+  return Math.ceil(gstPaise / 100);
+}
+
+/** Display price for a day registration — GST on the same base total public-register charges. */
+export function dayDisplayPrice(fees: RegistrationFees, day: 'DAY_1' | 'DAY_2' | 'BOTH'): number {
+  return withGst(day === 'BOTH' ? fees.DAY_1 + fees.DAY_2 : fees[day]);
+}
+
+/** Display price for a set of special events — GST on their summed base fees, as charged. */
+export function specialDisplayPrice(events: { fee: number }[]): number {
+  return withGst(events.reduce((sum, event) => sum + Number(event.fee || 0), 0));
+}
+
 export function formatRupees(amount: number): string {
   return `₹${Number.isInteger(amount) ? amount : amount.toFixed(2)}`;
 }
@@ -95,5 +126,5 @@ export function formatRupees(amount: number): string {
 /** Live fee label for a special-event catalog card, or null until loaded / unmapped. */
 export function liveSpecialFeeLabel(specialEvents: SpecialEvent[], eventId: string): string | null {
   const special = findSpecialEvent(specialEvents, eventId);
-  return special ? formatRupees(Number(special.fee)) : null;
+  return special ? formatRupees(withGst(Number(special.fee))) : null;
 }

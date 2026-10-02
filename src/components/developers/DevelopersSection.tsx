@@ -2,17 +2,9 @@ import React, { useState } from 'react'
 import {
   frontendDevelopersData,
   backendDevelopersData,
-  type FrontendDeveloperMember,
-  type DeveloperMember,
 } from '@/data/developers'
-import { CoverflowCarousel } from '@/components/credentials/CoverflowCarousel'
-import { FrontendDeveloperCard } from './FrontendDeveloperCard'
-import { DeveloperGlitchCard } from './DeveloperGlitchCard'
+import { DeveloperMascotPushCarousel, type UnifiedDeveloper } from './DeveloperMascotPushCarousel'
 import './DevelopersSection.css'
-
-export type UnifiedDeveloper =
-  | { type: 'frontend'; data: FrontendDeveloperMember }
-  | { type: 'backend'; data: DeveloperMember }
 
 const barathi = frontendDevelopersData.find((d) => d.id === 'fed-barathi-sankar')!
 const hariharan = backendDevelopersData.find((d) => d.id === 'dev-hariharan-ramesh')!
@@ -55,38 +47,10 @@ export const DevelopersSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Unified Coverflow Carousel combining both Backend and Frontend Developers */}
-        <CoverflowCarousel
-          items={allDevelopers}
-          getKey={(dev) => dev.data.id}
-          getLabel={(dev) => dev.data.name}
-          getItemClassName={(dev) =>
-            dev.type === 'frontend'
-              ? 'infinite-carousel-item--frontend'
-              : 'infinite-carousel-item--backend'
-          }
-          renderItem={(dev, { isActive }) =>
-            dev.type === 'frontend' ? (
-              <FrontendDeveloperCard developer={dev.data} />
-            ) : (
-              <DeveloperGlitchCard developer={dev.data} isActive={isActive} />
-            )
-          }
-          onActiveChange={(_idx, dev) => setActiveDev(dev)}
-          autoDelayMs={4500}
-          xStep={{
-            desktop: 270,
-            mobile: 88,
-          }}
-          variant={`infinite-carousel--developers infinite-carousel--developers-${activeDev.type}`}
-          rewindWhenHidden
-          dimWith="opacity"
-          labels={{
-            prev: 'Previous developer',
-            next: 'Next developer',
-            dots: 'Developers team',
-            dot: (name) => `Show ${name}`,
-          }}
+        {/* Unified Mascot Pushing Carousel with all 5 Operatives */}
+        <DeveloperMascotPushCarousel
+          developers={allDevelopers}
+          onActiveChange={setActiveDev}
         />
       </div>
     </div>

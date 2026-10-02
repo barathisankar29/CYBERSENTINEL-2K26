@@ -8,7 +8,10 @@ import {
   type CheckRegistrationResponse
 } from '@/services/registration';
 import { sound } from '../sound';
-import { Check, Copy, CreditCard, Download, Printer, QrCode, Search, ShieldCheck, Users } from 'lucide-react';
+import { formatRupees, withGst } from '../useLiveRegistrationData';
+import { RegistrationStatusDialog } from '../RegistrationStatusDialog';
+import { OUTCOME_COPY, registrationOutcome } from '../registrationStatus';
+import { AlertTriangle, Check, CheckCircle2, Copy, CreditCard, Download, Printer, QrCode, Search, ShieldCheck, Users, XCircle } from 'lucide-react';
 
 interface FavoritesScreenProps {
   onSelectModule?: (mod: ModuleId) => void;
@@ -22,11 +25,11 @@ const DAY_LABELS: Record<string, string> = {
   SPECIAL: 'SPECIAL EVENTS'
 };
 
-function statusTone(status?: string) {
-  if (status === 'VERIFIED' || status === 'CONFIRMED') return 'text-[#00ff66] border-[#00ff66] bg-[#00ff66]/10';
-  if (status === 'REJECTED') return 'text-[#ff4d6d] border-[#ff4d6d] bg-[#ff4d6d]/10';
-  return 'text-[#ffee00] border-[#ffee00] bg-[#ffee00]/10';
-}
+const OUTCOME_TONE = {
+  success: 'text-[#6ee7b7] border-[#34d399] bg-[#34d399]/10',
+  pending: 'text-[#fcd34d] border-[#fbbf24] bg-[#fbbf24]/10',
+  failed: 'text-[#fda4af] border-[#fb7185] bg-[#fb7185]/10'
+} as const;
 
 /**
  * Official entry QR, drawn from the backend's `qr_url` (only present once
@@ -138,6 +141,10 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
   // The email the shown record was looked up with — what checking.js sends to the payment process.
   const [recordEmail, setRecordEmail] = useState('');
   const [paying, setPaying] = useState(false);
+  // Outcome popup — opened after every successful lookup (manual, or the
+  // automatic one when returning from payment / refreshing).
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const recordRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
   const copyTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -147,6 +154,7 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
     try {
       setRecord(await checkRegistration(lookupEmail, lookupPhone));
       setRecordEmail(lookupEmail);
+      setDialogOpen(true);
     } catch (err) {
       setRecord(null);
       setError(err instanceof Error ? err.message : 'Unable to check registration.');
@@ -187,7 +195,13 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
   };
 
   const paymentStatus = record?.payment?.status ?? 'PENDING';
-  const isVerified = record?.payment?.status === 'VERIFIED' && record.registration.status === 'CONFIRMED';
+  // GST-inclusive amount, on the same recorded base that Pay Payment sends
+  // (display only — the payload is unchanged, exactly as checking.js).
+  const displayAmount = record?.payment ? withGst(record.payment.amount) : null;
+  const amountLabel = displayAmount === null ? '—' : `${formatRupees(displayAmount)} incl. GST`;
+  const outcome = record ? registrationOutcome(record) : null;
+  const outcomeCopy = outcome ? OUTCOME_COPY[outcome] : null;
+  const isVerified = outcome === 'success';
   const canCreateTeam = isVerified && record?.registration.selected_day !== 'SPECIAL' && !record?.team;
 
   // register2 checking.js "Pay Payment": shown until payment is VERIFIED.
@@ -205,6 +219,12 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
     }
   };
 
+  const viewRecord = () => {
+    sound.playNavClick();
+    setDialogOpen(false);
+    requestAnimationFrame(() => recordRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  };
+
   const triggerReceiptDownload = () => {
     if (!record) return;
     const lines = [
@@ -218,7 +238,7 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
       `DEPARTMENT       : ${record.participant.department}`,
       `REGISTERED FOR   : ${DAY_LABELS[record.registration.selected_day] ?? record.registration.selected_day}`,
       `REGISTRATION     : ${record.registration.status}`,
-      `PAYMENT          : ${paymentStatus}${record.payment ? ` (₹${record.payment.amount})` : ''}`,
+      `PAYMENT          : ${paymentStatus}${displayAmount !== null ? ` (${amountLabel})` : ''}`,
       `UTR              : ${record.payment?.utr_masked || 'Hidden'}`,
       ...(record.special_events.length
         ? [`SPECIAL EVENTS   : ${record.special_events.map((ev) => ev.name).join(', ')}`]
@@ -242,6 +262,26 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
 
   return (
     <div className="w-full relative" data-purpose="registrations-vault-content">
+      {record && outcome && dialogOpen && (
+        <RegistrationStatusDialog
+          outcome={outcome}
+          registrationCode={record.registration.registration_code}
+          primary={
+            outcome === 'success'
+              ? { label: 'VIEW REGISTRATION', onClick: viewRecord }
+              : {
+                  label: outcome === 'failed' ? 'PAY AGAIN' : 'COMPLETE PAYMENT',
+                  onClick: () => void handlePay(),
+                  busy: paying,
+                  busyLabel: 'PREPARING PAYMENT...'
+                }
+          }
+          secondary={
+            outcome === 'success' ? undefined : { label: outcome === 'failed' ? 'VIEW REGISTRATION' : 'CHECK REGISTRATION', onClick: viewRecord }
+          }
+          onClose={() => setDialogOpen(false)}
+        />
+      )}
       {/* Header Dither Bar */}
       <section className="pixel-dither-bar h-12 w-full flex items-center justify-between px-4 mb-6 select-none">
         <h1 className="font-pixel text-black text-xs sm:text-lg tracking-wider font-extrabold flex items-center gap-3">
@@ -335,13 +375,17 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
                 <span className="text-gray-400 text-[10px] font-silkscreen block">PAYMENT STATUS</span>
                 <span
                   className={`font-bold text-sm flex items-center gap-1.5 ${
-                    isVerified ? 'text-[#00ff66]' : paymentStatus === 'REJECTED' ? 'text-[#ff4d6d]' : 'text-[#ffee00]'
+                    outcome === 'success' ? 'text-[#6ee7b7]' : outcome === 'failed' ? 'text-[#fda4af]' : 'text-[#fcd34d]'
                   }`}
                 >
-                  <ShieldCheck className="w-4 h-4" /> {paymentStatus.replace('_', ' ')}
+                  <ShieldCheck className="w-4 h-4" /> {outcomeCopy?.paymentLabel}
                 </span>
               </div>
-              <span className="text-gray-500 text-[10px] font-silkscreen">{record.registration.status}</span>
+              <span className="text-gray-500 text-[10px] font-silkscreen text-right">
+                REGISTRATION
+                <br />
+                {outcomeCopy?.registrationLabel}
+              </span>
             </div>
 
             <button
@@ -363,7 +407,7 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
 
           <div className="space-y-4">
             {/* Pass card */}
-            <div className="border-2 border-[#2d123d] hover:border-[#9933ff] bg-[#07050a] p-4 transition-all shadow-sm flex flex-col space-y-3">
+            <div ref={recordRef} className="scroll-mt-4 border-2 border-[#2d123d] hover:border-[#9933ff] bg-[#07050a] p-4 transition-all shadow-sm flex flex-col space-y-3">
               <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-[#1e0f2b]">
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="font-pixel text-xs sm:text-sm text-[#ffee00] tracking-wider break-all">
@@ -379,9 +423,11 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
                   </button>
                 </div>
                 <span
-                  className={`inline-flex items-center gap-1.5 px-2 py-0.5 border text-[10px] font-silkscreen font-bold ${statusTone(paymentStatus)}`}
+                  className={`inline-flex items-center gap-1.5 px-2 py-0.5 border text-[10px] font-silkscreen font-bold ${
+                    outcome ? OUTCOME_TONE[outcome] : ''
+                  }`}
                 >
-                  {isVerified ? 'CONFIRMED // ACTIVE PASS' : `PAYMENT ${paymentStatus.replace('_', ' ')}`}
+                  {isVerified ? 'CONFIRMED // ACTIVE PASS' : `PAYMENT ${outcomeCopy?.paymentLabel}`}
                 </span>
               </div>
 
@@ -422,7 +468,7 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
                 </div>
                 <div>
                   <span className="text-gray-500 text-[9px] block">AMOUNT</span>
-                  <span className="text-[#00ffff]">{record.payment ? `₹${record.payment.amount}` : '—'}</span>
+                  <span className="text-[#00ffff]">{amountLabel}</span>
                 </div>
                 <div>
                   <span className="text-gray-500 text-[9px] block">UTR</span>
@@ -430,15 +476,35 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
                 </div>
               </div>
 
-              {!isVerified && paymentStatus !== 'REJECTED' && (
-                <p className="text-[11px] font-mono text-gray-400">
-                  Your QR will appear after payment verification. If you have not completed payment yet, use Pay Payment below.
-                </p>
-              )}
-              {paymentStatus === 'REJECTED' && (
-                <p className="text-[11px] font-mono text-[#ff8fa3]">
-                  Your payment could not be verified. Please contact the organizing team.
-                </p>
+              {outcome && outcomeCopy && (
+                <div className={`border p-3 flex flex-col gap-2 ${OUTCOME_TONE[outcome]}`} data-purpose="status-panel" data-outcome={outcome}>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div className="bg-black/40 border border-[#2d123d] px-3 py-2">
+                      <span className="block text-[9px] font-silkscreen text-gray-400 tracking-wider">REGISTRATION STATUS</span>
+                      <span className="flex items-center gap-1.5 font-pixel text-xs text-[#6ee7b7] tracking-wider mt-0.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                        REGISTRATION {outcomeCopy.registrationLabel}
+                      </span>
+                    </div>
+                    <div className="bg-black/40 border border-[#2d123d] px-3 py-2">
+                      <span className="block text-[9px] font-silkscreen text-gray-400 tracking-wider">PAYMENT STATUS</span>
+                      <span className="flex items-center gap-1.5 font-pixel text-xs tracking-wider mt-0.5">
+                        {outcome === 'success' ? (
+                          <CheckCircle2 className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                        ) : outcome === 'failed' ? (
+                          <XCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                        ) : (
+                          <AlertTriangle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                        )}
+                        PAYMENT {outcomeCopy.paymentLabel}
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-[11px] font-mono text-gray-300 leading-relaxed">
+                    {outcomeCopy.message}
+                    {outcome === 'success' ? ' Your entry QR is below.' : ' Your entry QR appears once payment is verified.'}
+                  </p>
+                </div>
               )}
 
               {paymentStatus !== 'VERIFIED' && (
@@ -450,7 +516,7 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
                   data-purpose="pay-payment-btn"
                 >
                   <CreditCard className="w-3.5 h-3.5" />
-                  <span>{paying ? 'PREPARING PAYMENT...' : 'PAY PAYMENT'}</span>
+                  <span>{paying ? 'PREPARING PAYMENT...' : outcome === 'failed' ? 'PAY AGAIN' : 'COMPLETE PAYMENT'}</span>
                 </button>
               )}
 

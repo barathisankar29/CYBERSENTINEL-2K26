@@ -23,6 +23,13 @@ interface TeamCreationScreenProps {
 const DAY_LABELS: Record<TeamDay, string> = { DAY_1: 'DAY 1', DAY_2: 'DAY 2' };
 
 type Leader = { identity: string; data: TeamVerifyResponse };
+
+/** register2 team.js sizeLabel: "2 members" or "2-3 members". */
+function sizeLabel(item: TeamPackage): string {
+  return item.min_size === item.max_size
+    ? `${item.min_size} member${item.min_size === 1 ? '' : 's'}`
+    : `${item.min_size}-${item.max_size} members`;
+}
 type CreatedTeam = TeamCreateResponse['team'] & { members: { name: string; code: string; role: 'LEADER' | 'MEMBER' }[] };
 
 /**
@@ -44,6 +51,8 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
   const [teamName, setTeamName] = useState('');
   const [day, setDay] = useState<TeamDay | ''>('');
   const [packageId, setPackageId] = useState('');
+  // Leader-chosen team size within the package's range (team-management `team_size`).
+  const [teamSize, setTeamSize] = useState(0);
   const [members, setMembers] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -68,8 +77,19 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
       list[0];
     setDay(nextDay);
     setPackageId(pkg?.id ?? '');
-    setMembers(Array.from({ length: Math.max((pkg?.size ?? 0) - 1, 0) }, () => ''));
+    const size = pkg?.min_size ?? 0;
+    setTeamSize(size);
+    setMembers(Array.from({ length: Math.max(size - 1, 0) }, () => ''));
   };
+
+  // Changing the size keeps what was already typed for the remaining members.
+  const chooseSize = (size: number) => {
+    setTeamSize(size);
+    setMembers((prev) => Array.from({ length: Math.max(size - 1, 0) }, (_, i) => prev[i] ?? ''));
+  };
+  const sizeOptions = selectedPackage
+    ? Array.from({ length: selectedPackage.max_size - selectedPackage.min_size + 1 }, (_, i) => selectedPackage.min_size + i)
+    : [];
 
   const verifyLeader = async (value: string) => {
     const trimmed = value.trim();
@@ -105,7 +125,8 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
     if (!leader || !day || !selectedPackage) return fail('Select a valid day and event team package.');
     if (!teamName.trim()) return fail('Enter a team name.');
     const memberIds = members.map((value) => value.trim());
-    if (memberIds.some((value) => !value)) return fail(`Enter all ${selectedPackage.size - 1} other team members.`);
+    if (!teamSize) return fail('Choose a team size.');
+    if (memberIds.some((value) => !value)) return fail(`Enter all ${teamSize - 1} other team members.`);
 
     setErrorMsg(null);
     setSubmitting(true);
@@ -123,6 +144,7 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
         members: memberIds,
         day,
         packageId: selectedPackage.id,
+        teamSize,
         teamName: teamName.trim()
       });
       sound.playSuccess();
@@ -170,9 +192,11 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
           <div className="bg-[#07050d] border border-[#2d123d] p-3 flex flex-col justify-between">
             <span className="text-gray-400 text-[9px] sm:text-[10px] font-silkscreen block tracking-wider">[TEAM SIZE]</span>
             <span className="font-pixel text-[#ff007f] text-xs sm:text-sm font-bold truncate mt-1">
-              {selectedPackage ? `EXACTLY ${selectedPackage.size} MEMBERS` : '—'}
+              {selectedPackage ? `${teamSize} MEMBERS` : '—'}
             </span>
-            <span className="text-[9px] font-mono text-gray-400 mt-0.5">LEADER + {Math.max((selectedPackage?.size ?? 1) - 1, 0)} MEMBERS</span>
+            <span className="text-[9px] font-mono text-gray-400 mt-0.5">
+              {selectedPackage ? `LEADER + ${Math.max(teamSize - 1, 0)} MEMBERS · ALLOWED ${sizeLabel(selectedPackage).toUpperCase()}` : 'LEADER + MEMBERS'}
+            </span>
           </div>
 
           <div className="bg-[#07050d] border border-[#2d123d] p-3 flex flex-col justify-between">
@@ -314,7 +338,7 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
             {/* ===== Step 2: configure team ===== */}
             {leader && (
               <form onSubmit={handleCreate} className="space-y-4 pt-1 font-oswald font-medium" data-purpose="team-creation-form">
-                <div className="bg-[#0a0614] border border-[#2d1b46] p-3 grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <div className="bg-[#0a0614] border border-[#2d1b46] p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
                   <div>
                     <label htmlFor="team-name" className="text-slate-200 font-oswald font-medium text-sm tracking-wider flex items-center gap-1.5 mb-1">
                       <Award className="w-4 h-4 text-[#ff007f]" />
@@ -358,7 +382,26 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
                       {day && packages.length === 0 && <option value="">No team packages on this day</option>}
                       {packages.map((item) => (
                         <option key={item.id} value={item.id}>
-                          {item.events.map((ev) => ev.name).join(' + ')} · {item.size} members
+                          {item.events.map((ev) => ev.name).join(' + ')} · {sizeLabel(item)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="team-size" className="text-slate-200 font-oswald font-medium text-sm tracking-wider block mb-1">
+                      TEAM SIZE
+                    </label>
+                    <select
+                      id="team-size"
+                      value={teamSize || ''}
+                      onChange={(e) => chooseSize(Number(e.target.value))}
+                      disabled={!selectedPackage}
+                      className="w-full bg-black border border-[#7c3aed] text-white px-3 py-2 text-sm font-oswald font-medium tracking-wide focus:border-[#00ffff] focus:outline-hidden cursor-pointer disabled:opacity-50"
+                    >
+                      {!selectedPackage && <option value="">Select a package first</option>}
+                      {sizeOptions.map((size) => (
+                        <option key={size} value={size}>
+                          {size} members
                         </option>
                       ))}
                     </select>
@@ -367,7 +410,7 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
 
                 {selectedPackage && (
                   <p className="text-xs sm:text-sm font-oswald font-medium tracking-wider text-[#00ffff] px-1">
-                    THIS TEAM IS ONLY FOR: {eventNames}. EXACTLY {selectedPackage.size} MEMBERS REQUIRED.
+                    THIS TEAM IS ONLY FOR: {eventNames}. CHOOSE {sizeLabel(selectedPackage).toUpperCase()}.
                   </p>
                 )}
 

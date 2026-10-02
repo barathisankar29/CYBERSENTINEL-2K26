@@ -1,3 +1,4 @@
+import { TEST_REGISTRATION_FEE } from '@/config/registrationTestFee'
 import { functionUrl, registrationConfig, rpcUrl } from './config'
 import type {
   ActiveEvent,
@@ -137,7 +138,8 @@ export function submitToPaymentProcess({ email, day, registrationFee }: PaymentP
   const fields: [string, string][] = [
     ['email', email],
     ['day', day],
-    ['registration_fee', String(registrationFee)],
+    // TEMPORARY test price (src/config/registrationTestFee.ts) while it is set.
+    ['registration_fee', String(TEST_REGISTRATION_FEE ?? registrationFee)],
   ]
   const form = document.createElement('form')
   form.method = 'POST'
@@ -209,6 +211,7 @@ export function createTeam(input: TeamCreateInput): Promise<TeamCreateResponse> 
     members: input.members,
     day: input.day,
     package_id: input.packageId,
+    team_size: input.teamSize,
     team_name: input.teamName,
   })
 }

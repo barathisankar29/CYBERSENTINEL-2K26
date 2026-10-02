@@ -2,7 +2,11 @@ import React, { useEffect, useMemo, useState } from 'react';
 import type { CharacterId } from '@/types/characterProfile';
 import { characterProfiles } from '@/data/characterProfiles';
 import {
+  checkRegistration,
   getActiveEvents,
+  getLastRegistration,
+  resolvePaymentAmount,
+  type CheckRegistrationResponse,
   saveLastRegistration,
   submitRegistration,
   submitToPaymentProcess,
@@ -11,8 +15,17 @@ import {
 } from '@/services/registration';
 import { recordBackendRegistration } from '@/utils/eventRegistration';
 import { sound } from './sound';
-import { formatRupees, useLiveRegistrationData } from './useLiveRegistrationData';
+import {
+  dayDisplayPrice,
+  formatRupees,
+  GST_PERCENT,
+  specialDisplayPrice,
+  useLiveRegistrationData,
+  withGst
+} from './useLiveRegistrationData';
 import { useMascot } from '@/components/mascot';
+import { RegistrationStatusDialog } from './RegistrationStatusDialog';
+import { registrationOutcome } from './registrationStatus';
 
 export interface RegistrationPortalInitialData {
   dayType?: RegistrationDay;
@@ -100,7 +113,8 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
 
   // Special events (backend codes) if SPECIAL is selected
   const [selectedSpecialCodes, setSelectedSpecialCodes] = useState<string[]>(
-    initialData?.dayType === 'SPECIAL' ? initialData.specialEventCodes ?? [] : []
+    // One special event per registration (there is no combined special package).
+    initialData?.dayType === 'SPECIAL' ? (initialData.specialEventCodes ?? []).slice(0, 1) : []
   );
 
   // Day events (rest/v1/events, ACTIVE only) and the participant's picks.
@@ -141,6 +155,50 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
     setSelectedEventIds((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
   };
 
+  // Returning visitor: if this browser already submitted a registration
+  // (cs_last_registration, saved before the payment redirect), look it up
+  // with the read-only check-registration and say where it stands — so an
+  // unpaid registration is finished instead of registered a second time.
+  // public-register is never called here.
+  const [returning, setReturning] = useState<{ email: string; record: CheckRegistrationResponse } | null>(null);
+  const [returningPaying, setReturningPaying] = useState(false);
+
+  useEffect(() => {
+    const last = getLastRegistration();
+    if (!last?.email || !last.phone) return;
+    let cancelled = false;
+    checkRegistration(last.email, last.phone)
+      .then((record) => {
+        if (!cancelled) setReturning({ email: last.email, record });
+      })
+      .catch(() => {
+        // No record (or lookup unavailable): just show the normal form.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const payReturning = async () => {
+    if (!returning || returningPaying) return;
+    sound.playNavClick();
+    setReturningPaying(true);
+    try {
+      const registrationFee = await resolvePaymentAmount(returning.record);
+      submitToPaymentProcess({ email: returning.email, day: returning.record.registration.selected_day, registrationFee });
+    } catch (error) {
+      setReturningPaying(false);
+      setReturning(null);
+      showError(error instanceof Error ? error.message : 'Unable to determine the payment amount.');
+    }
+  };
+
+  const openRegistrations = () => {
+    sound.playNavClick();
+    setReturning(null);
+    onNavigateToRegistrations();
+  };
+
   // Alert & submission state
   const [alertInfo, setAlertInfo] = useState<{ type: 'error' | 'success'; message: string; regId?: string } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -156,23 +214,22 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
     };
   }, []);
 
-  // Fee from the backend's own fee tables — the same numbers public-register charges.
+  // Customer-facing (GST-inclusive) price from the backend's own base fees.
+  // Display only: public-register still charges the base and returns it as
+  // registration_fee, which is what goes to the payment process.
   const getFeeAmount = (): number | null => {
     if (selectedDay === 'SPECIAL') {
       if (!specialEvents.length) return null;
-      return specialEvents
-        .filter((event) => selectedSpecialCodes.includes(event.code))
-        .reduce((sum, event) => sum + Number(event.fee || 0), 0);
+      return specialDisplayPrice(specialEvents.filter((event) => selectedSpecialCodes.includes(event.code)));
     }
     if (!fees) return null;
-    if (selectedDay === 'BOTH') return fees.DAY_1 + fees.DAY_2;
-    return fees[selectedDay];
+    return dayDisplayPrice(fees, selectedDay);
   };
   const feeAmount = getFeeAmount();
   const feeDisplay = feeAmount === null ? '—' : formatRupees(feeAmount);
 
   const toggleSpecialEvent = (code: string) => {
-    setSelectedSpecialCodes((prev) => (prev.includes(code) ? prev.filter((item) => item !== code) : [...prev, code]));
+    setSelectedSpecialCodes([code]);
   };
 
   const showError = (message: string) => {
@@ -243,7 +300,7 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
           {
             id: `${characterId}-${selectedDay.toLowerCase()}`,
             label: (fromPack && initialData?.packLabel) || selectedDay.replace('_', ' '),
-            price: result.registration_fee ?? feeAmount ?? 0,
+            price: feeAmount ?? withGst(result.registration_fee),
             events: eventNames
           },
           result.registration_code,
@@ -308,6 +365,36 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
       className="fixed inset-0 z-50 bg-[#05010a] text-gray-200 overflow-y-auto selection:bg-[#ff007f] selection:text-white flex flex-col justify-between"
       data-purpose="fullscreen-registration-portal"
     >
+      {returning && (() => {
+        const outcome = registrationOutcome(returning.record);
+        return (
+          <RegistrationStatusDialog
+            outcome={outcome}
+            registrationCode={returning.record.registration.registration_code}
+            title={outcome === 'success' ? 'ALREADY REGISTERED' : outcome === 'failed' ? 'PAYMENT FAILED' : 'REGISTRATION FOUND'}
+            message={
+              outcome === 'success'
+                ? 'Your CyberSentinel 2K26 registration has been completed successfully. View it for your entry QR, or close this to register for another day.'
+                : outcome === 'failed'
+                  ? 'Your registration was created successfully, but the payment was not completed successfully. Please complete the payment again to confirm your registration.'
+                  : 'Registration has been created successfully, but your payment is still pending. Please complete the pending payment to finish your registration.'
+            }
+            primary={
+              outcome === 'success'
+                ? { label: 'VIEW REGISTRATION', onClick: openRegistrations }
+                : {
+                    label: outcome === 'failed' ? 'PAY AGAIN' : 'COMPLETE PAYMENT',
+                    onClick: () => void payReturning(),
+                    busy: returningPaying,
+                    busyLabel: 'PREPARING PAYMENT...'
+                  }
+            }
+            secondary={outcome === 'success' ? undefined : { label: 'CHECK REGISTRATION', onClick: openRegistrations }}
+            onClose={() => setReturning(null)}
+          />
+        );
+      })()}
+
       <header className="w-full bg-[#0a0314] border-b-2 border-[#2d123d] px-3 sm:px-8 py-3.5 flex items-center justify-between gap-2 sticky top-0 z-40 backdrop-blur-md">
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           <div className="shrink-0 w-8 h-8 bg-[#9333ea] border border-[#c084fc] flex items-center justify-center font-silkscreen text-white font-bold text-sm shadow-[0_0_10px_rgba(147,51,234,0.5)]">
@@ -525,7 +612,7 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
                       }`}
                     >
                       <input
-                        type="checkbox"
+                        type="radio"
                         name="special_event"
                         value={event.code}
                         checked={checked}
@@ -538,7 +625,7 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
                       <span className="flex flex-col">
                         <span className="font-pixel text-xs text-white uppercase">{event.name}</span>
                         <span className="text-[10px] font-mono text-gray-400">
-                          {event.description || 'Special event'} • {formatRupees(Number(event.fee))}
+                          {event.description || 'Special event'} • {formatRupees(withGst(Number(event.fee)))}
                         </span>
                       </span>
                     </label>
@@ -551,6 +638,7 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
               <div className="border-b sm:border-b-0 sm:border-r border-[#2d123d] pb-2 sm:pb-0 sm:pr-3">
                 <small className="block text-[10px] font-silkscreen text-gray-400 uppercase mb-0.5">Registration Fee</small>
                 <div className="font-pixel text-xl sm:text-2xl text-[#38bdf8] font-bold" id="fee">{feeDisplay}</div>
+                <small className="block text-[10px] font-mono text-gray-500 mt-0.5">Incl. {GST_PERCENT}% GST</small>
               </div>
               <div className="border-b sm:border-b-0 sm:border-r border-[#2d123d] pb-2 sm:pb-0 sm:pr-3">
                 <small className="block text-[10px] font-silkscreen text-gray-400 uppercase mb-0.5">Payment</small>
