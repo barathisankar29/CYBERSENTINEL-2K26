@@ -27,7 +27,7 @@ export const brandingStripLogos: BrandingStripLogo[] = [
     id: 'vel-tech',
     src: '/assets/branding/vel-tech-high-tech-logo-v2.webp',
     alt: 'Vel Tech High Tech Dr. Rangarajan Dr. Sakunthala Engineering College',
-    width: 1220,
+    width: 1420,
     height: 360,
   },
   { id: 'nba', src: '/assets/branding/nba-logo.webp', alt: 'National Board of Accreditation', width: 227, height: 228 },
