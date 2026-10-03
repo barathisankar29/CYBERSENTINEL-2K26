@@ -59,3 +59,22 @@
   }
 }
 
+/* Big screens / laptop view: wide horizontal landscape card matching user template */
+@media (min-width: 960px) {
+  .neon-splatter-card {
+    max-width: 960px;
+    min-height: 440px;
+    padding: 0.65rem;
+  }
+
+  .neon-splatter-card__inner {
+    min-height: 420px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2.2rem 3rem;
+    gap: 2.5rem;
+    border-radius: 28px;
+  }
+}
+
