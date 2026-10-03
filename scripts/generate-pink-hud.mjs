@@ -30,8 +30,8 @@ async function renderPinkSimpleBanner() {
 
   const cx = 185;
   const cy = 180;
-  const sealSize = 226;
-  const circleRadius = 138;
+  const sealSize = 270;       // Big logo seal completely filling the circle
+  const circleRadius = 136;   // Clean single ring hugging the seal snugly (zero empty gap)
 
   const boxLeft = 340;
   const boxRight = 1370;
@@ -116,7 +116,7 @@ async function renderPinkSimpleBanner() {
       </filter>
     </defs>
 
-    <!-- 1. LEFT PORTAL: Clean Single Glowing Ring (extra concentric circle removed) -->
+    <!-- 1. LEFT PORTAL: Clean Single Glowing Ring (snugly hugging the enlarged seal) -->
     <g filter="url(#neonPink)">
       <circle cx="${cx}" cy="${cy}" r="${circleRadius}" fill="none" stroke="url(#pinkPortalGrad)" stroke-width="2.8" opacity="0.95" />
     </g>
@@ -261,7 +261,7 @@ async function renderPinkSimpleBanner() {
   await sharp(webpBuffer).toFile(targetLogoV2Webp);
   await sharp(webpBuffer).toFile(targetFullLogoV2Webp);
 
-  console.log('Successfully generated updated pink logo banner with single circle and prominent second line!');
+  console.log('Successfully generated updated pink logo banner!');
 }
 
 renderPinkSimpleBanner().catch(console.error);
