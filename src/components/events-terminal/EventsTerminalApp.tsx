@@ -183,6 +183,16 @@ export function EventsTerminalApp({
     setActiveModule('team');
   };
 
+  // Where the primary back control leads (none on the home and events-list screens).
+  const backTarget: { module: ModuleId; label: string } | null =
+    activeModule === 'firmware'
+      ? { module: 'compete', label: 'BACK TO EVENTS' }
+      : activeModule === 'favorites' || activeModule === 'team'
+        ? selectedEvent
+          ? { module: 'firmware', label: 'BACK TO EVENT' }
+          : { module: 'compete', label: 'BACK TO EVENTS' }
+        : null;
+
   // Frame color treatments:
   // home → PURPLE, compete → PINK, firmware → PURPLE,
   // favorites → RADIANCE, team → RADIANCE (matching favorites)
@@ -225,16 +235,35 @@ export function EventsTerminalApp({
           } as React.CSSProperties
         }
       >
-        {/* Way back to the main CyberSentinel site (the reference is a closed
-            single-page app), styled in the terminal's own pixel language. */}
-        <Link
-          to="/#buildings"
-          onClick={() => sound.playNavClick()}
-          className="self-start mb-2 px-2.5 py-1 font-silkscreen text-[10px] text-gray-400 border border-[#333] hover:text-white hover:border-[#ff007f] transition-colors"
-          title="Exit terminal, return to CyberSentinel city"
-        >
-          ‹ EXIT TO CITY
-        </Link>
+        <div className="self-start mb-2 flex flex-wrap items-center gap-2">
+          {/* Way back to the main CyberSentinel site (the reference is a closed
+              single-page app), styled in the terminal's own pixel language. */}
+          <Link
+            to="/#buildings"
+            onClick={() => sound.playNavClick()}
+            className="px-2.5 py-1 font-silkscreen text-[10px] text-gray-400 border border-[#333] hover:text-white hover:border-[#ff007f] transition-colors"
+            title="Exit terminal, return to CyberSentinel city"
+            data-purpose="back-to-city"
+          >
+            ‹ EXIT TO CITY
+          </Link>
+
+          {/* Back up the events flow — event page -> events list;
+              checking / team -> the event the visitor came from. */}
+          {backTarget && (
+            <button
+              type="button"
+              onClick={() => {
+                sound.playNavClick();
+                setActiveModule(backTarget.module);
+              }}
+              className="px-3 py-1.5 font-silkscreen text-[11px] sm:text-xs text-[#ff007f] border-2 border-[#ff007f] bg-[#ff007f]/10 hover:bg-[#ff007f] hover:text-white shadow-[0_0_8px_rgba(255,0,127,0.35)] transition-colors cursor-pointer"
+              data-purpose="back-to-event"
+            >
+              ← {backTarget.label}
+            </button>
+          )}
+        </div>
 
         <RetroNav activeModule={activeModule} onSelectModule={setActiveModule} />
 
@@ -300,6 +329,7 @@ export function EventsTerminalApp({
         {portalData && (
           <RegistrationPortalPage
             initialData={portalData}
+            backLabel={!flowFromRoute && activeModule === 'firmware' ? 'BACK TO EVENT' : 'BACK TO EVENTS'}
             onClose={handlePortalClose}
             onNavigateToRegistrations={handlePortalNavigateToRegistrations}
           />

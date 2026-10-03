@@ -226,7 +226,11 @@ export function useJourneyProgress({ active, breakpoints, reducedMotion }: UseJo
   useEffect(() => {
     if (!active) return
 
+    // Touch: on phones the journey is a horizontal story — swipe LEFT for
+    // the next stop, RIGHT for the previous one (vertical swipes still step
+    // too). The dominant axis of the gesture decides which one it is.
     let touchStartY: number | null = null
+    let touchStartX: number | null = null
 
     const onWheel = (event: WheelEvent) => {
       const target = event.target as HTMLElement | null
@@ -246,27 +250,38 @@ export function useJourneyProgress({ active, breakpoints, reducedMotion }: UseJo
       const target = event.target as HTMLElement | null
       if (!target?.closest('.timeline-journey')) return
       touchStartY = event.touches[0]?.clientY ?? null
+      touchStartX = event.touches[0]?.clientX ?? null
     }
     const onTouchMove = (event: TouchEvent) => {
       const target = event.target as HTMLElement | null
       if (!target?.closest('.timeline-journey')) return
 
-      if (touchStartY !== null) {
-        const currentY = event.touches[0]?.clientY ?? touchStartY
-        const delta = touchStartY - currentY
+      if (touchStartY !== null && touchStartX !== null) {
+        const deltaX = touchStartX - (event.touches[0]?.clientX ?? touchStartX)
+        const deltaY = touchStartY - (event.touches[0]?.clientY ?? touchStartY)
+        // Horizontal drags always stay with the journey (no page pan,
+        // no browser back/forward swipe).
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+          event.preventDefault()
+          return
+        }
         const bps = breakpointsRef.current
-        if (stepIndexRef.current <= 0 && delta < 0) return
-        if (stepIndexRef.current >= bps.length - 1 && delta > 0) return
+        if (stepIndexRef.current <= 0 && deltaY < 0) return
+        if (stepIndexRef.current >= bps.length - 1 && deltaY > 0) return
       }
 
       event.preventDefault()
     }
     const onTouchEnd = (event: TouchEvent) => {
-      if (touchStartY === null) return
-      const endY = event.changedTouches[0]?.clientY ?? touchStartY
-      const delta = touchStartY - endY
+      if (touchStartY === null || touchStartX === null) return
+      const deltaY = touchStartY - (event.changedTouches[0]?.clientY ?? touchStartY)
+      const deltaX = touchStartX - (event.changedTouches[0]?.clientX ?? touchStartX)
       touchStartY = null
+      touchStartX = null
+      const horizontal = Math.abs(deltaX) > Math.abs(deltaY)
+      const delta = horizontal ? deltaX : deltaY
       if (Math.abs(delta) < SWIPE_THRESHOLD_PX) return
+      // Swipe left (finger moves left, deltaX > 0) / up -> next stop.
       step(delta > 0 ? 1 : -1)
     }
     const onKeyDown = (event: KeyboardEvent) => {

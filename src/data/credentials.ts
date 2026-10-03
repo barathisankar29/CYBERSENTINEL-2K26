@@ -96,7 +96,8 @@ export const coConvenorsData: CredentialMember[] = [
 /**
  * Student Coordinators
  */
-// Display order is the committee hierarchy.
+// Display order is the committee hierarchy: President, Vice President,
+// Secretary, Joint Secretary (x2), Treasurers.
 export const studentCoordinatorsData: CredentialMember[] = [
   {
     id: 'devanand-v',
@@ -117,16 +118,6 @@ export const studentCoordinatorsData: CredentialMember[] = [
     instagram: 'https://www.instagram.com/itz_me_.nikki/',
     linkedin: 'https://www.linkedin.com/in/nihitha-thulasimuthu-1917a432a/',
     accentColor: 'green',
-  },
-  {
-    id: 'akshaya-m',
-    name: 'AKSHAYA M',
-    role: 'Treasury // Student Coordinator',
-    phone: '+91 9940888882',
-    image: '/assets/credentials/student_akshaya_m.webp',
-    instagram: 'https://www.instagram.com/akshaya_mhaa/',
-    linkedin: 'https://www.linkedin.com/in/akshaya-mhaa/',
-    accentColor: 'pink',
   },
   {
     id: 'prathish-m',
@@ -159,9 +150,19 @@ export const studentCoordinatorsData: CredentialMember[] = [
     accentColor: 'pink',
   },
   {
+    id: 'akshaya-m',
+    name: 'AKSHAYA M',
+    role: 'Treasurer // Student Coordinator',
+    phone: '+91 9940888882',
+    image: '/assets/credentials/student_akshaya_m.webp',
+    instagram: 'https://www.instagram.com/akshaya_mhaa/',
+    linkedin: 'https://www.linkedin.com/in/akshaya-mhaa/',
+    accentColor: 'pink',
+  },
+  {
     id: 'rishikesh',
     name: 'RISHIKESH',
-    role: 'Treasury // Student Coordinator',
+    role: 'Treasurer // Student Coordinator',
     phone: '+91 8778286011',
     image: '/assets/credentials/student_rishikesh.webp',
     instagram: 'https://www.instagram.com/_.rishikx._/',
@@ -194,11 +195,10 @@ export const editorsData: CredentialMember[] = [
   },
   {
     id: 'bharath',
-    name: 'Bharath',
+    name: 'Bharath S',
     role: 'Video Editor',
     phone: '+91 9597105882',
-    // No photo yet: neon silhouette placeholder until one is sent.
-    image: '/assets/credentials/editor_bharath.svg',
+    image: '/assets/credentials/editor_bharath_s.webp',
     accentColor: 'orange',
   },
 ]

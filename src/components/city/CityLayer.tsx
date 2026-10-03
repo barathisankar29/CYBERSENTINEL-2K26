@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react'
+import { memo, type CSSProperties } from 'react'
 import { lerpExpr, windowT } from '@/animation/progressCss'
 import type { CityLayerConfig, LayerMotion, ProgressWindow } from './cityLayers.config'
 
@@ -23,7 +23,9 @@ interface CityLayerProps {
  * `--scene-progress` (see progressCss.ts), so this component renders once
  * and the browser — not React — applies each scroll frame.
  */
-export function CityLayer({ layer, isMobile, lazy = false }: CityLayerProps) {
+// memo: a layer's props are static config, so the scene's occasional flag
+// re-renders (scroll hint, CTA tappable) never redo the 7 layers.
+export const CityLayer = memo(function CityLayer({ layer, isMobile, lazy = false }: CityLayerProps) {
   const motion: LayerMotion = isMobile ? layer.mobile : layer.desktop
   const motionT = localProgress(layer.motionRange)
   const opacityT = localProgress(layer.opacityRange ?? layer.motionRange)
@@ -54,4 +56,4 @@ export function CityLayer({ layer, isMobile, lazy = false }: CityLayerProps) {
       style={style}
     />
   )
-}
+})

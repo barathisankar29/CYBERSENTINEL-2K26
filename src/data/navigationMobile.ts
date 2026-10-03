@@ -9,7 +9,7 @@
  * at its own natural aspect ratio — see NavigationCityMobile.tsx/.css —
  * so these stay correctly anchored to the picture's actual content at
  * any phone width), matching
- * public/assets/city/navigation/navigation-mobile.webp — a high-angle
+ * public/assets/city/navigation/navigation-mobile-v2.webp — a high-angle
  * portrait composition (941x1672, ~9:16) with six landmarks:
  *   - left obelisk tower tagged "VTHD"        -> about
  *   - tall center tower lit "EVENTS"          -> events

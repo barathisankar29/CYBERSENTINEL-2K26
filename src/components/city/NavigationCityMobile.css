@@ -251,12 +251,12 @@
   border-radius: 18px;
   background: radial-gradient(
     ellipse 75% 65% at 50% 50%,
-    rgba(255, 62, 165, 0.42) 0%,
-    rgba(147, 51, 234, 0.22) 45%,
+    rgba(255, 62, 165, 0.18) 0%,
+    rgba(147, 51, 234, 0.1) 45%,
     transparent 72%
   );
   filter: blur(10px);
-  opacity: 0.65;
+  opacity: 0.45;
   pointer-events: none;
   transition: opacity 150ms ease, filter 150ms ease;
 }
@@ -272,7 +272,7 @@
   background-position: center;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  filter: drop-shadow(0 0 8px rgba(255, 62, 165, 0.5)) drop-shadow(0 6px 14px rgba(0, 0, 0, 0.75));
+  filter: drop-shadow(0 0 4px rgba(255, 62, 165, 0.22)) drop-shadow(0 6px 14px rgba(0, 0, 0, 0.75));
   pointer-events: none;
   transition: filter 150ms ease;
 }
@@ -301,8 +301,8 @@
   text-transform: uppercase;
   color: #ffffff;
   text-shadow:
-    0 0 8px rgba(255, 255, 255, 0.75),
-    0 0 14px rgba(255, 62, 165, 0.85);
+    0 0 4px rgba(255, 255, 255, 0.35),
+    0 0 8px rgba(255, 62, 165, 0.3);
 }
 
 .mobile-nav-card--compact {
@@ -324,28 +324,24 @@
 
 .mobile-nav-card--prominent .mobile-nav-card__glass {
   filter:
-    brightness(1.28)
-    contrast(1.12)
-    drop-shadow(0 0 18px rgba(255, 62, 165, 1))
-    drop-shadow(0 0 34px rgba(255, 0, 127, 0.85))
-    drop-shadow(0 0 52px rgba(255, 105, 180, 0.65))
+    brightness(1.1)
+    contrast(1.05)
+    drop-shadow(0 0 8px rgba(255, 62, 165, 0.4))
     drop-shadow(0 8px 18px rgba(0, 0, 0, 0.85));
-  animation: eventsGlassShine 3.2s ease-in-out infinite alternate;
 }
 
 .mobile-nav-card--prominent .mobile-nav-card__aura {
   inset: -14px -18px -16px;
   border-radius: 24px;
-  opacity: 1;
+  opacity: 0.5;
   filter: blur(16px);
   background: radial-gradient(
     ellipse 85% 75% at 50% 50%,
-    rgba(255, 62, 165, 0.85) 0%,
-    rgba(255, 0, 127, 0.6) 35%,
-    rgba(147, 51, 234, 0.4) 65%,
+    rgba(255, 62, 165, 0.28) 0%,
+    rgba(255, 0, 127, 0.16) 35%,
+    rgba(147, 51, 234, 0.12) 65%,
     transparent 80%
   );
-  animation: eventsAuraPulse 3.2s ease-in-out infinite alternate;
 }
 
 .mobile-nav-card--prominent .mobile-nav-card__title {
@@ -354,12 +350,8 @@
   letter-spacing: 0.22em;
   color: #ffffff;
   text-shadow:
-    0 0 6px #ffffff,
-    0 0 14px #ffffff,
-    0 0 24px rgba(255, 255, 255, 0.9),
-    0 0 35px rgba(255, 62, 165, 1),
-    0 0 55px rgba(255, 0, 127, 0.95),
-    0 0 75px rgba(236, 72, 153, 0.85);
+    0 0 5px rgba(255, 255, 255, 0.55),
+    0 0 12px rgba(255, 62, 165, 0.45);
 }
 
 /* Luminous shining gleam sweep across the Events banner */
@@ -373,9 +365,9 @@
   background: linear-gradient(
     105deg,
     transparent 20%,
-    rgba(255, 255, 255, 0.3) 47%,
-    rgba(255, 255, 255, 0.65) 50%,
-    rgba(255, 255, 255, 0.3) 53%,
+    rgba(255, 255, 255, 0.12) 47%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.12) 53%,
     transparent 80%
   );
   background-size: 250% 100%;
@@ -452,7 +444,7 @@
   height: 14px;
   display: block;
   fill: #ffffff;
-  filter: drop-shadow(0 0 3px #ffffff) drop-shadow(0 0 8px #ff3ea5) drop-shadow(0 0 14px #00f0ff);
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.7)) drop-shadow(0 0 4px rgba(255, 62, 165, 0.4));
   transform-origin: center center;
   animation: sparkleTwinkle 2.4s ease-in-out infinite;
 }
@@ -489,7 +481,7 @@
 /* Hover-capable devices only */
 @media (hover: hover) {
   .mobile-nav-card:hover .mobile-nav-card__glass {
-    filter: drop-shadow(0 0 14px rgba(255, 62, 165, 0.85)) brightness(1.15);
+    filter: drop-shadow(0 0 6px rgba(255, 62, 165, 0.45)) brightness(1.08);
   }
 
   .mobile-nav-card:hover .mobile-nav-card__aura {
@@ -498,14 +490,14 @@
   }
 
   .mobile-nav-card:hover .mobile-nav-card__title {
-    text-shadow: 0 0 10px #ffffff, 0 0 18px rgba(255, 62, 165, 1);
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5), 0 0 10px rgba(255, 62, 165, 0.45);
   }
 }
 
 /* Touch / focus / active */
 .mobile-nav-card:active .mobile-nav-card__glass,
 .mobile-nav-card:focus-visible .mobile-nav-card__glass {
-  filter: drop-shadow(0 0 18px rgba(255, 62, 165, 1)) brightness(1.25);
+  filter: drop-shadow(0 0 8px rgba(255, 62, 165, 0.55)) brightness(1.12);
   transition-duration: 90ms;
 }
 

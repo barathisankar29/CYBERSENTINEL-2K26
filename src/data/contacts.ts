@@ -20,12 +20,12 @@ export interface ContactGroup {
  * is only ever edited in one place. Coordinators are grouped by office
  * (the part of their role before "//"), each group listing its offices in
  * order: President & Vice President / Secretary & Joint Secretary /
- * Treasury. Within an office, people keep their credentials.ts order.
+ * Treasurer. Within an office, people keep their credentials.ts order.
  */
 const GROUPS: { id: string; tone: ContactGroup['tone']; offices: string[] }[] = [
   { id: 'leadership', tone: 'pink', offices: ['President', 'Vice President'] },
   { id: 'secretariat', tone: 'cyan', offices: ['Secretary', 'Joint Secretary'] },
-  { id: 'treasury', tone: 'violet', offices: ['Treasury'] },
+  { id: 'treasury', tone: 'violet', offices: ['Treasurer'] },
 ]
 
 const officeOf = (role: string) => role.split('//')[0].trim().toLowerCase()

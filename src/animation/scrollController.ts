@@ -37,6 +37,43 @@ function createStableViewport() {
   }
 }
 
+/**
+ * The tracked element's page position (document top + height), cached so a
+ * scroll frame never has to call getBoundingClientRect(). That call, made
+ * right after the previous frame wrote --scene-progress, forced a
+ * synchronous style + layout recalculation on every scroll frame — the
+ * single biggest source of scroll jank. The cache is refreshed only when
+ * layout can actually have moved: the element or the page resizing
+ * (images/fonts loading, intro removed, rotation).
+ */
+function createElementMetrics(element: HTMLElement, onChange: () => void) {
+  let top = 0
+  let height = 0
+  const read = () => {
+    const rect = element.getBoundingClientRect()
+    top = rect.top + window.scrollY
+    height = rect.height
+  }
+  read()
+  const observer = new ResizeObserver(() => {
+    read()
+    onChange()
+  })
+  observer.observe(element)
+  observer.observe(document.documentElement)
+  return {
+    /** Same value getBoundingClientRect().top would give, without layout. */
+    get viewportTop() {
+      return top - window.scrollY
+    },
+    get height() {
+      return height
+    },
+    refresh: read,
+    disconnect: () => observer.disconnect(),
+  }
+}
+
 export interface ScrollProgress {
   /** 0-1 progress through the tracked element's scrollable range. */
   progress: number
@@ -70,9 +107,8 @@ export function useScrollProgress<T extends HTMLElement>(
     const viewport = createStableViewport()
     const measure = () => {
       frameRef.current = null
-      const rect = element.getBoundingClientRect()
-      const scrollableDistance = Math.max(rect.height - viewport.height, 1)
-      const next = Math.min(Math.max(-rect.top / scrollableDistance, 0), 1)
+      const scrollableDistance = Math.max(metrics.height - viewport.height, 1)
+      const next = Math.min(Math.max(-metrics.viewportTop / scrollableDistance, 0), 1)
       setProgress(next)
     }
 
@@ -81,9 +117,13 @@ export function useScrollProgress<T extends HTMLElement>(
         frameRef.current = requestAnimationFrame(measure)
       }
     }
+    const metrics = createElementMetrics(element, requestMeasure)
 
     const handleResize = () => {
-      if (viewport.update()) requestMeasure()
+      if (viewport.update()) {
+        metrics.refresh()
+        requestMeasure()
+      }
     }
 
     requestMeasure()
@@ -91,6 +131,7 @@ export function useScrollProgress<T extends HTMLElement>(
     window.addEventListener('resize', handleResize)
 
     return () => {
+      metrics.disconnect()
       window.removeEventListener('scroll', requestMeasure)
       window.removeEventListener('resize', handleResize)
       if (frameRef.current !== null) {
@@ -140,9 +181,15 @@ export function useScrollProgressVar<T extends HTMLElement>(
     const element = ref.current
     if (!element) return
 
+    // Only write when the value changes: a scene that is scrolled past (held
+    // at 0 or 1) then causes no style invalidation at all.
+    let last: number | null = null
     const apply = (value: number) => {
-      element.style.setProperty(PROGRESS_VAR, String(value))
-      onProgressRef.current?.(value)
+      const rounded = Math.round(value * 10000) / 10000
+      if (rounded === last) return
+      last = rounded
+      element.style.setProperty(PROGRESS_VAR, String(rounded))
+      onProgressRef.current?.(rounded)
     }
 
     if (pinned !== null) {
@@ -154,22 +201,26 @@ export function useScrollProgressVar<T extends HTMLElement>(
     const viewport = createStableViewport()
     const measure = () => {
       frame = null
-      const rect = element.getBoundingClientRect()
-      const scrollableDistance = Math.max(rect.height - viewport.height, 1)
-      apply(Math.min(Math.max(-rect.top / (scrollableDistance * completeAt), 0), 1))
+      const scrollableDistance = Math.max(metrics.height - viewport.height, 1)
+      apply(Math.min(Math.max(-metrics.viewportTop / (scrollableDistance * completeAt), 0), 1))
     }
     const requestMeasure = () => {
       if (frame === null) frame = requestAnimationFrame(measure)
     }
+    const metrics = createElementMetrics(element, requestMeasure)
 
     const handleResize = () => {
-      if (viewport.update()) requestMeasure()
+      if (viewport.update()) {
+        metrics.refresh()
+        requestMeasure()
+      }
     }
 
     measure()
     window.addEventListener('scroll', requestMeasure, { passive: true })
     window.addEventListener('resize', handleResize)
     return () => {
+      metrics.disconnect()
       window.removeEventListener('scroll', requestMeasure)
       window.removeEventListener('resize', handleResize)
       if (frame !== null) cancelAnimationFrame(frame)

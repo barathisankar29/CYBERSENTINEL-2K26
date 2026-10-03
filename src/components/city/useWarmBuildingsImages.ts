@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { navigationBuildings } from '@/data/navigation'
 import { navigationCityEnvironmentLayers } from './navigationCityEnvironment.config'
 
-export const MOBILE_NAVIGATION_BG = '/assets/city/navigation/navigation-mobile.webp'
+export const MOBILE_NAVIGATION_BG = '/assets/city/navigation/navigation-mobile-v2.webp'
 
 /**
  * The buildings section's images are lazy so they never compete with the

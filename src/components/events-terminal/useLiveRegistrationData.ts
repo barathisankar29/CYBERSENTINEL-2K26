@@ -78,6 +78,8 @@ const SPECIAL_EVENT_CODES: Record<string, string> = {
   'dacre-dance': 'GD',
   thiruvizha_corner: 'TC',
   'dacre-thiruvizha': 'TC',
+  e_sports: 'EP',
+  'dacre-esports': 'EP',
 };
 
 export function specialEventCodeFor(id: string): string | undefined {
@@ -126,5 +128,8 @@ export function formatRupees(amount: number): string {
 /** Live fee label for a special-event catalog card, or null until loaded / unmapped. */
 export function liveSpecialFeeLabel(specialEvents: SpecialEvent[], eventId: string): string | null {
   const special = findSpecialEvent(specialEvents, eventId);
-  return special ? formatRupees(withGst(Number(special.fee))) : null;
+  if (!special) return null;
+  const label = formatRupees(withGst(Number(special.fee)));
+  // E-Sports is registered (and charged) per team.
+  return specialEventCodeFor(eventId) === 'EP' ? `${label} / TEAM` : label;
 }

@@ -29,6 +29,8 @@ export interface EventSpec {
   protocols: string[];
   coordinators: Coordinator[];
   isSpecial?: boolean;
+  /** Show the team size as a banner above the event protocol (coordinator request). */
+  teamSizeInProtocol?: boolean;
 }
 
 export type ThemeName = 'pink' | 'cyan' | 'green' | 'amber';

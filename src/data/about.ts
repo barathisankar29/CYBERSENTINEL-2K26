@@ -32,7 +32,7 @@ export const collegeData = {
     { label: 'GRADE', value: 'NAAC A' },
   ] as StatItem[],
   sealSrc: '/assets/about/vel-tech-seal.png',
-  bannerSrc: '/assets/branding/vel-tech-high-tech-logo-full.webp',
+  bannerSrc: '/assets/branding/vel-tech-high-tech-logo-full-v2.webp',
 }
 
 export const cyberSentinelData = {
@@ -78,8 +78,8 @@ export const hackathonClubData = {
     { name: 'Prathish M', role: 'Secretary', color: 'green' },
     { name: 'Hari Ganesh', role: 'Joint Secretary', color: 'orange' },
     { name: 'Neha M', role: 'Joint Secretary', color: 'pink' },
-    { name: 'Akshaya M', role: 'Treasury', color: 'yellow' },
-    { name: 'Rishikesh', role: 'Treasury', color: 'purple' },
+    { name: 'Akshaya M', role: 'Treasurer', color: 'yellow' },
+    { name: 'Rishikesh', role: 'Treasurer', color: 'purple' },
   ] as ClubMember[],
 }
 

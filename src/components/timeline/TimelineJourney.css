@@ -843,13 +843,54 @@
    */
   .timeline-world,
   .timeline-card-slot {
-    --tl-world-vh: calc(1cqh + 0.0115054 * var(--tl-scene-lift));
+    /* Full-height unit (the panorama filling the whole stage). */
+    --tl-world-u0: calc(1cqh + 0.0115054 * var(--tl-scene-lift));
+    --tl-world-vh: var(--tl-world-u0);
   }
 
-  /* Top-align instead of centring: with the inline translateY(-50%), a top
-     of half the world's height puts the world's top edge at the stage's. */
+  /*
+   * Zoom out. Each frame is a ~3:1 panorama, so at full stage height a
+   * phone only ever shows ~15% of a frame — the "very zoomed in" look. The
+   * world (frames, bridge, train, stations — all on this unit) is drawn at
+   * --tl-mobile-zoom of that size, and moved down so the RAIL stays exactly
+   * where it was: the card above and the fight below keep their places.
+   * Rail is 46.5% down the world, so the top edge moves by
+   * 46.5 * u0 * (1 - zoom). The bands above/below are filled with the
+   * artwork's own edge colours (stage background + soft fades).
+   */
   .timeline-world {
-    top: calc(50 * var(--tl-world-vh));
+    --tl-mobile-zoom: 0.6;
+    --tl-world-vh: calc(var(--tl-world-u0) * var(--tl-mobile-zoom));
+    /* Inline translateY(-50%) centres on `top`, so top = half the height
+       plus the shift that keeps the rail in place. */
+    top: calc(50 * var(--tl-world-vh) + 46.5 * var(--tl-world-u0) * (1 - var(--tl-mobile-zoom)));
+  }
+
+  .timeline-stage {
+    background: linear-gradient(180deg, #0f163c 0%, #121a44 45%, #171e4b 100%);
+  }
+
+  /* Blend the panorama's top and bottom edges into the fill. Painted once
+     into the world's own layer, so panning stays a pure transform. */
+  .timeline-world::before,
+  .timeline-world::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    height: 9%;
+    pointer-events: none;
+  }
+
+  .timeline-world::before {
+    top: 0;
+    background: linear-gradient(180deg, #0f163c 0%, rgba(15, 22, 60, 0) 100%);
+  }
+
+  .timeline-world::after {
+    bottom: 0;
+    background: linear-gradient(0deg, #171e4b 0%, rgba(23, 30, 75, 0) 100%);
   }
 
   /* ---- 1. Top bar -------------------------------------------------- */
@@ -1023,4 +1064,21 @@
     -webkit-backdrop-filter: none !important;
     background: rgba(9, 8, 20, 0.94) !important;
   }
+}
+
+/* Mobile: a small cue that the journey moves by swiping left / right. */
+.timeline-hud__swipe-hint {
+  margin-right: 0.6em;
+  color: rgb(125 211 252 / 0.75);
+  letter-spacing: 0.12em;
+  animation: timeline-swipe-hint 2.4s ease-in-out infinite;
+}
+
+@keyframes timeline-swipe-hint {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeline-hud__swipe-hint { animation: none; }
 }

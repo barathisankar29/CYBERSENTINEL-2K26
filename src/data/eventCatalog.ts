@@ -33,7 +33,7 @@ export const DAY_1_EVENTS: CatalogEvent[] = [
     venue: 'Systems Lab 01 / Block B',
     time: '11:30 AM - 02:00 PM',
     fee: '₹150 / Solo',
-    crew: 'Solo',
+    crew: '3 Members',
   },
   {
     id: 'unsaid',
@@ -42,7 +42,7 @@ export const DAY_1_EVENTS: CatalogEvent[] = [
     venue: 'Open Air Auditorium',
     time: '01:30 PM - 03:30 PM',
     fee: '₹100 / Duo',
-    crew: '2 Members',
+    crew: '2-3 Members',
   },
   {
     id: 'weblica',
@@ -51,7 +51,7 @@ export const DAY_1_EVENTS: CatalogEvent[] = [
     venue: 'Web Lab 03 / Floor 1',
     time: '02:30 PM - 05:00 PM',
     fee: '₹150 / Cadet',
-    crew: '1-2 Designers',
+    crew: 'Solo or 2 Members',
   },
   {
     id: 'x-coders',
@@ -60,7 +60,7 @@ export const DAY_1_EVENTS: CatalogEvent[] = [
     venue: 'Main CAD Dock / Lab 02',
     time: '03:30 PM - 06:00 PM',
     fee: '₹200 / Pair',
-    crew: '2 Members',
+    crew: 'Solo',
   },
 ]
 
@@ -72,7 +72,7 @@ export const DAY_2_EVENTS: CatalogEvent[] = [
     venue: 'Main Auditorium / Stage 1',
     time: '10:30 AM - 03:30 PM',
     fee: '₹150 / Entry',
-    crew: '1 Member',
+    crew: '2-3 Members',
   },
   {
     id: 'connections',
@@ -90,7 +90,7 @@ export const DAY_2_EVENTS: CatalogEvent[] = [
     venue: 'Audio Auditorium 01',
     time: '11:30 AM - 12:30 PM',
     fee: '₹100 / Crew',
-    crew: '2-3 Players',
+    crew: '2-3 Members',
   },
   {
     id: 'mixed-signals',
@@ -99,7 +99,7 @@ export const DAY_2_EVENTS: CatalogEvent[] = [
     venue: 'Central Plaza Stage',
     time: '01:15 PM - 02:15 PM',
     fee: '₹50 / Player',
-    crew: '3 Members',
+    crew: '2-3 Members',
   },
   {
     id: 'lyrics',
@@ -109,15 +109,6 @@ export const DAY_2_EVENTS: CatalogEvent[] = [
     time: '02:15 PM - 03:15 PM',
     fee: '₹100 / Crew',
     crew: '2-3 Members',
-  },
-  {
-    id: 'e-sports',
-    name: 'E-Sports',
-    description: 'E-Sports is the mystery event of Day 2. The game, format and team size will be announced soon. Included with every Day 2 and combo pass.',
-    venue: 'To Be Announced',
-    time: 'To Be Announced',
-    fee: 'Included in Pass',
-    crew: 'To Be Announced',
   },
 ]
 
@@ -129,7 +120,7 @@ export const SPECIAL_EVENTS: CatalogEvent[] = [
     venue: 'Open Air Mega Stage',
     time: '04:30 PM - 07:00 PM',
     fee: '₹590 / Crew',
-    crew: '6-15 Members',
+    crew: '4-10 Members',
   },
   {
     id: 'thiruvizha-corner',
@@ -139,5 +130,14 @@ export const SPECIAL_EVENTS: CatalogEvent[] = [
     time: '10:00 AM - 05:00 PM',
     fee: '₹690 / Entry',
     crew: 'Open to All',
+  },
+  {
+    id: 'e-sports',
+    name: 'E-Sports',
+    description: 'Two Free Fire tournaments: Clash Squad (16 teams, 4 knockout rounds, Bermuda map) and Lord Esports Battle Royale (24 teams, 2 rounds). Cash prizes for 1st and 2nd place. Registered per team.',
+    venue: 'To Be Announced',
+    time: 'To Be Announced',
+    fee: 'Per Team',
+    crew: 'Per Team',
   },
 ]
