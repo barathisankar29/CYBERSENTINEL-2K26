@@ -54,49 +54,19 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectModule, onNaviga
               <span>[FF]</span>
             </div>
 
-            {/* Central Pixel Art Canvas */}
-            <div className="w-full flex-1 bg-black border border-[#2b1038] relative flex flex-col items-center justify-center p-6 overflow-hidden select-none min-h-[240px]">
-              {/* Subtle background grid with purple / dark blue accent */}
-              <div
-                className="absolute inset-0 opacity-25 pointer-events-none"
-                style={{
-                  backgroundImage:
-                    'linear-gradient(rgba(147, 51, 234, 0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(147, 51, 234, 0.18) 1px, transparent 1px)',
-                  backgroundSize: '16px 16px'
-                }}
+            {/* Central artwork */}
+            <div className="w-full flex-1 bg-black border border-[#2b1038] relative overflow-hidden select-none min-h-[240px]">
+              <img
+                src="/assets/events/events-home-poster.webp"
+                alt="CyberSentinel 2K26 neon city poster"
+                className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+                loading="eager"
+                decoding="async"
               />
 
-              {/* Central Cybersentinel Pixel Emblem */}
-              <div className="relative z-10 flex flex-col items-center">
-                <div className="w-28 h-28 sm:w-32 sm:h-32 border-4 border-[#9333ea] bg-[#0e0413] flex flex-col items-center justify-center relative shadow-[0_0_25px_rgba(147,51,234,0.5)]">
-                  {/* Decorative corner brackets on the shield */}
-                  <div className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-l-2 border-white" />
-                  <div className="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-white" />
-                  <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 border-b-2 border-l-2 border-white" />
-                  <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 border-b-2 border-r-2 border-white" />
-
-                  {/* Emblem Typography */}
-                  <div className="text-center p-2">
-                    <div className="font-pixel text-[11px] text-[#c084fc] leading-tight tracking-wider">
-                      CYBER
-                    </div>
-                    <div className="font-pixel text-sm sm:text-base text-white font-bold mt-1 tracking-wider drop-shadow-[0_0_8px_rgba(255,0,127,0.8)]">
-                      SENTINEL
-                    </div>
-                    <div className="font-pixel text-[10px] text-[#ff007f] mt-1 tracking-widest">
-                      2K26
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4 font-silkscreen text-[10px] text-[#e0aaff] tracking-widest px-3 py-1 border border-[#9333ea] bg-[#12051c]">
-                  CSE SYMPOSIUM
-                </div>
-              </div>
-
               {/* Minimal corner indicators */}
-              <div className="absolute bottom-2 left-2 text-[#9333ea] font-mono text-[10px]">&gt;&gt;</div>
-              <div className="absolute bottom-2 right-2 text-[#9333ea] font-mono text-[10px]">&lt;&lt;</div>
+              <div className="absolute bottom-2 left-2 z-10 text-[#c084fc] font-mono text-[10px] drop-shadow-[0_0_4px_#000]">&gt;&gt;</div>
+              <div className="absolute bottom-2 right-2 z-10 text-[#c084fc] font-mono text-[10px] drop-shadow-[0_0_4px_#000]">&lt;&lt;</div>
             </div>
 
             {/* Bottom bar of left frame */}
@@ -114,7 +84,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectModule, onNaviga
         >
           {/* Main Event Title & Tagline */}
           <div>
-            <h2 className="font-pixel text-[clamp(1rem,5.6vw,1.5rem)] [overflow-wrap:anywhere] sm:text-3xl md:text-4xl text-white tracking-wider mb-2 leading-tight drop-shadow-[0_0_15px_rgba(255,0,127,0.7)]">
+            <h2 className="font-pixel text-[clamp(1rem,5.6vw,1.5rem)] [overflow-wrap:anywhere] sm:text-3xl md:text-[clamp(1.25rem,3.2vw,2.25rem)] text-white tracking-wider mb-2 leading-tight drop-shadow-[0_0_15px_rgba(255,0,127,0.7)]">
               CYBERSENTINEL 2K26
             </h2>
 
@@ -131,7 +101,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectModule, onNaviga
 
           {/* Track Buttons: Track 01 (Day 1), Track 02 (Day 2) & Track 03 (Special Events in Day 2) */}
           <div className="space-y-2" data-purpose="tracks-container">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-1 lg:grid-cols-3 gap-2.5 sm:gap-3">
               {/* TRACK 01 BUTTON */}
               <button
                 type="button"
