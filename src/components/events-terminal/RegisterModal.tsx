@@ -231,8 +231,20 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
     if (!config.isPerEventPricing) {
       // Day passes charge the day fee; the ticked events become the
       // registration's selected events (public-register selected_event_ids).
-      // Coming from an event page, start with just that event.
-      initialSelected = fromEvent ? [fromEvent.id] : config.events.map((e) => e.id);
+      if (fromEvent) {
+        if (isTeamEvent(fromEvent)) {
+          // If the defaultly selected event is a team event, select all team events for that day!
+          const teamEvents = config.events.filter(
+            (e) => (fromEvent.day ? e.day === fromEvent.day : true) && isTeamEvent(e)
+          );
+          initialSelected = teamEvents.map((e) => e.id);
+        } else {
+          // Solo event: only that solo event is selected
+          initialSelected = [fromEvent.id];
+        }
+      } else {
+        initialSelected = config.events.map((e) => e.id);
+      }
     } else if (initialEventId) {
       initialSelected = [initialEventId];
     } else {

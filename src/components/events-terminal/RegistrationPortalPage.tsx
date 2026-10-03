@@ -61,30 +61,31 @@ const EVENT_DAYS = ['DAY_1', 'DAY_2'] as const;
 
 const normalizeName = (value: string) => value.toLowerCase().replace(/[^a-z0-9]/g, '');
 
-export function isTeamEvent(event: { id?: string; code?: string; name?: string; event_type?: string | null }): boolean {
+export function isTeamEvent(event: { id?: string; code?: string; name?: string; event_type?: string | null; originalEventId?: string }): boolean {
   const name = (event.name || '').toLowerCase();
   const code = (event.code || '').toUpperCase();
   const id = (event.id || '').toLowerCase();
+  const originalId = (event.originalEventId || '').toLowerCase();
 
   // Weblica, XCoders, and Spotlight are ALWAYS solo events
-  if (name.includes('weblica') || code === 'WB' || id.includes('weblica')) return false;
-  if (name.includes('xcoder') || code === 'XC' || id.includes('x_coder') || id.includes('xcoder')) return false;
-  if (name.includes('spotlight') || code === 'SL' || name.includes('talent') || code === 'TAL' || id.includes('talent') || id.includes('spotlight')) return false;
+  if (name.includes('weblica') || code === 'WB' || id.includes('weblica') || originalId.includes('weblica')) return false;
+  if (name.includes('xcoder') || code === 'XC' || id.includes('x_coder') || id.includes('xcoder') || originalId.includes('x_coder') || originalId.includes('xcoder')) return false;
+  if (name.includes('spotlight') || code === 'SL' || name.includes('talent') || code === 'TAL' || id.includes('talent') || id.includes('spotlight') || originalId.includes('talent')) return false;
 
   // Explicit backend event_type check
   if (event.event_type && event.event_type.toUpperCase() === 'TEAM') return true;
   if (event.event_type && (event.event_type.toUpperCase() === 'SOLO' || event.event_type.toUpperCase() === 'INDIVIDUAL')) return false;
 
   // Day 1 Team Events
-  if (name.includes('paper') || code === 'PP' || id.includes('paper')) return true;
-  if (name.includes('cipher') || name.includes('cypher') || code === 'CC' || id.includes('cypher') || id.includes('cipher')) return true;
-  if (name.includes('unsaid') || code === 'US' || id.includes('unsaid')) return true;
+  if (name.includes('paper') || code === 'PP' || id.includes('paper') || originalId.includes('paper')) return true;
+  if (name.includes('cipher') || name.includes('cypher') || code === 'CC' || id.includes('cypher') || id.includes('cipher') || originalId.includes('cypher') || originalId.includes('cipher')) return true;
+  if (name.includes('unsaid') || code === 'US' || id.includes('unsaid') || originalId.includes('unsaid')) return true;
 
   // Day 2 Team Events
-  if (name.includes('connection') || code === 'CN' || id.includes('connection')) return true;
-  if (name.includes('bgm') || code === 'BGM' || id.includes('bgm')) return true;
-  if (name.includes('mixed') || code === 'MS' || id.includes('mixed')) return true;
-  if (name.includes('lyric') || code === 'LL' || id.includes('lyric')) return true;
+  if (name.includes('connection') || code === 'CN' || id.includes('connection') || originalId.includes('connection')) return true;
+  if (name.includes('bgm') || code === 'BGM' || id.includes('bgm') || originalId.includes('bgm')) return true;
+  if (name.includes('mixed') || code === 'MS' || id.includes('mixed') || originalId.includes('mixed')) return true;
+  if (name.includes('lyric') || code === 'LL' || id.includes('lyric') || originalId.includes('lyric')) return true;
 
   return false;
 }
@@ -161,7 +162,19 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
         if (cancelled) return;
         setActiveEvents(events);
         // Preselect what the visitor picked on the event page / pack.
-        setSelectedEventIds(matchActiveEventIds(initialData?.selectedEvents, events));
+        const baseSelectedIds = matchActiveEventIds(initialData?.selectedEvents, events);
+        // If any defaultly selected event is a team event, select all team events for that day as well!
+        const expandedIds = new Set(baseSelectedIds);
+        for (const id of baseSelectedIds) {
+          const ev = events.find((e) => e.id === id);
+          if (ev && isTeamEvent(ev)) {
+            const sameDayTeamEvents = events.filter((e) => e.day === ev.day && isTeamEvent(e));
+            for (const teamEv of sameDayTeamEvents) {
+              expandedIds.add(teamEv.id);
+            }
+          }
+        }
+        setSelectedEventIds([...expandedIds]);
         setEventsReady(true);
       })
       .catch(() => {
