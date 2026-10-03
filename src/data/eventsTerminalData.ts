@@ -143,7 +143,7 @@ export const ALL_EVENTS: EventSpec[] = [
       '"Weblica" is a creative web development event where participants recreate a given user interface with accuracy and creativity. They will be evaluated on design, layout, responsiveness, visual elements, and overall implementation within the given time.',
     date: 'DAY 01',
     time: '01:15 PM - 02:15 PM',
-    teamSize: 'SOLO OR 2 MEMBERS',
+    teamSize: '1 MEMBER',
     coordinators: [
       coordinator('Aswathy', '4TH', '9566052452'),
       coordinator('Barathi Sankar M', '3RD', '6374834081'),
@@ -154,7 +154,7 @@ export const ALL_EVENTS: EventSpec[] = [
     chipLabel: 'WEBLICA',
     chipSub: 'DOM-GRID',
     protocols: [
-      'Participants can compete solo or in teams of 2.',
+      'Participants compete solo.',
       'Participants must recreate the given user interface as accurately as possible.',
       'Event timing: 01:15 PM - 02:15 PM (Day 1).',
       'The complete task must be finished within the time limit announced by the organizers.',
@@ -242,10 +242,10 @@ export const ALL_EVENTS: EventSpec[] = [
     image: '/assets/events/talent_show.webp',
     quote: '"OWN THE STAGE. ONE PERFORMER. ALL EYES ON YOU."',
     description:
-      '"Spotlight" is an exciting talent show where teams showcase their unique talents and abilities. From singing and dancing to acting, mimicry, or storytelling, it celebrates creativity, confidence, and individuality.',
+      '"Spotlight" is an exciting talent show where participants showcase their unique talents and abilities. From singing and dancing to acting, mimicry, or storytelling, it celebrates creativity, confidence, and individuality.',
     date: 'DAY 02',
     time: '10:30 AM - 03:30 PM',
-    teamSize: '2 - 3 MEMBERS',
+    teamSize: '1 MEMBER',
     coordinators: [
       coordinator('Sasidharan', '3RD', '7708151802'),
       coordinator('Princy', '3RD', '6374830226'),
@@ -255,8 +255,8 @@ export const ALL_EVENTS: EventSpec[] = [
     chipLabel: 'SPOTLIGHT',
     chipSub: 'STAGE-01',
     protocols: [
-      'Each team must have 2-3 members.',
-      'Each team will get a fixed time limit for their performance.',
+      'Participants compete solo.',
+      'Each participant will get a fixed time limit for their performance.',
       'Participants can showcase any suitable talent such as singing, dancing, acting, mimicry, storytelling, beatboxing, or other creative talents.',
       'The performance must be appropriate for the institution and audience.',
       'Vulgar, offensive, or inappropriate content is strictly prohibited.',

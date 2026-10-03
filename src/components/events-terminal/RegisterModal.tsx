@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { EventSpec } from '@/types/eventsTerminal';
 import { sound } from './sound';
-import type { RegistrationPortalInitialData } from './RegistrationPortalPage';
+import { isTeamEvent, type RegistrationPortalInitialData } from './RegistrationPortalPage';
 import {
   findSpecialEvent,
   dayDisplayPrice,
@@ -270,14 +270,43 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
     sound.playBlip();
     setModalState((prev) => {
       if (!prev) return null;
+      const config = PACK_CONFIGS[prev.characterKey];
       const isSelected = prev.selectedEventIds.includes(eventId);
       // Special events are registered one at a time (no combined special package).
-      const singleChoice = PACK_CONFIGS[prev.characterKey]?.isPerEventPricing;
+      const singleChoice = config?.isPerEventPricing;
+      if (singleChoice) {
+        return {
+          ...prev,
+          selectedEventIds: isSelected ? [] : [eventId]
+        };
+      }
+
+      const clickedEvent = config?.events.find((e) => e.id === eventId);
+      if (clickedEvent && isTeamEvent(clickedEvent)) {
+        // Find all team events in this pack for the same day
+        const teamEvents = config.events.filter(
+          (e) => (clickedEvent.day ? e.day === clickedEvent.day : true) && isTeamEvent(e)
+        );
+        const teamEventIds = teamEvents.map((e) => e.id);
+
+        let nextSelected: string[];
+        if (!isSelected) {
+          // If the user clicks an unselected team event -> ALL team events for that day get clicked/selected!
+          nextSelected = Array.from(new Set([...prev.selectedEventIds, ...teamEventIds]));
+        } else {
+          // If the user clicks an already selected team event -> uncheck all team events for that day
+          nextSelected = prev.selectedEventIds.filter((id) => !teamEventIds.includes(id));
+        }
+        return {
+          ...prev,
+          selectedEventIds: nextSelected
+        };
+      }
+
+      // Solo events toggle individually
       const nextSelected = isSelected
         ? prev.selectedEventIds.filter((id) => id !== eventId)
-        : singleChoice
-          ? [eventId]
-          : [...prev.selectedEventIds, eventId];
+        : [...prev.selectedEventIds, eventId];
       return {
         ...prev,
         selectedEventIds: nextSelected
@@ -935,15 +964,15 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                         <div className="flex items-center gap-2.5">
                           {/* Retro Pixel Checkbox */}
                           <div
-                            className={`w-5 h-5 border flex items-center justify-center font-arcade text-[10px] shrink-0 ${
-                              isChecked ? 'text-black font-bold' : 'border-zinc-700 bg-black'
+                            className={`w-5 h-5 border flex items-center justify-center text-xs font-bold shrink-0 ${
+                              isChecked ? 'text-black' : 'border-zinc-700 bg-black'
                             }`}
                             style={{
                               backgroundColor: isChecked ? activeConfig.accentColor : 'transparent',
                               borderColor: isChecked ? activeConfig.accentColor : '#3f3f46'
                             }}
                           >
-                            {isChecked ? 'X' : ''}
+                            {isChecked ? '✓' : ''}
                           </div>
                           <span
                             className="font-arcade text-[9px]"

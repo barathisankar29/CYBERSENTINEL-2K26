@@ -61,6 +61,34 @@ const EVENT_DAYS = ['DAY_1', 'DAY_2'] as const;
 
 const normalizeName = (value: string) => value.toLowerCase().replace(/[^a-z0-9]/g, '');
 
+export function isTeamEvent(event: { id?: string; code?: string; name?: string; event_type?: string | null }): boolean {
+  const name = (event.name || '').toLowerCase();
+  const code = (event.code || '').toUpperCase();
+  const id = (event.id || '').toLowerCase();
+
+  // Weblica, XCoders, and Spotlight are ALWAYS solo events
+  if (name.includes('weblica') || code === 'WB' || id.includes('weblica')) return false;
+  if (name.includes('xcoder') || code === 'XC' || id.includes('x_coder') || id.includes('xcoder')) return false;
+  if (name.includes('spotlight') || code === 'SL' || name.includes('talent') || code === 'TAL' || id.includes('talent') || id.includes('spotlight')) return false;
+
+  // Explicit backend event_type check
+  if (event.event_type && event.event_type.toUpperCase() === 'TEAM') return true;
+  if (event.event_type && (event.event_type.toUpperCase() === 'SOLO' || event.event_type.toUpperCase() === 'INDIVIDUAL')) return false;
+
+  // Day 1 Team Events
+  if (name.includes('paper') || code === 'PP' || id.includes('paper')) return true;
+  if (name.includes('cipher') || name.includes('cypher') || code === 'CC' || id.includes('cypher') || id.includes('cipher')) return true;
+  if (name.includes('unsaid') || code === 'US' || id.includes('unsaid')) return true;
+
+  // Day 2 Team Events
+  if (name.includes('connection') || code === 'CN' || id.includes('connection')) return true;
+  if (name.includes('bgm') || code === 'BGM' || id.includes('bgm')) return true;
+  if (name.includes('mixed') || code === 'MS' || id.includes('mixed')) return true;
+  if (name.includes('lyric') || code === 'LL' || id.includes('lyric')) return true;
+
+  return false;
+}
+
 /**
  * Backend event ids for the events handed over by the pack chooser / event
  * page, matched by name against the live ACTIVE events (exact name first,
@@ -155,7 +183,36 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
 
   const toggleDayEvent = (id: string) => {
     sound.playBlip();
-    setSelectedEventIds((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
+    const clickedEvent = activeEvents.find((e) => e.id === id);
+    if (!clickedEvent) {
+      setSelectedEventIds((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
+      return;
+    }
+
+    if (isTeamEvent(clickedEvent)) {
+      // Find all team events for the same day as the clicked event
+      const sameDayTeamEvents = activeEvents.filter(
+        (e) => e.day === clickedEvent.day && isTeamEvent(e)
+      );
+      const teamEventIds = sameDayTeamEvents.map((e) => e.id);
+
+      setSelectedEventIds((prev) => {
+        const isCurrentlyChecked = prev.includes(id);
+        if (!isCurrentlyChecked) {
+          // If the user clicks an unselected team event -> ALL team events for that day get clicked/selected!
+          const newIds = new Set([...prev, ...teamEventIds]);
+          return Array.from(newIds);
+        } else {
+          // If the user clicks an already selected team event -> uncheck all team events for that day
+          return prev.filter((existingId) => !teamEventIds.includes(existingId));
+        }
+      });
+    } else {
+      // Solo events (Weblica, XCoders, Spotlight) toggle individually
+      setSelectedEventIds((prev) =>
+        prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+      );
+    }
   };
 
   // Returning visitor: if this browser already submitted a registration
@@ -588,7 +645,9 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
                                   <span className="font-pixel text-xs text-white uppercase break-words">
                                     {event.code} · {event.name}
                                   </span>
-                                  <span className="text-[10px] font-mono text-gray-400">{event.event_type || 'Event'}</span>
+                                  <span className="text-[10px] font-mono text-gray-400">
+                                    {isTeamEvent(event) ? 'Team Event' : 'Solo Event'}
+                                  </span>
                                 </span>
                               </label>
                             );
