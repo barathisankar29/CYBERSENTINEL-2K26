@@ -251,6 +251,8 @@ async function renderPinkSimpleBanner() {
   const targetFullLogoWebp = path.join(PUBLIC_BRANDING_DIR, 'vel-tech-high-tech-logo-full.webp');
   const targetLogoV2Webp = path.join(PUBLIC_BRANDING_DIR, 'vel-tech-high-tech-logo-v2.webp');
   const targetFullLogoV2Webp = path.join(PUBLIC_BRANDING_DIR, 'vel-tech-high-tech-logo-full-v2.webp');
+  const targetLogoV3Webp = path.join(PUBLIC_BRANDING_DIR, 'vel-tech-high-tech-logo-v3.webp');
+  const targetFullLogoV3Webp = path.join(PUBLIC_BRANDING_DIR, 'vel-tech-high-tech-logo-full-v3.webp');
 
   const webpBuffer = await sharp(finalTransparentPng)
     .webp({ quality: 100, alphaQuality: 100, lossless: true })
@@ -260,6 +262,9 @@ async function renderPinkSimpleBanner() {
   await sharp(webpBuffer).toFile(targetFullLogoWebp);
   await sharp(webpBuffer).toFile(targetLogoV2Webp);
   await sharp(webpBuffer).toFile(targetFullLogoV2Webp);
+  await sharp(webpBuffer).toFile(targetLogoV3Webp);
+  await sharp(webpBuffer).toFile(targetFullLogoV3Webp);
+
 
   console.log('Successfully generated updated pink logo banner!');
 }
