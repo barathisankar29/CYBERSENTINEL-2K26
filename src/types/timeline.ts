@@ -26,13 +26,13 @@ export type DayKey = 'day1' | 'day2'
  * - `stage`       — a programme stage (registration, sessions, day
  *                   opening/closing, cultural programme)
  * - `milestone`   — a ceremony (inauguration, valedictory)
- * - `destination` — the journey's final stop (prize distribution)
+ * - `destination` — the journey's final stop (DJ play)
  */
 export type StationKind = 'stage' | 'milestone' | 'destination'
 
 /**
  * One stage of the Timeline page's single continuous journey — the
- * symposium programme, registration to prize distribution, rendered as a
+ * symposium programme, registration to the closing DJ play, rendered as a
  * train crossing the three-frame bridge (see
  * src/components/timeline/TimelineJourney.tsx and ./timelineWorld.ts).
  * Distinct from MetroStation above. Stops carry programme ORDER only — no

@@ -501,10 +501,10 @@
 
 .timeline-active-card {
   position: relative;
-  width: clamp(260px, 22vw, 380px);
+  width: clamp(300px, 26vw, 430px);
   min-height: 2.5rem;
   display: grid;
-  grid-template-columns: auto auto 1fr;
+  grid-template-columns: auto auto 1fr auto;
   align-items: center;
   column-gap: 0.65rem;
   border-radius: 10px;
@@ -654,15 +654,23 @@
     0 0 40px rgba(255, 209, 102, 0.32);
 }
 
-.timeline-active-card--destination .timeline-card__title {
+.timeline-active-card--destination /* Pixel stage animation (StageAnimation.tsx), right of the text. */
+.timeline-card__art {
+  grid-column: 4;
+  grid-row: 1 / span 2;
+  align-self: center;
+}
+
+.timeline-card__title {
   color: #ffe7a8;
   text-shadow: 0 0 14px rgba(255, 209, 102, 0.35);
 }
 
 /* Title + description use the card's full width (right of the index
-   column), not just the narrow middle column the label row leaves. */
+   column, left of the stage animation), not just the narrow middle column
+   the label row leaves. */
 .timeline-card__body {
-  grid-column: 2 / -1;
+  grid-column: 2 / 4;
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
@@ -741,7 +749,7 @@
 
 @media (max-width: 900px) {
   .timeline-active-card {
-    width: clamp(230px, 44vw, 320px);
+    width: clamp(270px, 48vw, 370px);
     padding: 0.5rem 0.7rem;
   }
 
@@ -1010,7 +1018,7 @@
 
   .timeline-active-card {
     width: min(100%, 26rem);
-    grid-template-columns: auto auto 1fr;
+    grid-template-columns: auto auto 1fr auto;
     padding: 0.45rem 0.6rem;
     column-gap: 0.45rem;
     background: linear-gradient(160deg, rgba(14, 18, 38, 0.95), rgba(7, 9, 22, 0.97));
@@ -1081,4 +1089,13 @@
 
 @media (prefers-reduced-motion: reduce) {
   .timeline-hud__swipe-hint { animation: none; }
+}
+
+/* Rain sound toggle (reuses the site music button's look). On phones the
+   HUD spans the top of the screen, so the toggle drops just below it. */
+@media (max-width: 767px) {
+  .timeline-rain-toggle {
+    top: calc(env(safe-area-inset-top, 0px) + 6.4rem);
+    right: 0.75rem;
+  }
 }

@@ -7,7 +7,8 @@ import type { DayKey, StationKind, TimelineEvent } from '@/types/timeline'
  * These are the major PROGRAMME STAGES of the symposium, not the individual
  * competitions (those live on the Events page). Stage names are generic on
  * purpose and there are no times: nothing more specific is confirmed for
- * 2K26 yet. The journey's final destination is the prize distribution.
+ * 2K26 yet. The journey's final destination is the DJ play after the prize
+ * distribution.
  */
 
 interface StageContent {
@@ -37,12 +38,8 @@ const DAY_2: StageContent[] = [
   stage('techno-cultural', 'TECHNO-CULTURAL ACTIVITIES', "Continuation of the symposium's technical and cultural programme."),
   stage('special-programme', 'SPECIAL / CULTURAL PROGRAMME', 'Major cultural and special activities.'),
   stage('valedictory', 'VALEDICTORY', 'Closing ceremony and conclusion of CyberSentinel 2K26.', 'milestone'),
-  stage(
-    'prize-distribution',
-    'PRIZE DISTRIBUTION',
-    'Recognition of winners and achievements. The end of the Sentinel Journey.',
-    'destination',
-  ),
+  stage('prize-distribution', 'PRIZE DISTRIBUTION', 'Recognition of winners and achievements.', 'milestone'),
+  stage('dj-play', 'DJ PLAY', 'Lights down, volume up. The end of the Sentinel Journey.', 'destination'),
 ]
 
 // Stages are spread evenly along the bridge, inset from the outer edges of

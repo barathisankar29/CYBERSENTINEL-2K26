@@ -1,4 +1,5 @@
-import { useCallback, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
+import { Volume2, VolumeX } from 'lucide-react'
 import { useReducedMotion } from '@/animation/useReducedMotion'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { timelineEvents } from '@/data/timelineSchedule'
@@ -6,10 +7,22 @@ import type { DayKey, StationKind, TimelineEvent } from '@/types/timeline'
 import { FRAME_LAYOUT, JOURNEY_BOUNDS, SEAM_LAYOUTS, activationThreshold, featherMaskImage } from './timelineWorld'
 import { useJourneyProgress } from './useJourneyProgress'
 import { TimelinePoint } from './TimelinePoint'
+import { StageAnimation } from './StageAnimation'
 import { CharacterFight } from './CharacterFight'
+import { RainAmbience } from './rainAmbience'
 import './TimelineJourney.css'
 
 const TRAIN_SRC = '/assets/timeline/timeline-train.webp'
+
+// The visitor's rain mute choice, remembered per browser (a convenience only).
+const RAIN_MUTED_KEY = 'cs_timeline_rain_muted'
+function readRainMuted(): boolean {
+  try {
+    return window.localStorage.getItem(RAIN_MUTED_KEY) === '1'
+  } catch {
+    return false
+  }
+}
 
 // Frame 1 is the only one ever visible at rest (the journey starts there —
 // see JOURNEY_BOUNDS) so it alone loads eagerly/with priority.
@@ -66,7 +79,7 @@ const seamHazeLayer = SEAM_LAYOUTS.map((seam) => (
  * frames stitched into ONE continuous horizontal world (Frame01 -> Frame02
  * -> Frame03) that the train crosses once, carrying the whole symposium
  * programme from registration and the inauguration, through both days'
- * events, to the prize distribution (src/data/timelineSchedule.ts). A
+ * events, to the closing DJ play (src/data/timelineSchedule.ts). A
  * single normalized `progress` value (0-1) from useJourneyProgress —
  * driven automatically once started, then one stop at a time by the
  * user's own scroll/swipe/keys — drives the train's world position, the
@@ -80,6 +93,30 @@ export function TimelineJourney() {
   const trainRef = useRef<HTMLDivElement>(null)
   const cardObserverRef = useRef<ResizeObserver | null>(null)
   const [started, setStarted] = useState(false)
+  const [rainMuted, setRainMuted] = useState(readRainMuted)
+  const rainRef = useRef<RainAmbience | null>(null)
+
+  // Rain starts with the journey: the Start Journey click is the user
+  // gesture browsers require before any audio can play.
+  const startJourney = () => {
+    rainRef.current ??= new RainAmbience()
+    rainRef.current.start(rainMuted)
+    setStarted(true)
+  }
+
+  const toggleRain = () => {
+    const next = !rainMuted
+    setRainMuted(next)
+    rainRef.current?.setMuted(next)
+    try {
+      window.localStorage.setItem(RAIN_MUTED_KEY, next ? '1' : '0')
+    } catch {
+      // Storage unavailable (private mode etc.) — the toggle still works.
+    }
+  }
+
+  // Leaving the page fades the rain out and releases the audio context.
+  useEffect(() => () => rainRef.current?.stop(), [])
   const [worldWidth, setWorldWidth] = useState(0)
   const [trainWidth, setTrainWidth] = useState(0)
   const [trainHeight, setTrainHeight] = useState(0)
@@ -190,7 +227,7 @@ export function TimelineJourney() {
   // stop-by-stop segments and manual step navigation — see
   // useJourneyProgress. Starts at 0 (departure) and deliberately ENDS at
   // the final stop's threshold (no trailing 1): the journey's last resting
-  // point is the prize distribution itself, with its card up. Exactly one
+  // point is the closing DJ play itself, with its card up. Exactly one
   // entry per stop — never deduped — so breakpoints[i] always lines up with
   // orderedStations[i - 1] even if a stop's threshold ever clamps onto the
   // departure point (deduping it would shift every card by one).
@@ -292,6 +329,9 @@ export function TimelineJourney() {
           <div className="timeline-card__body">
             <h3 className="timeline-card__title">{displayedStation.title}</h3>
             <p className="timeline-card__desc">{displayedStation.description}</p>
+          </div>
+          <div className="timeline-card__art">
+            <StageAnimation stageId={displayedStation.id} />
           </div>
         </>
       )}
@@ -401,6 +441,30 @@ export function TimelineJourney() {
           </div>
         )}
 
+        {started && (
+          <aside className="site-bg-music-hud timeline-rain-toggle" aria-label="Rain sound">
+            <button
+              type="button"
+              className={`site-audio-btn ${rainMuted ? 'site-audio-btn--off' : 'site-audio-btn--on'}`}
+              onClick={toggleRain}
+              aria-pressed={!rainMuted}
+              aria-label={rainMuted ? 'Play rain sound' : 'Mute rain sound'}
+              title={rainMuted ? 'Play rain sound' : 'Mute rain sound'}
+            >
+              {rainMuted ? (
+                <span className="site-audio-btn__icon site-audio-btn__icon--off">
+                  <VolumeX size={17} strokeWidth={2.2} />
+                </span>
+              ) : (
+                <span className="site-audio-btn__icon site-audio-btn__icon--on">
+                  <Volume2 size={17} strokeWidth={2.2} />
+                  <span className="site-audio-pulse-ring" aria-hidden="true" />
+                </span>
+              )}
+            </button>
+          </aside>
+        )}
+
         {showIntro && (
           <div className="day-select" role="group" aria-label="The Sentinel Journey">
             <p className="day-select__eyebrow">CYBERSENTINEL // 2K26</p>
@@ -410,9 +474,9 @@ export function TimelineJourney() {
             </p>
 
             <div className="day-select__cards">
-              <button type="button" className="day-card day-card--day1" onClick={() => setStarted(true)}>
+              <button type="button" className="day-card day-card--day1" onClick={startJourney}>
                 <span className="day-card__index">DAY 01 &rarr; 02</span>
-                <span className="day-card__label">Registration to Prize Distribution</span>
+                <span className="day-card__label">Registration to DJ Play</span>
                 <span className="day-card__cta">
                   Start Journey <span aria-hidden="true">&rarr;</span>
                 </span>
