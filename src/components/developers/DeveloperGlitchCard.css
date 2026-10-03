@@ -416,3 +416,35 @@
     height: 28px;
   }
 }
+
+/* Big screens / laptop view: scale art stage in horizontal layout */
+@media (min-width: 960px) {
+  .dev-card__art-stage {
+    width: 100%;
+    max-width: 330px;
+    height: 320px;
+  }
+
+  .dev-card__geo-shape--primary {
+    width: 230px;
+    height: 240px;
+  }
+
+  .dev-card__geo-stitch-svg {
+    width: 230px;
+    height: 240px;
+  }
+
+  .dev-card__geo-shape--secondary {
+    width: 180px;
+    height: 190px;
+  }
+
+  .dev-card__avatar-wrap {
+    height: 280px;
+  }
+
+  .dev-card__avatar-img {
+    max-height: 270px;
+  }
+}

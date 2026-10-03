@@ -72,6 +72,10 @@ update public.events set
   status = 'ACTIVE', updated_at = now()
 where code = 'SL';
 
+update public.events set
+  event_type = 'INDIVIDUAL', min_team_size = 1, max_team_size = 1, updated_at = now()
+where code = 'CC';
+
 -- 2. Missing sheet events + E-Sports -----------------------------------------
 -- One INSERT ... VALUES per row (not a shared VALUES list) so each literal is
 -- coerced to the column's real type — works whether day / event_type / status
@@ -93,7 +97,7 @@ begin
     insert into public.events
       (code, name, description, day, event_type, min_team_size, max_team_size, start_time, end_time, registration_fee, status)
     values
-      ('CC', 'Cipher Coding', 'Solve encrypted clues, coding challenges and puzzles to unlock a secret PIN.', 'DAY_1', 'TEAM', 2, 2, '11:30', '12:30', 0, 'ACTIVE');
+      ('CC', 'Cipher Coding', 'Solve encrypted clues, coding challenges and puzzles to unlock a secret PIN.', 'DAY_1', 'INDIVIDUAL', 1, 1, '11:30', '12:30', 0, 'ACTIVE');
   end if;
   if not exists (select 1 from public.events where code = 'WB') then  -- CONFIRM team size
     insert into public.events

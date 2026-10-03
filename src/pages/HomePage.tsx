@@ -5,7 +5,6 @@ import { NavigationCityScene } from '@/components/city/NavigationCityScene'
 import { VideoIntro } from '@/components/intro/VideoIntro'
 import { FuturisticTransition } from '@/components/intro/FuturisticTransition'
 import { SiteFooter } from '@/components/ui/SiteFooter'
-import { BackgroundMusicHUD } from '@/components/audio/BackgroundMusicHUD'
 import { useSmoothScroll } from '@/animation/useSmoothScroll'
 import { hasSeenIntro, markIntroAsSeen } from '@/utils/introSession'
 import { scrollToBuildings } from '@/utils/scrollBuildings'
@@ -89,7 +88,6 @@ export function HomePage() {
       {introStage === 'transition' && (
         <FuturisticTransition onComplete={handleTransitionComplete} />
       )}
-      <BackgroundMusicHUD visible={introStage !== 'intro'} />
       <CityScene introCompleted={introStage === 'completed'} />
       <NavigationCityScene />
       <SiteFooter />

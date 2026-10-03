@@ -21,8 +21,14 @@ export const FirmwareScreen: React.FC<FirmwareScreenProps> = ({
   onProceedToPortal
 }) => {
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const { specialEvents } = useLiveRegistrationData();
   const liveFee = isPaidSpecialFeeEvent(event) ? liveSpecialFeeLabel(specialEvents, event.id) : null;
+  const imageSrc = !imageError ? (event.image || `/assets/events/${event.id}.webp`) : null;
+
+  React.useEffect(() => {
+    setImageError(false);
+  }, [event.id]);
 
   const protocolsToDisplay: string[] =
     event.protocols && event.protocols.length > 0
@@ -87,7 +93,7 @@ export const FirmwareScreen: React.FC<FirmwareScreenProps> = ({
             </div>
 
             {/* Pixel Artwork Canvas / Graphic Area */}
-            <div className="w-full h-52 sm:h-64 bg-black border border-[#2b1038] relative flex flex-col items-center justify-center p-3 overflow-hidden select-none">
+            <div className="w-full h-56 sm:h-64 md:h-72 bg-black border border-[#2b1038] relative flex flex-col items-center justify-center p-2 overflow-hidden select-none">
               {/* Background Grid lines with subtle purple/magenta */}
               <div
                 className="absolute inset-0 opacity-20 pointer-events-none"
@@ -98,37 +104,48 @@ export const FirmwareScreen: React.FC<FirmwareScreenProps> = ({
                 }}
               />
 
-              {/* Central Hardware Microchip Pixel Illustration */}
-              <div className="relative z-10 flex flex-col items-center">
-                <div className="w-28 h-28 border-2 border-[#9333ea] bg-[#0c0410] flex items-center justify-center relative shadow-[0_0_20px_rgba(147,51,234,0.4)]">
-                  {/* Chip Pins Top & Bottom */}
-                  <div className="absolute -top-2 flex gap-2">
-                    <span className="w-1.5 h-2 bg-[#ff007f]" />
-                    <span className="w-1.5 h-2 bg-[#9333ea]" />
-                    <span className="w-1.5 h-2 bg-[#ff007f]" />
-                    <span className="w-1.5 h-2 bg-[#9333ea]" />
-                  </div>
-                  <div className="absolute -bottom-2 flex gap-2">
-                    <span className="w-1.5 h-2 bg-[#9333ea]" />
-                    <span className="w-1.5 h-2 bg-[#ff007f]" />
-                    <span className="w-1.5 h-2 bg-[#9333ea]" />
-                    <span className="w-1.5 h-2 bg-[#ff007f]" />
-                  </div>
+              {imageSrc ? (
+                <img
+                  src={imageSrc}
+                  alt={`${event.title} poster`}
+                  className="w-full h-full object-contain relative z-10 block pointer-events-none drop-shadow-[0_0_12px_rgba(147,51,234,0.3)]"
+                  onError={() => setImageError(true)}
+                  loading="eager"
+                  decoding="async"
+                />
+              ) : (
+                /* Central Hardware Microchip Pixel Illustration (Fallback) */
+                <div className="relative z-10 flex flex-col items-center">
+                  <div className="w-28 h-28 border-2 border-[#9333ea] bg-[#0c0410] flex items-center justify-center relative shadow-[0_0_20px_rgba(147,51,234,0.4)]">
+                    {/* Chip Pins Top & Bottom */}
+                    <div className="absolute -top-2 flex gap-2">
+                      <span className="w-1.5 h-2 bg-[#ff007f]" />
+                      <span className="w-1.5 h-2 bg-[#9333ea]" />
+                      <span className="w-1.5 h-2 bg-[#ff007f]" />
+                      <span className="w-1.5 h-2 bg-[#9333ea]" />
+                    </div>
+                    <div className="absolute -bottom-2 flex gap-2">
+                      <span className="w-1.5 h-2 bg-[#9333ea]" />
+                      <span className="w-1.5 h-2 bg-[#ff007f]" />
+                      <span className="w-1.5 h-2 bg-[#9333ea]" />
+                      <span className="w-1.5 h-2 bg-[#ff007f]" />
+                    </div>
 
-                  {/* Chip Core */}
-                  <div className="w-16 h-16 border border-[#9333ea] bg-[#050208] flex flex-col items-center justify-center text-center p-1">
-                    <span className="font-silkscreen text-[9px] text-[#c084fc] leading-none">
-                      {event.chipLabel || 'EVENT'}
-                    </span>
-                    <span className="font-pixel text-[8px] text-white mt-1">
-                      {event.chipSub || 'CSE'}
-                    </span>
+                    {/* Chip Core */}
+                    <div className="w-16 h-16 border border-[#9333ea] bg-[#050208] flex flex-col items-center justify-center text-center p-1">
+                      <span className="font-silkscreen text-[9px] text-[#c084fc] leading-none">
+                        {event.chipLabel || 'EVENT'}
+                      </span>
+                      <span className="font-pixel text-[8px] text-white mt-1">
+                        {event.chipSub || 'CSE'}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Scanline CRT overlay */}
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent h-6 w-full animate-pulse" />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent h-6 w-full animate-pulse z-20" />
             </div>
           </div>
 

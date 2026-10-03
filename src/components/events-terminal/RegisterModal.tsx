@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { EventSpec } from '@/types/eventsTerminal';
 import { sound } from './sound';
-import type { RegistrationPortalInitialData } from './RegistrationPortalPage';
+import { isTeamEvent, type RegistrationPortalInitialData } from './RegistrationPortalPage';
 import {
   findSpecialEvent,
   dayDisplayPrice,
@@ -15,6 +15,7 @@ import {
 interface EventItem {
   id: string;
   name: string;
+  subtitle?: string;
   day?: string;
   protocol?: string;
   originalEventId?: string;
@@ -86,8 +87,8 @@ const PACK_CONFIGS: Record<string, CharacterConfig> = {
     isPerEventPricing: true,
     events: [
       { id: 'dacre-dance', name: 'Group Dance', protocol: 'PROTOCOL_A', originalEventId: 'group_dance' },
-      { id: 'dacre-thiruvizha', name: 'Thiruvizha Corner', protocol: 'PROTOCOL_B', originalEventId: 'thiruvizha_corner' },
-      { id: 'dacre-esports', name: 'E-Sports', protocol: 'PROTOCOL_C', originalEventId: 'e_sports' }
+      { id: 'dacre-thiruvizha', name: 'Thiruvizha Corner', subtitle: '(Stalls & Stores)', protocol: 'PROTOCOL_B', originalEventId: 'thiruvizha_corner' },
+      { id: 'dacre-esports', name: 'E-Sports', subtitle: '(Free-Fire)', protocol: 'PROTOCOL_C', originalEventId: 'e_sports' }
     ]
   },
   COSMA: {
@@ -230,8 +231,20 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
     if (!config.isPerEventPricing) {
       // Day passes charge the day fee; the ticked events become the
       // registration's selected events (public-register selected_event_ids).
-      // Coming from an event page, start with just that event.
-      initialSelected = fromEvent ? [fromEvent.id] : config.events.map((e) => e.id);
+      if (fromEvent) {
+        if (isTeamEvent(fromEvent)) {
+          // If the defaultly selected event is a team event, select all team events for that day!
+          const teamEvents = config.events.filter(
+            (e) => (fromEvent.day ? e.day === fromEvent.day : true) && isTeamEvent(e)
+          );
+          initialSelected = teamEvents.map((e) => e.id);
+        } else {
+          // Solo event: only that solo event is selected
+          initialSelected = [fromEvent.id];
+        }
+      } else {
+        initialSelected = config.events.map((e) => e.id);
+      }
     } else if (initialEventId) {
       initialSelected = [initialEventId];
     } else {
@@ -269,14 +282,43 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
     sound.playBlip();
     setModalState((prev) => {
       if (!prev) return null;
+      const config = PACK_CONFIGS[prev.characterKey];
       const isSelected = prev.selectedEventIds.includes(eventId);
       // Special events are registered one at a time (no combined special package).
-      const singleChoice = PACK_CONFIGS[prev.characterKey]?.isPerEventPricing;
+      const singleChoice = config?.isPerEventPricing;
+      if (singleChoice) {
+        return {
+          ...prev,
+          selectedEventIds: isSelected ? [] : [eventId]
+        };
+      }
+
+      const clickedEvent = config?.events.find((e) => e.id === eventId);
+      if (clickedEvent && isTeamEvent(clickedEvent)) {
+        // Find all team events in this pack for the same day
+        const teamEvents = config.events.filter(
+          (e) => (clickedEvent.day ? e.day === clickedEvent.day : true) && isTeamEvent(e)
+        );
+        const teamEventIds = teamEvents.map((e) => e.id);
+
+        let nextSelected: string[];
+        if (!isSelected) {
+          // If the user clicks an unselected team event -> ALL team events for that day get clicked/selected!
+          nextSelected = Array.from(new Set([...prev.selectedEventIds, ...teamEventIds]));
+        } else {
+          // If the user clicks an already selected team event -> uncheck all team events for that day
+          nextSelected = prev.selectedEventIds.filter((id) => !teamEventIds.includes(id));
+        }
+        return {
+          ...prev,
+          selectedEventIds: nextSelected
+        };
+      }
+
+      // Solo events toggle individually
       const nextSelected = isSelected
         ? prev.selectedEventIds.filter((id) => id !== eventId)
-        : singleChoice
-          ? [eventId]
-          : [...prev.selectedEventIds, eventId];
+        : [...prev.selectedEventIds, eventId];
       return {
         ...prev,
         selectedEventIds: nextSelected
@@ -586,14 +628,14 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                 data-purpose="sub-event-group-dance"
                 style={{ borderColor: 'rgba(0, 255, 204, 0.5)' }}
               >
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between gap-2">
                   <div>
                     <span className="text-[9px] font-arcade block" style={{ color: 'rgba(0, 255, 204, 0.7)' }}>
                       PROTOCOL_A
                     </span>
                     <span className="font-pixel text-xs sm:text-sm text-white font-bold">Group Dance</span>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right shrink-0">
                     <span className="font-arcade text-xs" style={{ color: '#00ffcc' }}>
                       {cardPrice('DR. DACRE', ['dacre-dance'])}
                     </span>
@@ -614,14 +656,22 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                 data-purpose="sub-event-thiruvizha"
                 style={{ borderColor: 'rgba(0, 255, 204, 0.5)' }}
               >
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between gap-2">
                   <div>
                     <span className="text-[9px] font-arcade block" style={{ color: 'rgba(0, 255, 204, 0.7)' }}>
                       PROTOCOL_B
                     </span>
-                    <span className="font-pixel text-xs sm:text-sm text-white font-bold">Thiruvizha Corner</span>
+                    <div className="font-pixel text-xs sm:text-sm text-white font-bold leading-snug">
+                      <div>Thiruvizha</div>
+                      <div className="flex items-baseline gap-1">
+                        <span>Corner</span>
+                        <span className="text-[9px] sm:text-[10px] text-zinc-400 font-normal font-mono whitespace-nowrap">
+                          (Stalls &amp; Stores)
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right shrink-0">
                     <span className="font-arcade text-xs" style={{ color: '#00ffcc' }}>
                       {cardPrice('DR. DACRE', ['dacre-thiruvizha'])}
                     </span>
@@ -642,14 +692,19 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                 data-purpose="sub-event-esports"
                 style={{ borderColor: 'rgba(0, 255, 204, 0.5)' }}
               >
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between gap-2">
                   <div>
                     <span className="text-[9px] font-arcade block" style={{ color: 'rgba(0, 255, 204, 0.7)' }}>
                       PROTOCOL_C
                     </span>
-                    <span className="font-pixel text-xs sm:text-sm text-white font-bold">E-Sports</span>
+                    <span className="font-pixel text-xs sm:text-sm text-white font-bold flex items-baseline flex-wrap gap-1">
+                      <span>E-Sports</span>
+                      <span className="text-[9px] sm:text-[10px] text-zinc-400 font-normal font-mono whitespace-nowrap">
+                        (Free-Fire)
+                      </span>
+                    </span>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right shrink-0">
                     <span className="font-arcade text-xs" style={{ color: '#00ffcc' }}>
                       {cardPrice('DR. DACRE', ['dacre-esports'])}
                     </span>
@@ -921,15 +976,15 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                         <div className="flex items-center gap-2.5">
                           {/* Retro Pixel Checkbox */}
                           <div
-                            className={`w-5 h-5 border flex items-center justify-center font-arcade text-[10px] shrink-0 ${
-                              isChecked ? 'text-black font-bold' : 'border-zinc-700 bg-black'
+                            className={`w-5 h-5 border flex items-center justify-center text-xs font-bold shrink-0 ${
+                              isChecked ? 'text-black' : 'border-zinc-700 bg-black'
                             }`}
                             style={{
                               backgroundColor: isChecked ? activeConfig.accentColor : 'transparent',
                               borderColor: isChecked ? activeConfig.accentColor : '#3f3f46'
                             }}
                           >
-                            {isChecked ? 'X' : ''}
+                            {isChecked ? '✓' : ''}
                           </div>
                           <span
                             className="font-arcade text-[9px]"
@@ -937,8 +992,13 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                           >
                             {String(idx + 1).padStart(2, '0')}
                           </span>
-                          <span className="font-pixel text-xs sm:text-sm font-semibold tracking-wide">
-                            {ev.name}
+                          <span className="font-pixel text-xs sm:text-sm font-semibold tracking-wide flex items-baseline flex-wrap gap-1">
+                            <span>{ev.name}</span>
+                            {ev.subtitle && (
+                              <span className="text-[10px] sm:text-xs text-zinc-400 font-normal font-mono whitespace-nowrap">
+                                {ev.subtitle}
+                              </span>
+                            )}
                           </span>
                         </div>
 

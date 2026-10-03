@@ -33,7 +33,7 @@ export const DAY_1_EVENTS: CatalogEvent[] = [
     venue: 'Systems Lab 01 / Block B',
     time: '11:30 AM - 02:00 PM',
     fee: '₹150 / Solo',
-    crew: '3 Members',
+    crew: 'Solo',
   },
   {
     id: 'unsaid',
@@ -51,7 +51,7 @@ export const DAY_1_EVENTS: CatalogEvent[] = [
     venue: 'Web Lab 03 / Floor 1',
     time: '02:30 PM - 05:00 PM',
     fee: '₹150 / Cadet',
-    crew: 'Solo or 2 Members',
+    crew: 'Solo',
   },
   {
     id: 'x-coders',
@@ -72,7 +72,7 @@ export const DAY_2_EVENTS: CatalogEvent[] = [
     venue: 'Main Auditorium / Stage 1',
     time: '10:30 AM - 03:30 PM',
     fee: '₹150 / Entry',
-    crew: '2-3 Members',
+    crew: 'Solo',
   },
   {
     id: 'connections',

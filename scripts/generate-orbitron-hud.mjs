@@ -265,14 +265,17 @@ async function renderBanner() {
   // Save to public branding paths as lossless WebP
   const targetLogoWebp = path.join(PUBLIC_BRANDING_DIR, 'vel-tech-high-tech-logo.webp');
   const targetFullLogoWebp = path.join(PUBLIC_BRANDING_DIR, 'vel-tech-high-tech-logo-full.webp');
+  const targetLogoV2Webp = path.join(PUBLIC_BRANDING_DIR, 'vel-tech-high-tech-logo-v2.webp');
+  const targetFullLogoV2Webp = path.join(PUBLIC_BRANDING_DIR, 'vel-tech-high-tech-logo-full-v2.webp');
 
-  await sharp(finalTransparentPng)
+  const webpBuffer = await sharp(finalTransparentPng)
     .webp({ quality: 100, alphaQuality: 100, lossless: true })
-    .toFile(targetLogoWebp);
+    .toBuffer();
 
-  await sharp(finalTransparentPng)
-    .webp({ quality: 100, alphaQuality: 100, lossless: true })
-    .toFile(targetFullLogoWebp);
+  await sharp(webpBuffer).toFile(targetLogoWebp);
+  await sharp(webpBuffer).toFile(targetFullLogoWebp);
+  await sharp(webpBuffer).toFile(targetLogoV2Webp);
+  await sharp(webpBuffer).toFile(targetFullLogoV2Webp);
 
   console.log('Successfully updated logo banner with Orbitron typography matching the hero department font!');
 }
