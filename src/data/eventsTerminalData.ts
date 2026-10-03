@@ -110,7 +110,7 @@ export const ALL_EVENTS: EventSpec[] = [
       '"Cipher Coding" is a competitive technical event combining cryptography, logical reasoning, and programming. Participants solve encrypted clues, coding challenges, and puzzles to unlock a secret PIN, with speed and accuracy determining the winner.',
     date: 'DAY 01',
     time: '11:30 AM - 12:30 PM',
-    teamSize: '3 MEMBERS',
+    teamSize: '1 MEMBER',
     coordinators: [
       coordinator('Kiran Roopika', undefined, '7695942195'),
       coordinator('Sivagnanam C M', '3RD', '9342247349'),
@@ -121,14 +121,14 @@ export const ALL_EVENTS: EventSpec[] = [
     chipLabel: 'CIPHER',
     chipSub: 'SHA-256',
     protocols: [
-      'Each team must consist of exactly 3 members.',
+      'Participants compete solo.',
       'Challenges must be solved in the given order; skipping levels is not allowed.',
       'Each solved challenge reveals a digit or part of the PIN required for the next level.',
       'Event timing: 11:30 AM - 12:30 PM (Day 1).',
       'Participants must complete all challenges within the time limit announced by the organizers.',
       'Use of external AI tools, online forums, or pre-written code/resources is strictly prohibited.',
       'Sharing answers, PIN digits, code, or solutions with other participants will lead to immediate disqualification.',
-      'If multiple teams finish successfully, the team completing the final stage in the shortest total time will be considered the winner.'
+      'If multiple participants finish successfully, the participant completing the final stage in the shortest total time will be considered the winner.'
     ]
   },
   {

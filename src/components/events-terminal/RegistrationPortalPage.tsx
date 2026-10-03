@@ -67,10 +67,11 @@ export function isTeamEvent(event: { id?: string; code?: string; name?: string; 
   const id = (event.id || '').toLowerCase();
   const originalId = (event.originalEventId || '').toLowerCase();
 
-  // Weblica, XCoders, and Spotlight are ALWAYS solo events
+  // Weblica, XCoders, Spotlight, and Cipher Coding are ALWAYS solo events
   if (name.includes('weblica') || code === 'WB' || id.includes('weblica') || originalId.includes('weblica')) return false;
   if (name.includes('xcoder') || code === 'XC' || id.includes('x_coder') || id.includes('xcoder') || originalId.includes('x_coder') || originalId.includes('xcoder')) return false;
   if (name.includes('spotlight') || code === 'SL' || name.includes('talent') || code === 'TAL' || id.includes('talent') || id.includes('spotlight') || originalId.includes('talent')) return false;
+  if (name.includes('cipher') || name.includes('cypher') || code === 'CC' || id.includes('cypher') || id.includes('cipher') || originalId.includes('cypher') || originalId.includes('cipher')) return false;
 
   // Explicit backend event_type check
   if (event.event_type && event.event_type.toUpperCase() === 'TEAM') return true;
@@ -78,7 +79,6 @@ export function isTeamEvent(event: { id?: string; code?: string; name?: string; 
 
   // Day 1 Team Events
   if (name.includes('paper') || code === 'PP' || id.includes('paper') || originalId.includes('paper')) return true;
-  if (name.includes('cipher') || name.includes('cypher') || code === 'CC' || id.includes('cypher') || id.includes('cipher') || originalId.includes('cypher') || originalId.includes('cipher')) return true;
   if (name.includes('unsaid') || code === 'US' || id.includes('unsaid') || originalId.includes('unsaid')) return true;
 
   // Day 2 Team Events
@@ -221,7 +221,7 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
         }
       });
     } else {
-      // Solo events (Weblica, XCoders, Spotlight) toggle individually
+      // Solo events (Weblica, XCoders, Spotlight, Cipher Coding) toggle individually
       setSelectedEventIds((prev) =>
         prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
       );

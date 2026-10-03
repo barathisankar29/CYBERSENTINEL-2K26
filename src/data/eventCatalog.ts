@@ -33,7 +33,7 @@ export const DAY_1_EVENTS: CatalogEvent[] = [
     venue: 'Systems Lab 01 / Block B',
     time: '11:30 AM - 02:00 PM',
     fee: '₹150 / Solo',
-    crew: '3 Members',
+    crew: 'Solo',
   },
   {
     id: 'unsaid',
