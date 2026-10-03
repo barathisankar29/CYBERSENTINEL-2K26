@@ -114,7 +114,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectModule, onNaviga
         >
           {/* Main Event Title & Tagline */}
           <div>
-            <h2 className="font-pixel text-2xl sm:text-3xl md:text-4xl text-white tracking-wider mb-2 leading-tight drop-shadow-[0_0_15px_rgba(255,0,127,0.7)]">
+            <h2 className="font-pixel text-[clamp(1rem,5.6vw,1.5rem)] [overflow-wrap:anywhere] sm:text-3xl md:text-4xl text-white tracking-wider mb-2 leading-tight drop-shadow-[0_0_15px_rgba(255,0,127,0.7)]">
               CYBERSENTINEL 2K26
             </h2>
 
