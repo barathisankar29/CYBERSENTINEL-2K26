@@ -40,6 +40,7 @@ export const ALL_EVENTS: EventSpec[] = [
     day: 1,
     track: 'technical',
     title: 'PAPER PRESENTATION',
+    image: '/assets/events/paper_presentation.webp',
     quote: '"PRESENT INNOVATIVE IDEAS. REDEFINE THE COMPUTING HORIZON."',
     description:
       'A paper presentation event is a place where participants showcase their research, ideas, or innovations through structured presentations. It allows knowledge sharing, critical discussions, and evaluation by experts.',
@@ -73,6 +74,7 @@ export const ALL_EVENTS: EventSpec[] = [
     day: 1,
     track: 'technical',
     title: 'UNSAID',
+    image: '/assets/events/unsaid.webp',
     quote: '"SILENCE IN THE CHANNEL. EXPRESS WITHOUT WORDS. DECODE THE SIGNAL."',
     description:
       '"Unsaid" is a fun team-based guessing game where one participant gives indirect and creative hints while the other decodes the answer. Featuring gadgets, electronics, and CSE-related terms, it tests communication, creativity, understanding, and presence of mind.',
@@ -102,6 +104,7 @@ export const ALL_EVENTS: EventSpec[] = [
     day: 1,
     track: 'technical',
     title: 'CIPHER CODING',
+    image: '/assets/events/cypher_coding.webp',
     quote: '"DECRYPT THE LOGIC. CRACK THE CIPHER. COMPILE UNDER PRESSURE."',
     description:
       '"Cipher Coding" is a competitive technical event combining cryptography, logical reasoning, and programming. Participants solve encrypted clues, coding challenges, and puzzles to unlock a secret PIN, with speed and accuracy determining the winner.',
@@ -134,6 +137,7 @@ export const ALL_EVENTS: EventSpec[] = [
     day: 1,
     track: 'technical',
     title: 'WEBLICA',
+    image: '/assets/events/weblica.webp',
     quote: '"FORGE SEAMLESS DIGITAL EXPERIENCES WITH MODERN WEB UX."',
     description:
       '"Weblica" is a creative web development event where participants recreate a given user interface with accuracy and creativity. They will be evaluated on design, layout, responsiveness, visual elements, and overall implementation within the given time.',
@@ -166,6 +170,7 @@ export const ALL_EVENTS: EventSpec[] = [
     day: 1,
     track: 'technical',
     title: 'XCODERS',
+    image: '/assets/events/x_coders.webp',
     quote: '"DECIPHER THE SYNTAX. DECODE THE PROBLEM. COMPILE THE SOLUTION."',
     description:
       '"Xcoders" is a fun technical coding challenge where participants decipher problem statements written in quirky programming languages like Rajini++ or Chef. Using the given syntax, they must understand the problem and decode a solution in C, C++, Python, or Java.',
@@ -201,6 +206,7 @@ export const ALL_EVENTS: EventSpec[] = [
     day: 2,
     track: 'non_technical',
     title: 'GROUP DANCE',
+    image: '/assets/events/group_dance.webp',
     quote: '"ELECTRIFY THE GRID. SYNC KINETIC MOTIONS. RULE THE DANCEFLOOR."',
     description:
       '"Group Dance" is a vibrant event where rhythm, energy, and teamwork come together. Participants will showcase their creativity, synchronization, expressions, and unique choreography through an energetic team performance.',
@@ -233,6 +239,7 @@ export const ALL_EVENTS: EventSpec[] = [
     day: 2,
     track: 'non_technical',
     title: 'SPOTLIGHT',
+    image: '/assets/events/talent_show.webp',
     quote: '"OWN THE STAGE. ONE PERFORMER. ALL EYES ON YOU."',
     description:
       '"Spotlight" is an exciting talent show where teams showcase their unique talents and abilities. From singing and dancing to acting, mimicry, or storytelling, it celebrates creativity, confidence, and individuality.',
@@ -265,6 +272,7 @@ export const ALL_EVENTS: EventSpec[] = [
     day: 2,
     track: 'non_technical',
     title: 'CONNECTIONS',
+    image: '/assets/events/connections.webp',
     quote: '"DECODE THE CLUES. CONNECT THE UNCONNECTED."',
     description:
       '"Connections" is a visual guessing game where teams identify the hidden link between a set of images related to a movie or song. It tests observation, memory, quick thinking, entertainment knowledge, and teamwork.',
@@ -295,6 +303,7 @@ export const ALL_EVENTS: EventSpec[] = [
     day: 2,
     track: 'non_technical',
     title: 'FIND THE BGM',
+    image: '/assets/events/bgm.webp',
     quote: '"HEAR THE BEAT. NAME THE SCENE. BEAT THE CLOCK."',
     description:
       '"Find the BGM" is a music-based event where teams identify a movie or song from a background music clip. It tests musical memory, attentiveness, movie and music knowledge, and quick thinking.',
@@ -327,6 +336,7 @@ export const ALL_EVENTS: EventSpec[] = [
     day: 2,
     track: 'non_technical',
     title: 'MIXED SIGNALS',
+    image: '/assets/events/mixed_signals.webp',
     quote: '"CANNOT SEE. CANNOT SPEAK. CANNOT HEAR. STILL IN SYNC."',
     description:
       '"Mixed Signals" is a team-based challenge where participants overcome different communication barriers to solve a given task. It tests teamwork, creativity, coordination, communication, and presence of mind within a limited time.',
@@ -361,6 +371,7 @@ export const ALL_EVENTS: EventSpec[] = [
     day: 2,
     track: 'non_technical',
     title: 'LOST IN LYRICS',
+    image: '/assets/events/lyrics.webp',
     quote: '"LOST IN TRANSLATION. FOUND IN THE MELODY."',
     description:
       '"Lost in Lyrics" is a music-based team event where participants identify the original song from translated lyrics. It tests their knowledge of songs, lyrical understanding, memory, and quick thinking.',
@@ -395,6 +406,7 @@ export const ALL_EVENTS: EventSpec[] = [
     day: 2,
     track: 'non_technical',
     title: 'E-SPORTS',
+    image: '/assets/events/e_sports.webp',
     quote: '"THE ARENA IS SET. THE GAME IS A SECRET."',
     description:
       'E-Sports is a special event of CyberSentinel 2K26 with two Free Fire tournaments: a Free Fire Clash Squad Tournament where 16 teams battle through 4 knockout rounds (16 → 8 → 4 → 2 → 1), and the Lord Esports Battle Royale Tournament where 24 teams compete across 2 rounds. Cash prizes are awarded to the Winner and Runner-up. Registration is per team.',
@@ -421,6 +433,7 @@ export const ALL_EVENTS: EventSpec[] = [
     day: 2,
     track: 'non_technical',
     title: 'THIRUVIZHA CORNER',
+    image: '/assets/events/thiruvizha_corner.webp',
     quote: '"TRADITIONAL CARNIVAL DELIGHTS. VIBRANT CYBER FAIR."',
     description:
       '"Thiruvizha Corner" is a vibrant space where culture, creativity, and entrepreneurship come together. Participants can set up stalls to showcase or sell food, traditional items, arts, crafts, accessories, Henna art, and more.',
