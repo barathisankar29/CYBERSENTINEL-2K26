@@ -23,7 +23,7 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  padding: clamp(0.5rem, 2vh, 1.25rem) 1rem 0.25rem;
+  padding: clamp(0.5rem, 2vh, 1.25rem) 1rem 2.25rem;
   flex-shrink: 0;
   z-index: 2;
 }
