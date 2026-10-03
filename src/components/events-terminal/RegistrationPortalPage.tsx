@@ -626,7 +626,19 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
                         {checked ? '✓' : ''}
                       </span>
                       <span className="flex flex-col">
-                        <span className="font-pixel text-xs text-white uppercase">{event.name}</span>
+                        <span className="font-pixel text-xs text-white uppercase flex items-baseline flex-wrap gap-1">
+                          <span>{event.name}</span>
+                          {(event.code === 'TC' || event.name.toLowerCase().includes('thiruvizha')) && (
+                            <span className="text-[10px] text-zinc-400 font-normal font-mono normal-case">
+                              (Stalls &amp; Stores)
+                            </span>
+                          )}
+                          {(event.code === 'EP' || event.name.toLowerCase().includes('esport') || event.name.toLowerCase().includes('e-sport')) && (
+                            <span className="text-[10px] text-zinc-400 font-normal font-mono normal-case">
+                              (Free-Fire)
+                            </span>
+                          )}
+                        </span>
                         <span className="text-[10px] font-mono text-gray-400">
                           {event.description || 'Special event'} • {formatRupees(withGst(Number(event.fee)))}
                         </span>

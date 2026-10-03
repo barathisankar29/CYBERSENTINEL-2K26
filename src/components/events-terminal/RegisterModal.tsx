@@ -15,6 +15,7 @@ import {
 interface EventItem {
   id: string;
   name: string;
+  subtitle?: string;
   day?: string;
   protocol?: string;
   originalEventId?: string;
@@ -86,8 +87,8 @@ const PACK_CONFIGS: Record<string, CharacterConfig> = {
     isPerEventPricing: true,
     events: [
       { id: 'dacre-dance', name: 'Group Dance', protocol: 'PROTOCOL_A', originalEventId: 'group_dance' },
-      { id: 'dacre-thiruvizha', name: 'Thiruvizha Corner', protocol: 'PROTOCOL_B', originalEventId: 'thiruvizha_corner' },
-      { id: 'dacre-esports', name: 'E-Sports', protocol: 'PROTOCOL_C', originalEventId: 'e_sports' }
+      { id: 'dacre-thiruvizha', name: 'Thiruvizha Corner', subtitle: '(Stalls & Stores)', protocol: 'PROTOCOL_B', originalEventId: 'thiruvizha_corner' },
+      { id: 'dacre-esports', name: 'E-Sports', subtitle: '(Free-Fire)', protocol: 'PROTOCOL_C', originalEventId: 'e_sports' }
     ]
   },
   COSMA: {
@@ -586,14 +587,14 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                 data-purpose="sub-event-group-dance"
                 style={{ borderColor: 'rgba(0, 255, 204, 0.5)' }}
               >
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between gap-2">
                   <div>
                     <span className="text-[9px] font-arcade block" style={{ color: 'rgba(0, 255, 204, 0.7)' }}>
                       PROTOCOL_A
                     </span>
                     <span className="font-pixel text-xs sm:text-sm text-white font-bold">Group Dance</span>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right shrink-0">
                     <span className="font-arcade text-xs" style={{ color: '#00ffcc' }}>
                       {cardPrice('DR. DACRE', ['dacre-dance'])}
                     </span>
@@ -614,14 +615,22 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                 data-purpose="sub-event-thiruvizha"
                 style={{ borderColor: 'rgba(0, 255, 204, 0.5)' }}
               >
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between gap-2">
                   <div>
                     <span className="text-[9px] font-arcade block" style={{ color: 'rgba(0, 255, 204, 0.7)' }}>
                       PROTOCOL_B
                     </span>
-                    <span className="font-pixel text-xs sm:text-sm text-white font-bold">Thiruvizha Corner</span>
+                    <div className="font-pixel text-xs sm:text-sm text-white font-bold leading-snug">
+                      <div>Thiruvizha</div>
+                      <div className="flex items-baseline gap-1">
+                        <span>Corner</span>
+                        <span className="text-[9px] sm:text-[10px] text-zinc-400 font-normal font-mono whitespace-nowrap">
+                          (Stalls &amp; Stores)
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right shrink-0">
                     <span className="font-arcade text-xs" style={{ color: '#00ffcc' }}>
                       {cardPrice('DR. DACRE', ['dacre-thiruvizha'])}
                     </span>
@@ -642,14 +651,19 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                 data-purpose="sub-event-esports"
                 style={{ borderColor: 'rgba(0, 255, 204, 0.5)' }}
               >
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between gap-2">
                   <div>
                     <span className="text-[9px] font-arcade block" style={{ color: 'rgba(0, 255, 204, 0.7)' }}>
                       PROTOCOL_C
                     </span>
-                    <span className="font-pixel text-xs sm:text-sm text-white font-bold">E-Sports</span>
+                    <span className="font-pixel text-xs sm:text-sm text-white font-bold flex items-baseline flex-wrap gap-1">
+                      <span>E-Sports</span>
+                      <span className="text-[9px] sm:text-[10px] text-zinc-400 font-normal font-mono whitespace-nowrap">
+                        (Free-Fire)
+                      </span>
+                    </span>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right shrink-0">
                     <span className="font-arcade text-xs" style={{ color: '#00ffcc' }}>
                       {cardPrice('DR. DACRE', ['dacre-esports'])}
                     </span>
@@ -937,8 +951,13 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                           >
                             {String(idx + 1).padStart(2, '0')}
                           </span>
-                          <span className="font-pixel text-xs sm:text-sm font-semibold tracking-wide">
-                            {ev.name}
+                          <span className="font-pixel text-xs sm:text-sm font-semibold tracking-wide flex items-baseline flex-wrap gap-1">
+                            <span>{ev.name}</span>
+                            {ev.subtitle && (
+                              <span className="text-[10px] sm:text-xs text-zinc-400 font-normal font-mono whitespace-nowrap">
+                                {ev.subtitle}
+                              </span>
+                            )}
                           </span>
                         </div>
 
