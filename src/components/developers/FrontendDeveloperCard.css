@@ -146,3 +146,63 @@
   }
 }
 
+/* Big screens / laptop view: two-column horizontal layout matching user template */
+@media (min-width: 960px) {
+  .frontend-dev-card__graphic-col {
+    width: 44%;
+    flex: 0 0 44%;
+    max-width: 360px;
+    padding: 0;
+  }
+
+  .frontend-dev-card__img-container {
+    max-width: 340px;
+    height: 320px;
+  }
+
+  .frontend-dev-card__img {
+    max-height: 310px;
+    max-width: 100%;
+  }
+
+  .frontend-dev-card__info-col {
+    width: 56%;
+    flex: 1 1 56%;
+    align-items: flex-start;
+    text-align: left;
+    gap: 1.15rem;
+    padding-left: 0.5rem;
+  }
+
+  .frontend-dev-card__name {
+    font-size: clamp(2.8rem, 3.8vw, 4.2rem);
+    text-align: left;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    white-space: normal;
+  }
+
+  .frontend-dev-card__desc {
+    font-size: clamp(0.85rem, 1.05vw, 1rem);
+    line-height: 1.65;
+    letter-spacing: 0.04em;
+    text-align: left;
+    text-transform: uppercase;
+    max-width: 500px;
+    opacity: 0.95;
+  }
+
+  .frontend-dev-card__socials {
+    justify-content: center;
+    width: 100%;
+    max-width: 500px;
+    gap: 1.5rem;
+    padding-top: 0.5rem;
+  }
+
+  .frontend-dev-card__social-svg {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+

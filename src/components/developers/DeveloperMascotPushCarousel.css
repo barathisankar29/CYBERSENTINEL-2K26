@@ -575,3 +575,64 @@
   box-shadow: 0 0 10px #00f0ff, 0 0 20px rgba(0, 240, 255, 0.6);
 }
 
+/* ==========================================================================
+   BIG SCREENS / LAPTOP OVERRIDES (min-width: 960px)
+   Horizontal wide card stage matching user template
+   ========================================================================== */
+@media (min-width: 960px) {
+  .mascot-carousel {
+    max-width: 1200px;
+  }
+
+  .mascot-carousel__stage {
+    min-height: 480px;
+    gap: clamp(1.8rem, 3.5vw, 3.5rem);
+  }
+
+  .mascot-carousel__card-wrapper {
+    max-width: 960px;
+  }
+
+  .mascot-pusher {
+    top: 10px;
+    left: -76px;
+  }
+
+  .mascot-card-slot.is-exiting--next {
+    animation-name: cardExitRightDesktop;
+  }
+  .mascot-card-slot.is-exiting--prev {
+    animation-name: cardExitLeftDesktop;
+  }
+  .mascot-card-slot.is-entering--next {
+    animation-name: cardEnterLeftDesktop;
+  }
+  .mascot-card-slot.is-entering--prev {
+    animation-name: cardEnterRightDesktop;
+  }
+}
+
+@keyframes cardExitRightDesktop {
+  0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: 1; }
+  40% { transform: translate3d(180px, 0, 0) scale(0.96) rotate(2deg); opacity: 0.85; }
+  100% { transform: translate3d(1100px, 0, 0) scale(0.8) rotate(8deg); opacity: 0; }
+}
+
+@keyframes cardExitLeftDesktop {
+  0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: 1; }
+  40% { transform: translate3d(-180px, 0, 0) scale(0.96) rotate(-2deg); opacity: 0.85; }
+  100% { transform: translate3d(-1100px, 0, 0) scale(0.8) rotate(-8deg); opacity: 0; }
+}
+
+@keyframes cardEnterLeftDesktop {
+  0% { transform: translate3d(-1100px, 0, 0) scale(0.85) rotate(-6deg); opacity: 0; }
+  60% { transform: translate3d(30px, 0, 0) scale(1.01) rotate(1deg); opacity: 1; }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes cardEnterRightDesktop {
+  0% { transform: translate3d(1100px, 0, 0) scale(0.85) rotate(6deg); opacity: 0; }
+  60% { transform: translate3d(-30px, 0, 0) scale(1.01) rotate(-1deg); opacity: 1; }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: 1; }
+}
+

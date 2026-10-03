@@ -17,26 +17,45 @@ interface BrandingStripProps {
  * browsers still load them immediately rather than deferring.
  */
 export function BrandingStrip({ style }: BrandingStripProps) {
+  const velTechLogo = brandingStripLogos.find((logo) => logo.id === 'vel-tech')
+  const badgeLogos = brandingStripLogos.filter((logo) => logo.id !== 'vel-tech')
+
   return (
     <div className="branding-strip" style={style}>
-      {brandingStripLogos.map((logo) => (
-        <span
-          key={logo.id}
-          data-logo-id={logo.id}
-          className={logo.blend === 'multiply' ? 'branding-strip__chip' : 'branding-strip__mark'}
-        >
+      {velTechLogo && (
+        <div className="branding-strip__main" data-logo-id="vel-tech">
           <img
-            src={logo.src}
-            alt={logo.alt}
-            width={logo.width}
-            height={logo.height}
+            src={velTechLogo.src}
+            alt={velTechLogo.alt}
+            width={velTechLogo.width}
+            height={velTechLogo.height}
             loading="lazy"
             decoding="async"
             draggable={false}
-            className={`branding-strip__logo ${logo.blend === 'multiply' ? 'branding-strip__logo--multiply' : ''}`}
+            className="branding-strip__logo branding-strip__logo--hero"
           />
-        </span>
-      ))}
+        </div>
+      )}
+      <div className="branding-strip__badges">
+        {badgeLogos.map((logo) => (
+          <span
+            key={logo.id}
+            data-logo-id={logo.id}
+            className={logo.blend === 'multiply' ? 'branding-strip__chip' : 'branding-strip__mark'}
+          >
+            <img
+              src={logo.src}
+              alt={logo.alt}
+              width={logo.width}
+              height={logo.height}
+              loading="lazy"
+              decoding="async"
+              draggable={false}
+              className={`branding-strip__logo ${logo.blend === 'multiply' ? 'branding-strip__logo--multiply' : ''}`}
+            />
+          </span>
+        ))}
+      </div>
     </div>
   )
 }
