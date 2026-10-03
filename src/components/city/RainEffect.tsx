@@ -33,8 +33,8 @@ const SLANT = 0.18
 const STRIKE_INTERVAL = 4000
 const FLASH_MS = 450
 const BOLT_MS = 180
-// Thunder peak gain — kept low so it sits under the page, not over it.
-const THUNDER_VOLUME = 0.14
+// Thunder peak gain — tuned so it rumbles clearly alongside ambient cyberpunk music
+const THUNDER_VOLUME = 0.28
 
 interface Drop {
   x: number
