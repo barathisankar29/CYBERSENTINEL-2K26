@@ -112,9 +112,11 @@ export interface TeamCreateInput {
   members: string[]
   day: TeamDay
   packageId: string
-  /** Chosen size, within the package's min_size..max_size */
+  /** Chosen size; must fit every event in selectedEventIds */
   teamSize: number
   teamName: string
+  /** The package events this team participates in (at least one) */
+  selectedEventIds: string[]
 }
 
 export interface TeamCreateResponse {

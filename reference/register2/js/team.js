@@ -4,6 +4,10 @@ const state = { identity: '', packages: { DAY_1: [], DAY_2: [] }, registration: 
 function esc(value) { return String(value ?? '').replace(/[&<>"']/g, character => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[character])); }
 function message(text, type = 'error') { const box = $('#teamMessage'); box.className = `alert show ${type}`; box.textContent = text; showFeedback(type === 'success' ? (mode === 'create' ? 'Team created' : 'Team joined') : 'Team request failed', text, type); }
 function selectedPackage() { return state.packages[$('#teamDay').value]?.find(item => item.id === $('#teamPackage').value); }
+function selectedTeamEvents(item = selectedPackage()) {
+  const selectedIds = new Set(Array.from(document.querySelectorAll('input[name="teamEvent"]:checked')).map(input => input.value));
+  return (item?.events || []).filter(event => selectedIds.has(event.id));
+}
 function sizeLabel(item) { return item.min_size === item.max_size ? `${item.min_size} member${item.min_size === 1 ? '' : 's'}` : `${item.min_size}-${item.max_size} members`; }
 function renderPackages() {
   const day = $('#teamDay').value;
@@ -15,6 +19,11 @@ function renderPackage() {
   const item = selectedPackage();
   $('#packageNote').textContent = item ? `This team is applicable only for: ${item.events.map(event => event.name).join(' and ')}. Choose ${sizeLabel(item)}.` : 'Select a day and team package.';
   if (mode !== 'create') return;
+  const choices = $('#teamEventChoices');
+  const options = $('#teamEventOptions');
+  choices.classList.toggle('hidden', !item);
+  options.innerHTML = item ? item.events.map(event => `<label class="event-option"><input type="checkbox" name="teamEvent" value="${esc(event.id)}" checked><span>${esc(event.name)}<small>${esc(event.code)}</small></span></label>`).join('') : '';
+  options.querySelectorAll('input[name="teamEvent"]').forEach(input => input.addEventListener('change', renderTeamSizeOptions));
   let sizeSelect = $('#teamSize');
   if (!sizeSelect) {
     const field = document.createElement('div');
@@ -28,12 +37,25 @@ function renderPackage() {
     $('#memberFields').innerHTML = '';
     return;
   }
+  renderTeamSizeOptions();
+}
+function renderTeamSizeOptions() {
+  const item = selectedPackage();
+  const sizeSelect = $('#teamSize');
+  const events = selectedTeamEvents(item);
+  if (!item || !events.length) {
+    sizeSelect.innerHTML = '';
+    renderMemberFields();
+    return;
+  }
+  const minSize = Math.max(2, ...events.map(event => event.min_team_size));
+  const maxSize = Math.min(3, ...events.map(event => event.max_team_size));
   const previousSize = Number(sizeSelect.value);
-  sizeSelect.innerHTML = Array.from({ length: item.max_size - item.min_size + 1 }, (_, index) => {
-    const size = item.min_size + index;
+  sizeSelect.innerHTML = Array.from({ length: maxSize - minSize + 1 }, (_, index) => {
+    const size = minSize + index;
     return `<option value="${size}">${size} members</option>`;
   }).join('');
-  sizeSelect.value = String(previousSize >= item.min_size && previousSize <= item.max_size ? previousSize : item.min_size);
+  sizeSelect.value = String(previousSize >= minSize && previousSize <= maxSize ? previousSize : minSize);
   renderMemberFields();
 }
 function renderMemberFields() {
@@ -57,6 +79,8 @@ async function verifyMember() {
 async function submitTeam() {
   const item = selectedPackage(); if (!item) return message('Select a valid day and event team package.');
   const teamSize = Number($('#teamSize')?.value || 0);
+  const selectedEventIds = Array.from(document.querySelectorAll('input[name="teamEvent"]:checked')).map(input => input.value);
+  if (mode === 'create' && !selectedEventIds.length) return message('Select at least one event for this team.');
   const members = Array.from(document.querySelectorAll('.member-identity')).map(input => input.value.trim());
   if (mode === 'create' && members.some(value => !value)) return message(`Enter all ${teamSize - 1} other team members.`);
   const button = $('#submitTeam'); button.disabled = true; button.textContent = mode === 'create' ? 'Checking members...' : 'Joining...';
@@ -67,7 +91,15 @@ async function submitTeam() {
       const ineligible = registrations.find(data => data.registration.selected_day !== 'BOTH' && data.registration.selected_day !== selectedDay);
       if (ineligible) throw new Error(`${ineligible.registration.participant_name} is not registered for ${selectedDay.replace('_', ' ')}.`);
     }
-    const data = await request({ action: mode, identity: state.identity, members, day: $('#teamDay').value, package_id: item.id, team_size: teamSize, team_name: $('#teamName')?.value.trim(), team_code: $('#teamCode')?.value.trim() });
+    const data = await request({ action: mode, identity: state.identity, members, day: $('#teamDay').value, package_id: item.id, team_size: teamSize, team_name: $('#teamName')?.value.trim(), team_code: $('#teamCode')?.value.trim(), selected_event_ids: mode === 'create' ? selectedEventIds : undefined });
+    if (mode === 'create') {
+      const savedEventIds = data.team?.package_events?.map(event => event.id);
+      const expectedEventIds = item.events.filter(event => selectedEventIds.includes(event.id)).map(event => event.id);
+      if (!savedEventIds || savedEventIds.length !== expectedEventIds.length
+        || expectedEventIds.some(eventId => !savedEventIds.includes(eventId))) {
+        throw new Error('The team may have been created, but the server saved a different event selection. Do not create it again; redeploy the team-management function and ask an administrator to correct this team.');
+      }
+    }
     message(data.message, 'success'); if (data.team?.team_code) $('#packageNote').textContent = `Team created. Share this code with your members: ${data.team.team_code}`;
   } catch (error) { message(error.message); } finally { button.disabled = false; button.textContent = mode === 'create' ? 'Create team' : 'Join team'; }
 }
@@ -75,7 +107,7 @@ async function loadTeams() {
   const item = selectedPackage(); if (!item) { $('#teamResults').innerHTML = ''; return; }
   try {
     const data = await request({ action: 'list', identity: state.identity, day: $('#teamDay').value, package_id: item.id, search: $('#teamSearch')?.value.trim() });
-    $('#teamResults').innerHTML = data.teams.length ? data.teams.map(team => `<article class="team-result"><div><h3>${esc(team.team_name)}</h3><p class="notice">Code: ${esc(team.team_code)} · Leader: ${esc(team.leader_name)} · ${team.member_count}/${team.max_members} members</p></div><span class="status ${team.full ? 'rejected' : 'verified'}">${team.full ? 'Full' : 'Open'}</span></article>`).join('') : '<p class="notice">No teams found for this package.</p>';
+    $('#teamResults').innerHTML = data.teams.length ? data.teams.map(team => `<article class="team-result"><div><h3>${esc(team.team_name)}</h3><p class="notice">Code: ${esc(team.team_code)} · Leader: ${esc(team.leader_name)} · ${team.member_count}/${team.max_members} members</p><p class="notice">Events: ${team.package_events.map(esc).join(', ')}</p></div><span class="status ${team.full ? 'rejected' : 'verified'}">${team.full ? 'Full' : 'Open'}</span></article>`).join('') : '<p class="notice">No teams found for this package.</p>';
   } catch (error) { message(error.message); }
 }
 $('#verifyBtn').onclick = verifyMember;

@@ -213,5 +213,6 @@ export function createTeam(input: TeamCreateInput): Promise<TeamCreateResponse> 
     package_id: input.packageId,
     team_size: input.teamSize,
     team_name: input.teamName,
+    selected_event_ids: input.selectedEventIds,
   })
 }

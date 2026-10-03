@@ -71,9 +71,19 @@ Deno.serve(async request => {
     if (!selectedPackage) throw new Error("Select a valid team event package.");
 
     if (action === "create") {
+      const requestedEventIds = Array.isArray(body.selected_event_ids)
+        ? body.selected_event_ids.map((value: unknown) => String(value))
+        : [];
+      const selectedEventIds = Array.from(new Set(requestedEventIds));
+      if (!selectedEventIds.length || selectedEventIds.length !== requestedEventIds.length
+        || selectedEventIds.some(eventId => !selectedPackage.events.some(event => event.id === eventId))) {
+        throw new Error("Select one or more valid events from this team package.");
+      }
+      const selectedEvents = selectedPackage.events.filter(event => selectedEventIds.includes(event.id));
       const teamSize = Number(body.team_size);
-      if (!Number.isInteger(teamSize) || teamSize < selectedPackage.min_size || teamSize > selectedPackage.max_size || teamSize < 2 || teamSize > 3) throw new Error(`Choose a team size between ${selectedPackage.min_size} and ${selectedPackage.max_size}.`);
-      if (selectedPackage.events.some(event => teamSize < event.min_team_size || teamSize > event.max_team_size)) throw new Error("The selected team size is not allowed for every event in this package.");
+      const minTeamSize = Math.max(2, ...selectedEvents.map(event => event.min_team_size));
+      const maxTeamSize = Math.min(3, ...selectedEvents.map(event => event.max_team_size));
+      if (!Number.isInteger(teamSize) || teamSize < minTeamSize || teamSize > maxTeamSize) throw new Error(`Choose a team size between ${minTeamSize} and ${maxTeamSize}.`);
       const memberIdentities = Array.isArray(body.members) ? body.members.map((value: unknown) => String(value || "").trim()).filter(Boolean) : [];
       const uniqueIdentities = Array.from(new Set([identity, ...memberIdentities]));
       if (uniqueIdentities.length !== teamSize) throw new Error(`This team requires exactly ${teamSize} verified members.`);
@@ -81,61 +91,87 @@ Deno.serve(async request => {
       for (const memberIdentity of uniqueIdentities) {
         const member = await verifiedRegistration(db, memberIdentity);
         if (!(member.selected_day === "BOTH" || member.selected_day === day)) throw new Error(`${member.participant.name} is not registered for the selected day.`);
-        if (!selectedPackage.events.every(event => member.selected_event_ids.includes(event.id))) throw new Error(`${member.participant.name} has not selected every event in this team package.`);
+        if (!selectedEventIds.every(eventId => member.selected_event_ids.includes(eventId))) throw new Error(`${member.participant.name} has not selected every event chosen for this team.`);
         members.push(member);
       }
       const memberIds = members.map(member => member.id);
-      const packageEventIds = selectedPackage.events.map(event => event.id);
-      const { data: existing } = await db.from("team_members").select("registration_id,participants(name),event_teams!inner(event_id)").in("registration_id", memberIds).in("event_teams.event_id", packageEventIds);
-      if (existing?.length) {
-        const names = existing.map((row: any) => row.participants?.name || "Unknown member").join(", ");
+      const { data: existingMemberships, error: membershipError } = await db.from("team_members").select("team_id,registration_id,registrations(participants(name))").in("registration_id", memberIds);
+      if (membershipError) throw membershipError;
+      const existingTeamIds = Array.from(new Set((existingMemberships || []).map((row: any) => row.team_id)));
+      const { data: existingPackages, error: existingPackagesError } = existingTeamIds.length
+        ? await db.from("event_team_packages").select("team_id,event_id").in("team_id", existingTeamIds).in("event_id", selectedEventIds)
+        : { data: [], error: null };
+      if (existingPackagesError) throw existingPackagesError;
+      const conflictingMembers = (existingMemberships || []).filter((member: any) =>
+        existingPackages?.some((teamEvent: any) => teamEvent.team_id === member.team_id)
+      );
+      if (conflictingMembers.length) {
+        const names = Array.from(new Set(conflictingMembers.map((row: any) => row.registrations?.participants?.name || "Unknown member"))).join(", ");
         throw new Error(`${names} already in team for the same event`);
       }
       const teamName = String(body.team_name || "").trim();
       if (!teamName) throw new Error("Enter a team name.");
-      const { data: team, error: teamError } = await db.from("event_teams").insert({ event_id: selectedPackage.events[0].id, team_code: `${day}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`, team_name: teamName, leader_registration_id: registration.id, max_members: teamSize }).select("id,team_code,team_name").single();
-      if (teamError) throw teamError;
-      const { error: packageError } = await db.from("event_team_packages").insert(selectedPackage.events.map(event => ({ team_id: team.id, event_id: event.id })));
-      if (packageError) throw packageError;
-      const { error: memberError } = await db.from("team_members").insert(members.map((member, index) => ({ team_id: team.id, registration_id: member.id, member_role: index === 0 ? "LEADER" : "MEMBER" })));
-      if (memberError) throw memberError;
-      return json({ success: true, message: `Team created for ${selectedPackage.events.map(event => event.name).join(" and ")}.`, team: { ...team, package_events: selectedPackage.events } });
+      const teamEvents = selectedEvents;
+      const teamCode = `${day}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
+      const { data: createdTeams, error: createError } = await db.rpc("create_event_team_atomic", {
+        p_event_id: teamEvents[0].id,
+        p_team_code: teamCode,
+        p_team_name: teamName,
+        p_leader_registration_id: registration.id,
+        p_max_members: teamSize,
+        p_event_ids: teamEvents.map(event => event.id),
+        p_registration_ids: members.map(member => member.id)
+      });
+      if (createError) throw createError;
+      const team = Array.isArray(createdTeams) ? createdTeams[0] : createdTeams;
+      if (!team?.id) throw new Error("Team creation did not return a saved team.");
+      return json({ success: true, message: `Team created for ${teamEvents.map(event => event.name).join(" and ")}.`, team: { ...team, package_events: teamEvents } });
     }
 
     if (action === "list") {
-      const { data: teams, error } = await db.from("event_team_packages").select("team_id,event_teams(id,team_code,team_name,status,max_members,leader_registration_id,team_members(count))").in("event_id", selectedPackage.events.map(event => event.id));
+      const { data: teams, error } = await db.from("event_team_packages").select("team_id,event_id,event_teams(id,team_code,team_name,status,max_members,leader_registration_id,team_members(count))").in("event_id", selectedPackage.events.map(event => event.id));
       if (error) throw error;
       const seen = new Set<string>();
       const results = [];
       for (const row of teams || []) {
         const team = row.event_teams as any;
         if (!team || seen.has(team.id)) continue;
-        const { data: teamPackage } = await db.from("event_team_packages").select("event_id").eq("team_id", team.id);
+        const { data: teamPackage, error: teamPackageError } = await db.from("event_team_packages").select("event_id").eq("team_id", team.id);
+        if (teamPackageError) throw teamPackageError;
         const teamEventIds = (teamPackage || []).map((item: any) => item.event_id).sort();
         const selectedPackageEventIds = selectedPackage.events.map(event => event.id).sort();
-        if (JSON.stringify(teamEventIds) !== JSON.stringify(selectedPackageEventIds)) continue;
+        if (!teamEventIds.length || !teamEventIds.every(eventId => selectedPackageEventIds.includes(eventId))
+          || !teamEventIds.every(eventId => registration.selected_event_ids.includes(eventId))) continue;
         seen.add(team.id);
         const count = team.team_members?.[0]?.count || 0;
-        const { data: leader } = await db.from("registrations").select("participants(name)").eq("id", team.leader_registration_id).maybeSingle();
-        results.push({ team_code: team.team_code, team_name: team.team_name, leader_name: leader?.participants?.name || "Team leader", member_count: count, max_members: team.max_members, full: count >= team.max_members || team.status !== "OPEN" });
+        const { data: leader, error: leaderError } = await db.from("registrations").select("participants(name)").eq("id", team.leader_registration_id).maybeSingle();
+        if (leaderError) throw leaderError;
+        results.push({ team_code: team.team_code, team_name: team.team_name, leader_name: leader?.participants?.name || "Team leader", member_count: count, max_members: team.max_members, package_events: teamEventIds.map(eventId => selectedPackage.events.find(event => event.id === eventId)?.name).filter(Boolean), full: count >= team.max_members || team.status !== "OPEN" });
       }
       return json({ success: true, teams: results });
     }
 
     if (action === "join") {
       const teamCode = String(body.team_code || "").trim().toUpperCase();
-      const { data: team } = await db.from("event_teams").select("id,team_code,team_name,status,max_members,team_members(count)").eq("team_code", teamCode).maybeSingle();
+      const { data: team, error: teamError } = await db.from("event_teams").select("id,team_code,team_name,status,max_members,team_members(count)").eq("team_code", teamCode).maybeSingle();
+      if (teamError) throw teamError;
       if (!team || team.status !== "OPEN") throw new Error("Open team was not found.");
       const count = team.team_members?.[0]?.count || 0;
       if (count >= team.max_members) throw new Error("This team is already full.");
-      const { data: packageRows } = await db.from("event_team_packages").select("event_id").eq("team_id", team.id);
+      const { data: packageRows, error: packageRowsError } = await db.from("event_team_packages").select("event_id").eq("team_id", team.id);
+      if (packageRowsError) throw packageRowsError;
       const teamEventIds = (packageRows || []).map((row: any) => row.event_id).sort();
       const selectedPackageEventIds = selectedPackage.events.map(event => event.id).sort();
-      if (JSON.stringify(teamEventIds) !== JSON.stringify(selectedPackageEventIds)) throw new Error("This team belongs to a different event package.");
+      if (!teamEventIds.length || !teamEventIds.every(eventId => selectedPackageEventIds.includes(eventId))) throw new Error("This team belongs to a different event package.");
       if (!teamEventIds.every(eventId => registration.selected_event_ids.includes(eventId))) throw new Error("You have not selected every event in this team package.");
-      const packageEventIds = selectedPackage.events.map(event => event.id);
-      const { data: existing } = await db.from("team_members").select("participants(name),event_teams!inner(event_id)").eq("registration_id", registration.id).in("event_teams.event_id", packageEventIds).maybeSingle();
-      if (existing) throw new Error(`${(existing as any).participants?.name || registration.participant.name} already in team for the same event`);
+      const { data: existingMemberships, error: membershipError } = await db.from("team_members").select("team_id,registrations(participants(name))").eq("registration_id", registration.id);
+      if (membershipError) throw membershipError;
+      const existingTeamIds = Array.from(new Set((existingMemberships || []).map((row: any) => row.team_id)));
+      const { data: existingPackages, error: existingPackagesError } = existingTeamIds.length
+        ? await db.from("event_team_packages").select("team_id,event_id").in("team_id", existingTeamIds).in("event_id", teamEventIds)
+        : { data: [], error: null };
+      if (existingPackagesError) throw existingPackagesError;
+      if (existingPackages?.length) throw new Error(`${registration.participant.name} already in team for the same event`);
       const { error } = await db.from("team_members").insert({ team_id: team.id, registration_id: registration.id, member_role: "MEMBER" });
       if (error) throw error;
       return json({ success: true, message: `Joined ${team.team_name}.` });

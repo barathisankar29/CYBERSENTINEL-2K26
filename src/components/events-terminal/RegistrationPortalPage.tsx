@@ -637,20 +637,10 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
               </div>
             )}
 
-            <div className="bg-[#120621] border border-[#2d123d] p-3.5 sm:p-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="border-b sm:border-b-0 sm:border-r border-[#2d123d] pb-2 sm:pb-0 sm:pr-3">
-                <small className="block text-[10px] font-silkscreen text-gray-400 uppercase mb-0.5">Registration Fee</small>
-                <div className="font-pixel text-xl sm:text-2xl text-[#38bdf8] font-bold" id="fee">{feeDisplay}</div>
-                <small className="block text-[10px] font-mono text-gray-500 mt-0.5">Incl. {GST_PERCENT}% GST</small>
-              </div>
-              <div className="border-b sm:border-b-0 sm:border-r border-[#2d123d] pb-2 sm:pb-0 sm:pr-3">
-                <small className="block text-[10px] font-silkscreen text-gray-400 uppercase mb-0.5">Payment</small>
-                <strong className="block text-sm sm:text-base font-body text-white">Official UPI QR</strong>
-              </div>
-              <div>
-                <small className="block text-[10px] font-silkscreen text-gray-400 uppercase mb-0.5">QR</small>
-                <strong className="block text-sm sm:text-base font-body text-[#34d399]">After verification</strong>
-              </div>
+            <div className="bg-[#120621] border border-[#2d123d] p-3.5 sm:p-4">
+              <small className="block text-[10px] font-silkscreen text-gray-400 uppercase mb-0.5">Registration Fee</small>
+              <div className="font-pixel text-xl sm:text-2xl text-[#38bdf8] font-bold" id="fee">{feeDisplay}</div>
+              <small className="block text-[10px] font-mono text-gray-500 mt-0.5">Incl. {GST_PERCENT}% GST</small>
             </div>
           </div>
 
