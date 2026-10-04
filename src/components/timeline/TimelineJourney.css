@@ -1091,10 +1091,10 @@
   .timeline-hud__swipe-hint { animation: none; }
 }
 
-/* Rain sound toggle (reuses the site music button's look). On phones the
+/* Train sound toggle (reuses the site music button's look). On phones the
    HUD spans the top of the screen, so the toggle drops just below it. */
 @media (max-width: 767px) {
-  .timeline-rain-toggle {
+  .timeline-sound-toggle {
     top: calc(env(safe-area-inset-top, 0px) + 6.4rem);
     right: 0.75rem;
   }

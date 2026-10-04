@@ -9,16 +9,16 @@ import { useJourneyProgress } from './useJourneyProgress'
 import { TimelinePoint } from './TimelinePoint'
 import { StageAnimation } from './StageAnimation'
 import { CharacterFight } from './CharacterFight'
-import { RainAmbience } from './rainAmbience'
+import { TrainAmbience } from './trainAmbience'
 import './TimelineJourney.css'
 
 const TRAIN_SRC = '/assets/timeline/timeline-train.webp'
 
-// The visitor's rain mute choice, remembered per browser (a convenience only).
-const RAIN_MUTED_KEY = 'cs_timeline_rain_muted'
-function readRainMuted(): boolean {
+// The visitor's train-sound mute choice, remembered per browser (a convenience only).
+const SOUND_MUTED_KEY = 'cs_timeline_sound_muted'
+function readSoundMuted(): boolean {
   try {
-    return window.localStorage.getItem(RAIN_MUTED_KEY) === '1'
+    return window.localStorage.getItem(SOUND_MUTED_KEY) === '1'
   } catch {
     return false
   }
@@ -93,30 +93,30 @@ export function TimelineJourney() {
   const trainRef = useRef<HTMLDivElement>(null)
   const cardObserverRef = useRef<ResizeObserver | null>(null)
   const [started, setStarted] = useState(false)
-  const [rainMuted, setRainMuted] = useState(readRainMuted)
-  const rainRef = useRef<RainAmbience | null>(null)
+  const [soundMuted, setSoundMuted] = useState(readSoundMuted)
+  const trainSoundRef = useRef<TrainAmbience | null>(null)
 
-  // Rain starts with the journey: the Start Journey click is the user
-  // gesture browsers require before any audio can play.
+  // The train sound starts with the journey: the Start Journey click is the
+  // user gesture browsers require before any audio can play.
   const startJourney = () => {
-    rainRef.current ??= new RainAmbience()
-    rainRef.current.start(rainMuted)
+    trainSoundRef.current ??= new TrainAmbience()
+    trainSoundRef.current.start(soundMuted)
     setStarted(true)
   }
 
-  const toggleRain = () => {
-    const next = !rainMuted
-    setRainMuted(next)
-    rainRef.current?.setMuted(next)
+  const toggleSound = () => {
+    const next = !soundMuted
+    setSoundMuted(next)
+    trainSoundRef.current?.setMuted(next)
     try {
-      window.localStorage.setItem(RAIN_MUTED_KEY, next ? '1' : '0')
+      window.localStorage.setItem(SOUND_MUTED_KEY, next ? '1' : '0')
     } catch {
       // Storage unavailable (private mode etc.) — the toggle still works.
     }
   }
 
-  // Leaving the page fades the rain out and releases the audio context.
-  useEffect(() => () => rainRef.current?.stop(), [])
+  // Leaving the page fades the sound out and releases the audio context.
+  useEffect(() => () => trainSoundRef.current?.stop(), [])
   const [worldWidth, setWorldWidth] = useState(0)
   const [trainWidth, setTrainWidth] = useState(0)
   const [trainHeight, setTrainHeight] = useState(0)
@@ -237,6 +237,11 @@ export function TimelineJourney() {
   }, [points, bounds.start, bounds.end, noseOffset])
 
   const { progress, stepIndex, jumpTo } = useJourneyProgress({ active: started, breakpoints, reducedMotion })
+
+  // The train sound paces its wheel clacks by how fast the train is moving.
+  useEffect(() => {
+    trainSoundRef.current?.reportPosition(progress)
+  }, [progress])
 
   // stepIndex 0 is the departure point, before the first stop; every index
   // after that is a stop, the last being the final destination.
@@ -442,16 +447,16 @@ export function TimelineJourney() {
         )}
 
         {started && (
-          <aside className="site-bg-music-hud timeline-rain-toggle" aria-label="Rain sound">
+          <aside className="site-bg-music-hud timeline-sound-toggle" aria-label="Train sound">
             <button
               type="button"
-              className={`site-audio-btn ${rainMuted ? 'site-audio-btn--off' : 'site-audio-btn--on'}`}
-              onClick={toggleRain}
-              aria-pressed={!rainMuted}
-              aria-label={rainMuted ? 'Play rain sound' : 'Mute rain sound'}
-              title={rainMuted ? 'Play rain sound' : 'Mute rain sound'}
+              className={`site-audio-btn ${soundMuted ? 'site-audio-btn--off' : 'site-audio-btn--on'}`}
+              onClick={toggleSound}
+              aria-pressed={!soundMuted}
+              aria-label={soundMuted ? 'Play train sound' : 'Mute train sound'}
+              title={soundMuted ? 'Play train sound' : 'Mute train sound'}
             >
-              {rainMuted ? (
+              {soundMuted ? (
                 <span className="site-audio-btn__icon site-audio-btn__icon--off">
                   <VolumeX size={17} strokeWidth={2.2} />
                 </span>
