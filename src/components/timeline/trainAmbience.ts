@@ -27,7 +27,7 @@ const FADE_IN_S = 1.5
 const FADE_OUT_S = 0.5
 const TICK_MS = 100
 /** Journey progress per second that counts as "full speed" (see TRAVEL_MS_PER_UNIT). */
-const FULL_SPEED = 0.09
+const FULL_SPEED = 0.14
 /** Level while parked at a station, relative to full speed. */
 const IDLE_LEVEL = 0.18
 
