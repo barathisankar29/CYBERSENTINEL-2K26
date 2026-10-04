@@ -24,8 +24,13 @@ export function SiteFooter() {
                 {section.shortLabel.toUpperCase()}
               </Link>
             ))}
-          {/* Admin panel page is not built yet — /admin falls through to the generic /:slug page until it is. */}
-          <Link to="/admin">ADMIN PANEL</Link>
+          <a
+            href="https://cybersentinel-workspace.web.app/coordinator/login"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            ADMIN PANEL
+          </a>
         </nav>
 
         <div className="site-footer__meta">
