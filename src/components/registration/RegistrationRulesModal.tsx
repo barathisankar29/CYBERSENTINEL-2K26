@@ -198,7 +198,7 @@ export function RegistrationRulesModal({
                 <div>
                   <h4 className="reg-rules-callout__title">HOW DAY-WISE EVENT AUTO-SELECTION WORKS</h4>
                   <p className="reg-rules-callout__desc">
-                    When you select a character/pass, <strong>all events for that selected day are auto-selected by default</strong>. If you only wish to compete in <strong>two or three events</strong>, you must <strong>manually uncheck/deselect</strong> the remaining events in the event checklist before continuing! (If you choose any group's events, automatically other group's events also get selected, and don't worry—if you want to deselect, just uncheck the events in the event checklist... Further queries? Contact us!)
+                    When you select a character/pass, <strong>all events for that selected day are auto-selected by default</strong>. If you only wish to compete in <strong>two or three events</strong>, you must <strong>manually uncheck/deselect</strong> the remaining events in the event checklist before continuing! (If you choose any group's events, automatically other group's events also get selected, and don't worry—if you want to deselect, just uncheck the events while creating the team after registration... Further queries? Contact us!)
                   </p>
                 </div>
               </div>
@@ -378,6 +378,7 @@ export function RegistrationRulesModal({
                   <li>• A member cannot join two different teams for the same event.</li>
                   <li>• All teammates must be registered for the same symposium day (or Both Days).</li>
                   <li>• Duo events require exactly 2 verified members; Team packages accommodate 2 to 3 verified members.</li>
+                  <li>• If a teammate or friend has already added you to their team, you do not need to create or submit another team registration.</li>
                 </ul>
               </div>
             </div>
