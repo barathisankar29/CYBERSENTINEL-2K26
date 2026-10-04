@@ -13,7 +13,7 @@
  * called from one (the "Start Journey" click).
  */
 
-const MASTER_VOLUME = 0.5
+const MASTER_VOLUME = 0.85
 const FADE_IN_S = 1.5
 const FADE_OUT_S = 0.5
 const NOISE_SECONDS = 4
@@ -146,7 +146,7 @@ export class TrainAmbience {
     this.speed += (target - this.speed) * (target > this.speed ? 0.3 : 0.08)
 
     const now = ctx.currentTime
-    rumble.gain.setTargetAtTime(0.04 + this.speed * 0.32, now, 0.12)
+    rumble.gain.setTargetAtTime(0.05 + this.speed * 0.4, now, 0.12)
     hum.gain.setTargetAtTime(0.012 + this.speed * 0.012, now, 0.2)
 
     if (this.speed < 0.12) {

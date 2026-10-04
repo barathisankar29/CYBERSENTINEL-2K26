@@ -413,7 +413,12 @@ export const ALL_EVENTS: EventSpec[] = [
     date: 'DAY 02',
     time: 'TO BE ANNOUNCED',
     teamSize: 'PER TEAM',
-    coordinators: [],
+    coordinators: [
+      coordinator('Anandha Perumal S', '4TH', '7397490710'),
+      coordinator('Dinesh Kumar E', '4TH', '8190922212'),
+      coordinator('Jeswin Soundhar G', '2ND', '9025216406'),
+      coordinator('Saran S', '2ND', '9176655051')
+    ],
     chipLabel: 'E-SPORTS',
     chipSub: 'ARENA',
     isSpecial: true,
