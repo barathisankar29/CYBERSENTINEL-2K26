@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
+import { Link } from 'react-router-dom'
 import type { CharacterConfig, RegistrationRecord } from '@/types/characterProfile'
-import { QrCode, Download, X, Copy, Check } from 'lucide-react'
+import { Download, X, Copy, Check, Lock, ShieldAlert, ExternalLink } from 'lucide-react'
 import './CharacterInfoQr.css'
 
 interface CharacterInfoProps {
@@ -15,7 +16,7 @@ interface CharacterInfoProps {
  * - Left: Avatar headshot in cyan double border frame
  * - Right Container divided into 2 blocks:
  *     - Block 1 (Left): Data Table (ID, NAME, AGE, BIRTHDAY, BLOOD TYPE, GENDER)
- *     - Block 2 (Right): Interactive Official Entry QR Code
+ *     - Block 2 (Right): Interactive Official Entry QR Code (appears only when payment is confirmed/verified)
  *     - Far Right: Vertical Chromatic Ramp Bar
  * - Touch/click QR code opens full-screen big popup modal with high-res QR, registration code, and download.
  */
@@ -33,14 +34,16 @@ export function CharacterInfo({ character, registration }: CharacterInfoProps) {
   const [copied, setCopied] = useState(false)
   const copyTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
-  // Use official backend QR if available, else standard verification pass link
-  const effectiveQrValue =
-    registration.qrUrl ||
-    (typeof window !== 'undefined'
-      ? `${window.location.origin}/register/status?code=${registration.registrationId}`
-      : `https://cybersentinel.city/checkStatus?code=${registration.registrationId}`)
+  // Official entry QR only exists and appears when payment is finished and verified by admin
+  const isVerified = Boolean(registration.isVerified && registration.qrUrl)
+  const effectiveQrValue = isVerified ? (registration.qrUrl as string) : ''
 
   useEffect(() => {
+    if (!isVerified || !effectiveQrValue) {
+      setQrDataUrl('')
+      return
+    }
+
     let cancelled = false
     import('qrcode')
       .then(({ default: QRCode }) => {
@@ -62,7 +65,7 @@ export function CharacterInfo({ character, registration }: CharacterInfoProps) {
     return () => {
       cancelled = true
     }
-  }, [effectiveQrValue])
+  }, [isVerified, effectiveQrValue])
 
   useEffect(() => {
     return () => clearTimeout(copyTimer.current)
@@ -136,55 +139,65 @@ export function CharacterInfo({ character, registration }: CharacterInfoProps) {
             </div>
           </div>
 
-          {/* Block 2 (Right): Interactive Entry QR Code Box */}
+          {/* Block 2 (Right): Interactive Entry QR Code Box or Verification Pending */}
           <button
             type="button"
-            className="profile-id-qr-box"
+            className={`profile-id-qr-box ${!isVerified ? 'profile-id-qr-box--pending' : ''}`}
             onClick={() => setIsModalOpen(true)}
-            aria-label="Enlarge Entry Pass QR Code"
-            title="Touch or click to view full size QR entry pass"
+            aria-label={isVerified ? 'Enlarge Entry Pass QR Code' : 'View Verification Status'}
+            title={isVerified ? 'Touch or click to view full size QR entry pass' : 'Payment verification pending — click for details'}
           >
             <div className="profile-id-qr-info-col">
               <div className="profile-id-qr-box__header">
-                <span className="profile-id-qr-box__tag">ENTRY PASS</span>
-                <span className={`profile-id-qr-box__led ${registration.isVerified ? 'is-verified' : ''}`} />
+                <span className="profile-id-qr-box__tag">{isVerified ? 'ENTRY PASS' : 'PASS STATUS'}</span>
+                <span className={`profile-id-qr-box__led ${isVerified ? 'is-verified' : 'is-pending'}`} />
               </div>
 
               <div className="profile-id-qr-box__meta-mobile">
-                <span className={`profile-id-qr-status-badge ${registration.isVerified ? 'is-verified' : ''}`}>
-                  {registration.isVerified ? 'VERIFIED // ADMIT' : 'ACTIVE PASS'}
+                <span className={`profile-id-qr-status-badge ${isVerified ? 'is-verified' : 'is-pending'}`}>
+                  {isVerified ? 'VERIFIED // ADMIT' : 'PAYMENT REVIEW'}
                 </span>
                 <span className="profile-id-qr-code-text">{registration.registrationId}</span>
               </div>
 
               <div className="profile-id-qr-box__footer profile-id-qr-box__footer--mobile">
-                <span className="profile-id-qr-zoom-text">⛶ TAP TO ZOOM</span>
+                <span className="profile-id-qr-zoom-text">{isVerified ? '⛶ TAP TO ZOOM' : 'ℹ DETAILS'}</span>
               </div>
             </div>
 
-            <div className="profile-id-qr-preview-frame">
-              {/* Corner brackets */}
-              <span className="qr-corner qr-corner--tl" />
-              <span className="qr-corner qr-corner--tr" />
-              <span className="qr-corner qr-corner--bl" />
-              <span className="qr-corner qr-corner--br" />
+            {isVerified && qrDataUrl ? (
+              <div className="profile-id-qr-preview-frame">
+                {/* Corner brackets */}
+                <span className="qr-corner qr-corner--tl" />
+                <span className="qr-corner qr-corner--tr" />
+                <span className="qr-corner qr-corner--bl" />
+                <span className="qr-corner qr-corner--br" />
 
-              {qrDataUrl ? (
                 <img
                   src={qrDataUrl}
                   alt={`Entry QR for ${registration.registrationId}`}
                   className="profile-id-qr-img"
                   draggable={false}
                 />
-              ) : (
-                <div className="profile-id-qr-placeholder">
-                  <QrCode size={36} className="text-cyan-400 animate-pulse" />
+              </div>
+            ) : (
+              <div className="profile-id-qr-preview-frame profile-id-qr-preview-frame--pending">
+                {/* Corner brackets */}
+                <span className="qr-corner qr-corner--tl" />
+                <span className="qr-corner qr-corner--tr" />
+                <span className="qr-corner qr-corner--bl" />
+                <span className="qr-corner qr-corner--br" />
+
+                <div className="profile-id-qr-locked-box">
+                  <Lock size={18} className="text-amber-400 mb-0.5" />
+                  <span className="profile-id-qr-locked-text">QR LOCKED</span>
+                  <span className="profile-id-qr-locked-sub">PAYMENT REVIEW</span>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             <div className="profile-id-qr-box__footer profile-id-qr-box__footer--desktop">
-              <span className="profile-id-qr-zoom-text">⛶ TAP TO ZOOM</span>
+              <span className="profile-id-qr-zoom-text">{isVerified ? '⛶ TAP TO ZOOM' : 'ℹ STATUS INFO'}</span>
             </div>
           </button>
 
@@ -214,16 +227,18 @@ export function CharacterInfo({ character, registration }: CharacterInfoProps) {
               {/* Modal Top Header */}
               <div className="profile-qr-modal-header">
                 <div className="profile-qr-modal-title-group">
-                  <span className="profile-qr-modal-sub">SYS://SECURITY.PASS_SCANNER</span>
+                  <span className="profile-qr-modal-sub">
+                    {isVerified ? 'SYS://SECURITY.PASS_SCANNER' : 'SYS://SECURITY.PAYMENT_VERIFICATION'}
+                  </span>
                   <h3 id="qr-modal-title" className="profile-qr-modal-title">
-                    OFFICIAL ENTRY QR PASS
+                    {isVerified ? 'OFFICIAL ENTRY QR PASS' : 'REGISTRATION UNDER REVIEW'}
                   </h3>
                 </div>
                 <button
                   type="button"
                   className="profile-qr-modal-close"
                   onClick={() => setIsModalOpen(false)}
-                  aria-label="Close QR Modal"
+                  aria-label="Close Modal"
                 >
                   <X size={18} />
                 </button>
@@ -231,30 +246,44 @@ export function CharacterInfo({ character, registration }: CharacterInfoProps) {
 
               {/* Modal Body */}
               <div className="profile-qr-modal-body">
-                <div className="profile-qr-modal-display-frame">
-                  <span className="qr-corner qr-corner--tl" />
-                  <span className="qr-corner qr-corner--tr" />
-                  <span className="qr-corner qr-corner--bl" />
-                  <span className="qr-corner qr-corner--br" />
+                {isVerified && qrDataUrl ? (
+                  <>
+                    <div className="profile-qr-modal-display-frame">
+                      <span className="qr-corner qr-corner--tl" />
+                      <span className="qr-corner qr-corner--tr" />
+                      <span className="qr-corner qr-corner--bl" />
+                      <span className="qr-corner qr-corner--br" />
 
-                  {qrDataUrl && (
-                    <img
-                      src={qrDataUrl}
-                      alt={`Full size Entry QR for ${registration.registrationId}`}
-                      className="profile-qr-modal-img"
-                    />
-                  )}
-                </div>
+                      <img
+                        src={qrDataUrl}
+                        alt={`Full size Entry QR for ${registration.registrationId}`}
+                        className="profile-qr-modal-img"
+                      />
+                    </div>
 
-                {/* Status pill */}
-                <div className="profile-qr-modal-status-badge">
-                  <span className="status-dot" />
-                  <span>
-                    {registration.isVerified
-                      ? 'VERIFIED & CONFIRMED // ADMIT PASS'
-                      : 'OFFICIAL ENTRY PASS // ACTIVE'}
-                  </span>
-                </div>
+                    {/* Status pill */}
+                    <div className="profile-qr-modal-status-badge">
+                      <span className="status-dot is-verified" />
+                      <span>VERIFIED & CONFIRMED // ADMIT PASS</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="profile-qr-modal-locked-box">
+                      <ShieldAlert size={44} className="text-amber-400 mb-2 animate-pulse" />
+                      <span className="profile-qr-modal-locked-title">PAYMENT VERIFICATION PENDING</span>
+                      <p className="profile-qr-modal-locked-desc">
+                        Registration record is logged. The official Entry QR Pass is issued <strong>only after college administrators confirm your payment</strong>.
+                      </p>
+                    </div>
+
+                    {/* Status pill */}
+                    <div className="profile-qr-modal-status-badge profile-qr-modal-status-badge--pending">
+                      <span className="status-dot is-pending" />
+                      <span>UNDER REVIEW // AWAITING ADMIN CONFIRMATION</span>
+                    </div>
+                  </>
+                )}
 
                 {/* Details table */}
                 <div className="profile-qr-modal-meta">
@@ -290,23 +319,43 @@ export function CharacterInfo({ character, registration }: CharacterInfoProps) {
                       <span className="meta-val">{registration.selectedDay}</span>
                     </div>
                   )}
+
+                  <div className="meta-row">
+                    <span className="meta-label">QR PASS STATUS:</span>
+                    <span className={`meta-val ${isVerified ? 'text-emerald-400' : 'text-amber-400'}`}>
+                      {isVerified ? 'ACTIVE // SCAN READY' : 'LOCKED UNTIL PAYMENT VERIFIED'}
+                    </span>
+                  </div>
                 </div>
 
                 <p className="profile-qr-modal-instruction">
-                  Show this QR code to the entrance desk or event coordinator at the venue for instant gate access.
+                  {isVerified
+                    ? 'Show this QR code to the entrance desk or event coordinator at the venue for instant gate access.'
+                    : 'Once payment verification completes, your QR code will unlock here automatically and in the My Registrations portal.'}
                 </p>
               </div>
 
               {/* Modal Footer Actions */}
               <div className="profile-qr-modal-footer">
-                <button
-                  type="button"
-                  className="profile-qr-modal-btn profile-qr-modal-btn--download"
-                  onClick={handleDownloadQr}
-                >
-                  <Download size={15} />
-                  <span>DOWNLOAD QR PASS</span>
-                </button>
+                {isVerified ? (
+                  <button
+                    type="button"
+                    className="profile-qr-modal-btn profile-qr-modal-btn--download"
+                    onClick={handleDownloadQr}
+                  >
+                    <Download size={15} />
+                    <span>DOWNLOAD QR PASS</span>
+                  </button>
+                ) : (
+                  <Link
+                    to="/register/status"
+                    className="profile-qr-modal-btn profile-qr-modal-btn--download"
+                    onClick={() => setIsModalOpen(false)}
+                  >
+                    <span>CHECK STATUS IN VAULT</span>
+                    <ExternalLink size={14} />
+                  </Link>
+                )}
                 <button
                   type="button"
                   className="profile-qr-modal-btn profile-qr-modal-btn--close"

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { EventSpec } from '@/types/eventsTerminal';
 import { sound } from './sound';
 import { isTeamEvent, type RegistrationPortalInitialData } from './RegistrationPortalPage';
+import { RegistrationRulesModal } from '@/components/registration/RegistrationRulesModal';
 import {
   findSpecialEvent,
   dayDisplayPrice,
@@ -158,6 +159,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
   onProceedToPortal
 }) => {
   const [modalState, setModalState] = useState<ActiveModalState | null>(null);
+  const [showRulesModal, setShowRulesModal] = useState(false);
   const live = useLiveRegistrationData();
   const cardPrice = (key: string, selectedIds?: string[]) =>
     priceLabel(livePackPrice(PACK_CONFIGS[key], live, selectedIds));
@@ -388,8 +390,8 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
             className="relative bg-black border-2 border-zinc-800 p-3 sm:p-5 retro-grid-bg w-full max-w-7xl mx-auto my-auto shadow-2xl flex flex-col gap-4"
             data-purpose="registration-terminal-chassis"
           >
-            {/* Top Terminal Bar with Close in left upper corner */}
-            <div className="flex items-center justify-start border-b border-zinc-800 pb-2 text-[10px] font-silkscreen text-zinc-400">
+            {/* Top Terminal Bar with Close in left upper corner and Rules button on right */}
+            <div className="flex items-center justify-between border-b border-zinc-800 pb-2 text-[10px] font-silkscreen text-zinc-400">
               <button
                 onClick={() => {
                   sound.playNavClick();
@@ -400,6 +402,21 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
               >
                 <span>[✕]</span>
                 <span>CLOSE</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  sound.playNavClick();
+                  setShowRulesModal(true);
+                }}
+                className="text-[#00f0ff] hover:text-white px-2 sm:px-2.5 py-1 border border-[#00f0ff]/50 hover:border-[#00f0ff] bg-[#00f0ff]/10 hover:bg-[#00f0ff]/20 cursor-pointer font-arcade text-[10px] sm:text-xs flex items-center gap-1 sm:gap-1.5 transition-all shadow-[0_0_8px_rgba(0,240,255,0.25)] whitespace-nowrap shrink-0"
+                title="View Registration & Team Rules"
+              >
+                <span>[📜]</span>
+                <span className="hidden md:inline">REGISTRATION RULES &amp; GUIDELINES</span>
+                <span className="hidden sm:inline md:hidden">RULES &amp; GUIDELINES</span>
+                <span className="inline sm:hidden">RULES</span>
               </button>
             </div>
 
@@ -1080,6 +1097,13 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
               </div>
           </div>
         </div>
+      )}
+
+      {showRulesModal && (
+        <RegistrationRulesModal
+          isOpen={showRulesModal}
+          onClose={() => setShowRulesModal(false)}
+        />
       )}
     </>
   );
