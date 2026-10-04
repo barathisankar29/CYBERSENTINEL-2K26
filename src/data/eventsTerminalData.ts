@@ -412,7 +412,7 @@ export const ALL_EVENTS: EventSpec[] = [
       'E-Sports is a special event of CyberSentinel 2K26 with two Free Fire tournaments: a Free Fire Clash Squad Tournament where 16 teams battle through 4 knockout rounds (16 → 8 → 4 → 2 → 1), and the Lord Esports Battle Royale Tournament where 24 teams compete across 2 rounds. Cash prizes are awarded to the Winner and Runner-up. Registration is per team.',
     date: 'DAY 02',
     time: 'TO BE ANNOUNCED',
-    teamSize: 'PER TEAM',
+    teamSize: '4 MEMBERS',
     coordinators: [
       coordinator('Anandha Perumal S', '4TH', '7397490710'),
       coordinator('Dinesh Kumar E', '4TH', '8190922212'),
@@ -423,7 +423,7 @@ export const ALL_EVENTS: EventSpec[] = [
     chipSub: 'ARENA',
     isSpecial: true,
     protocols: [
-      'Special event: registration and fee are per team. Register through Special Events; it is not part of the Day 1 / Day 2 passes.',
+      'Special event: teams of 4 members. Registration and fee are per team. Register through Special Events; it is not part of the Day 1 / Day 2 passes.',
       'FREE FIRE CLASH SQUAD TOURNAMENT: 16 teams across 4 knockout rounds (16 → 8 → 4 → 2 → 1); the final two teams compete for the championship.',
       'Clash Squad rules: No Gun Attributes. No Character Skills. Unlimited Ammo. Bermuda Map.',
       'Clash Squad: cash prizes awarded to 1st and 2nd place.',
