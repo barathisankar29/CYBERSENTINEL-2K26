@@ -115,8 +115,14 @@ export function TimelineJourney() {
     }
   }
 
-  // Leaving the page fades the sound out and releases the audio context.
-  useEffect(() => () => trainSoundRef.current?.stop(), [])
+  // Fetch the train recording while the intro screen is up, so it is ready
+  // to play on Start Journey. Leaving the page fades the sound out and
+  // releases the audio context.
+  useEffect(() => {
+    trainSoundRef.current ??= new TrainAmbience()
+    trainSoundRef.current.preload()
+    return () => trainSoundRef.current?.stop()
+  }, [])
   const [worldWidth, setWorldWidth] = useState(0)
   const [trainWidth, setTrainWidth] = useState(0)
   const [trainHeight, setTrainHeight] = useState(0)

@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-// How long the train dwells at each station before continuing (autoplay only).
-const SETTLE_MS = 550
-// Cinematic pace: a full, uninterrupted 0-1 journey would take this long.
-const TRAVEL_MS_PER_UNIT = 9000
-const MIN_SEGMENT_MS = 450
+// How long the train dwells at each station before continuing (autoplay
+// only). The stop's card stays up for this dwell plus the ride to the next
+// stop (~4 s in all) — long enough to read the agenda.
+const SETTLE_MS = 2600
+// Unhurried pace: a full, uninterrupted 0-1 journey would take this long
+// (~1.3 s between neighbouring stops).
+const TRAVEL_MS_PER_UNIT = 15000
+const MIN_SEGMENT_MS = 700
 // A swipe/scroll gesture only ever advances ONE station. Once a step has
 // been dispatched, further gestures aiming at the exact same station are
 // free (already-in-flight, no-op), but a gesture asking for a DIFFERENT

@@ -1,58 +1,42 @@
 /**
- * Subtle train sound for the Timeline page, synthesised with Web Audio — no
- * audio file to download. It follows the on-screen train: while the train
- * moves you hear a soft wheel rumble and the "clack-clack" of the wheels
- * crossing rail joints, paced by its speed; while it waits at a station it
- * settles to a faint electric hum.
+ * Train sound for the Timeline page: a real recording of train wheels
+ * knocking over rail joints, looped, that follows the on-screen train. While
+ * the train moves it plays at full level and normal speed; as the train
+ * slows into a station it fades down and its clacks slow down with it.
  *
- * The noise is generated once; after that the sound runs in the browser's
- * native audio graph. The only JS work is a 60 ms timer that reads the
- * train's latest position (`reportPosition`) and schedules the next clacks.
+ * Source: "Стук колёс поезда" ("Knocking wheels of train", recorded in a
+ * wagon), Wikimedia Commons, CC0 — no attribution required:
+ * https://commons.wikimedia.org/wiki/File:Стук_колёс_поезда.ogg
+ * Trimmed to a 14.6 s loop that starts and ends on a clack group, with the
+ * seam crossfaded. The file carries LOOP_MARGIN_S of wrapped-around audio on
+ * each side so the loop stays seamless even if a browser's MP3 decoder adds
+ * a few milliseconds of padding.
  *
- * Browsers only allow audio after a user gesture, so `start()` must be
- * called from one (the "Start Journey" click).
+ * The 125 KB file is fetched when the page opens (`preload`) and decoded on
+ * the Start Journey click — the user gesture browsers require before audio
+ * can play. After that the browser's native audio graph does the work; the
+ * only JS is a 100 ms timer that turns the train's position into speed.
  */
 
-const MASTER_VOLUME = 0.85
+const TRAIN_SRC = '/audio/timeline-train.mp3'
+const LOOP_MARGIN_S = 0.5
+const LOOP_LENGTH_S = 14.589977
+
+const MASTER_VOLUME = 0.75
 const FADE_IN_S = 1.5
 const FADE_OUT_S = 0.5
-const NOISE_SECONDS = 4
-const TICK_MS = 60
+const TICK_MS = 100
 /** Journey progress per second that counts as "full speed" (see TRAVEL_MS_PER_UNIT). */
-const FULL_SPEED = 0.15
-/** Gap between the two clacks of one bogie crossing a rail joint. */
-const PAIR_GAP_S = 0.12
-
-function brownNoise(ctx: AudioContext): AudioBuffer {
-  const length = Math.floor(ctx.sampleRate * NOISE_SECONDS)
-  const buffer = ctx.createBuffer(1, length, ctx.sampleRate)
-  const data = buffer.getChannelData(0)
-  let last = 0
-  for (let i = 0; i < length; i++) {
-    last = (last + 0.02 * (Math.random() * 2 - 1)) / 1.02
-    data[i] = last * 3.5
-  }
-  // Remove the drift between the first and last sample so the loop point
-  // doesn't click.
-  const drift = data[length - 1] - data[0]
-  for (let i = 0; i < length; i++) data[i] -= (drift * i) / length
-  return buffer
-}
-
-function clickNoise(ctx: AudioContext): AudioBuffer {
-  const length = Math.floor(ctx.sampleRate * 0.05)
-  const buffer = ctx.createBuffer(1, length, ctx.sampleRate)
-  const data = buffer.getChannelData(0)
-  for (let i = 0; i < length; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / length) ** 3
-  return buffer
-}
+const FULL_SPEED = 0.09
+/** Level while parked at a station, relative to full speed. */
+const IDLE_LEVEL = 0.18
 
 export class TrainAmbience {
   private ctx: AudioContext | null = null
   private master: GainNode | null = null
-  private rumble: GainNode | null = null
-  private hum: GainNode | null = null
-  private click: AudioBuffer | null = null
+  private motion: GainNode | null = null
+  private source: AudioBufferSourceNode | null = null
+  private bytes: Promise<ArrayBuffer | null> | null = null
   private timer: number | null = null
   private muted = false
 
@@ -60,13 +44,19 @@ export class TrainAmbience {
   private position = 0
   private lastPosition = 0
   private speed = 0
-  private nextClackAt = 0
 
   private onVisibility = () => {
     const ctx = this.ctx
     if (!ctx || ctx.state === 'closed') return
     if (document.hidden) void ctx.suspend()
     else if (!this.muted) void ctx.resume()
+  }
+
+  /** Start downloading the recording (no audio is created yet). */
+  preload() {
+    this.bytes ??= fetch(TRAIN_SRC)
+      .then((res) => (res.ok ? res.arrayBuffer() : null))
+      .catch(() => null)
   }
 
   /** Latest journey progress (0-1). Cheap: just stores the number. */
@@ -84,6 +74,7 @@ export class TrainAmbience {
     const AudioCtx =
       window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
     if (!AudioCtx) return
+    // Created synchronously inside the click so the browser lets it play.
     const ctx = new AudioCtx()
     this.ctx = ctx
 
@@ -92,105 +83,53 @@ export class TrainAmbience {
     master.connect(ctx.destination)
     this.master = master
 
-    // Wheel rumble: low brown noise, swelled by speed.
-    const rumbleSrc = ctx.createBufferSource()
-    rumbleSrc.buffer = brownNoise(ctx)
-    rumbleSrc.loop = true
-    const rumbleLow = ctx.createBiquadFilter()
-    rumbleLow.type = 'lowpass'
-    rumbleLow.frequency.value = 220
-    const rumble = ctx.createGain()
-    rumble.gain.value = 0.04
-    rumbleSrc.connect(rumbleLow).connect(rumble).connect(master)
-    this.rumble = rumble
-
-    // Faint electric hum of the train's motors, always present.
-    const hum = ctx.createGain()
-    hum.gain.value = 0.012
-    const humLow = ctx.createBiquadFilter()
-    humLow.type = 'lowpass'
-    humLow.frequency.value = 400
-    for (const [freq, level] of [
-      [98, 1],
-      [196, 0.35],
-    ] as const) {
-      const osc = ctx.createOscillator()
-      osc.frequency.value = freq
-      const g = ctx.createGain()
-      g.gain.value = level
-      osc.connect(g).connect(humLow)
-      osc.start()
-    }
-    humLow.connect(hum).connect(master)
-    this.hum = hum
-
-    this.click = clickNoise(ctx)
-    rumbleSrc.start()
+    const motion = ctx.createGain()
+    motion.gain.value = IDLE_LEVEL
+    motion.connect(master)
+    this.motion = motion
 
     this.lastPosition = this.position
     this.timer = window.setInterval(this.tick, TICK_MS)
     document.addEventListener('visibilitychange', this.onVisibility)
     this.applyMute()
+
+    this.preload()
+    void this.bytes!.then(async (data) => {
+      if (!data || this.ctx !== ctx) return
+      try {
+        // decodeAudioData detaches its input, so give it a copy.
+        const buffer = await ctx.decodeAudioData(data.slice(0))
+        if (this.ctx !== ctx) return
+        const source = ctx.createBufferSource()
+        source.buffer = buffer
+        source.loop = true
+        source.loopStart = LOOP_MARGIN_S
+        source.loopEnd = Math.min(buffer.duration, LOOP_MARGIN_S + LOOP_LENGTH_S)
+        source.connect(motion)
+        source.start(0, LOOP_MARGIN_S)
+        this.source = source
+      } catch {
+        // Undecodable audio: the journey simply stays silent.
+      }
+    })
   }
 
   private tick = () => {
-    const { ctx, rumble, hum } = this
-    if (!ctx || !rumble || !hum || ctx.state !== 'running') {
+    const { ctx, motion, source } = this
+    if (!ctx || !motion || ctx.state !== 'running') {
       this.lastPosition = this.position
       return
     }
     const velocity = Math.abs(this.position - this.lastPosition) / (TICK_MS / 1000)
     this.lastPosition = this.position
     const target = Math.min(1, velocity / FULL_SPEED)
-    // Quick to pick up, slow to fade, so short station stops don't cut the sound dead.
-    this.speed += (target - this.speed) * (target > this.speed ? 0.3 : 0.08)
+    // Quick to pick up, gentler to fade, like a train coasting into a station.
+    this.speed += (target - this.speed) * (target > this.speed ? 0.35 : 0.15)
 
     const now = ctx.currentTime
-    rumble.gain.setTargetAtTime(0.05 + this.speed * 0.4, now, 0.12)
-    hum.gain.setTargetAtTime(0.012 + this.speed * 0.012, now, 0.2)
-
-    if (this.speed < 0.12) {
-      this.nextClackAt = now + 0.15
-      return
-    }
-    // Faster train -> rail joints come by more often.
-    const interval = 1.25 - this.speed * 0.7
-    while (this.nextClackAt < now + 0.2) {
-      if (this.nextClackAt < now) this.nextClackAt = now + 0.02
-      const level = 0.12 + this.speed * 0.2
-      this.clack(this.nextClackAt, level)
-      this.clack(this.nextClackAt + PAIR_GAP_S, level * 0.8)
-      this.nextClackAt += interval
-    }
-  }
-
-  /** One wheel over a rail joint: a dull thump plus a short metallic tick. */
-  private clack(at: number, level: number) {
-    const { ctx, master, click } = this
-    if (!ctx || !master || !click) return
-
-    const thump = ctx.createOscillator()
-    thump.frequency.setValueAtTime(85, at)
-    thump.frequency.exponentialRampToValueAtTime(45, at + 0.09)
-    const thumpGain = ctx.createGain()
-    thumpGain.gain.setValueAtTime(0.0001, at)
-    thumpGain.gain.exponentialRampToValueAtTime(level, at + 0.005)
-    thumpGain.gain.exponentialRampToValueAtTime(0.0001, at + 0.11)
-    thump.connect(thumpGain).connect(master)
-    thump.start(at)
-    thump.stop(at + 0.12)
-
-    const tick = ctx.createBufferSource()
-    tick.buffer = click
-    tick.playbackRate.value = 0.9 + Math.random() * 0.2
-    const band = ctx.createBiquadFilter()
-    band.type = 'bandpass'
-    band.frequency.value = 1700
-    band.Q.value = 1.4
-    const tickGain = ctx.createGain()
-    tickGain.gain.value = level * 0.55
-    tick.connect(band).connect(tickGain).connect(master)
-    tick.start(at)
+    motion.gain.setTargetAtTime(IDLE_LEVEL + (1 - IDLE_LEVEL) * this.speed, now, 0.15)
+    // Slower train -> slower clacks.
+    source?.playbackRate.setTargetAtTime(0.78 + 0.22 * this.speed, now, 0.25)
   }
 
   setMuted(muted: boolean) {
@@ -221,8 +160,8 @@ export class TrainAmbience {
     const { ctx, master } = this
     this.ctx = null
     this.master = null
-    this.rumble = null
-    this.hum = null
+    this.motion = null
+    this.source = null
     if (this.timer !== null) window.clearInterval(this.timer)
     this.timer = null
     document.removeEventListener('visibilitychange', this.onVisibility)
