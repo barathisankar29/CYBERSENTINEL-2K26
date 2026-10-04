@@ -18,11 +18,26 @@ export const isPaidSpecialFeeEvent = (eventOrId?: { id?: string; title?: string 
 };
 
 /** Student coordinator: name, year of study (if known), and 10-digit mobile number. */
-const coordinator = (name: string, year?: string, mobile?: string): Coordinator => ({
-  name,
-  role: year ? `${year} YEAR // STUDENT COORDINATOR` : 'STUDENT COORDINATOR',
-  phone: mobile ? `+91 ${mobile.slice(0, 5)} ${mobile.slice(5)}` : undefined
-});
+const coordinator = (name: string, yearOrRole?: string, mobile?: string): Coordinator => {
+  const digits = mobile ? mobile.replace(/[^0-9]/g, '') : '';
+  const cleanMobile = digits.length >= 10 ? digits.slice(-10) : digits;
+
+  let role = 'STUDENT COORDINATOR';
+  if (yearOrRole) {
+    const trimmed = yearOrRole.trim();
+    if (trimmed.toUpperCase().includes('YEAR')) {
+      role = `${trimmed.toUpperCase()} // STUDENT COORDINATOR`;
+    } else {
+      role = `${trimmed.toUpperCase()} YEAR // STUDENT COORDINATOR`;
+    }
+  }
+
+  return {
+    name,
+    role,
+    phone: cleanMobile && cleanMobile.length === 10 ? `+91 ${cleanMobile.slice(0, 5)} ${cleanMobile.slice(5)}` : undefined
+  };
+};
 
 /**
  * Event details from the organizers' official sheet
@@ -49,13 +64,12 @@ export const ALL_EVENTS: EventSpec[] = [
     teamSize: '2 - 3 MEMBERS',
     teamSizeInProtocol: true,
     coordinators: [
-      coordinator('Dhanalakshmi', '4TH', '9345758749'),
-      coordinator('Mohammed Shaameer M R', '4TH', '6379532756'),
-      coordinator('Balaji M', '3RD', '6380399891'),
-      coordinator('Rishikesh R', '3RD', '8778286011'),
-      coordinator('Nithish Kumar', '2ND', '9962861163'),
-      coordinator('Hema N', '2ND', '8220930218'),
-      coordinator('Mohamed Thariq dheen', undefined, '6381852173')
+      coordinator('Dhanalakshmi', '4TH YEAR (SEC A)', '9845758749'),
+      coordinator('Mohamad Shameer', '4TH YEAR (SEC B)', '6379532756'),
+      coordinator('Balaji M', '3RD YEAR (SEC A)', '6380399891'),
+      coordinator('Rishikesh', '3RD YEAR (SEC C)', '8778286011'),
+      coordinator('Nithish Kumar', '2ND YEAR (SEC B)', '9962861163'),
+      coordinator('Hema', '2ND YEAR (SEC A)', '8220930218')
     ],
     chipLabel: 'PAPER',
     chipSub: 'IEEE-STD',
@@ -82,12 +96,12 @@ export const ALL_EVENTS: EventSpec[] = [
     time: '10:30 AM - 11:30 AM',
     teamSize: '2 - 3 MEMBERS',
     coordinators: [
-      coordinator('Jaya Swetha', '4TH', '8098037604'),
-      coordinator('Carlin Stephen', '3RD', '7305953834'),
-      coordinator('Kaaviya Shri', '3RD', '8124678783'),
-      coordinator('Jayashree P', '2ND', '8870172622'),
-      coordinator('Ranjeev', '2ND', '9789008691'),
-      coordinator('Prathish M', undefined, '7806816023')
+      coordinator('Jaya Swetha', '4TH YEAR (SEC B)', '8098037604'),
+      coordinator('Kamalesh', '4TH YEAR (SEC B)', '7530063123'),
+      coordinator('Carlin Stephen', '3RD YEAR (SEC A)', '7305953834'),
+      coordinator('Kaaviyaa Shri', '3RD YEAR (SEC B)', '8124678783'),
+      coordinator('Jayashree P', '2ND YEAR (SEC B)', '8807172622'),
+      coordinator('Ranjeev', '2ND YEAR (SEC C)', '9789008691')
     ],
     chipLabel: 'UNSAID',
     chipSub: 'MUTE-SIG',
@@ -112,11 +126,12 @@ export const ALL_EVENTS: EventSpec[] = [
     time: '11:30 AM - 12:30 PM',
     teamSize: '1 MEMBER',
     coordinators: [
-      coordinator('Kiran Roopika', undefined, '7695942195'),
-      coordinator('Sivagnanam C M', '3RD', '9342247349'),
-      coordinator('Kalaiyarasan', '3RD', '6383458069'),
-      coordinator('Naveen R J', '2ND', '8838654116'),
-      coordinator('Chandrika', '2ND', '8838402582')
+      coordinator('Yogesh', '4TH YEAR (SEC C)', '8667221703'),
+      coordinator('Kiran Roopika', '4TH YEAR (SEC B)', '7695942195'),
+      coordinator('Kalaiyarasan', '3RD YEAR (SEC B)', '6383458069'),
+      coordinator('Sivagnanam', '3RD YEAR (SEC C)', '9342247349'),
+      coordinator('Naveen', '2ND YEAR (SEC B)', '8838654116'),
+      coordinator('Chandrika', '2ND YEAR (SEC A)', '8838402582')
     ],
     chipLabel: 'CIPHER',
     chipSub: 'SHA-256',
@@ -145,11 +160,12 @@ export const ALL_EVENTS: EventSpec[] = [
     time: '01:15 PM - 02:15 PM',
     teamSize: '1 MEMBER',
     coordinators: [
-      coordinator('Aswathy', '4TH', '9566052452'),
-      coordinator('Barathi Sankar M', '3RD', '6374834081'),
-      coordinator('Jeevadharani V G', '3RD', '9444466435'),
-      coordinator('Chaithra', '2ND', '6383391983'),
-      coordinator('Thirunavukarasu', '2ND', '9363492223')
+      coordinator('Sai Guru', '4TH YEAR (SEC C)', '7550177315'),
+      coordinator('Aswathy', '4TH YEAR (SEC A)', '9566052452'),
+      coordinator('Barathi Shankar', '3RD YEAR (SEC A)', '6374834081'),
+      coordinator('Jeevadharani', '3RD YEAR (SEC A)', '9444466435'),
+      coordinator('Chaithra', '2ND YEAR (SEC A)', '6383391983'),
+      coordinator('Thirunavukarasu', '2ND YEAR (SEC C)', '9363492223')
     ],
     chipLabel: 'WEBLICA',
     chipSub: 'DOM-GRID',
@@ -178,11 +194,12 @@ export const ALL_EVENTS: EventSpec[] = [
     time: '02:15 PM - 03:15 PM',
     teamSize: '1 MEMBER',
     coordinators: [
-      coordinator('Dipika', undefined, '9080505979'),
-      coordinator('Sahael', undefined, '9884992692'),
-      coordinator('Mukesh Sivaji', '3RD', '9025798985'),
-      coordinator('Jayasurya', '2ND', '9080634638'),
-      coordinator('Shreenidhi S', '2ND', '7358979516')
+      coordinator('Tarun', '4TH YEAR (SEC C)', '7200997939'),
+      coordinator('Dipika G', '4TH YEAR (SEC A)', '9080505979'),
+      coordinator('Sahael M', '3RD YEAR (SEC C)', '9884992692'),
+      coordinator('Mukesh Sivaji', '3RD YEAR (SEC B)', '9025798985'),
+      coordinator('Jayasuriya', '2ND YEAR (SEC A)', '9080634638'),
+      coordinator('Shreenidhi', '2ND YEAR (SEC C)', '7358979516')
     ],
     chipLabel: 'X-CODE',
     chipSub: 'RAJINI++',
@@ -214,12 +231,12 @@ export const ALL_EVENTS: EventSpec[] = [
     time: '10:30 AM - 03:30 PM',
     teamSize: '4 - 10 MEMBERS',
     coordinators: [
-      coordinator('Amretha K A', '4TH', '9176447166'),
-      coordinator('Dravidraju', '4TH', '9487957125'),
-      coordinator('Aditya P S', '3RD', '9363972364'),
-      coordinator('Manoj P', '3RD', '9345632035'),
-      coordinator('Jayashree M', '2ND', '8270068022'),
-      coordinator('Sriram M', '2ND', '8608041222')
+      coordinator('Amretha K A', '4TH YEAR (SEC A)', '9176447166'),
+      coordinator('Dravidraju P', '4TH YEAR (SEC A)', '9487957125'),
+      coordinator('Aditya P S', '3RD YEAR (SEC A)', '9363972364'),
+      coordinator('Manoj P', '3RD YEAR (SEC B)', '9345632035'),
+      coordinator('Sriram M', '2ND YEAR (SEC C)', '8608041222'),
+      coordinator('Jayashree M', '2ND YEAR (SEC B)', '8270068022')
     ],
     chipLabel: 'KINETIC',
     chipSub: 'SYNC-08',
@@ -247,10 +264,12 @@ export const ALL_EVENTS: EventSpec[] = [
     time: '10:30 AM - 03:30 PM',
     teamSize: '1 MEMBER',
     coordinators: [
-      coordinator('Sasidharan', '3RD', '7708151802'),
-      coordinator('Princy', '3RD', '6374830226'),
-      coordinator('Vijay Anand', '2ND', '8148498259'),
-      coordinator('Kousalya', '2ND', '9360212289')
+      coordinator('Nishanth J', '4TH YEAR (CSE B)', '7550269987'),
+      coordinator('Vilfin', '4TH YEAR (SEC C)', '6369534894'),
+      coordinator('Sasidharan', '3RD YEAR (SEC C)', '7708151802'),
+      coordinator('Princy', '3RD YEAR (SEC B)', '6374830226'),
+      coordinator('Vijayanand', '2ND YEAR (SEC C)', '8148498259'),
+      coordinator('Kousalya', '2ND YEAR (SEC B)', '9360212289')
     ],
     chipLabel: 'SPOTLIGHT',
     chipSub: 'STAGE-01',
@@ -280,12 +299,12 @@ export const ALL_EVENTS: EventSpec[] = [
     time: '10:30 AM - 11:30 AM',
     teamSize: '2 - 3 MEMBERS',
     coordinators: [
-      coordinator('Arun R', '4TH', '8015064450'),
-      coordinator('Harshavardhini', undefined, '9345191880'),
-      coordinator('Asmitha P', '3RD', '9360172652'),
-      coordinator('Akshaya J', '3RD', '9342516589'),
-      coordinator('Swaathi Priya', '2ND', '8655763246'),
-      coordinator('Gokul Hari', '2ND', '8072706708')
+      coordinator('Arun R', '4TH YEAR (SEC A)', '8015064450'),
+      coordinator('Harshavardhini', '4TH YEAR (SEC A)', '9345191880'),
+      coordinator('Asmitha', '3RD YEAR (SEC A)', '9360172652'),
+      coordinator('Akshaya J', '3RD YEAR (SEC A)', '9342516589'),
+      coordinator('Swathi Priya', '2ND YEAR (SEC C)', '8655763246'),
+      coordinator('Gokul Hari', '2ND YEAR (SEC A)', '8072706708')
     ],
     chipLabel: 'REBUS',
     chipSub: 'ASSOCIATE',
@@ -311,13 +330,12 @@ export const ALL_EVENTS: EventSpec[] = [
     time: '11:30 AM - 12:30 PM',
     teamSize: '2 - 3 MEMBERS',
     coordinators: [
-      coordinator('Pandi Selvan'),
-      coordinator('Sahaya Vilfin', '4TH', '6369534894'),
-      coordinator('Kurus Vinglin'),
-      coordinator('Sudharshan', '3RD', '7010329140'),
-      coordinator('Thoufiq Ahmed', '3RD', '8712334495'),
-      coordinator('Aswathy R', '2ND', '7012546245'),
-      coordinator('Srisabari', '2ND', '7338950441')
+      coordinator('Pandi Selvan M D', '4TH YEAR (SEC B)', '7010501181'),
+      coordinator('Kurus Vinglin', '4TH YEAR (SEC B)', '6381243529'),
+      coordinator('Sudharshan', '3RD YEAR (SEC C)', '7010329140'),
+      coordinator('Thoufiq Ahmad', '3RD YEAR (SEC C)', '8712334495'),
+      coordinator('Aswathy', '2ND YEAR (SEC A)', '7012546245'),
+      coordinator('Srisabari', '2ND YEAR (SEC C)', '7338950441')
     ],
     chipLabel: 'BGM',
     chipSub: 'AUDIO-FX',
@@ -344,12 +362,11 @@ export const ALL_EVENTS: EventSpec[] = [
     time: '01:15 PM - 02:15 PM',
     teamSize: '2 - 3 MEMBERS',
     coordinators: [
-      coordinator('Ahamed Bassam', '4TH', '9043058272'),
-      coordinator('Prathish', '4TH', '7708832955'),
-      coordinator('Madumitha P', '3RD', '9360171606'),
-      coordinator('Kannan', '3RD', '8072509218'),
-      coordinator('Delli Babu D', '2ND', '7418893241'),
-      coordinator('Hemadheekshana', '2ND', '9345442352')
+      coordinator('Ahamed Bassam', '4TH YEAR (SEC A)', '9043058272'),
+      coordinator('Kannan', '3RD YEAR (SEC B)', '8072509218'),
+      coordinator('Madhumitha P', '3RD YEAR (SEC B)', '9360171606'),
+      coordinator('Delli Babu', '2ND YEAR (SEC A)', '7418893241'),
+      coordinator('Hemadheekshana', '2ND YEAR (SEC A)', '9345442352')
     ],
     chipLabel: 'SIGNAL',
     chipSub: 'NOISE-3X',
@@ -379,11 +396,12 @@ export const ALL_EVENTS: EventSpec[] = [
     time: '02:15 PM - 03:15 PM',
     teamSize: '2 - 3 MEMBERS',
     coordinators: [
-      coordinator('Vishnuram', '4TH', '8122647340'),
-      coordinator('Lathika M', '3RD', '9498349379'),
-      coordinator('Sezhiyan', '3RD', '9363342906'),
-      coordinator('Maheshwaran', '2ND', '6382892862'),
-      coordinator('Rohith V', '2ND', '8825401330')
+      coordinator('Vishnuram', '4TH YEAR (SEC C)', '8122647340'),
+      coordinator('Karthik D', '4TH YEAR (SEC B)', '8015134123'),
+      coordinator('Lathika', '3RD YEAR (SEC B)', '9498349379'),
+      coordinator('Sezhiyan', '3RD YEAR (SEC C)', '9363342906'),
+      coordinator('Maheshwaran', '2ND YEAR (SEC A)', '6382892862'),
+      coordinator('Rohith', '2ND YEAR (SEC B)', '8825401330')
     ],
     chipLabel: 'LYRICS',
     chipSub: 'TRANSLATE',
@@ -414,10 +432,10 @@ export const ALL_EVENTS: EventSpec[] = [
     time: 'TO BE ANNOUNCED',
     teamSize: '4 MEMBERS',
     coordinators: [
-      coordinator('Anandha Perumal S', '4TH', '7397490710'),
-      coordinator('Dinesh Kumar E', '4TH', '8190922212'),
-      coordinator('Jeswin Soundhar G', '2ND', '9025216406'),
-      coordinator('Saran S', '2ND', '9176655051')
+      coordinator('Anandha Perumal S', '4TH YEAR', '7397490710'),
+      coordinator('Dinesh Kumar E', '4TH YEAR', '8190922212'),
+      coordinator('Jeswin Soundhar G', '2ND YEAR', '9025216406'),
+      coordinator('Saran S', '2ND YEAR', '9176655051')
     ],
     chipLabel: 'E-SPORTS',
     chipSub: 'ARENA',
@@ -446,12 +464,12 @@ export const ALL_EVENTS: EventSpec[] = [
     time: '10:30 AM - 03:30 PM',
     teamSize: 'UP TO 3 PER STALL',
     coordinators: [
-      coordinator('Devdharshan', '4TH', '8122126781'),
-      coordinator('Ayaanar', '4TH', '8428679698'),
-      coordinator('Suban', '3RD', '7358302865'),
-      coordinator('Jayasurya J J', '3RD', '7825987988'),
-      coordinator('Sruthi Priya', '2ND', '9791087746'),
-      coordinator('Karthikeyan', '2ND', '8015844556')
+      coordinator('Dev Dharshan', '4TH YEAR (SEC A)', '8122126781'),
+      coordinator('Ayyanar', '4TH YEAR (SEC A)', '8428679698'),
+      coordinator('Jayasuriya', '3RD YEAR (SEC A)', '7825987988'),
+      coordinator('Suban', '3RD YEAR (SEC C)', '7358302865'),
+      coordinator('Sruthi Priya', '2ND YEAR (SEC C)', '9791087746'),
+      coordinator('Karthikeyan', '2ND YEAR (SEC B)', '8015844556')
     ],
     chipLabel: 'CARNIVAL',
     chipSub: 'FEST-2K26',
