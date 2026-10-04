@@ -30,6 +30,21 @@ form.addEventListener("submit",async event=>{
   const response=await fetch(`${CS_CONFIG.SUPABASE_URL}/functions/v1/public-register`,{method:"POST",headers:{Authorization:`Bearer ${CS_CONFIG.SUPABASE_ANON_KEY}`},body:fields});
   const data=await response.json();if(!response.ok)throw new Error(data.error||"Registration failed.");
   localStorage.setItem("cs_last_registration",JSON.stringify({code:data.registration_code,email:$("#email").value.trim(),phone:$("#phone").value.trim()}));
+  const overlay=document.createElement("div");
+  overlay.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px;font-family:sans-serif;";
+  overlay.innerHTML=`<div style="background:#090d16;border:2px solid #06b6d4;box-shadow:0 0 40px rgba(6,182,212,0.4);border-radius:12px;padding:24px;max-width:420px;width:100%;text-align:center;color:#fff;">
+    <div style="display:inline-block;padding:4px 12px;border-radius:999px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;font-size:12px;font-weight:600;letter-spacing:1px;margin-bottom:12px;">DATABASE VERIFICATION COMPLETE</div>
+    <h3 style="margin:8px 0;font-size:18px;color:#fff;">DATA VERIFIED // CONFIRMED</h3>
+    <p style="color:#67e8f9;font-size:13px;margin:8px 0 16px;">Please wait while being redirected to the payment gateway...</p>
+    <div style="background:#0e1726;border:1px solid rgba(6,182,212,0.3);border-radius:8px;padding:12px;font-size:12px;text-align:left;line-height:1.6;margin-bottom:16px;color:#cbd5e1;">
+      <div><strong style="color:#94a3b8;">REG ID:</strong> <span style="color:#67e8f9;font-weight:700;">${escapeHtml(data.registration_code)}</span></div>
+      <div><strong style="color:#94a3b8;">NAME:</strong> ${escapeHtml($("#name").value)}</div>
+      <div><strong style="color:#94a3b8;">EMAIL:</strong> ${escapeHtml($("#email").value)}</div>
+    </div>
+    <div style="font-size:11px;color:#94a3b8;">⏳ Do not refresh or close this window...</div>
+  </div>`;
+  document.body.appendChild(overlay);
+  await new Promise(r=>setTimeout(r,2500));
   const externalFields=new FormData();externalFields.append("email",$("#email").value.trim());externalFields.append("day",day);externalFields.append("registration_fee",String(data.registration_fee));
   const externalForm=document.createElement("form");externalForm.method="POST";externalForm.action="https://apps.veltech.edu.in/clique/CybersentinelProcess";externalForm.enctype="multipart/form-data";
   for(const [name,value] of externalFields.entries()){const input=document.createElement("input");input.type="hidden";input.name=name;input.value=String(value);externalForm.append(input)}

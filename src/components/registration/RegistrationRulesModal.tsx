@@ -198,7 +198,7 @@ export function RegistrationRulesModal({
                 <div>
                   <h4 className="reg-rules-callout__title">HOW DAY-WISE EVENT AUTO-SELECTION WORKS</h4>
                   <p className="reg-rules-callout__desc">
-                    When you select a character/pass, <strong>all events for that selected day are auto-selected by default</strong>. If you only wish to compete in <strong>two or three events</strong>, you must <strong>manually uncheck/deselect</strong> the remaining events in the event checklist before continuing!
+                    When you select a character/pass, <strong>all events for that selected day are auto-selected by default</strong>. If you only wish to compete in <strong>two or three events</strong>, you must <strong>manually uncheck/deselect</strong> the remaining events in the event checklist before continuing! (If you choose any group's events, automatically other group's events also get selected, and don't worry—if you want to deselect, just uncheck the events in the event checklist... Further queries? Contact us!)
                   </p>
                 </div>
               </div>
@@ -418,8 +418,8 @@ export function RegistrationRulesModal({
                 <div className="timeline-node">
                   <div className="timeline-dot timeline-dot--green" />
                   <div className="timeline-content">
-                    <span className="timeline-tag text-emerald-400">STAGE 3 (UNLOCKED)</span>
-                    <h4>ADMIN VERIFICATION &amp; QR UNLOCK</h4>
+                    <span className="timeline-tag text-emerald-400">STAGE 3</span>
+                    <h4>AFTER PAYMENT COMPLETED</h4>
                     <p>
                       College desk verifies your payment. Status upgrades to <strong>CONFIRMED // VERIFIED</strong>. Your high-resolution Entry QR Pass appears automatically in:
                     </p>
