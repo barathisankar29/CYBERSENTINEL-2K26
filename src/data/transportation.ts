@@ -59,12 +59,14 @@ export interface CampusLocation {
 export const campusLocationData: CampusLocation = {
   name: 'Vel Tech High Tech Dr. Rangarajan Dr. Sakunthala Engineering College',
   shortName: 'Vel Tech High Tech',
-  address: 'Vel Tech Road, Avadi, Chennai, Tamil Nadu 600062, India',
-  latitude: 13.1020,
-  longitude: 80.0986,
-  coordinatesDisplay: '13.1020° N, 80.0986° E',
+  address: 'No. 60, Vel Tech Road, Morai, Avadi, Chennai, Tamil Nadu 600062, India',
+  // Google Maps pin for the college (place "Vel Tech High Tech Dr.Rangarajan
+  // Dr.Sakunthala Engineering College").
+  latitude: 13.1877832,
+  longitude: 80.1064227,
+  coordinatesDisplay: '13.1878° N, 80.1064° E',
   googleMapsDirectionsUrl:
-    'https://www.google.com/maps/dir/?api=1&destination=13.1020,80.0986',
+    'https://www.google.com/maps/dir/?api=1&destination=13.1877832,80.1064227',
 }
 
 export const transitRoutesData: TransitRoute[] = [
@@ -149,8 +151,8 @@ export const landmarkHubsData: LandmarkTransitHub[] = [
     accentColor: 'magenta',
     coordinates: [13.0979, 80.0994],
     icon: '🚉',
-    distance: '7.2 km',
-    estTime: '15 mins',
+    distance: '11.9 km',
+    estTime: '25 mins',
     transitMode: 'Direct College Shuttle & MTC 62/77',
     sectorCode: 'SECTOR-AVD // 01',
   },
@@ -160,7 +162,7 @@ export const landmarkHubsData: LandmarkTransitHub[] = [
     accentColor: 'cyan',
     coordinates: [13.0694, 80.2057],
     icon: '🚌',
-    distance: '22 km',
+    distance: '24 km',
     estTime: '45 mins',
     transitMode: 'MTC Route 77 & Green Line Metro',
     sectorCode: 'SECTOR-CMBT // 02',
@@ -171,7 +173,7 @@ export const landmarkHubsData: LandmarkTransitHub[] = [
     accentColor: 'violet',
     coordinates: [13.0827, 80.2707],
     icon: '🏛️',
-    distance: '28 km',
+    distance: '30 km',
     estTime: '50 mins',
     transitMode: 'Direct Suburban EMU train to Avadi',
     sectorCode: 'SECTOR-MAS // 03',
@@ -182,8 +184,8 @@ export const landmarkHubsData: LandmarkTransitHub[] = [
     accentColor: 'magenta',
     coordinates: [13.0484, 80.0926],
     icon: '🚏',
-    distance: '7 km',
-    estTime: '18 mins',
+    distance: '21 km',
+    estTime: '35 mins',
     transitMode: 'MTC 62 & Outer Bypass Shuttles',
     sectorCode: 'SECTOR-PML // 04',
   },
@@ -193,7 +195,7 @@ export const landmarkHubsData: LandmarkTransitHub[] = [
     accentColor: 'cyan',
     coordinates: [12.9249, 80.1274],
     icon: '🚆',
-    distance: '38 km',
+    distance: '39 km',
     estTime: '70 mins',
     transitMode: 'Bypass Express Bus / EMU via Central',
     sectorCode: 'SECTOR-TBM // 05',
@@ -204,7 +206,7 @@ export const landmarkHubsData: LandmarkTransitHub[] = [
     accentColor: 'violet',
     coordinates: [12.9941, 80.1709],
     icon: '✈️',
-    distance: '30 km',
+    distance: '39 km',
     estTime: '55 mins',
     transitMode: 'Blue Line Metro to Central + EMU',
     sectorCode: 'SECTOR-MAA // 06',
@@ -218,10 +220,10 @@ export const chennaiTransitStopsData: TransitStopPoint[] = [
     name: 'Vel Tech Campus Gate Stop',
     hubGroup: 'AVADI',
     accentColor: 'cyan',
-    coordinates: [13.1020, 80.0986],  // Real campus GPS: Vel Tech Rd, Avadi
+    coordinates: [13.1877832, 80.1064227],  // Campus GPS (Google Maps pin): Morai, Avadi
     corridor: 'CAMPUS DIRECT',
     distanceFromCampus: '0.1 km',
-    zone: 'Avadi Vel Nagar',
+    zone: 'Morai, Avadi',
     landmarkInfo: 'College Entrance Gate & Security Port',
   },
   {
@@ -231,7 +233,7 @@ export const chennaiTransitStopsData: TransitStopPoint[] = [
     accentColor: 'magenta',
     coordinates: [13.0979, 80.0994],  // Real Avadi suburban railway station
     corridor: 'AVADI FEEDER',
-    distanceFromCampus: '1.2 km',
+    distanceFromCampus: '11.9 km',
     zone: 'Avadi Central',
     landmarkInfo: 'North Exit College Shuttle Pick-Up Point',
   },
@@ -242,7 +244,7 @@ export const chennaiTransitStopsData: TransitStopPoint[] = [
     accentColor: 'cyan',
     coordinates: [13.1004, 80.1012],  // Junction of Vel Tech Rd & CTH Road, Avadi
     corridor: 'AVADI-CTH LINK',
-    distanceFromCampus: '0.8 km',
+    distanceFromCampus: '12.0 km',
     zone: 'Avadi North',
     landmarkInfo: 'Main feeder stop on Vel Tech Road',
   },
@@ -253,7 +255,7 @@ export const chennaiTransitStopsData: TransitStopPoint[] = [
     accentColor: 'violet',
     coordinates: [13.1200, 80.0530],  // Real Pattabiram suburban railway station
     corridor: 'SUBURBAN LINK',
-    distanceFromCampus: '5.8 km',
+    distanceFromCampus: '12.9 km',
     zone: 'Pattabiram',
     landmarkInfo: 'Direct link to Suburban Mainline to Chennai Central',
   },
@@ -264,7 +266,7 @@ export const chennaiTransitStopsData: TransitStopPoint[] = [
     accentColor: 'magenta',
     coordinates: [13.1145, 80.1549],  // Real Ambattur Industrial Estate OT
     corridor: 'CTH ROAD EXPRESS',
-    distanceFromCampus: '11.8 km',
+    distanceFromCampus: '13.6 km',
     zone: 'Industrial Corridor',
     landmarkInfo: 'Major MTC Transfer Station – CTH Road',
   },
@@ -275,7 +277,7 @@ export const chennaiTransitStopsData: TransitStopPoint[] = [
     accentColor: 'cyan',
     coordinates: [13.1184, 80.1290],  // Real Thirumullaivoyal suburban railway station
     corridor: 'SUBURBAN RAIL',
-    distanceFromCampus: '7.5 km',
+    distanceFromCampus: '10.3 km',
     zone: 'West Industrial Belt',
     landmarkInfo: 'EMU local stop with direct bus feeder to campus',
   },
@@ -288,7 +290,7 @@ export const chennaiTransitStopsData: TransitStopPoint[] = [
     accentColor: 'magenta',
     coordinates: [13.0694, 80.2057],  // Real Koyambedu CMBT coords
     corridor: 'MTC CORRIDOR 77',
-    distanceFromCampus: '22 km',
+    distanceFromCampus: '24 km',
     zone: 'Central Metro',
     landmarkInfo: 'Inter-state bus terminal and Green Line Metro',
   },
@@ -299,7 +301,7 @@ export const chennaiTransitStopsData: TransitStopPoint[] = [
     accentColor: 'cyan',
     coordinates: [13.0827, 80.2707],  // Real Chennai Central Station
     corridor: 'EMU MAINLINE',
-    distanceFromCampus: '28 km',
+    distanceFromCampus: '30 km',
     zone: 'Harbour / Central',
     landmarkInfo: 'Moore Market Complex Suburban Terminal',
   },
@@ -310,7 +312,7 @@ export const chennaiTransitStopsData: TransitStopPoint[] = [
     accentColor: 'magenta',
     coordinates: [13.0484, 80.0926],  // Real Poonamallee High Road bus stand
     corridor: 'TRUNK ROAD 62',
-    distanceFromCampus: '7 km',
+    distanceFromCampus: '21 km',
     zone: 'West Outer Ring',
     landmarkInfo: 'Direct MTC 62 transit route origin',
   },
@@ -321,7 +323,7 @@ export const chennaiTransitStopsData: TransitStopPoint[] = [
     accentColor: 'violet',
     coordinates: [12.9249, 80.1274],  // Real Tambaram Junction
     corridor: 'BYPASS EXPRESS',
-    distanceFromCampus: '38 km',
+    distanceFromCampus: '39 km',
     zone: 'South Gateway',
     landmarkInfo: 'South Chennai transit exchange',
   },
@@ -332,7 +334,7 @@ export const chennaiTransitStopsData: TransitStopPoint[] = [
     accentColor: 'cyan',
     coordinates: [12.9941, 80.1709],  // Real Chennai International Airport
     corridor: 'BLUE LINE METRO',
-    distanceFromCampus: '30 km',
+    distanceFromCampus: '39 km',
     zone: 'South Metro',
     landmarkInfo: 'International & Domestic Terminals',
   },
@@ -343,7 +345,7 @@ export const chennaiTransitStopsData: TransitStopPoint[] = [
     accentColor: 'violet',
     coordinates: [13.0067, 80.2206],  // Real Guindy Metro Station
     corridor: 'METRO & RAIL INTERLINK',
-    distanceFromCampus: '25 km',
+    distanceFromCampus: '33 km',
     zone: 'South Central',
     landmarkInfo: 'Rapid transfer hub for southern suburbs',
   },
@@ -354,7 +356,7 @@ export const chennaiTransitStopsData: TransitStopPoint[] = [
     accentColor: 'cyan',
     coordinates: [13.1077, 80.2062],  // Real Villivakkam suburban railway station
     corridor: 'SUBURBAN FEEDER',
-    distanceFromCampus: '17 km',
+    distanceFromCampus: '21 km',
     zone: 'North Central',
     landmarkInfo: 'Suburban train corridor to Avadi via Ambattur',
   },
