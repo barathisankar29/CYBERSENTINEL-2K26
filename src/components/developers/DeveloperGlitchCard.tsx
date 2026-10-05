@@ -10,9 +10,9 @@ interface DeveloperGlitchCardProps {
   onClick?: () => void
 }
 
-export const DeveloperGlitchCard: React.FC<DeveloperGlitchCardProps> = memo(({
+export const DeveloperGlitchCard: React.FC<DeveloperGlitchCardProps> = memo(function DeveloperGlitchCard({
   developer,
-}) => {
+}) {
   const nameColor = developer.nameColor || developer.accentHex || '#00f0ff'
   const textColor = developer.textColor || developer.secondaryHex || '#38bdf8'
 

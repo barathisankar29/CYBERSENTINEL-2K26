@@ -79,21 +79,24 @@ export function RegistrationRulesModal({
   };
 
   return createPortal(
+    // Clicking the dimmed backdrop (not the card) closes the popup.
     <div
       className="reg-rules-backdrop"
-      onClick={onClose}
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
       onWheel={(e) => e.stopPropagation()}
       onTouchMove={(e) => {
         if (e.target === e.currentTarget) e.preventDefault();
       }}
       data-lenis-prevent="true"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="reg-rules-title"
     >
       <div
         className="reg-rules-card"
-        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="reg-rules-title"
         onWheel={(e) => e.stopPropagation()}
         data-lenis-prevent="true"
       >
@@ -198,7 +201,7 @@ export function RegistrationRulesModal({
                 <div>
                   <h4 className="reg-rules-callout__title">HOW DAY-WISE EVENT AUTO-SELECTION WORKS</h4>
                   <p className="reg-rules-callout__desc">
-                    When you select a character/pass, <strong>all events for that selected day are auto-selected by default</strong>. If you only wish to compete in <strong>two or three events</strong>, you must <strong>manually uncheck/deselect</strong> the remaining events in the event checklist before continuing! (If you choose any group's events, automatically other group's events also get selected, and don't worry—if you want to deselect, just uncheck the events while creating the team after registration... Further queries? Contact us!)
+                    When you select a character/pass, <strong>all events for that selected day are auto-selected by default</strong>. If you only wish to compete in <strong>two or three events</strong>, you must <strong>manually uncheck/deselect</strong> the remaining events in the event checklist before continuing! (If you choose any group&apos;s events, automatically other group&apos;s events also get selected, and don&apos;t worry—if you want to deselect, just uncheck the events while creating the team after registration... Further queries? Contact us!)
                   </p>
                 </div>
               </div>

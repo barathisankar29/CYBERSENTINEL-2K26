@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import type { EventSpec } from '@/types/eventsTerminal';
 import { sound } from './sound';
-import { isTeamEvent, type RegistrationPortalInitialData } from './RegistrationPortalPage';
+import type { RegistrationPortalInitialData } from './RegistrationPortalPage';
+import { isTeamEvent } from './teamEvents';
 import { RegistrationRulesModal } from '@/components/registration/RegistrationRulesModal';
 import {
   findSpecialEvent,

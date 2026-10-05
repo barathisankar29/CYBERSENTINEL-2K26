@@ -7,7 +7,7 @@ interface FrontendDeveloperCardProps {
   developer: FrontendDeveloperMember
 }
 
-export const FrontendDeveloperCard: React.FC<FrontendDeveloperCardProps> = memo(({ developer }) => {
+export const FrontendDeveloperCard: React.FC<FrontendDeveloperCardProps> = memo(function FrontendDeveloperCard({ developer }) {
   return (
     <NeonSplatterCard>
       {/* Left Column: Graphic / Artwork with Transparent Background */}

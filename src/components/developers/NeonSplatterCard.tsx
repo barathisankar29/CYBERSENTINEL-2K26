@@ -5,7 +5,7 @@ interface NeonSplatterCardProps {
   children: React.ReactNode
 }
 
-export const NeonSplatterCard: React.FC<NeonSplatterCardProps> = memo(({ children }) => {
+export const NeonSplatterCard: React.FC<NeonSplatterCardProps> = memo(function NeonSplatterCard({ children }) {
   return (
     <div className="neon-splatter-card">
       {/* Outer Splatter & Glow Layer (SVG vector splatter border matching template) */}

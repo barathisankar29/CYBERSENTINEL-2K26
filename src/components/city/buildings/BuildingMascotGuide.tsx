@@ -83,7 +83,7 @@ export const BuildingMascotGuide: React.FC = () => {
     setCurrentIndex((prev) => (prev + 1) % LANDMARK_GUIDES.length)
   }, [])
 
-  const handleBubbleClick = (e: React.MouseEvent) => {
+  const handleBubbleClick = (e: React.SyntheticEvent) => {
     e.stopPropagation()
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
     navigate(`/${currentGuide.id}`)
@@ -100,6 +100,14 @@ export const BuildingMascotGuide: React.FC = () => {
     }
   }, [goToNext])
 
+  // Enter / Space do the same as a click, for keyboard users.
+  const onActivateKey = (action: (event: React.SyntheticEvent) => void) => (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      action(event)
+    }
+  }
+
   return (
     <div
       className={`building-mascot-guide ${isBubbleLeft ? 'building-mascot-guide--bubble-left' : 'building-mascot-guide--bubble-right'}`}
@@ -115,7 +123,10 @@ export const BuildingMascotGuide: React.FC = () => {
       {isBubbleLeft && (
         <div
           className="building-mascot-guide__bubble"
+          role="button"
+          tabIndex={0}
           onClick={handleBubbleClick}
+          onKeyDown={onActivateKey(handleBubbleClick)}
           style={{ cursor: 'pointer' }}
           title={`Click to open ${currentGuide.label} page`}
         >
@@ -127,7 +138,10 @@ export const BuildingMascotGuide: React.FC = () => {
       {/* Floating Cyber Ghost Mascot Actor */}
       <div
         className="building-mascot-guide__actor"
+        role="button"
+        tabIndex={0}
         onClick={goToNext}
+        onKeyDown={onActivateKey(goToNext)}
         title="Click mascot to fly to next landmark"
       >
         <div className="building-mascot-guide__beacon" aria-hidden="true" />
@@ -147,7 +161,10 @@ export const BuildingMascotGuide: React.FC = () => {
       {!isBubbleLeft && (
         <div
           className="building-mascot-guide__bubble"
+          role="button"
+          tabIndex={0}
           onClick={handleBubbleClick}
+          onKeyDown={onActivateKey(handleBubbleClick)}
           style={{ cursor: 'pointer' }}
           title={`Click to open ${currentGuide.label} page`}
         >

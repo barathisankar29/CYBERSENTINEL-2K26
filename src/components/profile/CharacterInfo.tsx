@@ -216,14 +216,15 @@ export function CharacterInfo({ character, registration }: CharacterInfoProps) {
       {isModalOpen &&
         typeof document !== 'undefined' &&
         createPortal(
+          // Clicking the dimmed backdrop (not the card) closes the popup.
           <div
             className="profile-qr-modal-backdrop"
-            onClick={() => setIsModalOpen(false)}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="qr-modal-title"
+            role="presentation"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setIsModalOpen(false)
+            }}
           >
-            <div className="profile-qr-modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="profile-qr-modal-card" role="dialog" aria-modal="true" aria-labelledby="qr-modal-title">
               {/* Modal Top Header */}
               <div className="profile-qr-modal-header">
                 <div className="profile-qr-modal-title-group">
