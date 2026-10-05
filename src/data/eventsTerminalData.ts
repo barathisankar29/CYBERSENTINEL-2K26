@@ -64,7 +64,7 @@ export const ALL_EVENTS: EventSpec[] = [
     teamSize: '2 - 3 MEMBERS',
     teamSizeInProtocol: true,
     coordinators: [
-      coordinator('Dhanalakshmi', '4TH YEAR (SEC A)', '9845758749'),
+      coordinator('Dhanalakshmi B ', '4TH YEAR (SEC A)', '9345758749'),
       coordinator('Mohamad Shameer', '4TH YEAR (SEC B)', '6379532756'),
       coordinator('Balaji M', '3RD YEAR (SEC A)', '6380399891'),
       coordinator('Rishikesh', '3RD YEAR (SEC C)', '8778286011'),
