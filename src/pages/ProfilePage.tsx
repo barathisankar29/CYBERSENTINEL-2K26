@@ -79,6 +79,12 @@ export function ProfilePage() {
   const email = backendRecord ? (lastReg?.email ?? `${activeCharId}@cybersentinel.city`) :
     (storedRegistration?.email ?? `${activeCharId}@cybersentinel.city`)
 
+  const isVerified = Boolean(
+    backendRecord?.payment?.status === 'VERIFIED' &&
+    backendRecord?.registration?.status === 'CONFIRMED' &&
+    backendRecord?.qr_url
+  )
+
   const registration: RegistrationRecord = {
     registrationId,
     characterId: activeCharId as CharacterId,
@@ -88,8 +94,8 @@ export function ProfilePage() {
     email,
     registeredAt: storedRegistration?.registeredAt || new Date().toISOString(),
     paymentStatus: storedRegistration?.paymentStatus ?? 'test_mode_unverified',
-    qrUrl: backendRecord?.qr_url || null,
-    isVerified: backendRecord?.payment?.status === 'VERIFIED',
+    qrUrl: isVerified ? (backendRecord?.qr_url || null) : null,
+    isVerified,
     selectedDay: backendRecord?.registration.selected_day,
     college: backendRecord?.participant.college,
     department: backendRecord?.participant.department,

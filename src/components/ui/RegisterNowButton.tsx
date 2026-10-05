@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { RegistrationRulesModal } from '@/components/registration/RegistrationRulesModal'
 import './RegisterNowButton.css'
 
 interface RegisterNowButtonProps {
@@ -8,35 +10,59 @@ interface RegisterNowButtonProps {
    * hero identity stack (see IdentityLayer.tsx).
    */
   variant?: 'overlay' | 'hero'
+  onDirectProceed?: () => void
 }
 
 /** Grand CTA into the registration portal (/register, backed by the
- * Supabase registration Edge Functions) — separate from clicking the
- * Events building itself, so registration has its own obvious entry
- * point. Always visible regardless of registration state (unlike the
- * identity terminal, which reflects current state). */
-export function RegisterNowButton({ variant = 'overlay' }: RegisterNowButtonProps) {
+ * Supabase registration Edge Functions) — opens the official registration
+ * and team guidelines modal before proceeding to pack selection. */
+export function RegisterNowButton({ variant = 'overlay', onDirectProceed }: RegisterNowButtonProps) {
   const navigate = useNavigate()
+  const [showRules, setShowRules] = useState(false)
 
-  if (variant === 'hero') {
-    return (
-      <button type="button" className="register-now-hero" onClick={() => navigate('/register')}>
-        <span className="register-now-hero__glow" aria-hidden="true" />
-        <span className="register-now-hero__content">
-          <span className="register-now-hero__dot" aria-hidden="true" />
-          REGISTER NOW
-          <span className="register-now-hero__chevron" aria-hidden="true">
-            &rsaquo;
-          </span>
-        </span>
-      </button>
-    )
+  const handleOpenRules = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setShowRules(true)
+  }
+
+  const handleProceed = () => {
+    setShowRules(false)
+    if (onDirectProceed) {
+      onDirectProceed()
+    } else {
+      navigate('/register')
+    }
   }
 
   return (
-    <button type="button" className="register-now-btn" onClick={() => navigate('/register')}>
-      <span className="register-now-btn__dot" aria-hidden="true" />
-      REGISTER NOW
-    </button>
+    <>
+      {variant === 'hero' ? (
+        <button type="button" className="register-now-hero" onClick={handleOpenRules}>
+          <span className="register-now-hero__glow" aria-hidden="true" />
+          <span className="register-now-hero__content">
+            <span className="register-now-hero__dot" aria-hidden="true" />
+            REGISTER NOW
+            <span className="register-now-hero__chevron" aria-hidden="true">
+              &rsaquo;
+            </span>
+          </span>
+        </button>
+      ) : (
+        <button type="button" className="register-now-btn" onClick={handleOpenRules}>
+          <span className="register-now-btn__dot" aria-hidden="true" />
+          REGISTER NOW
+        </button>
+      )}
+
+      {showRules && (
+        <RegistrationRulesModal
+          isOpen={showRules}
+          onClose={() => setShowRules(false)}
+          onProceed={handleProceed}
+        />
+      )}
+    </>
   )
 }
+

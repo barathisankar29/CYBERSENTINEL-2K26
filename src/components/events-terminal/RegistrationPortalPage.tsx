@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Loader2, ShieldCheck } from 'lucide-react';
 import type { CharacterId } from '@/types/characterProfile';
 import { characterProfiles } from '@/data/characterProfiles';
 import {
@@ -258,8 +259,15 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
     setReturningPaying(true);
     try {
       const registrationFee = await resolvePaymentAmount(returning.record);
+      setRedirectingInfo({
+        regCode: returning.record.registration.registration_code,
+        name: returning.record.participant.name,
+        email: returning.email
+      });
+      await new Promise((resolve) => setTimeout(resolve, 2200));
       submitToPaymentProcess({ email: returning.email, day: returning.record.registration.selected_day, registrationFee });
     } catch (error) {
+      setRedirectingInfo(null);
       setReturningPaying(false);
       setReturning(null);
       showError(error instanceof Error ? error.message : 'Unable to determine the payment amount.');
@@ -274,6 +282,11 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
 
   // Alert & submission state
   const [alertInfo, setAlertInfo] = useState<{ type: 'error' | 'success'; message: string; regId?: string } | null>(null);
+  const [redirectingInfo, setRedirectingInfo] = useState<{
+    regCode: string;
+    name: string;
+    email: string;
+  } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { fees, specialEvents, error: pricingError } = useLiveRegistrationData();
@@ -392,9 +405,20 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
         regId: result.registration_code
       });
 
+      // Show alert-type popup: database verified user details, redirecting to payment
+      setRedirectingInfo({
+        regCode: result.registration_code,
+        name: fullName.trim(),
+        email: email.trim()
+      });
+
+      // Allow participant to view their verified registration details and redirect notice
+      await new Promise((resolve) => setTimeout(resolve, 2500));
+
       // Hand off to the college payment process exactly as register2 does.
       submitToPaymentProcess({ email: email.trim(), day: selectedDay, registrationFee: result.registration_fee });
     } catch (error) {
+      setRedirectingInfo(null);
       showError(error instanceof Error ? error.message : 'Registration failed.');
     } finally {
       setIsSubmitting(false);
@@ -755,6 +779,70 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
       <footer className="w-full bg-[#07020d] border-t border-[#2d123d] py-4 text-center text-gray-500 font-mono text-xs mt-6">
         CyberSentinel CS Symposium • Supabase-backed registration
       </footer>
+
+      {/* Alert type popup showing data verified in database and wait while redirecting to payment */}
+      {redirectingInfo && (
+        <div
+          className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-in fade-in duration-200"
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="redirect-dialog-title"
+        >
+          <div className="relative w-full max-w-md bg-[#090d16] border-2 border-cyan-500/80 rounded-xl shadow-[0_0_50px_rgba(6,182,212,0.35)] p-6 sm:p-7 text-center overflow-hidden">
+            {/* Cyber corner accents */}
+            <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-cyan-400" />
+            <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-cyan-400" />
+            <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-cyan-400" />
+            <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-cyan-400" />
+
+            {/* Status indicator */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 text-xs font-mono tracking-wider uppercase mb-4 animate-pulse">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              DATABASE VERIFICATION COMPLETE
+            </div>
+
+            {/* Glowing icon */}
+            <div className="relative mx-auto my-3 w-16 h-16 flex items-center justify-center">
+              <div className="absolute inset-0 rounded-full border-2 border-cyan-500/30 border-t-cyan-400 animate-spin" />
+              <ShieldCheck className="w-9 h-9 text-emerald-400 relative z-10" />
+            </div>
+
+            <h3 id="redirect-dialog-title" className="font-pixel text-lg sm:text-xl text-white tracking-wide mt-2">
+              DATA VERIFIED // CONFIRMED
+            </h3>
+
+            <p className="text-cyan-300 font-mono text-xs sm:text-sm mt-2 leading-relaxed">
+              Please wait while being redirected to the payment gateway...
+            </p>
+
+            {/* Registration Summary Card */}
+            <div className="mt-4 bg-[#0e1726] border border-cyan-500/30 rounded-lg p-3 text-left space-y-1.5 font-mono text-xs">
+              <div className="flex justify-between items-center text-gray-400">
+                <span>REGISTRATION ID:</span>
+                <span className="text-cyan-300 font-bold tracking-wider">{redirectingInfo.regCode}</span>
+              </div>
+              <div className="flex justify-between items-center text-gray-400">
+                <span>PARTICIPANT:</span>
+                <span className="text-white font-medium truncate max-w-[200px]">{redirectingInfo.name}</span>
+              </div>
+              <div className="flex justify-between items-center text-gray-400">
+                <span>VERIFIED EMAIL:</span>
+                <span className="text-white truncate max-w-[200px]">{redirectingInfo.email}</span>
+              </div>
+            </div>
+
+            {/* Cyber animated progress bar */}
+            <div className="mt-5 w-full bg-slate-800/80 rounded-full h-2 overflow-hidden border border-cyan-500/30">
+              <div className="bg-gradient-to-r from-cyan-400 via-emerald-400 to-cyan-300 h-full w-full animate-pulse" />
+            </div>
+
+            <p className="mt-3 text-[11px] text-gray-400 font-mono flex items-center justify-center gap-1.5">
+              <Loader2 className="w-3.5 h-3.5 text-cyan-400 animate-spin shrink-0" />
+              Do not refresh or close this window...
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

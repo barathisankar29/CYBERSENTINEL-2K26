@@ -11,7 +11,7 @@ import { sound } from '../sound';
 import { formatRupees, withGst } from '../useLiveRegistrationData';
 import { RegistrationStatusDialog } from '../RegistrationStatusDialog';
 import { OUTCOME_COPY, registrationOutcome } from '../registrationStatus';
-import { AlertTriangle, Check, CheckCircle2, Copy, CreditCard, Download, Printer, QrCode, Search, ShieldCheck, Users, XCircle } from 'lucide-react';
+import { AlertTriangle, Check, CheckCircle2, Copy, CreditCard, Download, Loader2, Printer, QrCode, Search, ShieldCheck, Users, XCircle } from 'lucide-react';
 
 interface FavoritesScreenProps {
   onSelectModule?: (mod: ModuleId) => void;
@@ -211,6 +211,7 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
     setPaying(true);
     try {
       const registrationFee = await resolvePaymentAmount(record);
+      await new Promise((resolve) => setTimeout(resolve, 2200));
       submitToPaymentProcess({ email: recordEmail, day: record.registration.selected_day, registrationFee });
     } catch (err) {
       sound.playError();
@@ -587,6 +588,47 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
             )}
           </div>
         </>
+      )}
+      {paying && record && (
+        <div
+          className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-in fade-in duration-200"
+          role="alertdialog"
+          aria-modal="true"
+        >
+          <div className="relative w-full max-w-md bg-[#090d16] border-2 border-cyan-500/80 rounded-xl shadow-[0_0_50px_rgba(6,182,212,0.35)] p-6 sm:p-7 text-center overflow-hidden">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 text-xs font-mono tracking-wider uppercase mb-4 animate-pulse">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              REGISTRATION RECORD CONFIRMED
+            </div>
+            <div className="relative mx-auto my-3 w-16 h-16 flex items-center justify-center">
+              <div className="absolute inset-0 rounded-full border-2 border-cyan-500/30 border-t-cyan-400 animate-spin" />
+              <ShieldCheck className="w-9 h-9 text-emerald-400 relative z-10" />
+            </div>
+            <h3 className="font-pixel text-lg sm:text-xl text-white tracking-wide mt-2">
+              FORWARDING TO PAYMENT
+            </h3>
+            <p className="text-cyan-300 font-mono text-xs sm:text-sm mt-2 leading-relaxed">
+              Please wait while being redirected to the payment gateway...
+            </p>
+            <div className="mt-4 bg-[#0e1726] border border-cyan-500/30 rounded-lg p-3 text-left space-y-1.5 font-mono text-xs">
+              <div className="flex justify-between items-center text-gray-400">
+                <span>REGISTRATION ID:</span>
+                <span className="text-cyan-300 font-bold tracking-wider">{record.registration.registration_code}</span>
+              </div>
+              <div className="flex justify-between items-center text-gray-400">
+                <span>PARTICIPANT:</span>
+                <span className="text-white font-medium truncate max-w-[200px]">{record.participant.name}</span>
+              </div>
+            </div>
+            <div className="mt-5 w-full bg-slate-800/80 rounded-full h-2 overflow-hidden border border-cyan-500/30">
+              <div className="bg-gradient-to-r from-cyan-400 via-emerald-400 to-cyan-300 h-full w-full animate-pulse" />
+            </div>
+            <p className="mt-3 text-[11px] text-gray-400 font-mono flex items-center justify-center gap-1.5">
+              <Loader2 className="w-3.5 h-3.5 text-cyan-400 animate-spin shrink-0" />
+              Do not refresh or close this window...
+            </p>
+          </div>
+        </div>
       )}
     </div>
   );
