@@ -109,50 +109,7 @@ async function generateVerticalCrestHud() {
       </filter>
     </defs>
 
-    <!-- ==================== 1. TOP CIRCUIT WINGS ==================== -->
-    <!-- Left Wing -->
-    <g filter="url(#neonPinkGlow)">
-      <!-- Faint guide -->
-      <path d="M 120 82 L 260 82 L 295 62 L 430 62 L 460 82 L 545 82" stroke="#7209B7" stroke-width="1.3" stroke-opacity="0.35" stroke-dasharray="6,4" fill="none" />
-      <!-- Main glowing rail -->
-      <path d="M 140 82 L 270 82 L 305 62 L 420 62 L 450 82 L 540 82" stroke="#FF007F" stroke-width="2.3" stroke-linecap="round" fill="none" />
-      <!-- Secondary lower branch -->
-      <path d="M 230 82 L 255 100 L 370 100 L 395 82" stroke="#FF2A85" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="4,4" fill="none" />
-      <!-- Upper branch -->
-      <path d="M 330 62 L 345 52 L 400 52" stroke="#FF007F" stroke-width="1.4" stroke-linecap="round" fill="none" />
-      <!-- Nodes / Blocks -->
-      <circle cx="145" cy="82" r="3.2" fill="#FF2A85" stroke="#FFFFFF" stroke-width="1" />
-      <rect x="185" y="80" width="20" height="4" rx="2" fill="#FF007F" />
-      <circle cx="305" cy="62" r="2.8" fill="#FFFFFF" />
-      <circle cx="420" cy="62" r="2.8" fill="#FF2A85" />
-      <rect x="350" y="50" width="26" height="3" rx="1.5" fill="#FF70A6" />
-      <!-- Chevrons -->
-      <path d="M 240 78 L 246 82 L 240 86" stroke="#FF70A6" stroke-width="1.8" fill="none" stroke-linecap="round" />
-      <path d="M 250 78 L 256 82 L 250 86" stroke="#FF70A6" stroke-width="1.8" fill="none" stroke-linecap="round" />
-      <circle cx="540" cy="82" r="4" fill="#FF007F" stroke="#FFFFFF" stroke-width="1.5" />
-    </g>
-
-    <!-- Right Wing -->
-    <g filter="url(#neonPinkGlow)">
-      <!-- Faint guide -->
-      <path d="M 1120 82 L 980 82 L 945 62 L 810 62 L 780 82 L 695 82" stroke="#7209B7" stroke-width="1.3" stroke-opacity="0.35" stroke-dasharray="6,4" fill="none" />
-      <!-- Main glowing rail -->
-      <path d="M 1100 82 L 970 82 L 935 62 L 820 62 L 790 82 L 700 82" stroke="#FF007F" stroke-width="2.3" stroke-linecap="round" fill="none" />
-      <!-- Secondary lower branch -->
-      <path d="M 1010 82 L 985 100 L 870 100 L 845 82" stroke="#FF2A85" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="4,4" fill="none" />
-      <!-- Upper branch -->
-      <path d="M 910 62 L 895 52 L 840 52" stroke="#FF007F" stroke-width="1.4" stroke-linecap="round" fill="none" />
-      <!-- Nodes / Blocks -->
-      <circle cx="1095" cy="82" r="3.2" fill="#FF2A85" stroke="#FFFFFF" stroke-width="1" />
-      <rect x="1035" y="80" width="20" height="4" rx="2" fill="#FF007F" />
-      <circle cx="935" cy="62" r="2.8" fill="#FFFFFF" />
-      <circle cx="820" cy="62" r="2.8" fill="#FF2A85" />
-      <rect x="864" y="50" width="26" height="3" rx="1.5" fill="#FF70A6" />
-      <!-- Chevrons -->
-      <path d="M 1000 78 L 994 82 L 1000 86" stroke="#FF70A6" stroke-width="1.8" fill="none" stroke-linecap="round" />
-      <path d="M 990 78 L 984 82 L 990 86" stroke="#FF70A6" stroke-width="1.8" fill="none" stroke-linecap="round" />
-      <circle cx="700" cy="82" r="4" fill="#FF007F" stroke="#FFFFFF" stroke-width="1.5" />
-    </g>
+    <!-- (Circuit wings removed per design) -->
 
     <!-- ==================== 2. MAIN CHAMFERED HUD FRAME (SLIM & COMPACT) ==================== -->
     <g filter="url(#neonPinkGlow)">
@@ -324,6 +281,8 @@ async function generateVerticalCrestHud() {
     .webp({ quality: 100, alphaQuality: 100, lossless: true })
     .toBuffer();
 
+  await sharp(webpBuffer).toFile(path.join(PUBLIC_BRANDING_DIR, 'vel-tech-high-tech-logo-v5.webp'));
+  await sharp(webpBuffer).toFile(path.join(PUBLIC_BRANDING_DIR, 'vel-tech-high-tech-logo-full-v5.webp'));
   await sharp(webpBuffer).toFile(path.join(PUBLIC_BRANDING_DIR, 'vel-tech-high-tech-logo-v4.webp'));
   await sharp(webpBuffer).toFile(path.join(PUBLIC_BRANDING_DIR, 'vel-tech-high-tech-logo-full-v4.webp'));
   await sharp(webpBuffer).toFile(path.join(PUBLIC_BRANDING_DIR, 'vel-tech-high-tech-logo.webp'));

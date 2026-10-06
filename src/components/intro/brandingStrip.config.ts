@@ -25,7 +25,7 @@ export const brandingStripLogos: BrandingStripLogo[] = [
     // Transparent neon lockup, recolored from the supplied blue PNG into the
     // city's violet -> magenta palette (emblem left untouched).
     id: 'vel-tech',
-    src: '/assets/branding/vel-tech-high-tech-logo-v4.webp',
+    src: '/assets/branding/vel-tech-high-tech-logo-v5.webp',
     alt: 'Vel Tech High Tech Dr. Rangarajan Dr. Sakunthala Engineering College',
     width: 1240,
     height: 330,
