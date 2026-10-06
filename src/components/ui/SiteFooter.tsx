@@ -25,7 +25,7 @@ export function SiteFooter() {
               </Link>
             ))}
           <a
-            href="https://cybersentinel-workspace.web.app/coordinator/login"
+            href="https://cybersentinel-portal.vercel.app/"
             target="_blank"
             rel="noopener noreferrer"
           >
