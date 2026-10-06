@@ -99,16 +99,19 @@ export function Airship() {
       {isModalOpen &&
         typeof document !== 'undefined' &&
         createPortal(
+          // Clicking the dimmed backdrop (not the poster) closes the popup.
           <div
-            role="dialog"
-            aria-modal="true"
-            aria-label="CyberSentinel Airship Poster"
+            role="presentation"
             className="airship-modal-backdrop"
-            onClick={() => setIsModalOpen(false)}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setIsModalOpen(false)
+            }}
           >
             <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="CyberSentinel Airship Poster"
               className="airship-modal-content"
-              onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header */}
               <div className="airship-modal-header">
