@@ -24,7 +24,7 @@ export const DAY_1_EVENTS: CatalogEvent[] = [
     venue: 'Seminar Hall A / Floor 2',
     time: '10:00 AM - 01:00 PM',
     fee: '₹200 / Team',
-    crew: '2-3 Members',
+    crew: '4 Members',
   },
   {
     id: 'cipher-coding',

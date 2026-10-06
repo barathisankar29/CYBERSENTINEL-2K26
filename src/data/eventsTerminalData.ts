@@ -61,7 +61,7 @@ export const ALL_EVENTS: EventSpec[] = [
       'A paper presentation event is a place where participants showcase their research, ideas, or innovations through structured presentations. It allows knowledge sharing, critical discussions, and evaluation by experts.',
     date: 'DAY 01',
     time: '10:30 AM - 02:00 PM',
-    teamSize: '2 - 3 MEMBERS',
+    teamSize: '4 MEMBERS',
     teamSizeInProtocol: true,
     coordinators: [
       coordinator('Dhanalakshmi B ', '4TH YEAR (SEC A)', '9345758749'),
@@ -325,7 +325,7 @@ export const ALL_EVENTS: EventSpec[] = [
     image: '/assets/events/bgm.webp',
     quote: '"HEAR THE BEAT. NAME THE SCENE. BEAT THE CLOCK."',
     description:
-      '"Find the BGM" is a music-based event where teams identify a movie or song from a background music clip. It tests musical memory, attentiveness, movie and music knowledge, and quick thinking.',
+      '"Find the BGM" is a music-based event where teams identify a song from a background music clip. It tests musical memory, attentiveness, movie and music knowledge, and quick thinking.',
     date: 'DAY 02',
     time: '11:30 AM - 12:30 PM',
     teamSize: '2 - 3 MEMBERS',
@@ -342,7 +342,7 @@ export const ALL_EVENTS: EventSpec[] = [
     protocols: [
       'Each team should consist of 2-3 members.',
       'The event will consist of multiple rounds with increasing difficulty levels.',
-      'Participants will listen to short instrumental clips and should identify the movie or show.',
+      'Participants will listen to short instrumental clips and should identify the song.',
       'Answers should be given within the given time after the clip is played.',
       'Use of mobile phones or any external help is strictly prohibited.',
       'The participant or team with the highest number of correct answers wins.'

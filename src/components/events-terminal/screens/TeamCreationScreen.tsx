@@ -10,14 +10,13 @@ import {
   type TeamVerifyResponse
 } from '@/services/registration';
 import { sound } from '../sound';
-import { TeamEventsDialog } from '../TeamEventsDialog';
 import { eventSizeRange } from '../teamEventSize';
 import { Award, CheckCircle, Shield, Users } from 'lucide-react';
 
 interface TeamCreationScreenProps {
   /** Registration ID to verify as leader (from My Registrations) */
   selectedRegId?: string | null;
-  /** Event name to preselect the package that contains it */
+  /** Event name to pre-tick (when arriving from that event's page) */
   selectedEventName?: string | null;
   onSelectModule?: (mod: ModuleId) => void;
 }
@@ -26,19 +25,30 @@ const DAY_LABELS: Record<TeamDay, string> = { DAY_1: 'DAY 1', DAY_2: 'DAY 2' };
 
 type Leader = { identity: string; data: TeamVerifyResponse };
 
-/**
- * Every team size at least one of the package's events accepts. The leader
- * then ticks which events the team plays; the ticked events must all fit the
- * chosen size (team-management checks the same against selected_event_ids).
- */
-function sizeRange(item: TeamPackage): [number, number] {
-  const ranges = item.events.map(eventSizeRange);
-  return [Math.min(...ranges.map(([min]) => min)), Math.max(...ranges.map(([, max]) => max))];
+type DayEvent = TeamPackage['events'][number] & { packageId: string };
+
+/** Every team event on the day, each remembering which backend package it belongs to. */
+function dayEventsOf(packages: TeamPackage[]): DayEvent[] {
+  return packages.flatMap((pkg) => pkg.events.map((ev) => ({ ...ev, packageId: pkg.id })));
 }
 
-/** register2 team.js sizeLabel: "2 members" or "2-3 members". */
-function sizeLabel(item: TeamPackage): string {
-  const [min, max] = sizeRange(item);
+/**
+ * What the ticked events allow. team-management groups events into packages
+ * by team size and creates a team for ONE package, so every ticked event
+ * must come from the same package, and the team size must suit all of them.
+ */
+function selectionInfo(packages: TeamPackage[], ids: string[]) {
+  const events = dayEventsOf(packages).filter((ev) => ids.includes(ev.id));
+  const packageIds = [...new Set(events.map((ev) => ev.packageId))];
+  const ranges = events.map(eventSizeRange);
+  const min = events.length ? Math.max(...ranges.map(([lo]) => lo)) : 0;
+  const max = events.length ? Math.min(...ranges.map(([, hi]) => hi)) : 0;
+  const valid = events.length > 0 && packageIds.length === 1 && min <= max;
+  return { events, packageId: valid ? packageIds[0] : '', min, max, valid };
+}
+
+/** "2 members" or "2-3 members". */
+function sizeLabel(min: number, max: number): string {
   return min === max ? `${min} member${min === 1 ? '' : 's'}` : `${min}-${max} members`;
 }
 type CreatedTeam = TeamCreateResponse['team'] & { members: { name: string; code: string; role: 'LEADER' | 'MEMBER' }[] };
@@ -61,38 +71,30 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
   const [verifying, setVerifying] = useState(false);
   const [teamName, setTeamName] = useState('');
   const [day, setDay] = useState<TeamDay | ''>('');
-  const [packageId, setPackageId] = useState('');
-  // Leader-chosen team size within the package's range (team-management `team_size`).
+  // The events this team plays, ticked one by one (sent as selected_event_ids).
+  const [checkedIds, setCheckedIds] = useState<string[]>([]);
+  // Leader-chosen team size, within what every ticked event allows (team-management `team_size`).
   const [teamSize, setTeamSize] = useState(0);
   const [members, setMembers] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [created, setCreated] = useState<CreatedTeam | null>(null);
-  // Set once the form is valid: the "which events?" popup is open.
-  const [pickingEvents, setPickingEvents] = useState(false);
   const autoVerified = useRef(false);
 
   const packages: TeamPackage[] = leader && day ? leader.data.packages[day] ?? [] : [];
-  const selectedPackage = packages.find((item) => item.id === packageId);
+  const dayEvents = dayEventsOf(packages);
+  const selection = selectionInfo(packages, checkedIds);
+  const selectedPackage = packages.find((item) => item.id === selection.packageId);
+  const eventNames = selection.events.map((ev) => ev.name).join(' + ');
+  // Why the ticked events can't form one team (they need different team sizes).
+  const conflictMessage =
+    selection.events.length > 0 && !selection.valid
+      ? `${selection.events.map((ev) => `${ev.name} (${sizeLabel(...eventSizeRange(ev))})`).join(', ')} need different team sizes. Create a separate team for each size.`
+      : null;
 
   const fail = (message: string) => {
     sound.playError();
     setErrorMsg(message);
-  };
-
-  const choosePackage = (data: TeamVerifyResponse | undefined, nextDay: TeamDay | '', nextPackageId?: string) => {
-    const list = data && nextDay ? data.packages[nextDay] ?? [] : [];
-    const pkg =
-      list.find((item) => item.id === nextPackageId) ??
-      (selectedEventName
-        ? list.find((item) => item.events.some((ev) => ev.name.toLowerCase() === selectedEventName.toLowerCase()))
-        : undefined) ??
-      list[0];
-    setDay(nextDay);
-    setPackageId(pkg?.id ?? '');
-    const size = pkg?.min_size ?? 0;
-    setTeamSize(size);
-    setMembers(Array.from({ length: Math.max(size - 1, 0) }, () => ''));
   };
 
   // Changing the size keeps what was already typed for the remaining members.
@@ -100,11 +102,36 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
     setTeamSize(size);
     setMembers((prev) => Array.from({ length: Math.max(size - 1, 0) }, (_, i) => prev[i] ?? ''));
   };
-  const sizeOptions = (() => {
-    if (!selectedPackage) return [];
-    const [min, max] = sizeRange(selectedPackage);
-    return Array.from({ length: max - min + 1 }, (_, i) => min + i);
-  })();
+
+  // New ticks: keep the chosen size if every ticked event still allows it,
+  // otherwise move to the smallest size they all allow.
+  const applySelection = (list: TeamPackage[], ids: string[]) => {
+    setCheckedIds(ids);
+    const info = selectionInfo(list, ids);
+    const size = info.valid ? (teamSize >= info.min && teamSize <= info.max ? teamSize : info.min) : 0;
+    chooseSize(size);
+  };
+
+  const toggleEvent = (id: string) => {
+    sound.playNavClick();
+    applySelection(packages, checkedIds.includes(id) ? checkedIds.filter((x) => x !== id) : [...checkedIds, id]);
+  };
+
+  // Picking a day clears the ticks, except the event the visitor came from (if it runs that day).
+  const chooseDay = (data: TeamVerifyResponse | undefined, nextDay: TeamDay | '') => {
+    const list = data && nextDay ? data.packages[nextDay] ?? [] : [];
+    const preset = selectedEventName
+      ? dayEventsOf(list)
+          .filter((ev) => ev.name.toLowerCase() === selectedEventName.toLowerCase())
+          .map((ev) => ev.id)
+      : [];
+    setDay(nextDay);
+    applySelection(list, preset);
+  };
+
+  const sizeOptions = selection.valid
+    ? Array.from({ length: selection.max - selection.min + 1 }, (_, i) => selection.min + i)
+    : [];
 
   const verifyLeader = async (value: string) => {
     const trimmed = value.trim();
@@ -116,7 +143,7 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
       const data = await verifyTeamMember(trimmed);
       setLeader({ identity: trimmed, data });
       const selected = data.registration.selected_day;
-      choosePackage(data, selected === 'DAY_1' || selected === 'DAY_2' ? selected : '');
+      chooseDay(data, selected === 'DAY_1' || selected === 'DAY_2' ? selected : '');
       sound.playSuccess();
     } catch (error) {
       setLeader(null);
@@ -135,22 +162,16 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedRegId]);
 
-  // Form checks first; then ask which of the package's events this team plays.
-  const handleCreate = (e: React.FormEvent) => {
+  const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!leader || !day || !selectedPackage) return fail('Select a valid day and event team package.');
+    if (!leader || !day) return fail('Select a day.');
+    if (!checkedIds.length) return fail('Tick at least one event for this team.');
+    if (!selection.valid || !selectedPackage) return fail(conflictMessage ?? 'These events cannot share one team.');
     if (!teamName.trim()) return fail('Enter a team name.');
     if (!teamSize) return fail('Choose a team size.');
     if (members.some((value) => !value.trim())) return fail(`Enter all ${teamSize - 1} other team members.`);
-    setErrorMsg(null);
-    sound.playNavClick();
-    setPickingEvents(true);
-  };
-
-  const createWithEvents = async (selectedEventIds: string[]) => {
-    setPickingEvents(false);
-    if (!leader || !day || !selectedPackage) return;
-    if (!selectedEventIds.length) return fail('Select at least one event for this team.');
+    // Package order, as the backend lists them.
+    const selectedEventIds = selectedPackage.events.filter((ev) => checkedIds.includes(ev.id)).map((ev) => ev.id);
     const memberIds = members.map((value) => value.trim());
 
     setErrorMsg(null);
@@ -197,7 +218,6 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
     }
   };
 
-  const eventNames = selectedPackage?.events.map((ev) => ev.name).join(' + ');
 
   return (
     <div className="w-full relative" data-purpose="create-team-screen-content">
@@ -216,7 +236,7 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
           <div className="bg-[#07050d] border-2 border-[#9933ff] p-3 flex flex-col justify-between shadow-[0_0_10px_rgba(153,51,255,0.2)] min-w-0">
             <span className="text-gray-400 text-[9px] sm:text-[10px] font-silkscreen block tracking-wider">[EVENT NAME]</span>
             <span className="font-pixel text-white text-xs sm:text-sm font-bold mt-1 break-words">
-              {eventNames || 'SELECT A PACKAGE'}
+              {eventNames || 'TICK THE EVENTS'}
             </span>
             <span className="text-[9px] font-mono text-[#c084fc] mt-0.5 truncate">
               PASS: {leader?.data.registration.registration_code ?? '—'}
@@ -226,10 +246,10 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
           <div className="bg-[#07050d] border border-[#2d123d] p-3 flex flex-col justify-between">
             <span className="text-gray-400 text-[9px] sm:text-[10px] font-silkscreen block tracking-wider">[TEAM SIZE]</span>
             <span className="font-pixel text-[#ff007f] text-xs sm:text-sm font-bold truncate mt-1">
-              {selectedPackage ? `${teamSize} MEMBERS` : '—'}
+              {selection.valid ? `${teamSize} MEMBERS` : '—'}
             </span>
             <span className="text-[9px] font-mono text-gray-400 mt-0.5">
-              {selectedPackage ? `LEADER + ${Math.max(teamSize - 1, 0)} MEMBERS · ALLOWED ${sizeLabel(selectedPackage).toUpperCase()}` : 'LEADER + MEMBERS'}
+              {selection.valid ? `LEADER + ${Math.max(teamSize - 1, 0)} MEMBERS · ALLOWED ${sizeLabel(selection.min, selection.max).toUpperCase()}` : 'LEADER + MEMBERS'}
             </span>
           </div>
 
@@ -372,7 +392,7 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
             {/* ===== Step 2: configure team ===== */}
             {leader && (
               <form onSubmit={handleCreate} className="space-y-4 pt-1 font-oswald font-medium" data-purpose="team-creation-form">
-                <div className="bg-[#0a0614] border border-[#2d1b46] p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+                <div className="bg-[#0a0614] border border-[#2d1b46] p-3 grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                   <div>
                     <label htmlFor="team-name" className="text-slate-200 font-oswald font-medium text-sm tracking-wider flex items-center gap-1.5 mb-1">
                       <Award className="w-4 h-4 text-[#ff007f]" />
@@ -394,31 +414,12 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
                     <select
                       id="team-day"
                       value={day}
-                      onChange={(e) => choosePackage(leader.data, e.target.value as TeamDay | '')}
+                      onChange={(e) => chooseDay(leader.data, e.target.value as TeamDay | '')}
                       className="w-full bg-black border border-[#7c3aed] text-white px-3 py-2 text-sm font-oswald font-medium tracking-wide focus:border-[#00ffff] focus:outline-hidden cursor-pointer"
                     >
                       <option value="">Select day</option>
                       <option value="DAY_1">Day 1</option>
                       <option value="DAY_2">Day 2</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label htmlFor="team-package" className="text-slate-200 font-oswald font-medium text-sm tracking-wider block mb-1">
-                      EVENT TEAM PACKAGE
-                    </label>
-                    <select
-                      id="team-package"
-                      value={packageId}
-                      onChange={(e) => choosePackage(leader.data, day, e.target.value)}
-                      className="w-full bg-black border border-[#7c3aed] text-white px-3 py-2 text-sm font-oswald font-medium tracking-wide focus:border-[#00ffff] focus:outline-hidden cursor-pointer"
-                    >
-                      {!day && <option value="">Select a day first</option>}
-                      {day && packages.length === 0 && <option value="">No team packages on this day</option>}
-                      {packages.map((item) => (
-                        <option key={item.id} value={item.id}>
-                          {item.events.map((ev) => ev.name).join(' + ')} · {sizeLabel(item)}
-                        </option>
-                      ))}
                     </select>
                   </div>
                   <div>
@@ -429,10 +430,10 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
                       id="team-size"
                       value={teamSize || ''}
                       onChange={(e) => chooseSize(Number(e.target.value))}
-                      disabled={!selectedPackage}
+                      disabled={!selection.valid}
                       className="w-full bg-black border border-[#7c3aed] text-white px-3 py-2 text-sm font-oswald font-medium tracking-wide focus:border-[#00ffff] focus:outline-hidden cursor-pointer disabled:opacity-50"
                     >
-                      {!selectedPackage && <option value="">Select a package first</option>}
+                      {!selection.valid && <option value="">Tick events first</option>}
                       {sizeOptions.map((size) => (
                         <option key={size} value={size}>
                           {size} members
@@ -442,11 +443,59 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
                   </div>
                 </div>
 
-                {selectedPackage && (
-                  <p className="text-xs sm:text-sm font-oswald font-medium tracking-wider text-[#00ffff] px-1">
-                    PACKAGE EVENTS: {eventNames}. CHOOSE {sizeLabel(selectedPackage).toUpperCase()}. YOU&apos;LL PICK WHICH
-                    EVENTS THIS TEAM PLAYS WHEN YOU CREATE IT.
-                  </p>
+                {/* One checkbox per event: the events this team will play. */}
+                {day && (
+                  <fieldset className="bg-[#0a0614] border border-[#2d1b46] p-3" data-purpose="team-event-choices">
+                    <legend className="px-1 text-slate-200 font-oswald font-medium text-sm tracking-wider">
+                      EVENTS THIS TEAM WILL PLAY
+                    </legend>
+                    {dayEvents.length === 0 ? (
+                      <p className="text-xs sm:text-sm text-slate-400 tracking-wide">
+                        No team events you registered for run on {DAY_LABELS[day]}.
+                      </p>
+                    ) : (
+                      <>
+                        <p className="text-xs text-slate-400 tracking-wide mb-2.5">
+                          Tick every event this team will participate in. Each member must also be registered for each ticked event.
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          {dayEvents.map((ev) => {
+                            const isChecked = checkedIds.includes(ev.id);
+                            const [min, max] = eventSizeRange(ev);
+                            return (
+                              <label
+                                key={ev.id}
+                                aria-label={ev.name}
+                                className={`flex items-start gap-3 px-3 py-2.5 border cursor-pointer transition-colors ${
+                                  isChecked
+                                    ? 'border-[#00ff66] bg-[#00ff66]/5'
+                                    : 'border-[#3b235a] bg-black/50 hover:border-[#7c3aed]'
+                                }`}
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={isChecked}
+                                  onChange={() => toggleEvent(ev.id)}
+                                  className="mt-0.5 w-4 h-4 accent-[#00ff66] cursor-pointer shrink-0"
+                                />
+                                <span className="flex flex-col min-w-0">
+                                  <span className="font-pixel text-xs text-white uppercase break-words">{ev.name}</span>
+                                  <span className="text-[10px] font-mono text-gray-400">
+                                    {ev.code} · {sizeLabel(min, max).toUpperCase()}
+                                  </span>
+                                </span>
+                              </label>
+                            );
+                          })}
+                        </div>
+                        {conflictMessage && (
+                          <p className="mt-2.5 text-xs sm:text-sm text-amber-300 tracking-wide" role="alert">
+                            {conflictMessage}
+                          </p>
+                        )}
+                      </>
+                    )}
+                  </fieldset>
                 )}
 
                 {members.length > 0 && (
@@ -486,7 +535,7 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
                 <div className="pt-2">
                   <button
                     type="submit"
-                    disabled={submitting || !selectedPackage}
+                    disabled={submitting || !selection.valid}
                     className="arcade-cta w-full py-3.5 px-6 font-pixel text-white text-xs sm:text-sm tracking-wider flex items-center justify-center gap-3 transition-transform cursor-pointer shadow-[0_0_20px_rgba(255,0,127,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
                     data-purpose="confirm-team-button"
                   >
@@ -501,15 +550,6 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
         )}
       </div>
 
-      {pickingEvents && selectedPackage && (
-        <TeamEventsDialog
-          teamName={teamName.trim()}
-          teamSize={teamSize}
-          events={selectedPackage.events}
-          onConfirm={(ids) => void createWithEvents(ids)}
-          onClose={() => setPickingEvents(false)}
-        />
-      )}
     </div>
   );
 };

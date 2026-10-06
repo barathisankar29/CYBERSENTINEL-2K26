@@ -9,6 +9,7 @@ import { Building } from './buildings/Building'
 import { NavigationCityMobile } from './NavigationCityMobile'
 import { RainEffect } from './RainEffect'
 import { Airship } from './Airship'
+import { SymposiumBillboard } from './SymposiumBillboard'
 import { useWarmBuildingsImages } from './useWarmBuildingsImages'
 import { ProfileAccessBadge } from '@/components/ui/ProfileAccessBadge'
 import { RegisterNowButton } from '@/components/ui/RegisterNowButton'
@@ -102,6 +103,8 @@ export function NavigationCityScene() {
         <RegisterNowButton />
         {/* Airship floating in the sky — desktop only (mobile returns early above) */}
         <Airship />
+        {/* Symposium billboard on the street between EVENTS and TRANSPORT; opens the full poster */}
+        <SymposiumBillboard revealed={revealed} />
         <div className="navigation-city-scene__buildings" style={{ zIndex: BUILDINGS_Z_INDEX }}>
           {navigationBuildings.map((building) => (
             <Building key={building.id} building={building} revealed={revealed} isMobile={isMobile} />

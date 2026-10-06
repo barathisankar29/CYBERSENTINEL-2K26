@@ -7,7 +7,7 @@ import {
 } from '@/data/about'
 import {
   convenorsData,
-  coConvenorsData,
+  facultyCoordinatorsData,
 } from '@/data/credentials'
 import { CyberNeonCard } from './CyberNeonCard'
 import { PatronNeonCard } from './PatronNeonCard'
@@ -477,14 +477,14 @@ export function AboutSection() {
             </div>
           </div>
 
-          {/* Convenors */}
+          {/* Convenor (Dr. V.R. Ravi) & Co-Convenor (Dr. S. Durga Devi) */}
           <div id="convenors" className="leadership-group leadership-group--convenors">
             <div className="leadership-header">
               <div className="leadership-header__tag leadership-header__tag--cyan">
                 <span className="leadership-header__dot leadership-header__dot--cyan" />
                 <span>SYMPOSIUM CONVENORS</span>
               </div>
-              <h3 className="leadership-header__title leadership-header__title--cyan">CONVENORS</h3>
+              <h3 className="leadership-header__title leadership-header__title--cyan">CONVENOR &amp; CO-CONVENOR</h3>
               <p className="leadership-header__desc">Academic stewardship and departmental governance powering CyberSentinel 2K26</p>
             </div>
 
@@ -493,29 +493,30 @@ export function AboutSection() {
                 <ConvenorHudCard
                   key={conv.id}
                   member={conv}
-                  nodeCode={idx === 1 ? 'HOD_COMMAND // CSE' : 'ACAD_COMMAND // DEAN'}
+                  nodeCode={idx === 0 ? 'CONVENOR // DEAN ACADEMICS' : 'CO-CONVENOR // HOD CSE'}
                 />
               ))}
             </div>
           </div>
 
-          {/* Co-Convenors (Faculty Coordinators) */}
-          <div id="co-convenors" className="leadership-group leadership-group--coconvenors">
+          {/* Faculty Coordinators */}
+          <div id="faculty-coordinators" className="leadership-group leadership-group--coconvenors">
             <div className="leadership-header">
               <div className="leadership-header__tag leadership-header__tag--cyan">
                 <span className="leadership-header__dot leadership-header__dot--cyan" />
                 <span>FACULTY COORDINATION</span>
               </div>
-              <h3 className="leadership-header__title leadership-header__title--cyan">CO-CONVENORS</h3>
+              <h3 className="leadership-header__title leadership-header__title--cyan">FACULTY COORDINATORS</h3>
               <p className="leadership-header__desc">Faculty event coordinators driving execution, technical oversight, and logistics</p>
             </div>
 
             <div className="coconvenors-grid">
-              {coConvenorsData.map((fac, idx) => (
+              {facultyCoordinatorsData.map((fac, idx) => (
                 <CoConvenorMechaCard
                   key={fac.id}
                   member={fac}
                   index={idx + 1}
+                  tag="FACULTY COORDINATOR"
                 />
               ))}
             </div>
