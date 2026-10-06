@@ -23,14 +23,15 @@ export interface CredentialSectionGroup {
 }
 
 /**
- * Convenors of CyberSentinel 2K26
+ * Convenor (Dr. V.R. Ravi) and Co-Convenor (Dr. S. Durga Devi) of
+ * CyberSentinel 2K26 — `role` is the title shown on their card's badge.
  */
 export const convenorsData: CredentialMember[] = [
   {
     id: 'dr-v-r-ravi',
     name: 'Dr. V.R. Ravi',
-    role: 'Dean Academics',
-    subRole: 'Vel Tech High Tech',
+    role: 'Convenor',
+    subRole: 'Dean Academics, Vel Tech High Tech',
     image: '/assets/credentials/convenor_dr_vr_ravi.webp',
     imagePosition: 'center 28%',
     linkedin: 'https://linkedin.com',
@@ -39,8 +40,8 @@ export const convenorsData: CredentialMember[] = [
   {
     id: 'dr-s-durga-devi',
     name: 'Dr. S. DURGA DEVI',
-    role: 'HOD - CSE',
-    subRole: 'Department of Computer Science and Engineering',
+    role: 'Co-Convenor',
+    subRole: 'HOD - CSE, Department of Computer Science and Engineering',
     image: '/assets/credentials/convenor_dr_s_durga_devi.webp',
     imagePosition: 'center 20%',
     linkedin: 'https://linkedin.com',
@@ -49,14 +50,14 @@ export const convenorsData: CredentialMember[] = [
 ]
 
 /**
- * Co-Convenors (Faculty / Event Coordinators)
+ * Faculty Coordinators
  */
-export const coConvenorsData: CredentialMember[] = [
+export const facultyCoordinatorsData: CredentialMember[] = [
   {
     id: 'jahir-hussain',
     name: 'JAHIR HUSSAIN',
     role: 'Asst. Professor - CSE',
-    subRole: 'Event Coordinator',
+    subRole: 'Faculty Coordinator',
     image: '/assets/credentials/coconvenor_jahir_hussain.webp',
     linkedin: 'https://linkedin.com',
     accentColor: 'cyan',
@@ -65,7 +66,7 @@ export const coConvenorsData: CredentialMember[] = [
     id: 'mr-s-nayagan',
     name: 'Mr. S. NAYAGAN',
     role: 'Asst. Professor - CSE',
-    subRole: 'Event Coordinator',
+    subRole: 'Faculty Coordinator',
     image: '/assets/credentials/coconvenor_s_nayagan.webp',
     imagePosition: 'center 35%',
     linkedin: 'https://linkedin.com',
@@ -75,7 +76,7 @@ export const coConvenorsData: CredentialMember[] = [
     id: 'mrs-vimala-p',
     name: 'Mrs. VIMALA P',
     role: 'Asst. Professor - CSE',
-    subRole: 'Event Coordinator',
+    subRole: 'Faculty Coordinator',
     image: '/assets/credentials/coconvenor_vimala_p.webp',
     imagePosition: 'center 28%',
     linkedin: 'https://linkedin.com',
@@ -85,7 +86,7 @@ export const coConvenorsData: CredentialMember[] = [
     id: 'mr-durai-vasanth',
     name: 'Mr. DURAI VASANTH',
     role: 'Asst. Professor - CSE',
-    subRole: 'Event Coordinator',
+    subRole: 'Faculty Coordinator',
     image: '/assets/credentials/coconvenor_durai_vasanth.webp',
     imagePosition: 'center 35%',
     linkedin: 'https://linkedin.com',

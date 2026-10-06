@@ -5,11 +5,14 @@ import './CoConvenorMechaCard.css'
 interface CoConvenorMechaCardProps {
   member: CredentialMember
   index?: number
+  /** Top tag text (default: "CO-CONVENOR // 0<index>"). */
+  tag?: string
 }
 
 export function CoConvenorMechaCard({
   member,
   index = 1,
+  tag,
 }: CoConvenorMechaCardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
   const [transformStyle, setTransformStyle] = useState<string>('perspective(1000px) rotateX(0deg) rotateY(0deg)')
@@ -114,7 +117,7 @@ export function CoConvenorMechaCard({
           {/* Top Telemetry Tag */}
           <div className="coconvenor-mecha-tag">
             <span className="coconvenor-mecha-dot" />
-            <span>CO-CONVENOR // 0{index}</span>
+            <span>{tag ?? `CO-CONVENOR // 0${index}`}</span>
           </div>
 
           {/* Glowing Circular Avatar with Cyber Ring */}
