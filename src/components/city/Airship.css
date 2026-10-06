@@ -11,7 +11,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: clamp(160px, 17vw, 250px);
+  width: clamp(240px, 25.5vw, 375px);
 }
 
 .airship__hull {
@@ -33,10 +33,10 @@
 
 /* Rigging wires connecting blimp hull directly to banner */
 .airship__rigging {
-  width: clamp(52px, 5.5vw, 78px);
-  height: 20px;
+  width: clamp(78px, 8.25vw, 117px);
+  height: 30px;
   /* Pull up so top rail connects flush into the underbelly of the blimp */
-  margin-top: -10px;
+  margin-top: -27px;
   margin-bottom: -1px;
   line-height: 0;
   pointer-events: none;
@@ -81,7 +81,7 @@
 
 .airship__banner-frame {
   position: relative;
-  width: clamp(52px, 5.5vw, 78px);
+  width: clamp(78px, 8.25vw, 117px);
   background: linear-gradient(
     135deg,
     rgba(15, 10, 35, 0.94),
@@ -135,7 +135,7 @@
   display: block;
   text-align: center;
   font-family: 'Silkscreen', monospace;
-  font-size: clamp(4px, 0.4vw, 6px);
+  font-size: clamp(6px, 0.6vw, 9px);
   color: rgba(34, 211, 238, 0.85);
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -152,7 +152,7 @@
   background: rgba(168, 85, 247, 0.85);
   color: #ffffff;
   font-family: 'Silkscreen', monospace;
-  font-size: 5px;
+  font-size: 7px;
   padding: 1px 3px;
   letter-spacing: 0.05em;
   border: 0.5px solid #22d3ee;

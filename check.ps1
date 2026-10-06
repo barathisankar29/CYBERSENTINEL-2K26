@@ -1,0 +1,1 @@
+Add-Type -AssemblyName System.Drawing; $img = [System.Drawing.Image]::FromFile('C:\Projects\CYBERSENTINEL-2K26\public\assets\city\navigation\airship-new.png'); Write-Host "Width: $($img.Width), Height: $($img.Height)"

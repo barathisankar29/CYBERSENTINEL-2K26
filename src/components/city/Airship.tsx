@@ -33,7 +33,7 @@ export function Airship() {
         {/* The blimp hull */}
         <div className="airship__hull">
           <img
-            src="/assets/city/navigation/airship.png"
+            src="/assets/city/navigation/airship-new.png"
             alt="CyberSentinel Airship"
             className="airship__blimp"
             draggable={false}
