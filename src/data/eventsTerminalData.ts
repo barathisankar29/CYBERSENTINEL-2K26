@@ -61,7 +61,7 @@ export const ALL_EVENTS: EventSpec[] = [
       'A paper presentation event is a place where participants showcase their research, ideas, or innovations through structured presentations. It allows knowledge sharing, critical discussions, and evaluation by experts.',
     date: 'DAY 01',
     time: '10:30 AM - 02:00 PM',
-    teamSize: '2 - 3 MEMBERS',
+    teamSize: '4 MEMBERS',
     teamSizeInProtocol: true,
     coordinators: [
       coordinator('Dhanalakshmi B ', '4TH YEAR (SEC A)', '9345758749'),
