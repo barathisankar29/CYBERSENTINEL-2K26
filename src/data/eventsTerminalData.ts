@@ -325,7 +325,7 @@ export const ALL_EVENTS: EventSpec[] = [
     image: '/assets/events/bgm.webp',
     quote: '"HEAR THE BEAT. NAME THE SCENE. BEAT THE CLOCK."',
     description:
-      '"Find the BGM" is a music-based event where teams identify a movie or song from a background music clip. It tests musical memory, attentiveness, movie and music knowledge, and quick thinking.',
+      '"Find the BGM" is a music-based event where teams identify a song from a background music clip. It tests musical memory, attentiveness, movie and music knowledge, and quick thinking.',
     date: 'DAY 02',
     time: '11:30 AM - 12:30 PM',
     teamSize: '2 - 3 MEMBERS',
@@ -342,7 +342,7 @@ export const ALL_EVENTS: EventSpec[] = [
     protocols: [
       'Each team should consist of 2-3 members.',
       'The event will consist of multiple rounds with increasing difficulty levels.',
-      'Participants will listen to short instrumental clips and should identify the movie or show.',
+      'Participants will listen to short instrumental clips and should identify the song.',
       'Answers should be given within the given time after the clip is played.',
       'Use of mobile phones or any external help is strictly prohibited.',
       'The participant or team with the highest number of correct answers wins.'
