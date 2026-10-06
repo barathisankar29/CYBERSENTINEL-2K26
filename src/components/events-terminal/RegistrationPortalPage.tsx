@@ -136,18 +136,7 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
         setActiveEvents(events);
         // Preselect what the visitor picked on the event page / pack.
         const baseSelectedIds = matchActiveEventIds(initialData?.selectedEvents, events);
-        // If any defaultly selected event is a team event, select all team events for that day as well!
-        const expandedIds = new Set(baseSelectedIds);
-        for (const id of baseSelectedIds) {
-          const ev = events.find((e) => e.id === id);
-          if (ev && isTeamEvent(ev)) {
-            const sameDayTeamEvents = events.filter((e) => e.day === ev.day && isTeamEvent(e));
-            for (const teamEv of sameDayTeamEvents) {
-              expandedIds.add(teamEv.id);
-            }
-          }
-        }
-        setSelectedEventIds([...expandedIds]);
+        setSelectedEventIds([...baseSelectedIds]);
         setEventsReady(true);
       })
       .catch(() => {
@@ -169,36 +158,9 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
 
   const toggleDayEvent = (id: string) => {
     sound.playBlip();
-    const clickedEvent = activeEvents.find((e) => e.id === id);
-    if (!clickedEvent) {
-      setSelectedEventIds((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
-      return;
-    }
-
-    if (isTeamEvent(clickedEvent)) {
-      // Find all team events for the same day as the clicked event
-      const sameDayTeamEvents = activeEvents.filter(
-        (e) => e.day === clickedEvent.day && isTeamEvent(e)
-      );
-      const teamEventIds = sameDayTeamEvents.map((e) => e.id);
-
-      setSelectedEventIds((prev) => {
-        const isCurrentlyChecked = prev.includes(id);
-        if (!isCurrentlyChecked) {
-          // If the user clicks an unselected team event -> ALL team events for that day get clicked/selected!
-          const newIds = new Set([...prev, ...teamEventIds]);
-          return Array.from(newIds);
-        } else {
-          // If the user clicks an already selected team event -> uncheck all team events for that day
-          return prev.filter((existingId) => !teamEventIds.includes(existingId));
-        }
-      });
-    } else {
-      // Solo events (Weblica, XCoders, Spotlight, Cipher Coding) toggle individually
-      setSelectedEventIds((prev) =>
-        prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-      );
-    }
+    setSelectedEventIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
   };
 
   // Returning visitor: if this browser already submitted a registration

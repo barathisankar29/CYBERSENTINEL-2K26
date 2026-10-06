@@ -1,0 +1,360 @@
+/* ─── Airship: desktop-only floating blimp with a hanging banner ─── */
+
+.airship {
+  position: absolute;
+  top: 4.5%;
+  left: 8%;
+  z-index: 11; /* above environment layers, below buildings at 12 */
+  pointer-events: none;
+  animation: airshipDrift 24s ease-in-out infinite alternate;
+  will-change: transform;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: clamp(160px, 17vw, 250px);
+}
+
+.airship__hull {
+  width: 100%;
+  line-height: 0;
+  display: flex;
+  justify-content: center;
+}
+
+/* The airship image itself */
+.airship__blimp {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 4px 16px rgba(168, 85, 247, 0.4))
+          drop-shadow(0 2px 8px rgba(34, 211, 238, 0.25));
+  animation: airshipGlow 4s ease-in-out infinite alternate;
+}
+
+/* Rigging wires connecting blimp hull directly to banner */
+.airship__rigging {
+  width: clamp(52px, 5.5vw, 78px);
+  height: 20px;
+  /* Pull up so top rail connects flush into the underbelly of the blimp */
+  margin-top: -10px;
+  margin-bottom: -1px;
+  line-height: 0;
+  pointer-events: none;
+  position: relative;
+  z-index: 2;
+}
+
+.airship__wires {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 0 3px rgba(34, 211, 238, 0.5));
+}
+
+/* The hanging banner button below the blimp */
+.airship__banner {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  pointer-events: auto; /* enable click */
+  position: relative;
+  display: flex;
+  justify-content: center;
+  animation: bannerSwing 5s ease-in-out infinite alternate;
+  transform-origin: top center;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.2s ease;
+  outline: none;
+}
+
+.airship__banner:hover {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.75));
+}
+
+.airship__banner:focus-visible {
+  outline: 2px solid #22d3ee;
+  outline-offset: 4px;
+}
+
+.airship__banner-frame {
+  position: relative;
+  width: clamp(52px, 5.5vw, 78px);
+  background: linear-gradient(
+    135deg,
+    rgba(15, 10, 35, 0.94),
+    rgba(28, 16, 52, 0.9)
+  );
+  border: 1px solid rgba(168, 85, 247, 0.6);
+  box-shadow:
+    0 0 10px rgba(168, 85, 247, 0.35),
+    0 0 20px rgba(34, 211, 238, 0.2),
+    inset 0 0 12px rgba(168, 85, 247, 0.12);
+  padding: 3px;
+  overflow: hidden;
+}
+
+/* Corner accent marks on the banner frame */
+.airship__banner-frame::before,
+.airship__banner-frame::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border: 1px solid rgba(34, 211, 238, 0.8);
+  pointer-events: none;
+}
+.airship__banner-frame::before {
+  top: 2px;
+  left: 2px;
+  border-right: none;
+  border-bottom: none;
+}
+.airship__banner-frame::after {
+  bottom: 2px;
+  right: 2px;
+  border-left: none;
+  border-top: none;
+}
+
+/* The image inside the banner */
+.airship__banner-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  aspect-ratio: 3 / 4;
+  opacity: 0.95;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+/* Label below the image */
+.airship__banner-label {
+  display: block;
+  text-align: center;
+  font-family: 'Silkscreen', monospace;
+  font-size: clamp(4px, 0.4vw, 6px);
+  color: rgba(34, 211, 238, 0.85);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding-top: 2px;
+  text-shadow: 0 0 4px rgba(34, 211, 238, 0.5);
+  white-space: nowrap;
+}
+
+/* Interactive click badge */
+.airship__banner-badge {
+  position: absolute;
+  bottom: 18px;
+  right: 5px;
+  background: rgba(168, 85, 247, 0.85);
+  color: #ffffff;
+  font-family: 'Silkscreen', monospace;
+  font-size: 5px;
+  padding: 1px 3px;
+  letter-spacing: 0.05em;
+  border: 0.5px solid #22d3ee;
+  box-shadow: 0 0 6px rgba(34, 211, 238, 0.6);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.airship__banner:hover .airship__banner-badge {
+  opacity: 1;
+}
+
+/* ─── Animations ─── */
+
+@keyframes airshipDrift {
+  0% {
+    transform: translate(0, 0) rotate(-0.3deg);
+  }
+  30% {
+    transform: translate(1vw, 0.6vh) rotate(0.1deg);
+  }
+  65% {
+    transform: translate(-0.8vw, -0.4vh) rotate(-0.2deg);
+  }
+  100% {
+    transform: translate(0.5vw, 0.3vh) rotate(0.15deg);
+  }
+}
+
+@keyframes airshipGlow {
+  0% {
+    filter: drop-shadow(0 4px 16px rgba(168, 85, 247, 0.35))
+            drop-shadow(0 2px 8px rgba(34, 211, 238, 0.2));
+  }
+  100% {
+    filter: drop-shadow(0 4px 22px rgba(168, 85, 247, 0.6))
+            drop-shadow(0 2px 12px rgba(34, 211, 238, 0.4));
+  }
+}
+
+@keyframes bannerSwing {
+  0% {
+    transform: rotate(-1.5deg);
+  }
+  100% {
+    transform: rotate(1.5deg);
+  }
+}
+
+/* ─── Full-Size Modal Popup ─── */
+
+.airship-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(5, 3, 15, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: airshipModalFadeIn 0.2s ease-out;
+  cursor: pointer;
+}
+
+.airship-modal-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  background: #0b071a;
+  border: 2px solid #a855f7;
+  box-shadow:
+    0 0 35px rgba(168, 85, 247, 0.45),
+    0 0 70px rgba(34, 211, 238, 0.25),
+    inset 0 0 25px rgba(168, 85, 247, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  cursor: default;
+  animation: airshipModalZoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.airship-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 1rem;
+  background: rgba(18, 11, 38, 0.95);
+  border-bottom: 1px solid rgba(168, 85, 247, 0.4);
+}
+
+.airship-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.airship-modal-tag {
+  font-family: 'Silkscreen', monospace;
+  font-size: 0.65rem;
+  color: #22d3ee;
+  letter-spacing: 0.1em;
+}
+
+.airship-modal-heading {
+  font-family: 'Silkscreen', monospace;
+  font-size: 0.75rem;
+  color: #f1f5f9;
+  letter-spacing: 0.08em;
+}
+
+.airship-modal-close {
+  background: transparent;
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  color: #cbd5e1;
+  font-family: 'Silkscreen', monospace;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.airship-modal-close:hover {
+  background: #a855f7;
+  color: #000;
+  border-color: #22d3ee;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+}
+
+.airship-modal-img-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: radial-gradient(circle at center, rgba(34, 211, 238, 0.08) 0%, rgba(11, 7, 26, 0.95) 75%);
+  overflow: hidden;
+}
+
+.airship-modal-img {
+  display: block;
+  max-height: 72vh;
+  max-width: 82vw;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
+}
+
+.airship-modal-scanline {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 0, 0, 0.25) 51%
+  );
+  background-size: 100% 4px;
+  opacity: 0.6;
+}
+
+.airship-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  background: rgba(18, 11, 38, 0.95);
+  border-top: 1px solid rgba(168, 85, 247, 0.3);
+  font-family: 'Silkscreen', monospace;
+  font-size: 0.6rem;
+  color: #94a3b8;
+}
+
+.airship-modal-footer-text {
+  letter-spacing: 0.06em;
+}
+
+.airship-modal-footer-action {
+  color: #22d3ee;
+  letter-spacing: 0.06em;
+}
+
+@keyframes airshipModalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes airshipModalZoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
