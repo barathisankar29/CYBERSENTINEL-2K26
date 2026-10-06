@@ -1,0 +1,81 @@
+/* The billboard on the street between EVENTS (x 57%) and TRANSPORT (x 93%)
+   in the desktop buildings scene. Sized by viewport height like the
+   buildings, capped by width so it never reaches either building. Sits just
+   under the buildings layer (z 12) so their edges paint over it. */
+.symposium-billboard {
+  position: absolute;
+  left: 75.5%;
+  bottom: 6%;
+  z-index: 11;
+  height: min(26vh, calc(23.5vw / 1.515));
+  aspect-ratio: 1000 / 660;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transform: translateX(-50%) translateY(4vh) scale(0.94);
+  transform-origin: 50% 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.5s ease,
+    transform 0.6s cubic-bezier(0.22, 1.2, 0.36, 1),
+    filter 0.25s ease;
+  filter: drop-shadow(0 0 10px rgba(217, 70, 239, 0.35));
+  -webkit-tap-highlight-color: transparent;
+}
+
+.symposium-billboard.is-revealed {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0) scale(1);
+}
+
+.symposium-billboard.is-revealed:hover,
+.symposium-billboard.is-revealed:focus-visible {
+  transform: translateX(-50%) translateY(-0.6vh) scale(1.03);
+  filter: drop-shadow(0 0 18px rgba(217, 70, 239, 0.7)) drop-shadow(0 0 6px rgba(34, 211, 238, 0.5));
+  outline: none;
+}
+
+.symposium-billboard__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Small "VIEW POSTER" tag between the legs, shown on hover/focus. */
+.symposium-billboard__hint {
+  position: absolute;
+  left: 50%;
+  bottom: 12%;
+  transform: translateX(-50%);
+  padding: 0.2rem 0.55rem;
+  font-family: 'Silkscreen', monospace;
+  font-size: clamp(0.5rem, 0.7vw, 0.68rem);
+  letter-spacing: 0.12em;
+  color: #f5d0fe;
+  background: rgba(18, 8, 36, 0.88);
+  border: 1px solid rgba(217, 70, 239, 0.7);
+  box-shadow: 0 0 10px rgba(217, 70, 239, 0.45);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.symposium-billboard.is-revealed:hover .symposium-billboard__hint,
+.symposium-billboard.is-revealed:focus-visible .symposium-billboard__hint {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .symposium-billboard,
+  .symposium-billboard.is-revealed:hover,
+  .symposium-billboard.is-revealed:focus-visible {
+    transition: opacity 0.2s ease;
+    transform: translateX(-50%);
+  }
+}
