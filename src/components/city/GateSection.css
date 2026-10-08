@@ -58,30 +58,38 @@
 
 /* ─── Mobile ─── */
 
-/* Airship — in the open sky between the two neon towers, its banner
+/* Airship — in the open sky between the two neon towers, its dual cards
    hanging just above the elevated rail. */
 .airship.airship--gate-mobile {
-  top: 1.5%;
+  top: 1%;
   left: 50%;
-  margin-left: calc(clamp(210px, 56%, 300px) / -2);
-  width: clamp(210px, 56%, 300px);
+  --airship-mobile-w: clamp(320px, 88vw, 440px);
+  width: var(--airship-mobile-w);
+  margin-left: calc(var(--airship-mobile-w) / -2);
   z-index: 3;
 }
 
-.airship--gate-mobile .airship__rigging,
-.airship--gate-mobile .airship__banner-frame {
-  width: clamp(78px, 22vw, 110px);
-}
-
 .airship--gate-mobile .airship__rigging {
-  margin-top: -22px;
+  width: clamp(190px, 54vw, 250px);
+  margin-top: -26px;
 }
 
+.airship--gate-mobile .airship__cards-row {
+  gap: 8px;
+}
+
+.airship--gate-mobile .airship__card-frame,
+.airship--gate-mobile .airship__banner-frame {
+  width: clamp(90px, 25.5vw, 118px);
+}
+
+.airship--gate-mobile .airship__card-label,
 .airship--gate-mobile .airship__banner-label {
-  font-size: 8px;
+  font-size: 7px;
 }
 
 /* No hover on touch: always show the VIEW tag so the banner reads as tappable. */
+.airship--gate-mobile .airship__card-badge,
 .airship--gate-mobile .airship__banner-badge {
   opacity: 1;
 }
@@ -102,12 +110,26 @@
 
 /* ─── Desktop ─── */
 
-/* Airship — in the open sky between the left towers and the centre spire. */
+/* Airship — large in the open sky between the left towers and the centre spire. */
 .airship.airship--gate-desktop {
-  top: 4%;
-  left: 27%;
-  width: clamp(260px, 24vw, 420px);
+  top: 3.5%;
+  left: 20%;
+  width: clamp(520px, 38vw, 760px);
   z-index: 3;
+}
+
+.airship--gate-desktop .airship__rigging {
+  width: clamp(235px, 17.5vw, 315px);
+  margin-top: -38px;
+}
+
+.airship--gate-desktop .airship__cards-row {
+  gap: 14px;
+}
+
+.airship--gate-desktop .airship__card-frame,
+.airship--gate-desktop .airship__banner-frame {
+  width: clamp(110px, 8.2vw, 148px);
 }
 
 /* No tint film on desktop: the wide picture is calm enough on its own. */

@@ -1,4 +1,4 @@
-/* ─── Airship: desktop-only floating blimp with a hanging banner ─── */
+/* ─── Airship: floating cyberpunk blimp carrying dual hanging cards ─── */
 
 .airship {
   position: absolute;
@@ -11,7 +11,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: clamp(240px, 25.5vw, 375px);
+  /* Grand, prominent scale */
+  width: clamp(500px, 40vw, 760px);
 }
 
 .airship__hull {
@@ -21,22 +22,33 @@
   justify-content: center;
 }
 
-/* The airship image itself */
+/* The airship blimp image itself */
 .airship__blimp {
   display: block;
   width: 100%;
   height: auto;
-  filter: drop-shadow(0 4px 16px rgba(168, 85, 247, 0.4))
-          drop-shadow(0 2px 8px rgba(34, 211, 238, 0.25));
+  filter: drop-shadow(0 6px 20px rgba(168, 85, 247, 0.45))
+          drop-shadow(0 2px 10px rgba(34, 211, 238, 0.3));
   animation: airshipGlow 4s ease-in-out infinite alternate;
 }
 
-/* Rigging wires connecting blimp hull directly to banner */
+/* ─── Hanging Payload (Rigging + Dual Cards) ─── */
+
+.airship__payload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: bannerSwing 5s ease-in-out infinite alternate;
+  transform-origin: top center;
+  pointer-events: none;
+}
+
+/* Dual-rail Rigging wires connecting blimp hull to both cards */
 .airship__rigging {
-  width: clamp(78px, 8.25vw, 117px);
-  height: 30px;
-  /* Pull up so top rail connects flush into the underbelly of the blimp */
-  margin-top: -27px;
+  width: clamp(210px, 17.5vw, 305px);
+  height: 32px;
+  /* Tuck up so top rail anchors flush into the underbelly of the blimp */
+  margin-top: -34px;
   margin-bottom: -1px;
   line-height: 0;
   pointer-events: none;
@@ -49,10 +61,23 @@
   height: 100%;
   display: block;
   overflow: visible;
-  filter: drop-shadow(0 0 3px rgba(34, 211, 238, 0.5));
+  filter: drop-shadow(0 0 3px rgba(34, 211, 238, 0.55));
 }
 
-/* The hanging banner button below the blimp */
+/* ─── Cards Row (Side-by-Side Cards) ─── */
+
+.airship__cards-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(10px, 1.1vw, 16px);
+  position: relative;
+  z-index: 3;
+}
+
+/* Individual hanging card button */
+.airship__card,
 .airship__banner {
   background: transparent;
   border: none;
@@ -63,55 +88,61 @@
   position: relative;
   display: flex;
   justify-content: center;
-  animation: bannerSwing 5s ease-in-out infinite alternate;
-  transform-origin: top center;
-  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.2s ease;
+  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.22s ease;
   outline: none;
 }
 
+.airship__card:hover,
 .airship__banner:hover {
-  transform: scale(1.08);
-  filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.75));
+  transform: translateY(-3px) scale(1.06);
+  filter: drop-shadow(0 0 14px rgba(34, 211, 238, 0.8));
 }
 
+.airship__card:focus-visible,
 .airship__banner:focus-visible {
   outline: 2px solid #22d3ee;
   outline-offset: 4px;
 }
 
+/* The neon card frame */
+.airship__card-frame,
 .airship__banner-frame {
   position: relative;
-  width: clamp(78px, 8.25vw, 117px);
+  width: clamp(98px, 8.2vw, 142px);
   background: linear-gradient(
     135deg,
     rgba(15, 10, 35, 0.94),
-    rgba(28, 16, 52, 0.9)
+    rgba(28, 16, 52, 0.92)
   );
-  border: 1px solid rgba(168, 85, 247, 0.6);
+  border: 1px solid rgba(168, 85, 247, 0.65);
   box-shadow:
     0 0 10px rgba(168, 85, 247, 0.35),
     0 0 20px rgba(34, 211, 238, 0.2),
-    inset 0 0 12px rgba(168, 85, 247, 0.12);
+    inset 0 0 12px rgba(168, 85, 247, 0.15);
   padding: 3px;
   overflow: hidden;
 }
 
-/* Corner accent marks on the banner frame */
+/* Corner accent brackets on the card frame */
+.airship__card-frame::before,
+.airship__card-frame::after,
 .airship__banner-frame::before,
 .airship__banner-frame::after {
   content: '';
   position: absolute;
   width: 6px;
   height: 6px;
-  border: 1px solid rgba(34, 211, 238, 0.8);
+  border: 1px solid rgba(34, 211, 238, 0.85);
   pointer-events: none;
 }
+.airship__card-frame::before,
 .airship__banner-frame::before {
   top: 2px;
   left: 2px;
   border-right: none;
   border-bottom: none;
 }
+.airship__card-frame::after,
 .airship__banner-frame::after {
   bottom: 2px;
   right: 2px;
@@ -119,7 +150,8 @@
   border-top: none;
 }
 
-/* The image inside the banner */
+/* The poster image inside each card */
+.airship__card-img,
 .airship__banner-img {
   display: block;
   width: 100%;
@@ -130,30 +162,46 @@
   border: 1px solid rgba(168, 85, 247, 0.3);
 }
 
-/* Label below the image */
+/* Subtle scanline texture */
+.airship__card-scanline {
+  position: absolute;
+  inset: 3px;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.25) 4px
+  );
+  opacity: 0.5;
+}
+
+/* Label under the poster */
+.airship__card-label,
 .airship__banner-label {
   display: block;
   text-align: center;
   font-family: 'Silkscreen', monospace;
-  font-size: clamp(6px, 0.6vw, 9px);
-  color: rgba(34, 211, 238, 0.85);
+  font-size: clamp(6px, 0.55vw, 8.5px);
+  color: rgba(34, 211, 238, 0.9);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  padding-top: 2px;
+  padding-top: 3px;
   text-shadow: 0 0 4px rgba(34, 211, 238, 0.5);
   white-space: nowrap;
 }
 
 /* Interactive click badge */
+.airship__card-badge,
 .airship__banner-badge {
   position: absolute;
-  bottom: 18px;
+  bottom: 20px;
   right: 5px;
-  background: rgba(168, 85, 247, 0.85);
+  background: rgba(168, 85, 247, 0.9);
   color: #ffffff;
   font-family: 'Silkscreen', monospace;
   font-size: 7px;
-  padding: 1px 3px;
+  padding: 1px 3.5px;
   letter-spacing: 0.05em;
   border: 0.5px solid #22d3ee;
   box-shadow: 0 0 6px rgba(34, 211, 238, 0.6);
@@ -162,6 +210,7 @@
   pointer-events: none;
 }
 
+.airship__card:hover .airship__card-badge,
 .airship__banner:hover .airship__banner-badge {
   opacity: 1;
 }
@@ -185,12 +234,12 @@
 
 @keyframes airshipGlow {
   0% {
-    filter: drop-shadow(0 4px 16px rgba(168, 85, 247, 0.35))
-            drop-shadow(0 2px 8px rgba(34, 211, 238, 0.2));
+    filter: drop-shadow(0 6px 20px rgba(168, 85, 247, 0.35))
+            drop-shadow(0 2px 10px rgba(34, 211, 238, 0.25));
   }
   100% {
-    filter: drop-shadow(0 4px 22px rgba(168, 85, 247, 0.6))
-            drop-shadow(0 2px 12px rgba(34, 211, 238, 0.4));
+    filter: drop-shadow(0 8px 28px rgba(168, 85, 247, 0.65))
+            drop-shadow(0 3px 14px rgba(34, 211, 238, 0.45));
   }
 }
 
@@ -241,6 +290,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.75rem;
   padding: 0.65rem 1rem;
   background: rgba(18, 11, 38, 0.95);
   border-bottom: 1px solid rgba(168, 85, 247, 0.4);
@@ -250,6 +300,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  min-width: 0;
 }
 
 .airship-modal-tag {
@@ -257,6 +308,7 @@
   font-size: 0.65rem;
   color: #22d3ee;
   letter-spacing: 0.1em;
+  white-space: nowrap;
 }
 
 .airship-modal-heading {
@@ -264,6 +316,42 @@
   font-size: 0.75rem;
   color: #f1f5f9;
   letter-spacing: 0.08em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Modal tab switchers */
+.airship-modal-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.airship-modal-tab {
+  background: rgba(28, 16, 52, 0.7);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  color: #cbd5e1;
+  font-family: 'Silkscreen', monospace;
+  font-size: 0.65rem;
+  padding: 0.25rem 0.55rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  letter-spacing: 0.05em;
+}
+
+.airship-modal-tab:hover {
+  background: rgba(168, 85, 247, 0.25);
+  color: #22d3ee;
+  border-color: #22d3ee;
+}
+
+.airship-modal-tab--active {
+  background: #22d3ee;
+  color: #0b071a;
+  border-color: #22d3ee;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.6);
 }
 
 .airship-modal-close {
@@ -275,6 +363,7 @@
   padding: 0.2rem 0.5rem;
   cursor: pointer;
   transition: all 0.15s ease;
+  flex-shrink: 0;
 }
 
 .airship-modal-close:hover {
