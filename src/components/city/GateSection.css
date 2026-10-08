@@ -62,25 +62,25 @@
 
 /* Second Airship (3 cards, upper sky, reversed direction) */
 .airship.airship--gate-mobile.airship--gate-second {
-  top: 0.5%;
+  top: 0%;
   left: 50%;
-  --airship-mobile-w: clamp(310px, 92vw, 420px);
+  --airship-mobile-w: clamp(290px, 88vw, 400px);
   width: var(--airship-mobile-w);
   margin-left: calc(var(--airship-mobile-w) / -2);
   z-index: 3;
 }
 
 .airship--gate-mobile.airship--gate-second .airship__rigging {
-  width: clamp(260px, 80vw, 345px);
-  margin-top: -26px;
+  width: clamp(240px, 74vw, 325px);
+  margin-top: -30px;
 }
 
 .airship--gate-mobile.airship--gate-second .airship__cards-row {
-  gap: 8px;
+  gap: 7px;
 }
 
 .airship--gate-mobile.airship--gate-second .airship__card-frame {
-  width: clamp(82px, 24.5vw, 106px);
+  width: clamp(75px, 22vw, 98px);
 }
 
 .airship--gate-mobile.airship--gate-second .airship__card-label {
@@ -89,29 +89,29 @@
 
 /* First Airship (2 cards, lower sky, left side little bottom) */
 .airship.airship--gate-mobile.airship--gate-first {
-  top: 22.5%;
-  left: 46%;
-  --airship-mobile-w: clamp(280px, 80vw, 360px);
+  top: 26.5%;
+  left: 47%;
+  --airship-mobile-w: clamp(260px, 75vw, 330px);
   width: var(--airship-mobile-w);
   margin-left: calc(var(--airship-mobile-w) / -2);
   z-index: 4;
 }
 
 .airship--gate-mobile.airship--gate-first .airship__rigging {
-  width: clamp(220px, 64vw, 290px);
-  margin-top: -24px;
+  width: clamp(205px, 60vw, 275px);
+  margin-top: -28px;
 }
 
 .airship--gate-mobile.airship--gate-first .airship__cards-row {
-  gap: 12px;
+  gap: 10px;
 }
 
 .airship--gate-mobile.airship--gate-first .airship__card-frame {
-  width: clamp(100px, 29vw, 132px);
+  width: clamp(92px, 26vw, 118px);
 }
 
 .airship--gate-mobile.airship--gate-first .airship__card-label {
-  font-size: 8px;
+  font-size: 7.5px;
 }
 
 /* No hover on touch: always show the VIEW tag so cards read as tappable. */
@@ -158,7 +158,7 @@
 
 /* Second Airship: 3 cards, right side middle, reversed direction */
 .airship.airship--gate-desktop.airship--gate-second {
-  top: 9%;
+  top: 17%;
   left: auto;
   right: 5%;
   width: clamp(580px, 43vw, 860px);
