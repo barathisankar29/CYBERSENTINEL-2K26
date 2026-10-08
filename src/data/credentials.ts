@@ -222,6 +222,7 @@ export const designersData: CredentialMember[] = [
     name: 'Praveen K G',
     role: 'Poster Designer',
     image: '/assets/credentials/designer_praveen_k_g.webp',
+    instagram: 'https://www.instagram.com/praveenneyyy/',
     linkedin: 'https://www.linkedin.com/in/praveen-ganesan-871164355',
     accentColor: 'orange',
   },

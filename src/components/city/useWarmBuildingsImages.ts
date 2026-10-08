@@ -4,20 +4,28 @@ import { navigationCityEnvironmentLayers } from './navigationCityEnvironment.con
 
 export const MOBILE_NAVIGATION_BG = '/assets/city/navigation/navigation-mobile-v2.webp'
 
+/** Gate section backgrounds (GateSection.tsx), one per device. */
+export const GATE_BG = {
+  mobile: { src: '/assets/city/navigation/gate-mobile.webp', width: 850, height: 1851 },
+  desktop: { src: '/assets/city/navigation/gate-desktop.webp', width: 1672, height: 940 },
+} as const
+
 /**
  * The buildings section's images are lazy so they never compete with the
  * hero — but lazy alone means they only START downloading when the visitor
  * scrolls there, which showed as a black screen until they arrived. This
- * warms exactly the images this device will show (phone: one composed
- * background; desktop: the background layer + the six buildings) once the
+ * warms exactly the images this device will show (the gate section's
+ * background first, since it comes right after the hero; then phone: one
+ * composed background; desktop: the background layer + the six buildings) once the
  * page has loaded and the browser is idle, so they are cached and decoded
  * by the time the buildings scroll into view.
  */
 export function useWarmBuildingsImages(isMobile: boolean) {
   useEffect(() => {
     const urls: string[] = isMobile
-      ? [MOBILE_NAVIGATION_BG]
+      ? [GATE_BG.mobile.src, MOBILE_NAVIGATION_BG]
       : [
+          GATE_BG.desktop.src,
           ...navigationCityEnvironmentLayers.map((layer) => layer.src),
           ...navigationBuildings.map((b) => b.assetPath),
         ].filter((url): url is string => Boolean(url))

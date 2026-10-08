@@ -47,11 +47,11 @@ export const DAY_1_EVENTS: CatalogEvent[] = [
   {
     id: 'weblica',
     name: 'Weblica',
-    description: 'Transform raw wireframe briefs into responsive, visually arresting UI/UX prototypes and retro-futuristic web designs within the time limit.',
+    description: 'Your eyes get one chance. Your creativity gets the rest. Observe a UI template, then recreate it from memory within the time limit.',
     venue: 'Web Lab 03 / Floor 1',
     time: '02:30 PM - 05:00 PM',
     fee: '₹150 / Cadet',
-    crew: 'Solo',
+    crew: 'Solo / Duo',
   },
   {
     id: 'x-coders',

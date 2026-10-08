@@ -155,14 +155,14 @@ export const ALL_EVENTS: EventSpec[] = [
     image: '/assets/events/weblica.webp',
     quote: '"FORGE SEAMLESS DIGITAL EXPERIENCES WITH MODERN WEB UX."',
     description:
-      '"Weblica" is a creative web development event where participants recreate a given user interface with accuracy and creativity. They will be evaluated on design, layout, responsiveness, visual elements, and overall implementation within the given time.',
+      'Your eyes get one chance. Your creativity gets the rest. Step into a UI/UX challenge where observation meets imagination. Choose your design, lock in the details, and turn what you remember into something of your own. Think fast, design smart, and see how close you can get to perfection.',
     date: 'DAY 01',
     time: '01:15 PM - 02:15 PM',
-    teamSize: '1 MEMBER',
+    teamSize: '1 - 2 MEMBERS',
     coordinators: [
       coordinator('Sai Guru', '4TH YEAR (SEC C)', '7550177315'),
       coordinator('Aswathy', '4TH YEAR (SEC A)', '9566052452'),
-      coordinator('Barathi Shankar', '3RD YEAR (SEC A)', '6374834081'),
+      coordinator('Barathi Sankar', '3RD YEAR (SEC A)', '6374834081'),
       coordinator('Jeevadharani', '3RD YEAR (SEC A)', '9444466435'),
       coordinator('Chaithra', '2ND YEAR (SEC A)', '6383391983'),
       coordinator('Thirunavukarasu', '2ND YEAR (SEC C)', '9363492223')
@@ -170,14 +170,13 @@ export const ALL_EVENTS: EventSpec[] = [
     chipLabel: 'WEBLICA',
     chipSub: 'DOM-GRID',
     protocols: [
-      'Participants compete solo.',
-      'Participants must recreate the given user interface as accurately as possible.',
-      'Event timing: 01:15 PM - 02:15 PM (Day 1).',
-      'The complete task must be finished within the time limit announced by the organizers.',
-      'The layout, spacing, typography, images, colors, and other visual elements should closely match the given reference.',
-      "Participants must create the interface themselves; copying another participant's work is not allowed.",
-      "Use of unauthorized external resources, AI tools, templates, or pre-written code is subject to the organizers' rules.",
-      "The interface will be judged based on accuracy, functionality, responsiveness, and overall presentation, and the judges' decision will be final."
+      'Participants may compete solo or in teams of two.',
+      'Every participant must register individually. Teams may be formed at the venue.',
+      'Choose one of four provided UI templates. A fixed observation period will be provided to study the selected template.',
+      'No phones, cameras or external devices are permitted during observation. The reference must not be photographed, recorded, captured, or otherwise preserved.',
+      'After observation, the reference will be withdrawn and will not be shown again until the event concludes.',
+      'Recreate the selected interface within the given development time.',
+      'Devices, design software, internet resources, and AI tools are permitted during development.'
     ]
   },
   {
