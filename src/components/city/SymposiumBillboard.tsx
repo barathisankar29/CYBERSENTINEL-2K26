@@ -4,16 +4,16 @@ import './Airship.css'
 import './SymposiumBillboard.css'
 
 /**
- * The CyberSentinel 2K26 billboard standing on the street between the EVENTS
- * tower and the TRANSPORT building (desktop buildings page only). Clicking
- * it opens the full official poster in the same popup style the airship
- * uses (airship-modal-* classes from Airship.css).
+ * The CyberSentinel 2K26 event truck (pamphlet on its side) parked on the
+ * plaza of the gate section. Clicking it opens the full official poster in the same popup
+ * style the airship uses (airship-modal-* classes from Airship.css).
  *
- * It appears together with the buildings (`revealed`), see
- * NavigationCityScene.tsx.
+ * It pops in once the plaza scrolls into view (`revealed`), and is
+ * positioned per device via `className`, see GateSection.tsx.
  */
 
-const BILLBOARD_IMAGE = '/assets/city/navigation/symposium-billboard.webp'
+// The neon CyberSentinel event truck carrying the pamphlet.
+const BILLBOARD_IMAGE = '/assets/city/navigation/event-truck.webp'
 const POSTER_IMAGE = '/assets/city/notice_board/Main_Poster.jpeg'
 
 export function SymposiumBillboard({ revealed, className }: { revealed: boolean; className?: string }) {

@@ -7,10 +7,7 @@ import { CityLayer } from './CityLayer'
 import { navigationCityEnvironmentLayers, NAVIGATION_REVEAL_PROGRESS } from './navigationCityEnvironment.config'
 import { Building } from './buildings/Building'
 import { NavigationCityMobile } from './NavigationCityMobile'
-import { MobileGateSection } from './MobileGateSection'
 import { RainEffect } from './RainEffect'
-import { Airship } from './Airship'
-import { SymposiumBillboard } from './SymposiumBillboard'
 import { useWarmBuildingsImages } from './useWarmBuildingsImages'
 import { ProfileAccessBadge } from '@/components/ui/ProfileAccessBadge'
 import { RegisterNowButton } from '@/components/ui/RegisterNowButton'
@@ -76,13 +73,7 @@ export function NavigationCityScene() {
   // `spacerRef` never attaches to anything on this branch. Desktop below
   // is completely untouched by this early return.
   if (isMobile) {
-    return (
-      <>
-        <NavigationCityMobile />
-        {/* Phones: airship + billboard get their own gate scene below the buildings */}
-        <MobileGateSection />
-      </>
-    )
+    return <NavigationCityMobile />
   }
 
   return (
@@ -108,10 +99,6 @@ export function NavigationCityScene() {
         <RainEffect zIndex={6} />
         <ProfileAccessBadge />
         <RegisterNowButton />
-        {/* Airship floating in the sky — desktop only (mobile returns early above) */}
-        <Airship />
-        {/* Symposium billboard on the street between EVENTS and TRANSPORT; opens the full poster */}
-        <SymposiumBillboard revealed={revealed} />
         <div className="navigation-city-scene__buildings" style={{ zIndex: BUILDINGS_Z_INDEX }}>
           {navigationBuildings.map((building) => (
             <Building key={building.id} building={building} revealed={revealed} isMobile={isMobile} />

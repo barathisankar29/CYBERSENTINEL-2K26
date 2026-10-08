@@ -3,13 +3,13 @@ import { createPortal } from 'react-dom'
 import './Airship.css'
 
 /**
- * A cyberpunk airship that floats in the upper-left sky of the buildings page
- * (desktop only), carrying a hanging banner with a poster image.
+ * A cyberpunk airship that floats in the sky of the gate section, carrying
+ * a hanging banner with a poster image.
  *
  * When the banner is clicked, a full-size cyberpunk modal popup displays the image.
  *
- * Rendered in NavigationCityScene (desktop) and, repositioned via `className`,
- * in MobileGateSection (phones).
+ * Rendered in GateSection (phones and desktop), positioned per device via
+ * `className`.
  */
 
 const BANNER_IMAGE = '/assets/city/navigation/chief-guest-poster.jpg'

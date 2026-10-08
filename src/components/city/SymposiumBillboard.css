@@ -8,7 +8,7 @@
   bottom: 6%;
   z-index: 11;
   height: min(26vh, calc(23.5vw / 1.515));
-  aspect-ratio: 1000 / 660;
+  aspect-ratio: 1400 / 700; /* event-truck.webp */
   padding: 0;
   border: 0;
   background: none;

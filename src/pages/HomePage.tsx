@@ -2,6 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
 import { useLocation, useNavigationType } from 'react-router-dom'
 import { CityScene } from '@/components/city/CityScene'
 import { NavigationCityScene } from '@/components/city/NavigationCityScene'
+import { GateSection } from '@/components/city/GateSection'
 import { VideoIntro } from '@/components/intro/VideoIntro'
 import { FuturisticTransition } from '@/components/intro/FuturisticTransition'
 import { SiteFooter } from '@/components/ui/SiteFooter'
@@ -89,6 +90,7 @@ export function HomePage() {
         <FuturisticTransition onComplete={handleTransitionComplete} />
       )}
       <CityScene introCompleted={introStage === 'completed'} />
+      <GateSection />
       <NavigationCityScene />
       <SiteFooter />
     </main>
