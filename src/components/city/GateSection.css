@@ -87,11 +87,11 @@
   font-size: 7px;
 }
 
-/* Second Airship (3 cards, upper sky, reversed direction) */
+/* Second Airship (3 cards, right side middle, reversed direction) */
 .airship.airship--gate-mobile.airship--gate-second {
-  top: 1%;
-  left: 50%;
-  --airship-mobile-w: clamp(310px, 92vw, 420px);
+  top: 3.5%;
+  left: 54%;
+  --airship-mobile-w: clamp(290px, 86vw, 390px);
   width: var(--airship-mobile-w);
   margin-left: calc(var(--airship-mobile-w) / -2);
   z-index: 3;
@@ -156,11 +156,12 @@
   width: clamp(100px, 7.2vw, 138px);
 }
 
-/* Second Airship: 3 cards, upper sky, reversed direction */
+/* Second Airship: 3 cards, right side middle, reversed direction */
 .airship.airship--gate-desktop.airship--gate-second {
-  top: 2%;
-  left: 42%;
-  width: clamp(560px, 42vw, 820px);
+  top: 9%;
+  left: auto;
+  right: 5%;
+  width: clamp(520px, 38vw, 760px);
   z-index: 3;
 }
 
