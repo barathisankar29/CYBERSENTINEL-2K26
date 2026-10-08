@@ -279,27 +279,15 @@ export function Airship({
               aria-label={`${selectedCard.title} Poster`}
               className="airship-modal-content"
             >
-              {/* Modal Header */}
+              {/* Sci-fi scanner bar across top */}
+              <div className="airship-modal-scanner" aria-hidden="true" />
+
+              {/* Modal Top Bar: Title & Close Button */}
               <div className="airship-modal-header">
                 <div className="airship-modal-title">
-                  <span className="airship-modal-tag">[AERIAL RECON]</span>
-                  <span className="airship-modal-heading">{selectedCard.title} // CYBERSENTINEL 2K26</span>
-                </div>
-
-                {/* Switcher tabs across all chief guests */}
-                <div className="airship-modal-tabs">
-                  {modalCards.map((card) => (
-                    <button
-                      key={card.id}
-                      type="button"
-                      className={`airship-modal-tab ${
-                        card.id === selectedCard.id ? 'airship-modal-tab--active' : ''
-                      }`}
-                      onClick={() => setSelectedCard(card)}
-                    >
-                      {card.tag}
-                    </button>
-                  ))}
+                  <span className="airship-modal-status-dot" aria-hidden="true" />
+                  <span className="airship-modal-tag">[DOSSIER // ARCHIVE]</span>
+                  <span className="airship-modal-heading">{selectedCard.title}</span>
                 </div>
 
                 <button
@@ -312,12 +300,49 @@ export function Airship({
                   title="Close [ESC]"
                   aria-label="Close poster view"
                 >
-                  [✕]
+                  <span className="airship-modal-close-icon">✕</span>
+                  <span className="airship-modal-close-text">ESC</span>
                 </button>
               </div>
 
-              {/* Modal Image Frame */}
+              {/* Dedicated Chief Guest Selector Bar: 2 and 2 horizontal grid */}
+              <div className="airship-modal-tabs-bar">
+                <div className="airship-modal-tabs-grid">
+                  {modalCards.map((card, idx) => (
+                    <button
+                      key={card.id}
+                      type="button"
+                      className={`airship-modal-tab ${
+                        card.id === selectedCard.id ? 'airship-modal-tab--active' : ''
+                      } ${idx === 4 ? 'airship-modal-tab--wide' : ''}`}
+                      onClick={() => setSelectedCard(card)}
+                    >
+                      <span className="airship-modal-tab-idx">0{idx + 1}</span>
+                      <span className="airship-modal-tab-name">{card.label}</span>
+                      {card.id === selectedCard.id && (
+                        <span className="airship-modal-tab-indicator">● ACTIVE</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Modal Image Frame with HUD Crosshairs and Scanlines */}
               <div className="airship-modal-img-wrap">
+                {/* HUD Viewfinder Corners */}
+                <span className="airship-modal-corner airship-modal-corner--tl" aria-hidden="true" />
+                <span className="airship-modal-corner airship-modal-corner--tr" aria-hidden="true" />
+                <span className="airship-modal-corner airship-modal-corner--bl" aria-hidden="true" />
+                <span className="airship-modal-corner airship-modal-corner--br" aria-hidden="true" />
+
+                {/* HUD Data Overlays */}
+                <div className="airship-modal-hud-overlay" aria-hidden="true">
+                  <span className="airship-modal-hud-tag airship-modal-hud-tag--tl">SEC: 07 // CLEARANCE L5</span>
+                  <span className="airship-modal-hud-tag airship-modal-hud-tag--tr">CLASSIFIED DOSSIER</span>
+                  <span className="airship-modal-hud-tag airship-modal-hud-tag--bl">13.1185° N, 80.0984° E</span>
+                  <span className="airship-modal-hud-tag airship-modal-hud-tag--br">STATUS: ENCRYPTED</span>
+                </div>
+
                 <img
                   src={selectedCard.image}
                   alt={`${selectedCard.title} Full Poster`}
@@ -329,10 +354,11 @@ export function Airship({
               {/* Modal Footer */}
               <div className="airship-modal-footer">
                 <span className="airship-modal-footer-text">
-                  {selectedCard.subtitle ?? 'PUBLIC SECURITY ARCHIVE // CLASSIFIED DISPATCH'}
+                  <span className="airship-modal-footer-code">CYBERSENTINEL 2K26 //</span>{' '}
+                  {selectedCard.subtitle ?? 'PUBLIC SECURITY ARCHIVE // KEYNOTE ADDRESS'}
                 </span>
                 <span className="airship-modal-footer-action">
-                  PRESS ESC OR CLICK OUTSIDE TO CLOSE
+                  [ CLICK OUTSIDE OR PRESS ESC ]
                 </span>
               </div>
             </div>

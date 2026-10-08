@@ -84,56 +84,56 @@
 
 /* Second Airship (3 cards, upper sky, reversed direction) */
 .airship.airship--gate-mobile.airship--gate-second {
-  top: 0.5%;
+  top: 1%;
   left: 50%;
-  --airship-mobile-w: clamp(285px, 86vw, 390px);
+  --airship-mobile-w: clamp(230px, 68vw, 310px);
   width: var(--airship-mobile-w);
   margin-left: calc(var(--airship-mobile-w) / -2);
   z-index: 3;
 }
 
 .airship--gate-mobile.airship--gate-second .airship__rigging {
-  width: clamp(245px, 76vw, 340px);
-  margin-top: -30px;
+  width: clamp(195px, 58vw, 260px);
+  margin-top: -22px;
 }
 
 .airship--gate-mobile.airship--gate-second .airship__cards-row {
-  gap: clamp(5px, 1.8vw, 8px);
+  gap: clamp(4px, 1.2vw, 6px);
 }
 
 .airship--gate-mobile.airship--gate-second .airship__card-frame {
-  width: clamp(80px, 25vw, 108px);
+  width: clamp(62px, 18.5vw, 82px);
 }
 
 .airship--gate-mobile.airship--gate-second .airship__card-label {
-  font-size: 7.5px;
+  font-size: 6.5px;
 }
 
 /* First Airship (2 cards, lower sky, left side little bottom) */
 .airship.airship--gate-mobile.airship--gate-first {
-  top: 27%;
-  left: 47%;
-  --airship-mobile-w: clamp(270px, 78vw, 350px);
+  top: 23%;
+  left: 48%;
+  --airship-mobile-w: clamp(220px, 64vw, 290px);
   width: var(--airship-mobile-w);
   margin-left: calc(var(--airship-mobile-w) / -2);
   z-index: 4;
 }
 
 .airship--gate-mobile.airship--gate-first .airship__rigging {
-  width: clamp(220px, 66vw, 295px);
-  margin-top: -28px;
+  width: clamp(165px, 48vw, 220px);
+  margin-top: -22px;
 }
 
 .airship--gate-mobile.airship--gate-first .airship__cards-row {
-  gap: clamp(10px, 3vw, 16px);
+  gap: clamp(8px, 2.4vw, 12px);
 }
 
 .airship--gate-mobile.airship--gate-first .airship__card-frame {
-  width: clamp(102px, 30vw, 134px);
+  width: clamp(76px, 23vw, 100px);
 }
 
 .airship--gate-mobile.airship--gate-first .airship__card-label {
-  font-size: 8px;
+  font-size: 7px;
 }
 
 /* No hover on touch: always show the VIEW tag so cards read as tappable. */
@@ -181,16 +181,16 @@
 
 /* ─── Desktop Airships ─── */
 
-/* First Airship: 2 cards, left side little bottom */
+/* First Airship: 2 cards, left side TOP so it clears the truck */
 .airship.airship--gate-desktop.airship--gate-first {
-  top: 15%;
+  top: 4.5%;
   left: 7%;
-  width: clamp(520px, 37vw, 740px);
+  width: clamp(480px, 35vw, 700px);
   z-index: 4;
 }
 
 .airship--gate-desktop.airship--gate-first .airship__rigging {
-  width: clamp(265px, 19.5vw, 355px);
+  width: clamp(250px, 18.5vw, 340px);
   margin-top: -38px;
 }
 
@@ -199,7 +199,7 @@
 }
 
 .airship--gate-desktop.airship--gate-first .airship__card-frame {
-  width: clamp(122px, 9vw, 168px);
+  width: clamp(118px, 8.6vw, 160px);
 }
 
 /* Second Airship: 3 cards, right side middle, reversed direction */

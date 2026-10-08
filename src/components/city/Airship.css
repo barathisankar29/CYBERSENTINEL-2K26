@@ -304,33 +304,33 @@
   }
 }
 
-/* ─── Full-Size Modal Popup ─── */
+/* ─── Chief Guest Holographic Popup Modal ─── */
 
 .airship-modal-backdrop {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(5, 3, 15, 0.88);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(5, 2, 14, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
-  animation: airshipModalFadeIn 0.2s ease-out;
+  padding: clamp(0.5rem, 2vw, 1.5rem);
+  animation: airshipModalFadeIn 0.22s ease-out;
   cursor: pointer;
 }
 
 .airship-modal-content {
   position: relative;
-  max-width: 90vw;
-  max-height: 90vh;
-  background: #0b071a;
-  border: 2px solid #a855f7;
+  width: min(94vw, 520px);
+  max-height: 94vh;
+  background: linear-gradient(180deg, #0e0722 0%, #080315 100%);
+  border: 1.5px solid rgba(34, 211, 238, 0.7);
   box-shadow:
-    0 0 35px rgba(168, 85, 247, 0.45),
-    0 0 70px rgba(34, 211, 238, 0.25),
-    inset 0 0 25px rgba(168, 85, 247, 0.15);
+    0 0 35px rgba(34, 211, 238, 0.35),
+    0 0 70px rgba(168, 85, 247, 0.25),
+    inset 0 0 30px rgba(168, 85, 247, 0.12);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -338,14 +338,58 @@
   animation: airshipModalZoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Cyberpunk corner bracket accents */
+.airship-modal-content::before,
+.airship-modal-content::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  z-index: 10;
+}
+.airship-modal-content::before {
+  top: -1px;
+  left: -1px;
+  border-top: 3px solid #22d3ee;
+  border-left: 3px solid #22d3ee;
+}
+.airship-modal-content::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 3px solid #22d3ee;
+  border-right: 3px solid #22d3ee;
+}
+
+/* Animated scanning laser on top edge */
+.airship-modal-scanner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #22d3ee 50%, #a855f7 80%, transparent 100%);
+  background-size: 200% 100%;
+  animation: modalScannerSweep 3s linear infinite;
+  z-index: 5;
+}
+
+@keyframes modalScannerSweep {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Modal Top Bar */
 .airship-modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
   padding: 0.65rem 1rem;
-  background: rgba(18, 11, 38, 0.95);
-  border-bottom: 1px solid rgba(168, 85, 247, 0.4);
+  background: rgba(16, 8, 36, 0.95);
+  border-bottom: 1px solid rgba(168, 85, 247, 0.35);
+  position: relative;
+  z-index: 2;
 }
 
 .airship-modal-title {
@@ -355,96 +399,228 @@
   min-width: 0;
 }
 
+.airship-modal-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22d3ee;
+  box-shadow: 0 0 8px #22d3ee;
+  animation: modalBeaconPulse 1.6s ease-in-out infinite alternate;
+  flex-shrink: 0;
+}
+
+@keyframes modalBeaconPulse {
+  0% { opacity: 0.4; transform: scale(0.85); }
+  100% { opacity: 1; transform: scale(1.15); box-shadow: 0 0 10px #22d3ee, 0 0 20px #22d3ee; }
+}
+
 .airship-modal-tag {
   font-family: 'Silkscreen', monospace;
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   color: #22d3ee;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   white-space: nowrap;
 }
 
 .airship-modal-heading {
   font-family: 'Silkscreen', monospace;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: #f1f5f9;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Modal tab switchers */
-.airship-modal-tabs {
-  display: flex;
+.airship-modal-close {
+  display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  flex-wrap: wrap;
-}
-
-.airship-modal-tab {
-  background: rgba(28, 16, 52, 0.7);
-  border: 1px solid rgba(168, 85, 247, 0.4);
-  color: #cbd5e1;
+  gap: 0.35rem;
+  background: rgba(28, 14, 56, 0.8);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #fca5a5;
   font-family: 'Silkscreen', monospace;
   font-size: 0.65rem;
-  padding: 0.25rem 0.55rem;
+  padding: 0.25rem 0.6rem;
   cursor: pointer;
-  transition: all 0.15s ease;
-  letter-spacing: 0.05em;
-}
-
-.airship-modal-tab:hover {
-  background: rgba(168, 85, 247, 0.25);
-  color: #22d3ee;
-  border-color: #22d3ee;
-}
-
-.airship-modal-tab--active {
-  background: #22d3ee;
-  color: #0b071a;
-  border-color: #22d3ee;
-  font-weight: bold;
-  box-shadow: 0 0 10px rgba(34, 211, 238, 0.6);
-}
-
-.airship-modal-close {
-  background: transparent;
-  border: 1px solid rgba(168, 85, 247, 0.4);
-  color: #cbd5e1;
-  font-family: 'Silkscreen', monospace;
-  font-size: 0.75rem;
-  padding: 0.2rem 0.5rem;
-  cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.18s ease;
   flex-shrink: 0;
 }
 
-.airship-modal-close:hover {
-  background: #a855f7;
-  color: #000;
-  border-color: #22d3ee;
-  box-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+.airship-modal-close-icon {
+  font-size: 0.75rem;
+  font-weight: bold;
 }
 
+.airship-modal-close-text {
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  color: rgba(254, 202, 202, 0.8);
+}
+
+.airship-modal-close:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: #ef4444;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+}
+
+/* Dedicated Tab Switcher Bar: 2 and 2 horizontal grid */
+.airship-modal-tabs-bar {
+  padding: 0.55rem 0.85rem;
+  background: rgba(12, 6, 26, 0.98);
+  border-bottom: 1px solid rgba(34, 211, 238, 0.25);
+}
+
+.airship-modal-tabs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.airship-modal-tab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  background: rgba(22, 12, 44, 0.85);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  color: #cbd5e1;
+  font-family: 'Silkscreen', monospace;
+  font-size: 0.62rem;
+  padding: 0.4rem 0.65rem;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  letter-spacing: 0.04em;
+  position: relative;
+  overflow: hidden;
+}
+
+.airship-modal-tab-idx {
+  font-size: 0.55rem;
+  color: rgba(34, 211, 238, 0.8);
+  font-weight: bold;
+}
+
+.airship-modal-tab-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.airship-modal-tab-indicator {
+  font-size: 0.5rem;
+  letter-spacing: 0.05em;
+  color: #080318;
+  background: #22d3ee;
+  padding: 1px 4px;
+  font-weight: bold;
+}
+
+.airship-modal-tab:hover {
+  background: rgba(34, 211, 238, 0.15);
+  color: #22d3ee;
+  border-color: rgba(34, 211, 238, 0.8);
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.3);
+}
+
+.airship-modal-tab--active {
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.95), rgba(6, 182, 212, 0.95));
+  color: #080318;
+  border-color: #22d3ee;
+  font-weight: bold;
+  box-shadow: 0 0 14px rgba(34, 211, 238, 0.7);
+}
+
+.airship-modal-tab--active .airship-modal-tab-idx {
+  color: #080318;
+}
+
+.airship-modal-tab--wide {
+  grid-column: span 2;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+/* Modal Poster Image Frame with HUD Crosshairs */
 .airship-modal-img-wrap {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  background: radial-gradient(circle at center, rgba(34, 211, 238, 0.08) 0%, rgba(11, 7, 26, 0.95) 75%);
+  padding: clamp(0.6rem, 1.8vw, 1.2rem);
+  background: radial-gradient(circle at center, rgba(34, 211, 238, 0.09) 0%, rgba(9, 4, 22, 0.98) 75%);
   overflow: hidden;
 }
 
+/* HUD Viewfinder Corners */
+.airship-modal-corner {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+  z-index: 3;
+}
+.airship-modal-corner--tl {
+  top: 8px;
+  left: 8px;
+  border-top: 2px solid #22d3ee;
+  border-left: 2px solid #22d3ee;
+}
+.airship-modal-corner--tr {
+  top: 8px;
+  right: 8px;
+  border-top: 2px solid #22d3ee;
+  border-right: 2px solid #22d3ee;
+}
+.airship-modal-corner--bl {
+  bottom: 8px;
+  left: 8px;
+  border-bottom: 2px solid #22d3ee;
+  border-left: 2px solid #22d3ee;
+}
+.airship-modal-corner--br {
+  bottom: 8px;
+  right: 8px;
+  border-bottom: 2px solid #22d3ee;
+  border-right: 2px solid #22d3ee;
+}
+
+/* HUD Data Overlays */
+.airship-modal-hud-overlay {
+  position: absolute;
+  inset: 12px;
+  pointer-events: none;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.airship-modal-hud-tag {
+  font-family: 'Silkscreen', monospace;
+  font-size: 0.52rem;
+  color: rgba(34, 211, 238, 0.65);
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 4px rgba(34, 211, 238, 0.5);
+}
+.airship-modal-hud-tag--tl { align-self: flex-start; }
+.airship-modal-hud-tag--tr { position: absolute; top: 0; right: 0; }
+.airship-modal-hud-tag--bl { align-self: flex-start; }
+.airship-modal-hud-tag--br { position: absolute; bottom: 0; right: 0; }
+
 .airship-modal-img {
   display: block;
-  max-height: 72vh;
-  max-width: 82vw;
+  max-height: clamp(260px, 48vh, 460px);
+  max-width: 84vw;
   width: auto;
   height: auto;
   object-fit: contain;
-  border: 1px solid rgba(168, 85, 247, 0.35);
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(168, 85, 247, 0.5);
+  box-shadow:
+    0 0 25px rgba(0, 0, 0, 0.85),
+    0 0 15px rgba(168, 85, 247, 0.35);
+  position: relative;
+  z-index: 1;
 }
 
 .airship-modal-scanline {
@@ -454,31 +630,37 @@
   background: linear-gradient(
     to bottom,
     transparent 50%,
-    rgba(0, 0, 0, 0.25) 51%
+    rgba(0, 0, 0, 0.3) 51%
   );
   background-size: 100% 4px;
-  opacity: 0.6;
+  opacity: 0.65;
+  z-index: 3;
 }
 
+/* Modal Footer */
 .airship-modal-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 1rem;
-  background: rgba(18, 11, 38, 0.95);
-  border-top: 1px solid rgba(168, 85, 247, 0.3);
+  gap: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  background: rgba(14, 7, 30, 0.98);
+  border-top: 1px solid rgba(168, 85, 247, 0.35);
   font-family: 'Silkscreen', monospace;
-  font-size: 0.6rem;
+  font-size: 0.58rem;
   color: #94a3b8;
 }
 
-.airship-modal-footer-text {
-  letter-spacing: 0.06em;
+.airship-modal-footer-code {
+  color: #a855f7;
+  font-weight: bold;
 }
 
 .airship-modal-footer-action {
   color: #22d3ee;
   letter-spacing: 0.06em;
+  white-space: nowrap;
+  font-size: 0.54rem;
 }
 
 @keyframes airshipModalFadeIn {
