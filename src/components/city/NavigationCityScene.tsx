@@ -7,6 +7,7 @@ import { CityLayer } from './CityLayer'
 import { navigationCityEnvironmentLayers, NAVIGATION_REVEAL_PROGRESS } from './navigationCityEnvironment.config'
 import { Building } from './buildings/Building'
 import { NavigationCityMobile } from './NavigationCityMobile'
+import { MobileGateSection } from './MobileGateSection'
 import { RainEffect } from './RainEffect'
 import { Airship } from './Airship'
 import { SymposiumBillboard } from './SymposiumBillboard'
@@ -75,7 +76,13 @@ export function NavigationCityScene() {
   // `spacerRef` never attaches to anything on this branch. Desktop below
   // is completely untouched by this early return.
   if (isMobile) {
-    return <NavigationCityMobile />
+    return (
+      <>
+        <NavigationCityMobile />
+        {/* Phones: airship + billboard get their own gate scene below the buildings */}
+        <MobileGateSection />
+      </>
+    )
   }
 
   return (

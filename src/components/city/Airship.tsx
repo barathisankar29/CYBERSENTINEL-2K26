@@ -8,13 +8,14 @@ import './Airship.css'
  *
  * When the banner is clicked, a full-size cyberpunk modal popup displays the image.
  *
- * Rendered only in NavigationCityScene (desktop branch), never on mobile.
+ * Rendered in NavigationCityScene (desktop) and, repositioned via `className`,
+ * in MobileGateSection (phones).
  */
 
 const BANNER_IMAGE = '/assets/city/navigation/chief-guest-poster.jpg'
 const BANNER_LABEL = 'CHIEF GUEST'
 
-export function Airship() {
+export function Airship({ className }: { className?: string } = {}) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   // Handle ESC key to close modal
@@ -29,7 +30,7 @@ export function Airship() {
 
   return (
     <>
-      <div className="airship">
+      <div className={className ? `airship ${className}` : 'airship'}>
         {/* The blimp hull */}
         <div className="airship__hull">
           <img

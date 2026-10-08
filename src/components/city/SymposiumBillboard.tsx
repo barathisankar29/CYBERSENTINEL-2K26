@@ -16,7 +16,7 @@ import './SymposiumBillboard.css'
 const BILLBOARD_IMAGE = '/assets/city/navigation/symposium-billboard.webp'
 const POSTER_IMAGE = '/assets/city/notice_board/Main_Poster.jpeg'
 
-export function SymposiumBillboard({ revealed }: { revealed: boolean }) {
+export function SymposiumBillboard({ revealed, className }: { revealed: boolean; className?: string }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   // ESC closes the poster.
@@ -33,7 +33,7 @@ export function SymposiumBillboard({ revealed }: { revealed: boolean }) {
     <>
       <button
         type="button"
-        className={`symposium-billboard ${revealed ? 'is-revealed' : ''}`}
+        className={`symposium-billboard ${revealed ? 'is-revealed' : ''} ${className ?? ''}`}
         onClick={() => setIsModalOpen(true)}
         title="Click to view the official poster"
         aria-label="View the official CyberSentinel 2K26 poster"

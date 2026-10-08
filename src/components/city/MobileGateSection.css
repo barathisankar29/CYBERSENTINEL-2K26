@@ -1,0 +1,89 @@
+/*
+ * MOBILE-ONLY gate scene below the mobile buildings page. Same in-flow
+ * model as NavigationCityMobile.css: the bg image alone sets the height,
+ * every overlay is absolutely positioned in % of that box.
+ */
+.mobile-gate-section {
+  position: relative;
+  width: 100%;
+  background: #0b0418;
+}
+
+.mobile-gate-scene {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.mobile-gate-scene__bg {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+}
+
+/* Dark violet film over the bg: dims the neon overall, a bit more at the
+   edges (vignette), so the airship and billboard stand out. */
+.mobile-gate-scene__film {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 85% 70% at 50% 45%, transparent 0%, rgba(6, 2, 16, 0.45) 100%),
+    rgba(10, 4, 26, 0.5);
+}
+
+/* Soft handoff from the buildings image above into the gate's sky. */
+.mobile-gate-scene__top-blend {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 7%;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, #0b0418 0%, rgba(11, 4, 24, 0.55) 45%, transparent 100%);
+}
+
+/* Airship — in the open sky between the two neon towers, its banner
+   hanging just above the elevated rail. */
+.airship.airship--mobile-gate {
+  top: 1.5%;
+  left: 50%;
+  margin-left: calc(clamp(210px, 56%, 300px) / -2);
+  width: clamp(210px, 56%, 300px);
+  z-index: 3;
+}
+
+.airship--mobile-gate .airship__rigging,
+.airship--mobile-gate .airship__banner-frame {
+  width: clamp(78px, 22vw, 110px);
+}
+
+.airship--mobile-gate .airship__rigging {
+  margin-top: -22px;
+}
+
+.airship--mobile-gate .airship__banner-label {
+  font-size: 8px;
+}
+
+/* No hover on touch: always show the VIEW tag so the banner reads as tappable. */
+.airship--mobile-gate .airship__banner-badge {
+  opacity: 1;
+}
+
+/* Billboard — standing on the wet plaza in front of the gate. */
+.symposium-billboard.symposium-billboard--mobile-gate {
+  left: 50%;
+  bottom: 5%;
+  z-index: 3;
+  width: min(66%, 340px);
+  height: auto;
+}
+
+.symposium-billboard--mobile-gate .symposium-billboard__hint {
+  font-size: 0.55rem;
+  opacity: 1;
+}

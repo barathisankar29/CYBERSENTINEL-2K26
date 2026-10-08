@@ -3,6 +3,7 @@ import { navigationBuildings } from '@/data/navigation'
 import { navigationCityEnvironmentLayers } from './navigationCityEnvironment.config'
 
 export const MOBILE_NAVIGATION_BG = '/assets/city/navigation/navigation-mobile-v2.webp'
+const MOBILE_GATE_BG = '/assets/city/navigation/gate-mobile.webp'
 
 /**
  * The buildings section's images are lazy so they never compete with the
@@ -16,7 +17,7 @@ export const MOBILE_NAVIGATION_BG = '/assets/city/navigation/navigation-mobile-v
 export function useWarmBuildingsImages(isMobile: boolean) {
   useEffect(() => {
     const urls: string[] = isMobile
-      ? [MOBILE_NAVIGATION_BG]
+      ? [MOBILE_NAVIGATION_BG, MOBILE_GATE_BG]
       : [
           ...navigationCityEnvironmentLayers.map((layer) => layer.src),
           ...navigationBuildings.map((b) => b.assetPath),
