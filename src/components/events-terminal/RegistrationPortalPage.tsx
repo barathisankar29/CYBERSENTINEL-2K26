@@ -158,8 +158,19 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
 
   const toggleDayEvent = (id: string) => {
     sound.playBlip();
+    const clicked = activeEvents.find((event) => event.id === id);
+    // Team events of the same day are registered together: ticking or
+    // unticking one team event ticks or unticks all of that day's team events.
+    const groupIds =
+      clicked && isTeamEvent(clicked)
+        ? activeEvents
+            .filter((event) => event.day === clicked.day && isTeamEvent(event))
+            .map((event) => event.id)
+        : [id];
     setSelectedEventIds((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+      prev.includes(id)
+        ? prev.filter((item) => !groupIds.includes(item))
+        : Array.from(new Set([...prev, ...groupIds]))
     );
   };
 
