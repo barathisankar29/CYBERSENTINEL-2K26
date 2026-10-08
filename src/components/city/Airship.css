@@ -1,4 +1,4 @@
-/* ─── Airship: floating cyberpunk blimp carrying dual hanging cards ─── */
+/* ─── Airship: floating cyberpunk blimps carrying hanging cards ─── */
 
 .airship {
   position: absolute;
@@ -13,6 +13,12 @@
   align-items: center;
   /* Grand, prominent scale */
   width: clamp(500px, 40vw, 760px);
+}
+
+/* Reverse airship: independent counter-phase drift */
+.airship--reverse {
+  animation: airshipDriftReverse 28s ease-in-out infinite alternate;
+  animation-delay: -6s;
 }
 
 .airship__hull {
@@ -32,7 +38,7 @@
   animation: airshipGlow 4s ease-in-out infinite alternate;
 }
 
-/* ─── Hanging Payload (Rigging + Dual Cards) ─── */
+/* ─── Hanging Payload (Rigging + Cards) ─── */
 
 .airship__payload {
   display: flex;
@@ -43,7 +49,12 @@
   pointer-events: none;
 }
 
-/* Dual-rail Rigging wires connecting blimp hull to both cards */
+.airship--reverse .airship__payload {
+  animation: bannerSwingReverse 5.4s ease-in-out infinite alternate;
+  animation-delay: -2s;
+}
+
+/* Dual-rail Rigging wires connecting blimp hull to cards */
 .airship__rigging {
   width: clamp(210px, 17.5vw, 305px);
   height: 32px;
@@ -74,6 +85,23 @@
   gap: clamp(10px, 1.1vw, 16px);
   position: relative;
   z-index: 3;
+}
+
+/* 3-card specific adjustments */
+.airship__payload--count-3 .airship__rigging {
+  width: clamp(270px, 21.5vw, 385px);
+}
+
+.airship__payload--count-3 .airship__cards-row {
+  gap: clamp(8px, 0.9vw, 12px);
+}
+
+.airship__payload--count-3 .airship__card-frame {
+  width: clamp(82px, 6.6vw, 116px);
+}
+
+.airship__payload--count-3 .airship__card-label {
+  font-size: clamp(5.5px, 0.46vw, 7.5px);
 }
 
 /* Individual hanging card button */
@@ -232,6 +260,21 @@
   }
 }
 
+@keyframes airshipDriftReverse {
+  0% {
+    transform: translate(0, 0) rotate(0.3deg);
+  }
+  30% {
+    transform: translate(-0.9vw, -0.5vh) rotate(-0.15deg);
+  }
+  65% {
+    transform: translate(0.7vw, 0.5vh) rotate(0.2deg);
+  }
+  100% {
+    transform: translate(-0.4vw, -0.3vh) rotate(-0.1deg);
+  }
+}
+
 @keyframes airshipGlow {
   0% {
     filter: drop-shadow(0 6px 20px rgba(168, 85, 247, 0.35))
@@ -249,6 +292,15 @@
   }
   100% {
     transform: rotate(1.5deg);
+  }
+}
+
+@keyframes bannerSwingReverse {
+  0% {
+    transform: rotate(1.5deg);
+  }
+  100% {
+    transform: rotate(-1.5deg);
   }
 }
 
@@ -326,6 +378,7 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  flex-wrap: wrap;
 }
 
 .airship-modal-tab {

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useIsMobile } from '@/hooks/useIsMobile'
-import { Airship } from './Airship'
+import { Airship, CHIEF_GUEST_CARDS_FIRST, CHIEF_GUEST_CARDS_SECOND } from './Airship'
 import { SymposiumBillboard } from './SymposiumBillboard'
 import { RainEffect } from './RainEffect'
 import { GATE_BG } from './useWarmBuildingsImages'
@@ -65,7 +65,21 @@ export function GateSection() {
         <div className="gate-scene__top-blend" aria-hidden="true" />
         <div className="gate-scene__bottom-blend" aria-hidden="true" />
         <RainEffect zIndex={1} />
-        <Airship className={`airship--gate-${device}`} />
+
+        {/* Second Airship: Upper sky, 3 cards (Guests 03, 04, 05), reversed flight direction */}
+        <Airship
+          className={`airship--gate-${device} airship--gate-second`}
+          cards={CHIEF_GUEST_CARDS_SECOND}
+          reversed
+        />
+
+        {/* First Airship: Left side, little bottom (Guests 01, 02), standard flight direction */}
+        <Airship
+          className={`airship--gate-${device} airship--gate-first`}
+          cards={CHIEF_GUEST_CARDS_FIRST}
+          reversed={false}
+        />
+
         <SymposiumBillboard revealed={revealed} className={`symposium-billboard--gate-${device}`} />
       </div>
     </section>

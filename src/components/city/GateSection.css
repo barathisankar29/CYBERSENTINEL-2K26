@@ -58,39 +58,64 @@
 
 /* ─── Mobile ─── */
 
-/* Airship — in the open sky between the two neon towers, its dual cards
-   hanging just above the elevated rail. */
-.airship.airship--gate-mobile {
+/* ─── Mobile Airships ─── */
+
+/* First Airship (2 cards, left side little bottom) */
+.airship.airship--gate-mobile.airship--gate-first {
+  top: 14%;
+  left: 45%;
+  --airship-mobile-w: clamp(260px, 76vw, 340px);
+  width: var(--airship-mobile-w);
+  margin-left: calc(var(--airship-mobile-w) / -2);
+  z-index: 4;
+}
+
+.airship--gate-mobile.airship--gate-first .airship__rigging {
+  width: clamp(175px, 52vw, 230px);
+  margin-top: -24px;
+}
+
+.airship--gate-mobile.airship--gate-first .airship__cards-row {
+  gap: 8px;
+}
+
+.airship--gate-mobile.airship--gate-first .airship__card-frame {
+  width: clamp(82px, 24vw, 110px);
+}
+
+.airship--gate-mobile.airship--gate-first .airship__card-label {
+  font-size: 7px;
+}
+
+/* Second Airship (3 cards, upper sky, reversed direction) */
+.airship.airship--gate-mobile.airship--gate-second {
   top: 1%;
   left: 50%;
-  --airship-mobile-w: clamp(320px, 88vw, 440px);
+  --airship-mobile-w: clamp(310px, 92vw, 420px);
   width: var(--airship-mobile-w);
   margin-left: calc(var(--airship-mobile-w) / -2);
   z-index: 3;
 }
 
-.airship--gate-mobile .airship__rigging {
-  width: clamp(190px, 54vw, 250px);
+.airship--gate-mobile.airship--gate-second .airship__rigging {
+  width: clamp(230px, 72vw, 310px);
   margin-top: -26px;
 }
 
-.airship--gate-mobile .airship__cards-row {
-  gap: 8px;
+.airship--gate-mobile.airship--gate-second .airship__cards-row {
+  gap: 6px;
 }
 
-.airship--gate-mobile .airship__card-frame,
-.airship--gate-mobile .airship__banner-frame {
-  width: clamp(90px, 25.5vw, 118px);
+.airship--gate-mobile.airship--gate-second .airship__card-frame {
+  width: clamp(70px, 21.5vw, 94px);
 }
 
-.airship--gate-mobile .airship__card-label,
-.airship--gate-mobile .airship__banner-label {
-  font-size: 7px;
+.airship--gate-mobile.airship--gate-second .airship__card-label {
+  font-size: 6px;
 }
 
-/* No hover on touch: always show the VIEW tag so the banner reads as tappable. */
-.airship--gate-mobile .airship__card-badge,
-.airship--gate-mobile .airship__banner-badge {
+/* No hover on touch: always show the VIEW tag so cards read as tappable. */
+.airship--gate-mobile .airship__card-badge {
   opacity: 1;
 }
 
@@ -108,28 +133,48 @@
   opacity: 1;
 }
 
-/* ─── Desktop ─── */
+/* ─── Desktop Airships ─── */
 
-/* Airship — large in the open sky between the left towers and the centre spire. */
-.airship.airship--gate-desktop {
-  top: 3.5%;
-  left: 20%;
-  width: clamp(520px, 38vw, 760px);
-  z-index: 3;
+/* First Airship: 2 cards, left side little bottom */
+.airship.airship--gate-desktop.airship--gate-first {
+  top: 15%;
+  left: 8%;
+  width: clamp(480px, 34vw, 680px);
+  z-index: 4;
 }
 
-.airship--gate-desktop .airship__rigging {
-  width: clamp(235px, 17.5vw, 315px);
-  margin-top: -38px;
+.airship--gate-desktop.airship--gate-first .airship__rigging {
+  width: clamp(210px, 15vw, 290px);
+  margin-top: -34px;
 }
 
-.airship--gate-desktop .airship__cards-row {
+.airship--gate-desktop.airship--gate-first .airship__cards-row {
   gap: 14px;
 }
 
-.airship--gate-desktop .airship__card-frame,
-.airship--gate-desktop .airship__banner-frame {
-  width: clamp(110px, 8.2vw, 148px);
+.airship--gate-desktop.airship--gate-first .airship__card-frame {
+  width: clamp(100px, 7.2vw, 138px);
+}
+
+/* Second Airship: 3 cards, upper sky, reversed direction */
+.airship.airship--gate-desktop.airship--gate-second {
+  top: 2%;
+  left: 42%;
+  width: clamp(560px, 42vw, 820px);
+  z-index: 3;
+}
+
+.airship--gate-desktop.airship--gate-second .airship__rigging {
+  width: clamp(290px, 22vw, 410px);
+  margin-top: -38px;
+}
+
+.airship--gate-desktop.airship--gate-second .airship__cards-row {
+  gap: 12px;
+}
+
+.airship--gate-desktop.airship--gate-second .airship__card-frame {
+  width: clamp(86px, 6.5vw, 120px);
 }
 
 /* No tint film on desktop: the wide picture is calm enough on its own. */
