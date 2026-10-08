@@ -15,6 +15,9 @@ export function isTeamEvent(event: { id?: string; code?: string; name?: string; 
   if (name.includes('spotlight') || code === 'SL' || name.includes('talent') || code === 'TAL' || id.includes('talent') || id.includes('spotlight') || originalId.includes('talent')) return false;
   if (name.includes('cipher') || name.includes('cypher') || code === 'CC' || id.includes('cypher') || id.includes('cipher') || originalId.includes('cypher') || originalId.includes('cipher')) return false;
 
+  // Connections is ALWAYS a team event, even if the backend row says otherwise
+  if (name.includes('connection') || code === 'CN' || id.includes('connection') || originalId.includes('connection')) return true;
+
   // Explicit backend event_type check
   if (event.event_type && event.event_type.toUpperCase() === 'TEAM') return true;
   if (event.event_type && (event.event_type.toUpperCase() === 'SOLO' || event.event_type.toUpperCase() === 'INDIVIDUAL')) return false;
@@ -24,7 +27,6 @@ export function isTeamEvent(event: { id?: string; code?: string; name?: string; 
   if (name.includes('unsaid') || code === 'US' || id.includes('unsaid') || originalId.includes('unsaid')) return true;
 
   // Day 2 Team Events
-  if (name.includes('connection') || code === 'CN' || id.includes('connection') || originalId.includes('connection')) return true;
   if (name.includes('bgm') || code === 'BGM' || id.includes('bgm') || originalId.includes('bgm')) return true;
   if (name.includes('mixed') || code === 'MS' || id.includes('mixed') || originalId.includes('mixed')) return true;
   if (name.includes('lyric') || code === 'LL' || id.includes('lyric') || originalId.includes('lyric')) return true;
