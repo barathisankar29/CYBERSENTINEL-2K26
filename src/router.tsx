@@ -54,7 +54,17 @@ const lightRouteLoaders = [
  */
 function usePrefetchRoutes() {
   useEffect(() => {
-    const { isLowRam, isMobile } = getDevicePerfInfo()
+    // If device is low RAM or very low RAM, completely skip prefetching to prevent
+    // tab crash / reload on mobile devices.
+    const { isLowRam, isVeryLowRam, isMobile } = getDevicePerfInfo()
+    if (isLowRam || isVeryLowRam) return
+
+    // Also skip if currently on any status or checking route
+    if (typeof window !== 'undefined') {
+      const p = window.location.pathname.toLowerCase()
+      if (p.includes('status') || p.includes('check')) return
+    }
+
     const queue = [
       ...lightRouteLoaders,
       ...(isLowRam ? [] : [loadEventsPage]),
@@ -110,9 +120,11 @@ export function AppRoutes() {
         <Route path="/contacts" element={<ContactPage />} />
         <Route path="/register" element={<RegistrationPage />} />
         <Route path="/register/status" element={<RegistrationStatusPage />} />
-        {/* The college payment gateway returns participants here after paying
-            (route matching is case-insensitive, so /checkstatus works too). */}
+        {/* The college payment gateway returns participants here after paying */}
         <Route path="/checkStatus" element={<RegistrationStatusPage />} />
+        <Route path="/checkstatus" element={<RegistrationStatusPage />} />
+        <Route path="/check-status" element={<RegistrationStatusPage />} />
+        <Route path="/payment-status" element={<RegistrationStatusPage />} />
         <Route path="/register/team" element={<CreateTeamPage />} />
         <Route path="/:slug" element={<SectionPage />} />
         <Route path="*" element={<NotFoundPage />} />

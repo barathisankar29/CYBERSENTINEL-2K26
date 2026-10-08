@@ -179,15 +179,81 @@ export async function resolvePaymentAmount(record: CheckRegistrationResponse): P
 
 /** POST functions/v1/check-registration */
 export async function checkRegistration(email: string, phone: string): Promise<CheckRegistrationResponse> {
-  return send<CheckRegistrationResponse>(
-    functionUrl('check-registration'),
-    {
+  const cleanEmail = email.trim().toLowerCase()
+  const cleanPhone = phone.trim()
+  try {
+    return await send<CheckRegistrationResponse>(
+      functionUrl('check-registration'),
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: cleanEmail, phone: cleanPhone }),
+      },
+      'Unable to check registration.',
+    )
+  } catch (err) {
+    // If exact match failed, try normalizing phone format (+91 prefix vs plain 10 digits)
+    const digitsOnly = cleanPhone.replace(/\D/g, '')
+    const altPhone = cleanPhone.startsWith('+91')
+      ? digitsOnly.slice(-10)
+      : digitsOnly.length === 10
+        ? `+91${digitsOnly}`
+        : null
+
+    if (altPhone && altPhone !== cleanPhone) {
+      try {
+        return await send<CheckRegistrationResponse>(
+          functionUrl('check-registration'),
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: cleanEmail, phone: altPhone }),
+          },
+          'Unable to check registration.',
+        )
+      } catch {
+        // Fall back to original error
+      }
+    }
+    throw err
+  }
+}
+
+export interface PaymentCallbackPayload {
+  email: string
+  contact?: string
+  day?: string
+  transactionId?: string
+  paymentStatus?: string
+  paidAmount?: number
+  transactionRefNo?: string
+}
+
+/**
+ * Forwards gateway return parameters directly to the payment-response edge function.
+ * Safeguard against gateways that redirect the browser with query parameters.
+ */
+export async function submitPaymentCallback(payload: PaymentCallbackPayload): Promise<boolean> {
+  if (!payload.email) return false
+  try {
+    const res = await fetch(functionUrl('payment-response'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, phone }),
-    },
-    'Unable to check registration.',
-  )
+      body: JSON.stringify({
+        Email: payload.email,
+        Contact: payload.contact || '',
+        Day: payload.day || 'DAY_1',
+        TransactionID: payload.transactionId || `TXN_${Date.now()}`,
+        PaymentStatus: payload.paymentStatus || 'TXN_SUCCESS',
+        PaymentDatetime: new Date().toISOString(),
+        PaidAmount: payload.paidAmount ?? 0,
+        TransactionRefNo: payload.transactionRefNo || null,
+      }),
+    })
+    return res.ok
+  } catch {
+    return false
+  }
 }
 
 async function teamRequest<T>(body: Record<string, unknown>): Promise<T> {

@@ -9,6 +9,7 @@ import { RegisterModal } from './RegisterModal';
 import { RegistrationComingSoon } from './RegistrationComingSoon';
 import { isRegistrationOpen, registrationOpensAt } from '@/config/registrationLaunch';
 import { useMascot } from '@/components/mascot';
+import { RegistrationRulesModal } from '@/components/registration/RegistrationRulesModal';
 import './eventsTerminal.css';
 
 // Screens reachable from RetroNav. The reference project also ships
@@ -77,6 +78,7 @@ export function EventsTerminalApp({
     }
   });
   const [portalData, setPortalData] = useState<RegistrationPortalInitialData | null>(null);
+  const [showRulesModal, setShowRulesModal] = useState(false);
   // Until registration launches (src/config/registrationLaunch.ts) the whole
   // terminal sits blurred and inert under the "opens soon" overlay.
   const [registrationLocked, setRegistrationLocked] = useState(() => !isRegistrationOpen());
@@ -263,6 +265,19 @@ export function EventsTerminalApp({
               ← {backTarget.label}
             </button>
           )}
+
+          <button
+            type="button"
+            onClick={() => {
+              sound.playNavClick();
+              setShowRulesModal(true);
+            }}
+            className="px-2.5 py-1 font-silkscreen text-[10px] text-[#00f0ff] border border-[#00f0ff]/50 bg-[#00f0ff]/10 hover:bg-[#00f0ff]/20 hover:text-white hover:border-[#00f0ff] transition-all flex items-center gap-1 cursor-pointer shadow-[0_0_8px_rgba(0,240,255,0.25)]"
+            title="View Registration & Event Rulebook"
+          >
+            <span>[📜]</span>
+            <span>RULES BOOK</span>
+          </button>
         </div>
 
         <RetroNav activeModule={activeModule} onSelectModule={setActiveModule} />
@@ -338,6 +353,10 @@ export function EventsTerminalApp({
 
       {registrationLocked && (
         <RegistrationComingSoon opensAt={registrationOpensAt()} onOpen={() => setRegistrationLocked(false)} />
+      )}
+
+      {showRulesModal && (
+        <RegistrationRulesModal isOpen={showRulesModal} onClose={() => setShowRulesModal(false)} />
       )}
     </>
   );

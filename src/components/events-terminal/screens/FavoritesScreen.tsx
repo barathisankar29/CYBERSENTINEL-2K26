@@ -3,15 +3,18 @@ import type { ModuleId } from '@/types/eventsTerminal';
 import {
   checkRegistration,
   getLastRegistration,
+  saveLastRegistration,
   resolvePaymentAmount,
   submitToPaymentProcess,
+  submitPaymentCallback,
   type CheckRegistrationResponse
 } from '@/services/registration';
 import { sound } from '../sound';
 import { formatRupees, withGst } from '../useLiveRegistrationData';
 import { RegistrationStatusDialog } from '../RegistrationStatusDialog';
 import { OUTCOME_COPY, registrationOutcome } from '../registrationStatus';
-import { AlertTriangle, Check, CheckCircle2, Copy, CreditCard, Download, Loader2, Printer, QrCode, Search, ShieldCheck, Users, XCircle } from 'lucide-react';
+import { AlertTriangle, Check, CheckCircle2, Copy, CreditCard, Download, Loader2, Printer, QrCode, RefreshCw, Search, ShieldCheck, Users, XCircle } from 'lucide-react';
+import { RegistrationRulesModal } from '@/components/registration/RegistrationRulesModal';
 
 interface FavoritesScreenProps {
   onSelectModule?: (mod: ModuleId) => void;
@@ -136,40 +139,106 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
   const [email, setEmail] = useState(saved.current?.email ?? '');
   const [phone, setPhone] = useState(saved.current?.phone ?? '');
   const [loading, setLoading] = useState(false);
+  const [isPolling, setIsPolling] = useState(false);
+  const [pollingAttempt, setPollingAttempt] = useState(0);
+  const pollTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
   const [record, setRecord] = useState<CheckRegistrationResponse | null>(null);
   // The email the shown record was looked up with — what checking.js sends to the payment process.
   const [recordEmail, setRecordEmail] = useState('');
   const [paying, setPaying] = useState(false);
-  // Outcome popup — opened after every successful lookup (manual, or the
-  // automatic one when returning from payment / refreshing).
+  // Outcome popup — opened after successful lookup / verification
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [showRulesModal, setShowRulesModal] = useState(false);
   const recordRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
   const copyTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
-  const lookup = useCallback(async (lookupEmail: string, lookupPhone: string) => {
-    setError(null);
-    setLoading(true);
-    try {
-      setRecord(await checkRegistration(lookupEmail, lookupPhone));
-      setRecordEmail(lookupEmail);
-      setDialogOpen(true);
-    } catch (err) {
-      setRecord(null);
-      setError(err instanceof Error ? err.message : 'Unable to check registration.');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const lookup = useCallback(
+    async (lookupEmail: string, lookupPhone: string, shouldPollIfPending = false, attempt = 1) => {
+      setError(null);
+      if (attempt === 1) {
+        setLoading(true);
+      }
+      try {
+        const res = await checkRegistration(lookupEmail, lookupPhone);
+        setRecord(res);
+        setRecordEmail(lookupEmail);
 
-  // Auto-load the registration submitted from this browser, if any.
+        const outcome = registrationOutcome(res);
+        if (outcome === 'success') {
+          setIsPolling(false);
+          setDialogOpen(true);
+        } else if (shouldPollIfPending && attempt < 5) {
+          // Gateway webhook may take a few seconds to reach Supabase
+          setIsPolling(true);
+          setPollingAttempt(attempt);
+          clearTimeout(pollTimerRef.current);
+          pollTimerRef.current = setTimeout(() => {
+            void lookup(lookupEmail, lookupPhone, true, attempt + 1);
+          }, 2500);
+        } else {
+          setIsPolling(false);
+          setDialogOpen(true);
+        }
+      } catch (err) {
+        setIsPolling(false);
+        setRecord(null);
+        setError(err instanceof Error ? err.message : 'Unable to check registration.');
+      } finally {
+        if (attempt === 1) {
+          setLoading(false);
+        }
+      }
+    },
+    []
+  );
+
+  // Parse URL query params from gateway redirect and auto-verify
   useEffect(() => {
-    const last = saved.current;
-    if (last?.email && last.phone) void lookup(last.email, last.phone);
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const qEmail = params.get('email') || params.get('Email') || '';
+    const qPhone = params.get('contact') || params.get('Contact') || params.get('phone') || params.get('Phone') || '';
+    const qTxn = params.get('transaction_id') || params.get('transactionId') || params.get('TransactionID') || params.get('txnid') || '';
+    const qStatus = params.get('payment_status') || params.get('paymentStatus') || params.get('PaymentStatus') || params.get('status') || '';
+    const qDay = params.get('day') || params.get('Day') || '';
+    const qAmount = Number(params.get('paid_amount') || params.get('PaidAmount') || params.get('amount') || 0);
+    const qRef = params.get('transaction_ref_no') || params.get('TransactionRefNo') || '';
+
+    // If payment gateway redirected back with transaction parameters, immediately forward to payment-response Edge Function
+    if (qEmail && (qTxn || qStatus)) {
+      void submitPaymentCallback({
+        email: qEmail,
+        contact: qPhone,
+        day: qDay,
+        transactionId: qTxn,
+        paymentStatus: qStatus || 'TXN_SUCCESS',
+        paidAmount: qAmount,
+        transactionRefNo: qRef
+      });
+    }
+
+    const effectiveEmail = qEmail || saved.current?.email || '';
+    const effectivePhone = qPhone || saved.current?.phone || '';
+
+    if (qEmail) setEmail(qEmail);
+    if (qPhone) setPhone(qPhone);
+
+    if (effectiveEmail && effectivePhone) {
+      saveLastRegistration({ email: effectiveEmail, phone: effectivePhone, code: saved.current?.code || '' });
+      // Poll if returning from gateway with transaction info or on status page
+      const isGatewayReturn = Boolean(qTxn || qStatus || window.location.pathname.toLowerCase().includes('status'));
+      void lookup(effectiveEmail, effectivePhone, isGatewayReturn);
+    }
   }, [lookup]);
 
-  useEffect(() => () => clearTimeout(copyTimer.current), []);
+  useEffect(() => {
+    return () => {
+      clearTimeout(copyTimer.current);
+      clearTimeout(pollTimerRef.current);
+    };
+  }, []);
 
   const handleLookup = (e: React.FormEvent) => {
     e.preventDefault();
@@ -179,7 +248,7 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
       setError('Enter both email and phone.');
       return;
     }
-    void lookup(email.trim(), phone.trim());
+    void lookup(email.trim(), phone.trim(), false);
   };
 
   const handleCopy = async (text: string) => {
@@ -284,11 +353,26 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
         />
       )}
       {/* Header Dither Bar */}
-      <section className="pixel-dither-bar h-12 w-full flex items-center justify-between px-4 mb-6 select-none">
-        <h1 className="font-pixel text-black text-xs sm:text-lg tracking-wider font-extrabold flex items-center gap-3">
-          <span className="inline-block w-3 h-3 bg-black" />
-          MY REGISTRATIONS // CYBERSENTINEL 2K26
+      <section className="pixel-dither-bar h-12 w-full flex items-center justify-between px-3 sm:px-4 mb-6 select-none">
+        <h1 className="font-pixel text-black text-xs sm:text-lg tracking-wider font-extrabold flex items-center gap-2 sm:gap-3 min-w-0">
+          <span className="inline-block w-3 h-3 bg-black shrink-0" />
+          <span className="truncate">MY REGISTRATIONS // CYBERSENTINEL 2K26</span>
         </h1>
+        <div className="flex items-center gap-2 relative z-10 shrink-0 ml-2">
+          <button
+            type="button"
+            onClick={() => {
+              sound.playNavClick();
+              setShowRulesModal(true);
+            }}
+            className="text-black hover:text-white px-2 sm:px-2.5 py-1 border-2 border-black bg-white/20 hover:bg-black font-arcade text-[10px] sm:text-xs flex items-center gap-1 sm:gap-1.5 transition-all shadow-xs whitespace-nowrap cursor-pointer"
+            title="View Registration & Event Rulebook"
+          >
+            <span>[📜]</span>
+            <span className="hidden sm:inline">RULES BOOK</span>
+            <span className="inline sm:hidden">RULES</span>
+          </button>
+        </div>
         <div aria-hidden="true" className="pixel-dither-fade" />
       </section>
 
@@ -333,6 +417,16 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
           <span>{loading ? 'CHECKING...' : 'CHECK STATUS'}</span>
         </button>
       </form>
+
+      {isPolling && (
+        <div className="p-3 mb-6 bg-cyan-950/80 border border-cyan-400 text-cyan-200 text-xs font-mono flex items-center justify-between shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+          <div className="flex items-center gap-2">
+            <Loader2 className="w-4 h-4 animate-spin text-cyan-400" />
+            <span>Confirming payment with gateway... (Checking attempt {pollingAttempt} of 5)</span>
+          </div>
+          <span className="text-[10px] text-cyan-400 font-pixel">PLEASE WAIT</span>
+        </div>
+      )}
 
       {error && (
         <div className="p-2.5 mb-6 bg-red-950/80 border border-red-500 text-red-200 text-xs font-mono" role="alert">
@@ -509,16 +603,32 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
               )}
 
               {paymentStatus !== 'VERIFIED' && (
-                <button
-                  type="button"
-                  onClick={() => void handlePay()}
-                  disabled={paying}
-                  className="inline-flex items-center justify-center gap-1.5 w-full sm:w-fit px-4 py-2 bg-[#ff007f] hover:bg-[#ff3399] text-white font-pixel text-[10px] tracking-wider cursor-pointer disabled:opacity-50 shadow-[0_0_10px_rgba(255,0,127,0.4)]"
-                  data-purpose="pay-payment-btn"
-                >
-                  <CreditCard className="w-3.5 h-3.5" />
-                  <span>{paying ? 'PREPARING PAYMENT...' : outcome === 'failed' ? 'PAY AGAIN' : 'COMPLETE PAYMENT'}</span>
-                </button>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => void handlePay()}
+                    disabled={paying || isPolling}
+                    className="inline-flex items-center justify-center gap-1.5 w-full sm:w-fit px-4 py-2 bg-[#ff007f] hover:bg-[#ff3399] text-white font-pixel text-[10px] tracking-wider cursor-pointer disabled:opacity-50 shadow-[0_0_10px_rgba(255,0,127,0.4)]"
+                    data-purpose="pay-payment-btn"
+                  >
+                    <CreditCard className="w-3.5 h-3.5" />
+                    <span>{paying ? 'PREPARING PAYMENT...' : outcome === 'failed' ? 'PAY AGAIN' : 'COMPLETE PAYMENT'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      sound.playNavClick();
+                      void lookup(email.trim(), phone.trim(), true);
+                    }}
+                    disabled={loading || isPolling}
+                    className="inline-flex items-center justify-center gap-1.5 w-full sm:w-fit px-4 py-2 bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/60 text-yellow-300 font-pixel text-[10px] tracking-wider cursor-pointer disabled:opacity-50"
+                    data-purpose="recheck-payment-btn"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${isPolling ? 'animate-spin' : ''}`} />
+                    <span>{isPolling ? `CHECKING (${pollingAttempt}/5)...` : 'RE-CHECK PAYMENT'}</span>
+                  </button>
+                </div>
               )}
 
               <button
@@ -629,6 +739,10 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
             </p>
           </div>
         </div>
+      )}
+
+      {showRulesModal && (
+        <RegistrationRulesModal isOpen={showRulesModal} onClose={() => setShowRulesModal(false)} />
       )}
     </div>
   );

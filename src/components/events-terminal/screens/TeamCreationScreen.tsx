@@ -12,6 +12,7 @@ import {
 import { sound } from '../sound';
 import { eventSizeRange } from '../teamEventSize';
 import { Award, CheckCircle, Shield, Users } from 'lucide-react';
+import { RegistrationRulesModal } from '@/components/registration/RegistrationRulesModal';
 
 interface TeamCreationScreenProps {
   /** Registration ID to verify as leader (from My Registrations) */
@@ -79,6 +80,7 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [created, setCreated] = useState<CreatedTeam | null>(null);
+  const [showRulesModal, setShowRulesModal] = useState(false);
   const autoVerified = useRef(false);
 
   const packages: TeamPackage[] = leader && day ? leader.data.packages[day] ?? [] : [];
@@ -222,11 +224,26 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
   return (
     <div className="w-full relative" data-purpose="create-team-screen-content">
       {/* Header Dither Bar */}
-      <section className="pixel-dither-bar h-12 w-full flex items-center justify-between px-4 mb-6 select-none">
-        <h1 className="font-pixel text-black text-xs sm:text-lg tracking-wider font-extrabold flex items-center gap-3">
-          <span className="inline-block w-3 h-3 bg-black" />
-          CREATE TEAM // CYBERSENTINEL 2K26
+      <section className="pixel-dither-bar h-12 w-full flex items-center justify-between px-3 sm:px-4 mb-6 select-none">
+        <h1 className="font-pixel text-black text-xs sm:text-lg tracking-wider font-extrabold flex items-center gap-2 sm:gap-3 min-w-0">
+          <span className="inline-block w-3 h-3 bg-black shrink-0" />
+          <span className="truncate">CREATE TEAM // CYBERSENTINEL 2K26</span>
         </h1>
+        <div className="flex items-center gap-2 relative z-10 shrink-0 ml-2">
+          <button
+            type="button"
+            onClick={() => {
+              sound.playNavClick();
+              setShowRulesModal(true);
+            }}
+            className="text-black hover:text-white px-2 sm:px-2.5 py-1 border-2 border-black bg-white/20 hover:bg-black font-arcade text-[10px] sm:text-xs flex items-center gap-1 sm:gap-1.5 transition-all shadow-xs whitespace-nowrap cursor-pointer"
+            title="View Registration & Event Rulebook"
+          >
+            <span>[📜]</span>
+            <span className="hidden sm:inline">RULES BOOK</span>
+            <span className="inline sm:hidden">RULES</span>
+          </button>
+        </div>
         <div aria-hidden="true" className="pixel-dither-fade" />
       </section>
 
@@ -550,6 +567,9 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
         )}
       </div>
 
+      {showRulesModal && (
+        <RegistrationRulesModal isOpen={showRulesModal} onClose={() => setShowRulesModal(false)} />
+      )}
     </div>
   );
 };

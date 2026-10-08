@@ -920,13 +920,27 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                   </span>
                 </div>
               </div>
-              <button
-                onClick={closeSubModal}
-                className="font-arcade text-xs text-zinc-400 hover:text-white px-2 py-1 border border-zinc-800 hover:border-zinc-500 cursor-pointer bg-black active:translate-y-0.5"
-                title="Return to Pack Selection"
-              >
-                [X]
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    sound.playNavClick();
+                    setShowRulesModal(true);
+                  }}
+                  className="text-[#00f0ff] hover:text-white px-2 py-1 border border-[#00f0ff]/50 hover:border-[#00f0ff] bg-[#00f0ff]/10 hover:bg-[#00f0ff]/20 cursor-pointer font-arcade text-[10px] flex items-center gap-1 transition-all whitespace-nowrap"
+                  title="View Registration Rules & Guidelines"
+                >
+                  <span>[📜]</span>
+                  <span>RULES</span>
+                </button>
+                <button
+                  onClick={closeSubModal}
+                  className="font-arcade text-xs text-zinc-400 hover:text-white px-2 py-1 border border-zinc-800 hover:border-zinc-500 cursor-pointer bg-black active:translate-y-0.5"
+                  title="Return to Pack Selection"
+                >
+                  [X]
+                </button>
+              </div>
             </div>
 
             {/* Modal Body */}

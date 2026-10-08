@@ -28,6 +28,7 @@ import {
 import { useMascot } from '@/components/mascot';
 import { RegistrationStatusDialog } from './RegistrationStatusDialog';
 import { registrationOutcome } from './registrationStatus';
+import { RegistrationRulesModal } from '@/components/registration/RegistrationRulesModal';
 
 export interface RegistrationPortalInitialData {
   dayType?: RegistrationDay;
@@ -222,6 +223,7 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
     email: string;
   } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showRulesModal, setShowRulesModal] = useState(false);
 
   const { fees, specialEvents, error: pricingError } = useLiveRegistrationData();
 
@@ -434,10 +436,23 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
           <span className="hidden sm:inline font-pixel text-xl text-white tracking-wider truncate">CyberSentinel</span>
         </div>
 
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <span className="hidden sm:inline-block px-3 py-1 bg-[#1a082b] border border-[#a855f7] text-[#c084fc] font-silkscreen text-[11px] tracking-wider uppercase">
             Participant Registration
           </span>
+          <button
+            type="button"
+            onClick={() => {
+              sound.playNavClick();
+              setShowRulesModal(true);
+            }}
+            className="text-[#00f0ff] hover:text-white px-2.5 py-1.5 border border-[#00f0ff]/50 hover:border-[#00f0ff] bg-[#00f0ff]/10 hover:bg-[#00f0ff]/20 cursor-pointer font-arcade text-xs flex items-center gap-1.5 transition-all shadow-[0_0_8px_rgba(0,240,255,0.25)] whitespace-nowrap"
+            title="View Registration & Event Rulebook"
+          >
+            <span>[📜]</span>
+            <span className="hidden md:inline">RULES BOOK</span>
+            <span className="inline md:hidden">RULES</span>
+          </button>
           <button
             type="button"
             onClick={() => {
@@ -776,6 +791,10 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
             </p>
           </div>
         </div>
+      )}
+
+      {showRulesModal && (
+        <RegistrationRulesModal isOpen={showRulesModal} onClose={() => setShowRulesModal(false)} />
       )}
     </div>
   );
