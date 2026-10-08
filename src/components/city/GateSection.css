@@ -109,9 +109,9 @@
   font-size: 6.5px;
 }
 
-/* First Airship (2 cards, lower sky, comfortable clearance above truck) */
+/* First Airship (2 cards, lower sky, 4px space above truck) */
 .airship.airship--gate-mobile.airship--gate-first {
-  top: 39.2%;
+  top: 38.8%;
   left: 48%;
   --airship-mobile-w: clamp(220px, 64vw, 290px);
   width: var(--airship-mobile-w);

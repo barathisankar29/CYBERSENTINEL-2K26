@@ -44,7 +44,7 @@ export const CHIEF_GUEST_CARDS_SECOND: AirshipCard[] = [
     title: 'CHIEF GUEST 03',
     label: 'CHIEF GUEST 03',
     tag: '[GUEST 03]',
-    image: '/assets/city/navigation/chief-guest-poster.jpg',
+    image: '/assets/city/navigation/chief-guest-poster-2.jpg',
     subtitle: 'DAY 02 // TECH SUMMIT SPECIAL GUEST'
   },
   {
@@ -52,7 +52,7 @@ export const CHIEF_GUEST_CARDS_SECOND: AirshipCard[] = [
     title: 'CHIEF GUEST 04',
     label: 'CHIEF GUEST 04',
     tag: '[GUEST 04]',
-    image: '/assets/city/navigation/chief-guest-poster.jpg',
+    image: '/assets/city/navigation/chief-guest-poster-2.jpg',
     subtitle: 'DAY 02 // DISTINGUISHED INNOVATOR'
   },
   {
@@ -60,7 +60,7 @@ export const CHIEF_GUEST_CARDS_SECOND: AirshipCard[] = [
     title: 'CHIEF GUEST 05',
     label: 'CHIEF GUEST 05',
     tag: '[GUEST 05]',
-    image: '/assets/city/navigation/chief-guest-poster.jpg',
+    image: '/assets/city/navigation/chief-guest-poster-2.jpg',
     subtitle: 'DAY 02 // VALEDICTORY CEREMONY'
   }
 ]
