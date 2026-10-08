@@ -89,19 +89,19 @@
 
 /* 3-card specific adjustments */
 .airship__payload--count-3 .airship__rigging {
-  width: clamp(270px, 21.5vw, 385px);
+  width: clamp(310px, 24.5vw, 425px);
 }
 
 .airship__payload--count-3 .airship__cards-row {
-  gap: clamp(8px, 0.9vw, 12px);
+  gap: clamp(10px, 1.1vw, 15px);
 }
 
 .airship__payload--count-3 .airship__card-frame {
-  width: clamp(82px, 6.6vw, 116px);
+  width: clamp(96px, 7.5vw, 132px);
 }
 
 .airship__payload--count-3 .airship__card-label {
-  font-size: clamp(5.5px, 0.46vw, 7.5px);
+  font-size: clamp(6px, 0.5vw, 8px);
 }
 
 /* Individual hanging card button */
@@ -136,7 +136,7 @@
 .airship__card-frame,
 .airship__banner-frame {
   position: relative;
-  width: clamp(98px, 8.2vw, 142px);
+  width: clamp(118px, 9.2vw, 160px);
   background: linear-gradient(
     135deg,
     rgba(15, 10, 35, 0.94),
@@ -147,7 +147,7 @@
     0 0 10px rgba(168, 85, 247, 0.35),
     0 0 20px rgba(34, 211, 238, 0.2),
     inset 0 0 12px rgba(168, 85, 247, 0.15);
-  padding: 3px;
+  padding: 3.5px;
   overflow: hidden;
 }
 
