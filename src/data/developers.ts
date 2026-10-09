@@ -61,7 +61,7 @@ export const frontendDevelopersData: FrontendDeveloperMember[] = [
     description:
       'I see design as a mix of logic, creativity, and curiosity. I enjoy turning simple ideas into thoughtful interfaces where every detail has a reason and every screen has a little personality.',
     linkedinUrl: 'https://www.linkedin.com/in/lakkipogu-pranith-856b91352/',
-    githubUrl: 'https://github.com/pranithl',
+    githubUrl: 'https://github.com/Pranith-L',
     instagramUrl: 'https://www.instagram.com/pranith_jr10/',
   },
   {
