@@ -1,6 +1,7 @@
 
 import os, math
-import numpy as np
+import  as numpy
+# pyrefly: ignore [missing-import]
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from collections import deque
 
@@ -279,7 +280,7 @@ def create_tcg_card(cfg):
     
     # Save image
     out_path = cfg['dest_path']
-    base.convert('RGB').save(out_path, 'WEBP', quality=90)
+    base.convert('RGB').save(out_path, 'WEBP', quality=92)
     print(f'Generated TCG Card: {out_path}')
 
 tcg_configs = [
