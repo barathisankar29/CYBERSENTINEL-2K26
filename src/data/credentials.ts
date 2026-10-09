@@ -124,7 +124,7 @@ export const studentCoordinatorsData: CredentialMember[] = [
     id: 'prathish-m',
     name: 'PRATHISH M',
     role: 'Secretary // Student Coordinator',
-    phone: '+91 7806816023',
+    phone: '+91 7708832955',
     image: '/assets/credentials/student_prathish_m.webp',
     instagram: 'https://www.instagram.com/mr_prathish_005/',
     linkedin: 'https://www.linkedin.com/in/prathish-m-87094b354/',
