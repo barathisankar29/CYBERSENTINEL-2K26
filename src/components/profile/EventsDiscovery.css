@@ -126,6 +126,7 @@
   color: rgba(255, 255, 255, 0.65);
   line-height: 1.5;
   flex: 1;
+  white-space: pre-line;
 }
 
 .info-card__meta {

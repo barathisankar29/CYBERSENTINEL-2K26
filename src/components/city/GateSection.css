@@ -86,23 +86,24 @@
 .airship.airship--gate-mobile.airship--gate-second {
   top: 1%;
   left: 50%;
-  --airship-mobile-w: clamp(230px, 68vw, 310px);
+  --airship-mobile-w: clamp(250px, 70vw, 350px);
   width: var(--airship-mobile-w);
   margin-left: calc(var(--airship-mobile-w) / -2);
   z-index: 3;
 }
 
 .airship--gate-mobile.airship--gate-second .airship__rigging {
-  width: clamp(195px, 58vw, 260px);
+  width: clamp(200px, 60vw, 280px);
   margin-top: -22px;
 }
 
 .airship--gate-mobile.airship--gate-second .airship__cards-row {
-  gap: clamp(4px, 1.2vw, 6px);
+  gap: clamp(3px, 1.0vw, 5px);
 }
 
+.airship--gate-mobile.airship--gate-second .airship__tcg-frame,
 .airship--gate-mobile.airship--gate-second .airship__card-frame {
-  width: clamp(62px, 18.5vw, 82px);
+  width: clamp(68px, 20.5vw, 90px);
 }
 
 .airship--gate-mobile.airship--gate-second .airship__card-label {
@@ -113,14 +114,14 @@
 .airship.airship--gate-mobile.airship--gate-first {
   top: 38.8%;
   left: 48%;
-  --airship-mobile-w: clamp(220px, 64vw, 290px);
+  --airship-mobile-w: clamp(250px, 68vw, 310px);
   width: var(--airship-mobile-w);
   margin-left: calc(var(--airship-mobile-w) / -2);
   z-index: 4;
 }
 
 .airship--gate-mobile.airship--gate-first .airship__rigging {
-  width: clamp(165px, 48vw, 220px);
+  width: clamp(180px, 50vw, 250px);
   margin-top: -22px;
 }
 
@@ -128,8 +129,9 @@
   gap: clamp(8px, 2.4vw, 12px);
 }
 
+.airship--gate-mobile.airship--gate-first .airship__tcg-frame,
 .airship--gate-mobile.airship--gate-first .airship__card-frame {
-  width: clamp(76px, 23vw, 100px);
+  width: clamp(68px, 20.5vw, 90px);
 }
 
 .airship--gate-mobile.airship--gate-first .airship__card-label {
@@ -183,23 +185,24 @@
 
 /* First Airship: 2 cards, left side TOP so it clears the truck */
 .airship.airship--gate-desktop.airship--gate-first {
-  top: 4.5%;
+  top: 2%;
   left: 7%;
-  width: clamp(480px, 35vw, 700px);
+  width: clamp(460px, 34vw, 690px);
   z-index: 4;
 }
 
 .airship--gate-desktop.airship--gate-first .airship__rigging {
-  width: clamp(250px, 18.5vw, 340px);
+  width: clamp(260px, 20vw, 360px);
   margin-top: -38px;
 }
 
 .airship--gate-desktop.airship--gate-first .airship__cards-row {
-  gap: 16px;
+  gap: 14px;
 }
 
+.airship--gate-desktop.airship--gate-first .airship__tcg-frame,
 .airship--gate-desktop.airship--gate-first .airship__card-frame {
-  width: clamp(118px, 8.6vw, 160px);
+  width: clamp(138px, 11.5vw, 185px);
 }
 
 /* Second Airship: 3 cards, right side middle, reversed direction */
@@ -212,7 +215,7 @@
 }
 
 .airship--gate-desktop.airship--gate-second .airship__rigging {
-  width: clamp(340px, 25vw, 455px);
+  width: clamp(430px, 36vw, 590px);
   margin-top: -42px;
 }
 
@@ -220,8 +223,9 @@
   gap: 14px;
 }
 
+.airship--gate-desktop.airship--gate-second .airship__tcg-frame,
 .airship--gate-desktop.airship--gate-second .airship__card-frame {
-  width: clamp(102px, 7.6vw, 142px);
+  width: clamp(138px, 11.5vw, 185px);
 }
 
 /* No tint film on desktop: the wide picture is calm enough on its own. */

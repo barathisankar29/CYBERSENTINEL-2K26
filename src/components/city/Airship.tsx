@@ -12,56 +12,44 @@ import './Airship.css'
 
 export interface AirshipCard {
   id: string
-  title: string
-  label: string
-  tag: string
+  name: string
   image: string
-  subtitle?: string
+  accent?: 'cyan' | 'amber' | 'magenta' | 'emerald' | 'rose'
 }
 
 export const CHIEF_GUEST_CARDS_FIRST: AirshipCard[] = [
   {
     id: 'guest-01',
-    title: 'CHIEF GUEST 01',
-    label: 'CHIEF GUEST 01',
-    tag: '[GUEST 01]',
-    image: '/assets/city/navigation/chief-guest-poster.jpg',
-    subtitle: 'DAY 01 // INAUGURATION CEREMONY'
+    name: 'KPY NAVEEN',
+    image: '/assets/city/navigation/guests/guest-tcg-01.jpg',
+    accent: 'cyan'
   },
   {
     id: 'guest-02',
-    title: 'CHIEF GUEST 02',
-    label: 'CHIEF GUEST 02',
-    tag: '[GUEST 02]',
-    image: '/assets/city/navigation/chief-guest-poster.jpg',
-    subtitle: 'DAY 01 // KEYNOTE ADDRESS'
+    name: 'RAPPER HEMI',
+    image: '/assets/city/navigation/guests/guest-tcg-02.jpg',
+    accent: 'amber'
   }
 ]
 
 export const CHIEF_GUEST_CARDS_SECOND: AirshipCard[] = [
   {
     id: 'guest-03',
-    title: 'CHIEF GUEST 03',
-    label: 'CHIEF GUEST 03',
-    tag: '[GUEST 03]',
-    image: '/assets/city/navigation/chief-guest-poster-2.jpg',
-    subtitle: 'DAY 02 // TECH SUMMIT SPECIAL GUEST'
+    name: 'DANCER JYOSTNA',
+    image: '/assets/city/navigation/guests/guest-tcg-03.jpg',
+    accent: 'magenta'
   },
   {
     id: 'guest-04',
-    title: 'CHIEF GUEST 04',
-    label: 'CHIEF GUEST 04',
-    tag: '[GUEST 04]',
-    image: '/assets/city/navigation/chief-guest-poster-2.jpg',
-    subtitle: 'DAY 02 // DISTINGUISHED INNOVATOR'
+    name: 'DANCER RANJANI',
+    image: '/assets/city/navigation/guests/guest-tcg-04.jpg',
+    accent: 'emerald'
   },
   {
     id: 'guest-05',
-    title: 'CHIEF GUEST 05',
-    label: 'CHIEF GUEST 05',
-    tag: '[GUEST 05]',
-    image: '/assets/city/navigation/chief-guest-poster-2.jpg',
-    subtitle: 'DAY 02 // VALEDICTORY CEREMONY'
+    name: 'SINGER DHARSHANA',
+    image: '/assets/city/navigation/guests/guest-tcg-05.jpg',
+    accent: 'rose'
   }
 ]
 
@@ -238,23 +226,21 @@ export function Airship({
               <button
                 key={card.id}
                 type="button"
-                className={`airship__card airship__card--idx-${idx}`}
+                className={`airship__tcg-card airship__tcg-card--idx-${idx} airship__tcg-card--accent-${card.accent ?? 'cyan'}`}
                 onClick={() => setSelectedCard(card)}
-                title={`Click to view ${card.title} poster`}
-                aria-label={`View ${card.title} poster in full size`}
+                title={card.name}
+                aria-label={`View ${card.name} card`}
               >
-                <div className="airship__card-frame">
+                <div className="airship__tcg-frame">
                   <img
                     src={card.image}
-                    alt={card.title}
-                    className="airship__card-img"
+                    alt={card.name}
+                    className="airship__tcg-img"
                     draggable={false}
                     loading="lazy"
                     decoding="async"
                   />
-                  <div className="airship__card-scanline" aria-hidden="true" />
-                  <span className="airship__card-label">{card.label}</span>
-                  <span className="airship__card-badge">VIEW</span>
+                  <div className="airship__tcg-foil" aria-hidden="true" />
                 </div>
               </button>
             ))}
@@ -262,7 +248,7 @@ export function Airship({
         </div>
       </div>
 
-      {/* Full-size Popup Modal */}
+      {/* Full-size TCG Card Modal */}
       {selectedCard &&
         typeof document !== 'undefined' &&
         createPortal(
@@ -276,14 +262,13 @@ export function Airship({
             <div
               role="dialog"
               aria-modal="true"
-              aria-label={`${selectedCard.title} Poster`}
-              className="airship-modal-content"
+              aria-label={selectedCard.name}
+              className={`airship-modal-content airship-modal-content--accent-${selectedCard.accent ?? 'cyan'}`}
             >
               {/* Modal Header */}
               <div className="airship-modal-header">
                 <div className="airship-modal-title">
-                  <span className="airship-modal-tag">[AERIAL RECON]</span>
-                  <span className="airship-modal-heading">{selectedCard.title} // CYBERSENTINEL 2K26</span>
+                  <span className="airship-modal-heading">{selectedCard.name}</span>
                 </div>
 
                 {/* Switcher tabs across all chief guests */}
@@ -292,12 +277,12 @@ export function Airship({
                     <button
                       key={card.id}
                       type="button"
-                      className={`airship-modal-tab ${
+                      className={`airship-modal-tab airship-modal-tab--accent-${card.accent ?? 'cyan'} ${
                         card.id === selectedCard.id ? 'airship-modal-tab--active' : ''
                       }`}
                       onClick={() => setSelectedCard(card)}
                     >
-                      {card.tag}
+                      {card.name}
                     </button>
                   ))}
                 </div>
@@ -310,29 +295,25 @@ export function Airship({
                     setSelectedCard(null)
                   }}
                   title="Close [ESC]"
-                  aria-label="Close poster view"
+                  aria-label="Close card view"
                 >
-                  [✕]
+                  ✕
                 </button>
               </div>
 
               {/* Modal Image Frame */}
-              <div className="airship-modal-img-wrap">
+              <div className="airship-modal-img-wrap airship-modal-img-wrap--tcg">
                 <img
                   src={selectedCard.image}
-                  alt={`${selectedCard.title} Full Poster`}
-                  className="airship-modal-img"
+                  alt={selectedCard.name}
+                  className="airship-modal-img airship-modal-img--tcg"
                 />
-                <div className="airship-modal-scanline" aria-hidden="true" />
               </div>
 
               {/* Modal Footer */}
               <div className="airship-modal-footer">
-                <span className="airship-modal-footer-text">
-                  {selectedCard.subtitle ?? 'PUBLIC SECURITY ARCHIVE // CLASSIFIED DISPATCH'}
-                </span>
                 <span className="airship-modal-footer-action">
-                  PRESS ESC OR CLICK OUTSIDE TO CLOSE
+                  ESC / CLICK OUTSIDE TO CLOSE
                 </span>
               </div>
             </div>
@@ -342,3 +323,5 @@ export function Airship({
     </>
   )
 }
+
+

@@ -12,7 +12,7 @@
   flex-direction: column;
   align-items: center;
   /* Grand, prominent scale */
-  width: clamp(500px, 40vw, 760px);
+  width: clamp(560px, 46vw, 880px);
 }
 
 /* Reverse airship: independent counter-phase drift */
@@ -89,24 +89,17 @@
 
 /* 3-card specific adjustments */
 .airship__payload--count-3 .airship__rigging {
-  width: clamp(310px, 24.5vw, 425px);
+  width: clamp(380px, 32vw, 540px);
 }
 
 .airship__payload--count-3 .airship__cards-row {
-  gap: clamp(10px, 1.1vw, 15px);
+  gap: clamp(10px, 1.1vw, 16px);
 }
 
-.airship__payload--count-3 .airship__card-frame {
-  width: clamp(96px, 7.5vw, 132px);
-}
+/* ─── TCG Trading Cards ─── */
 
-.airship__payload--count-3 .airship__card-label {
-  font-size: clamp(6px, 0.5vw, 8px);
-}
-
-/* Individual hanging card button */
-.airship__card,
-.airship__banner {
+/* Individual hanging TCG card button */
+.airship__tcg-card {
   background: transparent;
   border: none;
   padding: 0;
@@ -116,130 +109,91 @@
   position: relative;
   display: flex;
   justify-content: center;
-  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.22s ease;
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.28s ease;
   outline: none;
+  border-radius: 12px;
 }
 
-.airship__card:hover,
-.airship__banner:hover {
-  transform: translateY(-3px) scale(1.06);
-  filter: drop-shadow(0 0 14px rgba(34, 211, 238, 0.8));
+.airship__tcg-card:hover {
+  transform: translateY(-6px) scale(1.05);
 }
 
-.airship__card:focus-visible,
-.airship__banner:focus-visible {
+.airship__tcg-card:focus-visible {
   outline: 2px solid #22d3ee;
   outline-offset: 4px;
 }
 
-/* The neon card frame */
-.airship__card-frame,
-.airship__banner-frame {
+/* Accent glow variations */
+.airship__tcg-card--accent-cyan:hover {
+  filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.95));
+}
+.airship__tcg-card--accent-amber:hover {
+  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.95));
+}
+.airship__tcg-card--accent-magenta:hover {
+  filter: drop-shadow(0 0 20px rgba(255, 0, 127, 0.95));
+}
+.airship__tcg-card--accent-emerald:hover {
+  filter: drop-shadow(0 0 20px rgba(0, 255, 170, 0.95));
+}
+.airship__tcg-card--accent-rose:hover {
+  filter: drop-shadow(0 0 20px rgba(192, 132, 252, 0.95));
+}
+
+/* The TCG card frame: exact same width as reverse airship cards */
+.airship__tcg-frame {
   position: relative;
-  width: clamp(118px, 9.2vw, 160px);
-  background: linear-gradient(
-    135deg,
-    rgba(15, 10, 35, 0.94),
-    rgba(28, 16, 52, 0.92)
-  );
-  border: 1px solid rgba(168, 85, 247, 0.65);
-  box-shadow:
-    0 0 10px rgba(168, 85, 247, 0.35),
-    0 0 20px rgba(34, 211, 238, 0.2),
-    inset 0 0 12px rgba(168, 85, 247, 0.15);
-  padding: 3.5px;
+  width: clamp(138px, 11.5vw, 185px);
+  background: #08070d;
+  border-radius: 12px;
   overflow: hidden;
+  box-shadow:
+    0 8px 26px rgba(0, 0, 0, 0.9),
+    0 0 16px rgba(0, 0, 0, 0.6);
+  line-height: 0;
+  display: block;
 }
 
-/* Corner accent brackets on the card frame */
-.airship__card-frame::before,
-.airship__card-frame::after,
-.airship__banner-frame::before,
-.airship__banner-frame::after {
-  content: '';
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  border: 1px solid rgba(34, 211, 238, 0.85);
-  pointer-events: none;
-}
-.airship__card-frame::before,
-.airship__banner-frame::before {
-  top: 2px;
-  left: 2px;
-  border-right: none;
-  border-bottom: none;
-}
-.airship__card-frame::after,
-.airship__banner-frame::after {
-  bottom: 2px;
-  right: 2px;
-  border-left: none;
-  border-top: none;
+/* 3-card airship specific frame width */
+.airship__payload--count-3 .airship__tcg-frame {
+  width: clamp(138px, 11.5vw, 185px);
 }
 
-/* The poster image inside each card */
-.airship__card-img,
-.airship__banner-img {
+/* The card image itself (wide 4:5 ratio so guest image is seen BIG) */
+.airship__tcg-img {
   display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: 4 / 5;
   object-fit: cover;
-  aspect-ratio: 3 / 4;
-  opacity: 0.95;
-  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 12px;
+  transition: transform 0.35s ease;
 }
 
-/* Subtle scanline texture */
-.airship__card-scanline {
+.airship__tcg-card:hover .airship__tcg-img {
+  transform: scale(1.025);
+}
+
+/* Holographic foil sheen on hover */
+.airship__tcg-foil {
   position: absolute;
-  inset: 3px;
+  inset: 0;
   pointer-events: none;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 3px,
-    rgba(0, 0, 0, 0.25) 4px
+  border-radius: 12px;
+  background: linear-gradient(
+    125deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.22) 48%,
+    rgba(255, 255, 255, 0.38) 50%,
+    rgba(255, 255, 255, 0.22) 52%,
+    rgba(255, 255, 255, 0) 70%
   );
-  opacity: 0.5;
-}
-
-/* Label under the poster */
-.airship__card-label,
-.airship__banner-label {
-  display: block;
-  text-align: center;
-  font-family: 'Silkscreen', monospace;
-  font-size: clamp(6px, 0.55vw, 8.5px);
-  color: rgba(34, 211, 238, 0.9);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding-top: 3px;
-  text-shadow: 0 0 4px rgba(34, 211, 238, 0.5);
-  white-space: nowrap;
-}
-
-/* Interactive click badge */
-.airship__card-badge,
-.airship__banner-badge {
-  position: absolute;
-  bottom: 20px;
-  right: 5px;
-  background: rgba(168, 85, 247, 0.9);
-  color: #ffffff;
-  font-family: 'Silkscreen', monospace;
-  font-size: 7px;
-  padding: 1px 3.5px;
-  letter-spacing: 0.05em;
-  border: 0.5px solid #22d3ee;
-  box-shadow: 0 0 6px rgba(34, 211, 238, 0.6);
   opacity: 0;
-  transition: opacity 0.2s ease;
-  pointer-events: none;
+  transition: opacity 0.35s ease;
+  mix-blend-mode: overlay;
 }
 
-.airship__card:hover .airship__card-badge,
-.airship__banner:hover .airship__banner-badge {
+.airship__tcg-card:hover .airship__tcg-foil {
   opacity: 1;
 }
 
@@ -338,6 +292,43 @@
   animation: airshipModalZoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Modal Accent Variants */
+.airship-modal-content--accent-cyan {
+  border-color: #00f0ff;
+  box-shadow:
+    0 0 35px rgba(0, 240, 255, 0.45),
+    0 0 70px rgba(0, 240, 255, 0.2),
+    inset 0 0 25px rgba(0, 240, 255, 0.12);
+}
+.airship-modal-content--accent-amber {
+  border-color: #ffe600;
+  box-shadow:
+    0 0 35px rgba(255, 230, 0, 0.45),
+    0 0 70px rgba(255, 153, 0, 0.2),
+    inset 0 0 25px rgba(255, 230, 0, 0.12);
+}
+.airship-modal-content--accent-magenta {
+  border-color: #ff007f;
+  box-shadow:
+    0 0 35px rgba(255, 0, 127, 0.45),
+    0 0 70px rgba(168, 85, 247, 0.2),
+    inset 0 0 25px rgba(255, 0, 127, 0.12);
+}
+.airship-modal-content--accent-emerald {
+  border-color: #00ffaa;
+  box-shadow:
+    0 0 35px rgba(0, 255, 170, 0.45),
+    0 0 70px rgba(0, 240, 255, 0.2),
+    inset 0 0 25px rgba(0, 255, 170, 0.12);
+}
+.airship-modal-content--accent-rose {
+  border-color: #ff758c;
+  box-shadow:
+    0 0 35px rgba(255, 117, 140, 0.45),
+    0 0 70px rgba(255, 0, 127, 0.2),
+    inset 0 0 25px rgba(255, 117, 140, 0.12);
+}
+
 .airship-modal-header {
   display: flex;
   align-items: center;
@@ -407,6 +398,38 @@
   box-shadow: 0 0 10px rgba(34, 211, 238, 0.6);
 }
 
+/* Modal tab active accent styles */
+.airship-modal-tab--accent-cyan.airship-modal-tab--active {
+  background: #00f0ff;
+  color: #080415;
+  border-color: #00f0ff;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.7);
+}
+.airship-modal-tab--accent-amber.airship-modal-tab--active {
+  background: #ffe600;
+  color: #080415;
+  border-color: #ffe600;
+  box-shadow: 0 0 12px rgba(255, 230, 0, 0.7);
+}
+.airship-modal-tab--accent-magenta.airship-modal-tab--active {
+  background: #ff007f;
+  color: #ffffff;
+  border-color: #ff007f;
+  box-shadow: 0 0 12px rgba(255, 0, 127, 0.7);
+}
+.airship-modal-tab--accent-emerald.airship-modal-tab--active {
+  background: #00ffaa;
+  color: #080415;
+  border-color: #00ffaa;
+  box-shadow: 0 0 12px rgba(0, 255, 170, 0.7);
+}
+.airship-modal-tab--accent-rose.airship-modal-tab--active {
+  background: #ff758c;
+  color: #080415;
+  border-color: #ff758c;
+  box-shadow: 0 0 12px rgba(255, 117, 140, 0.7);
+}
+
 .airship-modal-close {
   background: transparent;
   border: 1px solid rgba(168, 85, 247, 0.4);
@@ -431,54 +454,38 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  background: radial-gradient(circle at center, rgba(34, 211, 238, 0.08) 0%, rgba(11, 7, 26, 0.95) 75%);
+  padding: 1.25rem;
+  background: radial-gradient(circle at center, rgba(30, 20, 50, 0.7) 0%, rgba(8, 6, 14, 0.98) 75%);
   overflow: hidden;
 }
 
 .airship-modal-img {
   display: block;
-  max-height: 72vh;
-  max-width: 82vw;
+  max-height: 78vh;
+  max-width: 86vw;
   width: auto;
   height: auto;
+  aspect-ratio: 4 / 5;
   object-fit: contain;
-  border: 1px solid rgba(168, 85, 247, 0.35);
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
-}
-
-.airship-modal-scanline {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    transparent 50%,
-    rgba(0, 0, 0, 0.25) 51%
-  );
-  background-size: 100% 4px;
-  opacity: 0.6;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9), 0 0 25px rgba(168, 85, 247, 0.35);
 }
 
 .airship-modal-footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 1rem;
+  justify-content: center;
+  padding: 0.6rem 1rem;
   background: rgba(18, 11, 38, 0.95);
   border-top: 1px solid rgba(168, 85, 247, 0.3);
   font-family: 'Silkscreen', monospace;
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   color: #94a3b8;
-}
-
-.airship-modal-footer-text {
-  letter-spacing: 0.06em;
 }
 
 .airship-modal-footer-action {
   color: #22d3ee;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
 }
 
 @keyframes airshipModalFadeIn {

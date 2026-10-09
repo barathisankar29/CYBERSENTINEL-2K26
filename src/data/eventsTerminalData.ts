@@ -424,10 +424,10 @@ export const ALL_EVENTS: EventSpec[] = [
     track: 'non_technical',
     title: 'E-SPORTS',
     image: '/assets/events/e_sports.webp',
-    quote: '"THE ARENA IS SET. THE GAME IS A SECRET."',
+    quote: '"CLASH SQUAD CHAMPIONSHIP. SHOWCASE YOUR SKILLS."',
     description:
-      'E-Sports is a special event of CyberSentinel 2K26 with two Free Fire tournaments: a Free Fire Clash Squad Tournament where 16 teams battle through 4 knockout rounds (16 → 8 → 4 → 2 → 1), and the Lord Esports Battle Royale Tournament where 24 teams compete across 2 rounds. Cash prizes are awarded to the Winner and Runner-up. Registration is per team.',
-    date: 'DAY 02',
+      'FREE FIRE CLASH SQUAD TOURNAMENT\n\nTournament Date: 15/10/2026\n\nGet ready for an intense Clash Squad Tournament where skilled players battle their way to the championship! Compete against tough opponents, showcase your skills, and fight for victory. Cash prizes will be awarded to the Winner and Runner-up.\n\nRULES\n\n- No Gun Attributes\n- No Character Skills\n- Unlimited Ammo\n- Bermuda Map\n\nPRIZES\n\n- Winner – Cash Prize\n- Runner-up – Cash Prize',
+    date: '15/10/2026',
     time: 'TO BE ANNOUNCED',
     teamSize: '4 MEMBERS',
     coordinators: [
@@ -437,16 +437,17 @@ export const ALL_EVENTS: EventSpec[] = [
       coordinator('Saran S', '2ND YEAR', '9176655051')
     ],
     chipLabel: 'E-SPORTS',
-    chipSub: 'ARENA',
+    chipSub: 'FREE FIRE',
     isSpecial: true,
     protocols: [
-      'Special event: teams of 4 members. Registration and fee are per team. Register through Special Events; it is not part of the Day 1 / Day 2 passes.',
-      'FREE FIRE CLASH SQUAD TOURNAMENT: 16 teams across 4 knockout rounds (16 → 8 → 4 → 2 → 1); the final two teams compete for the championship.',
-      'Clash Squad rules: No Gun Attributes. No Character Skills. Unlimited Ammo. Bermuda Map.',
-      'Clash Squad: cash prizes awarded to 1st and 2nd place.',
-      'LORD ESPORTS – BATTLE ROYALE TOURNAMENT: 24 teams across 2 Battle Royale rounds.',
-      'Battle Royale format: the Top 10 teams after Round 1 qualify for the final round; the Top 2 teams after Round 2 are declared the winners.',
-      'Battle Royale: cash prizes awarded to 1st and 2nd place based on final standings.'
+      'Tournament Date: 15/10/2026. Teams of 4 members. Registration is per team.',
+      'FREE FIRE CLASH SQUAD TOURNAMENT: Compete against tough opponents, showcase your skills, and fight for victory.',
+      'RULES: No Gun Attributes.',
+      'RULES: No Character Skills.',
+      'RULES: Unlimited Ammo.',
+      'RULES: Bermuda Map.',
+      'PRIZES: Winner – Cash Prize.',
+      'PRIZES: Runner-up – Cash Prize.'
     ]
   },
   {

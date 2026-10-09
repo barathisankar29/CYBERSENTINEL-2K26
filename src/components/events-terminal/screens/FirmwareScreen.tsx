@@ -175,7 +175,7 @@ export const FirmwareScreen: React.FC<FirmwareScreenProps> = ({
           </div>
 
           {/* Description Block */}
-          <div className="font-kelly text-sm sm:text-base text-gray-200 leading-relaxed bg-[#08030d] p-3.5 sm:p-4 border-l-2 border-[#9333ea] tracking-wide">
+          <div className="font-kelly text-sm sm:text-base text-gray-200 leading-relaxed bg-[#08030d] p-3.5 sm:p-4 border-l-2 border-[#9333ea] tracking-wide whitespace-pre-line">
             {event.description}
           </div>
 

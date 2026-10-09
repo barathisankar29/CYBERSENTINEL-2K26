@@ -134,7 +134,7 @@ export const SPECIAL_EVENTS: CatalogEvent[] = [
   {
     id: 'e-sports',
     name: 'E-Sports',
-    description: 'Two Free Fire tournaments: Clash Squad (16 teams, 4 knockout rounds, Bermuda map) and Lord Esports Battle Royale (24 teams, 2 rounds). Cash prizes for 1st and 2nd place. Teams of 4, registered per team.',
+    description: `FREE FIRE CLASH SQUAD TOURNAMENT\n\nTournament Date: 15/10/2026\n\nGet ready for an intense Clash Squad Tournament where skilled players battle their way to the championship! Compete against tough opponents, showcase your skills, and fight for victory. Cash prizes will be awarded to the Winner and Runner-up.\n\nRULES\n\n- No Gun Attributes\n- No Character Skills\n- Unlimited Ammo\n- Bermuda Map\n\nPRIZES\n\n- Winner – Cash Prize\n- Runner-up – Cash Prize`,
     venue: 'To Be Announced',
     time: 'To Be Announced',
     fee: 'Per Team',
