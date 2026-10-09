@@ -279,7 +279,7 @@ def create_tcg_card(cfg):
     
     # Save image
     out_path = cfg['dest_path']
-    base.convert('RGB').save(out_path, quality=96)
+    base.convert('RGB').save(out_path, 'WEBP', quality=90)
     print(f'Generated TCG Card: {out_path}')
 
 tcg_configs = [
@@ -287,7 +287,7 @@ tcg_configs = [
         'name': 'KPY NAVEEN',
         'mana_num': '1',
         'src_path': 'public/assets/city/navigation/guests/guest_01_man_black.png',
-        'dest_path': 'public/assets/city/navigation/guests/guest-tcg-01.jpg',
+        'dest_path': 'public/assets/city/navigation/guests/guest-tcg-01.webp',
         'primary_hex': '#38bdf8',
         'primary_rgb': (56, 189, 248),
         'accent_hex': '#00f0ff',
@@ -299,7 +299,7 @@ tcg_configs = [
         'name': 'RAPPER HEMI',
         'mana_num': '2',
         'src_path': 'public/assets/city/navigation/guests/guest_02_singer_yellow.png',
-        'dest_path': 'public/assets/city/navigation/guests/guest-tcg-02.jpg',
+        'dest_path': 'public/assets/city/navigation/guests/guest-tcg-02.webp',
         'primary_hex': '#ffd700',
         'primary_rgb': (255, 215, 0),
         'accent_hex': '#ffea85',
@@ -311,7 +311,7 @@ tcg_configs = [
         'name': 'DANCER JYOSTNA',
         'mana_num': '3',
         'src_path': 'public/assets/city/navigation/guests/guest_03_lady_black.png',
-        'dest_path': 'public/assets/city/navigation/guests/guest-tcg-03.jpg',
+        'dest_path': 'public/assets/city/navigation/guests/guest-tcg-03.webp',
         'primary_hex': '#f472b6',
         'primary_rgb': (244, 114, 182),
         'accent_hex': '#ff007f',
@@ -323,7 +323,7 @@ tcg_configs = [
         'name': 'DANCER RANJANI',
         'mana_num': '4',
         'src_path': 'public/assets/city/navigation/guests/guest_04_lady_saree.png',
-        'dest_path': 'public/assets/city/navigation/guests/guest-tcg-04.jpg',
+        'dest_path': 'public/assets/city/navigation/guests/guest-tcg-04.webp',
         'primary_hex': '#00ffaa',
         'primary_rgb': (0, 255, 170),
         'accent_hex': '#6ee7b7',
@@ -335,7 +335,7 @@ tcg_configs = [
         'name': 'SINGER DHARSHANA',
         'mana_num': '5',
         'src_path': 'public/assets/city/navigation/guests/guest_05_lady_peach.png',
-        'dest_path': 'public/assets/city/navigation/guests/guest-tcg-05.jpg',
+        'dest_path': 'public/assets/city/navigation/guests/guest-tcg-05.webp',
         'primary_hex': '#c084fc',
         'primary_rgb': (192, 132, 252),
         'accent_hex': '#e879f9',

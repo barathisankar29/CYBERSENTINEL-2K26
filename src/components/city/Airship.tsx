@@ -21,13 +21,13 @@ export const CHIEF_GUEST_CARDS_FIRST: AirshipCard[] = [
   {
     id: 'guest-01',
     name: 'KPY NAVEEN',
-    image: '/assets/city/navigation/guests/guest-tcg-01.jpg',
+    image: '/assets/city/navigation/guests/guest-tcg-01.webp',
     accent: 'cyan'
   },
   {
     id: 'guest-02',
     name: 'RAPPER HEMI',
-    image: '/assets/city/navigation/guests/guest-tcg-02.jpg',
+    image: '/assets/city/navigation/guests/guest-tcg-02.webp',
     accent: 'amber'
   }
 ]
@@ -36,19 +36,19 @@ export const CHIEF_GUEST_CARDS_SECOND: AirshipCard[] = [
   {
     id: 'guest-03',
     name: 'DANCER JYOSTNA',
-    image: '/assets/city/navigation/guests/guest-tcg-03.jpg',
+    image: '/assets/city/navigation/guests/guest-tcg-03.webp',
     accent: 'magenta'
   },
   {
     id: 'guest-04',
     name: 'DANCER RANJANI',
-    image: '/assets/city/navigation/guests/guest-tcg-04.jpg',
+    image: '/assets/city/navigation/guests/guest-tcg-04.webp',
     accent: 'emerald'
   },
   {
     id: 'guest-05',
     name: 'SINGER DHARSHANA',
-    image: '/assets/city/navigation/guests/guest-tcg-05.jpg',
+    image: '/assets/city/navigation/guests/guest-tcg-05.webp',
     accent: 'rose'
   }
 ]
