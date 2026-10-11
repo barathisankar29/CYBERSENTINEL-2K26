@@ -58,7 +58,7 @@ export function FuturisticTransition({ onComplete }: FuturisticTransitionProps) 
         <div className="futuristic-transition__laser-line" />
         <div className="futuristic-transition__telemetry">
           <span className="futuristic-transition__status-dot" />
-          <span className="futuristic-transition__status-text">INITIALIZING SENTINEL GRID</span>
+          <span className="futuristic-transition__status-text">INITIALIZING CYBERSENTINEL 2K26</span>
           <span className="futuristic-transition__bracket">[ONLINE]</span>
         </div>
       </div>
