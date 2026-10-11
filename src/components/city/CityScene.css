@@ -26,19 +26,19 @@
   backface-visibility: hidden;
 }
 
-/* Atmospheric Bottom Gradient Blend for Seamless Transition to About Section */
+/* Atmospheric Bottom Gradient Blend for Seamless Transition to Gate Section */
 .city-scene__bottom-blend {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 240px;
+  height: 280px;
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    rgba(5, 4, 10, 0.2) 30%,
-    rgba(5, 4, 10, 0.6) 60%,
-    rgba(5, 4, 10, 0.92) 85%,
+    rgba(5, 4, 10, 0.15) 20%,
+    rgba(5, 4, 10, 0.5) 45%,
+    rgba(5, 4, 10, 0.85) 75%,
     var(--city-black, #05040a) 100%
   );
   pointer-events: none;

@@ -1,8 +1,8 @@
 .site-footer {
   position: relative;
   padding: clamp(2rem, 5vw, 3.5rem) clamp(1rem, 4vw, 3rem);
-  background: linear-gradient(180deg, var(--city-black, #05040a) 0%, #0b0a1a 100%);
-  border-top: 1px solid rgba(124, 58, 237, 0.25);
+  background: linear-gradient(180deg, var(--city-black, #05040a) 0%, #080614 60%, #0b0a1a 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
   color: rgba(255, 255, 255, 0.6);
   font-family: var(--font-body, 'Rajdhani', sans-serif);
 }

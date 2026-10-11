@@ -83,6 +83,8 @@ export function CityScene({ introCompleted = true }: CitySceneProps) {
         <ParticleField zIndex={PARTICLE_Z_INDEX} reducedMotion={reducedMotion} isMobile={isMobile} />
         <IdentityLayer zIndex={IDENTITY_Z_INDEX} ctaInteractive={ctaInteractive} />
         <ScrollIndicator scrolledPast={scrolledPast} visible={introCompleted} />
+        {/* Atmospheric bottom gradient blend seamlessly handing off to Gate Section */}
+        <div className="city-scene__bottom-blend" aria-hidden="true" />
       </div>
     </section>
   )

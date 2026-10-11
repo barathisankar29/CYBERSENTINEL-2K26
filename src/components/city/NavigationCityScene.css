@@ -28,28 +28,42 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 32vh;
+  height: 38vh;
+  min-height: 260px;
   z-index: 4;
   pointer-events: none;
-  background:
-    radial-gradient(ellipse 60% 70% at 18% 8%, color-mix(in srgb, var(--city-cyan) 14%, transparent) 0%, transparent 65%),
-    radial-gradient(ellipse 60% 70% at 82% 8%, color-mix(in srgb, var(--city-magenta) 14%, transparent) 0%, transparent 65%),
-    linear-gradient(
-      to bottom,
-      var(--city-black) 0%,
-      color-mix(in srgb, var(--city-deep-indigo) 85%, var(--city-violet) 15%) 30%,
-      color-mix(in srgb, var(--city-violet) 40%, transparent) 65%,
-      transparent 100%
-    );
+  background: linear-gradient(
+    to bottom,
+    var(--city-black, #05040a) 0%,
+    rgba(5, 4, 10, 0.88) 30%,
+    rgba(10, 7, 30, 0.5) 60%,
+    rgba(15, 10, 40, 0.15) 85%,
+    transparent 100%
+  );
+}
+
+/* Atmospheric bottom blend handing off seamlessly to the site footer */
+.navigation-city-scene__bottom-blend {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 240px;
+  z-index: 5;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(5, 4, 10, 0.25) 30%,
+    rgba(5, 4, 10, 0.75) 70%,
+    var(--city-black, #05040a) 100%
+  );
 }
 
 /*
  * Depth veil: a very thin indigo-black tint over the background city only
  * (above the environment layers, under the buildings at z-index 12), so the
- * six buildings separate a little more from the skyline behind them. Almost
- * uniform — just slightly deeper toward the edges — so it reads as
- * atmosphere, not as an overlay or a transition. Colors underneath keep
- * their hue; nothing interactive sits under it.
+ * six buildings separate a little more from the skyline behind them.
  */
 .navigation-city-scene__depth-veil {
   position: absolute;
@@ -59,91 +73,6 @@
   background:
     radial-gradient(ellipse 85% 75% at 50% 55%, transparent 55%, rgba(6, 4, 20, 0.1) 100%),
     rgba(10, 7, 30, 0.14);
-}
-
-/* Futuristic Laser Seam & Horizon Beacon across Hero -> Buildings Transition */
-.navigation-city-scene__horizon-line {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(34, 211, 238, 0.2) 15%,
-    rgba(255, 62, 165, 0.9) 50%,
-    rgba(34, 211, 238, 0.2) 85%,
-    transparent 100%
-  );
-  box-shadow: 
-    0 0 14px rgba(255, 62, 165, 0.85),
-    0 0 28px rgba(34, 211, 238, 0.45);
-  pointer-events: none;
-  z-index: 15;
-  animation: heroBuildingSeamPulse 4s ease-in-out infinite alternate;
-}
-
-.navigation-city-scene__horizon-line::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 140px;
-  height: 4px;
-  background: #ff3ea5;
-  border-radius: 9999px;
-  box-shadow: 0 0 16px #ff3ea5, 0 0 32px #22d3ee;
-}
-
-@keyframes heroBuildingSeamPulse {
-  0% {
-    opacity: 0.75;
-    filter: drop-shadow(0 0 8px rgba(255, 62, 165, 0.7));
-  }
-  100% {
-    opacity: 1;
-    filter: drop-shadow(0 0 18px rgba(34, 211, 238, 0.9));
-  }
-}
-
-/* Atmospheric Horizon Portal Mist Layer */
-.navigation-city-scene__portal-mist {
-  position: absolute;
-  top: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 1400px;
-  height: 200px;
-  background: radial-gradient(
-    ellipse 75% 55% at 50% 25%,
-    rgba(255, 62, 165, 0.2) 0%,
-    rgba(124, 58, 237, 0.14) 38%,
-    rgba(34, 211, 238, 0.08) 68%,
-    transparent 85%
-  );
-  filter: blur(28px);
-  pointer-events: none;
-  z-index: 14;
-}
-
-/* Subtle holographic grid lines between Hero & Buildings */
-.navigation-city-scene__grid-pattern {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 35vh;
-  background-image:
-    linear-gradient(rgba(34, 211, 238, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34, 211, 238, 0.035) 1px, transparent 1px);
-  background-size: 48px 48px;
-  -webkit-mask-image: linear-gradient(180deg, #000000 0%, rgba(0, 0, 0, 0.7) 60%, transparent 100%);
-  mask-image: linear-gradient(180deg, #000000 0%, rgba(0, 0, 0, 0.7) 60%, transparent 100%);
-  pointer-events: none;
-  z-index: 3;
 }
 
 /* The ground plane buildings sit on — fills the viewport so each

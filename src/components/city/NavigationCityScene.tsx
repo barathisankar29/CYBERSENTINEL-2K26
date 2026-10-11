@@ -89,13 +89,11 @@ export function NavigationCityScene() {
         {navigationCityEnvironmentLayers.map((layer) => (
           <CityLayer key={layer.id} layer={layer} isMobile={isMobile} lazy />
         ))}
-        {/* Futuristic Laser Seam & Portal Mist between Hero and Buildings */}
-        <div className="navigation-city-scene__horizon-line" aria-hidden="true" />
-        <div className="navigation-city-scene__portal-mist" aria-hidden="true" />
-        <div className="navigation-city-scene__grid-pattern" aria-hidden="true" />
+        {/* Atmospheric top and bottom blends for continuous document-flow blending */}
         <div className="navigation-city-scene__atmosphere-blend" aria-hidden="true" />
+        <div className="navigation-city-scene__bottom-blend" aria-hidden="true" />
         <div className="navigation-city-scene__depth-veil" aria-hidden="true" />
-        {/* Above the mist/veil (z 3-5), under the buildings (z 12). */}
+        {/* Above the atmosphere layers, under the buildings (z 12). */}
         <RainEffect zIndex={6} />
         <ProfileAccessBadge />
         <RegisterNowButton />

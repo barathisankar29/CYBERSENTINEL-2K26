@@ -32,13 +32,9 @@ export function NavigationCityMobile() {
           className="mobile-nav-scene__bg"
         />
 
-        {/* Futuristic Laser Seam & Portal Mist between Hero and Buildings */}
-        <div className="navigation-city-scene__horizon-line" aria-hidden="true" />
-        <div className="navigation-city-scene__portal-mist" aria-hidden="true" />
-        <div className="navigation-city-scene__grid-pattern" aria-hidden="true" />
-
-        {/* Same atmospheric handoff treatment as desktop */}
+        {/* Seamless atmospheric top and bottom handoffs */}
         <div className="mobile-nav-scene__atmosphere-blend" aria-hidden="true" />
+        <div className="mobile-nav-scene__bottom-blend" aria-hidden="true" />
         <RainEffect zIndex={1} />
         <ProfileAccessBadge placement="bottom" />
 
