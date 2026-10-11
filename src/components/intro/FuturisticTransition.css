@@ -136,9 +136,27 @@
   font-size: clamp(0.72rem, 1.8vw, 0.88rem);
   letter-spacing: 0.22em;
   color: white;
+  white-space: nowrap;
   opacity: 0;
   transform: translateY(6px);
   transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+@media (max-width: 767px) {
+  .futuristic-transition__telemetry {
+    font-size: clamp(0.52rem, 2.6vw, 0.72rem);
+    letter-spacing: 0.08em;
+    gap: 0.35rem;
+    padding: 0 0.5rem;
+    margin-bottom: 0.8rem;
+    max-width: 96vw;
+    justify-content: center;
+  }
+
+  .futuristic-transition__status-dot {
+    width: 4px;
+    height: 4px;
+  }
 }
 
 .futuristic-transition--beam .futuristic-transition__telemetry {

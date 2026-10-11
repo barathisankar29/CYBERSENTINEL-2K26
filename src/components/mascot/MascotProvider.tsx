@@ -114,7 +114,7 @@ export function MascotProvider({ children }: { children: ReactNode }) {
     spritesPreloadedRef.current = true
     ALL_MASCOT_STATES.forEach((s) => {
       const img = new Image()
-      img.src = `/assets/mascot/${s}.png`
+      img.src = `/assets/mascot/${s}.webp`
     })
   }, [enabled])
 

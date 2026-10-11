@@ -276,7 +276,7 @@ export function Mascot() {
   }, [stopPhysics])
 
   // Asset source according to current state
-  const assetSrc = `/assets/mascot/${state}.png`
+  const assetSrc = `/assets/mascot/${state}.webp`
 
   // Mascot container classes
   const mascotClasses = [
