@@ -1,6 +1,7 @@
 import React, { useEffect, useId, useRef } from 'react';
 import { AlertTriangle, CheckCircle2, X, XCircle } from 'lucide-react';
 import { OUTCOME_COPY, type RegistrationOutcome } from './registrationStatus';
+import { MascotTeamIndicator } from '@/components/mascot';
 
 interface DialogAction {
   label: string;
@@ -18,6 +19,7 @@ interface RegistrationStatusDialogProps {
   primary: DialogAction;
   secondary?: DialogAction;
   onClose: () => void;
+  onCreateTeam?: () => void;
 }
 
 const TONE: Record<RegistrationOutcome, { accent: string; text: string; ring: string; Icon: typeof CheckCircle2 }> = {
@@ -39,7 +41,8 @@ export const RegistrationStatusDialog: React.FC<RegistrationStatusDialogProps> =
   message,
   primary,
   secondary,
-  onClose
+  onClose,
+  onCreateTeam
 }) => {
   const copy = OUTCOME_COPY[outcome];
   const tone = TONE[outcome];
@@ -148,6 +151,15 @@ export const RegistrationStatusDialog: React.FC<RegistrationStatusDialogProps> =
           <p id={descId} className="text-xs sm:text-sm text-gray-300 font-body leading-relaxed">
             {message ?? copy.message}
           </p>
+
+          {outcome === 'success' && (
+            <MascotTeamIndicator
+              variant="alert"
+              onCreateTeam={onCreateTeam}
+              text="MANDATORY NEXT STEP // FORM YOUR TEAM"
+              subtext="Payment verified! If participating in Duo or Team events, you must create your squad without fail. Don't leave yet!"
+            />
+          )}
 
           <div className="flex flex-col-reverse sm:flex-row gap-2 sm:justify-end">
             {secondary && (

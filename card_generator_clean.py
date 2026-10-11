@@ -1,8 +1,7 @@
 
 import os, math
-import  as numpy
-# pyrefly: ignore [missing-import]
-from PIL import Image, ImageDraw, ImageFont, ImageFilter
+import numpy as np  # type: ignore # pyrefly: ignore
+from PIL import Image, ImageDraw, ImageFont, ImageFilter  # type: ignore # pyrefly: ignore
 from collections import deque
 
 W = 800

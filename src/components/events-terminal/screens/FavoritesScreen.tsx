@@ -13,8 +13,9 @@ import { sound } from '../sound';
 import { formatRupees, withGst } from '../useLiveRegistrationData';
 import { RegistrationStatusDialog } from '../RegistrationStatusDialog';
 import { OUTCOME_COPY, registrationOutcome } from '../registrationStatus';
-import { AlertTriangle, Check, CheckCircle2, Copy, CreditCard, Download, Loader2, Printer, QrCode, RefreshCw, Search, ShieldCheck, Users, XCircle } from 'lucide-react';
+import { AlertTriangle, Check, CheckCircle2, Copy, CreditCard, Download, Loader2, Printer, QrCode, RefreshCw, Search, ShieldCheck, XCircle } from 'lucide-react';
 import { RegistrationRulesModal } from '@/components/registration/RegistrationRulesModal';
+import { MascotTeamIndicator } from '@/components/mascot';
 
 interface FavoritesScreenProps {
   onSelectModule?: (mod: ModuleId) => void;
@@ -40,7 +41,13 @@ const OUTCOME_TONE = {
  * Download renders the same entry-pass PNG as register2's checking.js.
  * The QR library is loaded only when a QR is actually shown.
  */
-const EntryQr: React.FC<{ url: string; code: string; day: string }> = ({ url, code, day }) => {
+const EntryQr: React.FC<{
+  url: string;
+  code: string;
+  day: string;
+  canCreateTeam?: boolean;
+  onCreateTeam?: () => void;
+}> = ({ url, code, day, canCreateTeam, onCreateTeam }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [failed, setFailed] = useState(false);
 
@@ -114,13 +121,31 @@ const EntryQr: React.FC<{ url: string; code: string; day: string }> = ({ url, co
         {failed ? (
           <p className="text-[11px] font-mono text-[#ff8fa3]">Unable to draw the QR. Please reload and try again.</p>
         ) : (
-          <button
-            type="button"
-            onClick={downloadPass}
-            className="inline-flex items-center justify-center gap-1.5 w-full sm:w-fit px-3 py-2 bg-[#00ff66] text-black hover:bg-[#5dff9b] font-pixel text-[10px] tracking-wider cursor-pointer"
-          >
-            <Download className="w-3.5 h-3.5" /> DOWNLOAD QR
-          </button>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mt-1">
+            <button
+              type="button"
+              onClick={downloadPass}
+              className="inline-flex items-center justify-center gap-1.5 w-full sm:w-fit px-3 py-2 bg-[#00ff66] text-black hover:bg-[#5dff9b] font-pixel text-[10px] tracking-wider cursor-pointer font-bold"
+            >
+              <Download className="w-3.5 h-3.5" /> DOWNLOAD QR
+            </button>
+            {canCreateTeam && onCreateTeam && (
+              <button
+                type="button"
+                onClick={onCreateTeam}
+                className="inline-flex items-center justify-center gap-1.5 w-full sm:w-fit px-3.5 py-2 bg-[#ff007f] hover:bg-[#ff3399] text-white font-pixel text-[10px] tracking-wider cursor-pointer shadow-[0_0_12px_rgba(255,0,127,0.5)] border border-[#ff66b2] animate-pulse"
+              >
+                <MascotTeamIndicator variant="button-icon" />
+                <span>CREATE TEAM NOW</span>
+              </button>
+            )}
+          </div>
+        )}
+        {canCreateTeam && (
+          <div className="mt-1 flex items-center gap-1.5 text-[10px] font-mono text-amber-300 bg-black/40 border border-amber-500/30 px-2.5 py-1.5">
+            <MascotTeamIndicator variant="button-icon" className="w-3.5" />
+            <span><strong>ACTION REQUIRED:</strong> You have your QR, but you must still create your team for team events!</span>
+          </div>
         )}
       </div>
     </div>
@@ -336,6 +361,16 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
         <RegistrationStatusDialog
           outcome={outcome}
           registrationCode={record.registration.registration_code}
+          onCreateTeam={
+            canCreateTeam
+              ? () => {
+                  setDialogOpen(false);
+                  const firstTeamEvent = record.team_events[0]?.name ?? '';
+                  if (onNavigateToTeamCreation) onNavigateToTeamCreation(record.registration.registration_code, firstTeamEvent);
+                  else onSelectModule?.('team');
+                }
+              : undefined
+          }
           primary={
             outcome === 'success'
               ? { label: 'VIEW REGISTRATION', onClick: viewRecord }
@@ -347,7 +382,19 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
                 }
           }
           secondary={
-            outcome === 'success' ? undefined : { label: outcome === 'failed' ? 'VIEW REGISTRATION' : 'CHECK REGISTRATION', onClick: viewRecord }
+            outcome === 'success'
+              ? canCreateTeam
+                ? {
+                    label: 'CREATE TEAM NOW',
+                    onClick: () => {
+                      setDialogOpen(false);
+                      const firstTeamEvent = record.team_events[0]?.name ?? '';
+                      if (onNavigateToTeamCreation) onNavigateToTeamCreation(record.registration.registration_code, firstTeamEvent);
+                      else onSelectModule?.('team');
+                    }
+                  }
+                : undefined
+              : { label: outcome === 'failed' ? 'VIEW REGISTRATION' : 'CHECK REGISTRATION', onClick: viewRecord }
           }
           onClose={() => setDialogOpen(false)}
         />
@@ -501,6 +548,18 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
           </div>
 
           <div className="space-y-4">
+            {canCreateTeam && (
+              <MascotTeamIndicator
+                variant="alert"
+                onCreateTeam={() => {
+                  sound.playNavClick();
+                  const firstTeamEvent = record.team_events[0]?.name ?? '';
+                  if (onNavigateToTeamCreation) onNavigateToTeamCreation(record.registration.registration_code, firstTeamEvent);
+                  else onSelectModule?.('team');
+                }}
+              />
+            )}
+
             {/* Pass card */}
             <div ref={recordRef} className="scroll-mt-4 border-2 border-[#2d123d] hover:border-[#9933ff] bg-[#07050a] p-4 transition-all shadow-sm flex flex-col space-y-3">
               <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-[#1e0f2b]">
@@ -531,20 +590,26 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
                   {DAY_LABELS[record.registration.selected_day] ?? record.registration.selected_day}
                 </h3>
                 {canCreateTeam && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      sound.playNavClick();
-                      const firstTeamEvent = record.team_events[0]?.name ?? '';
-                      if (onNavigateToTeamCreation) onNavigateToTeamCreation(record.registration.registration_code, firstTeamEvent);
-                      else onSelectModule?.('team');
-                    }}
-                    className="px-3.5 py-1.5 font-pixel text-[10px] tracking-wider cursor-pointer transition-all flex items-center justify-center gap-1.5 bg-[#ff007f] text-white hover:bg-[#ff3399] shadow-[0_0_10px_rgba(255,0,127,0.4)]"
-                    data-purpose="create-team-action-btn"
-                  >
-                    <Users className="w-3.5 h-3.5" />
-                    <span>CREATE TEAM</span>
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1 font-mono text-[9px] text-[#ffee00] bg-black/60 px-2 py-1 border border-[#ffee00]/40">
+                      <AlertTriangle className="w-3 h-3 text-[#ffee00] shrink-0" />
+                      <span className="hidden xs:inline">MANDATORY:</span> FORM SQUAD
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        sound.playNavClick();
+                        const firstTeamEvent = record.team_events[0]?.name ?? '';
+                        if (onNavigateToTeamCreation) onNavigateToTeamCreation(record.registration.registration_code, firstTeamEvent);
+                        else onSelectModule?.('team');
+                      }}
+                      className="px-3.5 py-1.5 font-pixel text-[10px] tracking-wider cursor-pointer transition-all flex items-center justify-center gap-2 bg-[#ff007f] text-white hover:bg-[#ff3399] shadow-[0_0_15px_rgba(255,0,127,0.6)] border border-[#ff66b2] animate-pulse"
+                      data-purpose="create-team-action-btn"
+                    >
+                      <MascotTeamIndicator variant="button-icon" />
+                      <span>CREATE TEAM</span>
+                    </button>
+                  </div>
                 )}
               </div>
 
@@ -649,6 +714,13 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
                   url={record.qr_url}
                   code={record.registration.registration_code}
                   day={record.registration.selected_day}
+                  canCreateTeam={canCreateTeam}
+                  onCreateTeam={() => {
+                    sound.playNavClick();
+                    const firstTeamEvent = record.team_events[0]?.name ?? '';
+                    if (onNavigateToTeamCreation) onNavigateToTeamCreation(record.registration.registration_code, firstTeamEvent);
+                    else onSelectModule?.('team');
+                  }}
                 />
               )}
             </div>
@@ -684,15 +756,34 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ onSelectModule
               </div>
             ) : (
               record.team_events.length > 0 && (
-                <div className="border-2 border-[#2d123d] bg-[#07050a] p-4">
-                  <span className="text-gray-400 text-[10px] font-silkscreen block mb-2">TEAM EVENTS ON YOUR PASS</span>
+                <div className="border-2 border-[#ff007f]/70 bg-[#0d0315] p-4 space-y-3 shadow-[0_0_15px_rgba(255,0,127,0.2)]">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="text-gray-300 text-[10px] font-silkscreen block">TEAM EVENTS ON YOUR PASS</span>
+                    <span className="text-[#ffee00] text-[10px] font-pixel flex items-center gap-1">
+                      <AlertTriangle className="w-3 h-3 text-[#ffee00]" />
+                      SQUAD NOT FORMED YET
+                    </span>
+                  </div>
                   <div className="flex flex-wrap gap-1.5">
                     {record.team_events.map((ev) => (
-                      <span key={ev.id} className="px-2 py-0.5 border border-[#7c3aed] text-[#c084fc] text-[10px] font-mono">
+                      <span key={ev.id} className="px-2 py-0.5 border border-[#ff007f]/50 text-[#ff66b2] text-[10px] font-mono bg-[#ff007f]/10">
                         {ev.name}
                       </span>
                     ))}
                   </div>
+                  {canCreateTeam && (
+                    <MascotTeamIndicator
+                      variant="banner"
+                      onCreateTeam={() => {
+                        sound.playNavClick();
+                        const firstTeamEvent = record.team_events[0]?.name ?? '';
+                        if (onNavigateToTeamCreation) onNavigateToTeamCreation(record.registration.registration_code, firstTeamEvent);
+                        else onSelectModule?.('team');
+                      }}
+                      text="ACTION REQUIRED // FORM YOUR SQUAD"
+                      subtext="You have team events on your pass. Team Leader must create team with member IDs."
+                    />
+                  )}
                 </div>
               )
             )}

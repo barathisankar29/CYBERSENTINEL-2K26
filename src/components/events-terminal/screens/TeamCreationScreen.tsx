@@ -13,6 +13,7 @@ import { sound } from '../sound';
 import { eventSizeRange } from '../teamEventSize';
 import { Award, CheckCircle, Shield, Users } from 'lucide-react';
 import { RegistrationRulesModal } from '@/components/registration/RegistrationRulesModal';
+import { MascotTeamIndicator } from '@/components/mascot';
 
 interface TeamCreationScreenProps {
   /** Registration ID to verify as leader (from My Registrations) */
@@ -248,6 +249,12 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
       </section>
 
       <div className="space-y-4">
+        <MascotTeamIndicator
+          variant="banner"
+          text="MASCOT DIRECTIVE // SQUAD FORMATION"
+          subtext="Team Leader enters registered teammates' Email or Registration ID. Ensure everyone has completed payment before creating your team!"
+        />
+
         {/* EVENT NAME | TEAM SIZE | ELIGIBILITY */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6" data-purpose="team-metadata-row">
           <div className="bg-[#07050d] border-2 border-[#9933ff] p-3 flex flex-col justify-between shadow-[0_0_10px_rgba(153,51,255,0.2)] min-w-0">
@@ -557,6 +564,7 @@ export const TeamCreationScreen: React.FC<TeamCreationScreenProps> = ({
                     data-purpose="confirm-team-button"
                   >
                     <span>&gt;&gt;</span>
+                    <MascotTeamIndicator variant="button-icon" />
                     <span>{submitting ? 'CHECKING MEMBERS...' : 'CREATE TEAM'}</span>
                     <span>&lt;&lt;</span>
                   </button>

@@ -1,6 +1,7 @@
 import React from 'react';
 import type { ModuleId } from '@/types/eventsTerminal';
 import { sound } from './sound';
+import { MascotTeamIndicator } from '@/components/mascot';
 
 interface RetroNavProps {
   activeModule: ModuleId;
@@ -145,6 +146,7 @@ export const RetroNav: React.FC<RetroNavProps> = ({ activeModule, onSelectModule
                   style={{ backgroundColor: item.color }}
                 />
               )}
+              {item.id === 'team' && <MascotTeamIndicator variant="badge" />}
               {item.renderIcon()}
             </button>
           );

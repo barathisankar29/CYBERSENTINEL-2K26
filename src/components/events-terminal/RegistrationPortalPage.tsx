@@ -791,6 +791,21 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
               </div>
             </div>
 
+            {/* Mascot Team Reminder */}
+            <div className="mt-3 bg-[#13051a] border border-[#ff007f]/50 rounded-lg p-2.5 flex items-center gap-2.5 text-left">
+              <img
+                src="/assets/mascot/mascot_team_indicator.webp"
+                alt="Mascot"
+                width={24}
+                height={30}
+                className="w-6 h-auto shrink-0 drop-shadow-[0_0_6px_rgba(255,0,127,0.7)]"
+                style={{ imageRendering: 'pixelated' }}
+              />
+              <p className="text-[10px] font-mono text-gray-200 leading-tight">
+                <strong className="text-[#ffee00]">NEXT STEP:</strong> After completing payment, return to <strong className="text-[#ff007f]">Create Team</strong> to form your squad!
+              </p>
+            </div>
+
             {/* Cyber animated progress bar */}
             <div className="mt-5 w-full bg-slate-800/80 rounded-full h-2 overflow-hidden border border-cyan-500/30">
               <div className="bg-gradient-to-r from-cyan-400 via-emerald-400 to-cyan-300 h-full w-full animate-pulse" />

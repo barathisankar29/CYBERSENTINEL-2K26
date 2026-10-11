@@ -15,6 +15,7 @@ import {
   Info,
   ArrowRight
 } from 'lucide-react';
+import { MascotTeamIndicator } from '@/components/mascot';
 import './RegistrationRulesModal.css';
 
 export interface RegistrationRulesModalProps {
@@ -357,7 +358,10 @@ export function RegistrationRulesModal({
                 <div className="workflow-item">
                   <div className="workflow-badge">STEP 4</div>
                   <div className="workflow-text">
-                    <h5>TEAM LEADER CREATES THE TEAM (/register/team)</h5>
+                    <h5 className="flex items-center gap-1.5 flex-wrap">
+                      <MascotTeamIndicator variant="button-icon" />
+                      <span>TEAM LEADER CREATES THE TEAM (/register/team)</span>
+                    </h5>
                     <p>
                       The Team Leader visits <strong>Create Team</strong>, verifies with their registered Email or Registration ID, chooses the Day and Package, selects the Team Size (e.g. <strong>2 members for Duo</strong>, or <strong>2–3 members for Team</strong>), and enters the <strong>Email / Registration ID</strong> for all teammates.
                     </p>
