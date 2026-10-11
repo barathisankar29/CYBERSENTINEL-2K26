@@ -16,4 +16,4 @@
 export const SITE_UNDER_DEVELOPMENT: boolean = false
 
 /** The supplied artwork, served as-is from /public. */
-export const UNDER_DEVELOPMENT_IMAGE = '/assets/website_under_development.png'
+export const UNDER_DEVELOPMENT_IMAGE = '/assets/website_under_development.webp'

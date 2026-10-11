@@ -82,8 +82,8 @@ export function Airship({
   }, [selectedCard])
 
   const blimpSrc = reversed
-    ? '/assets/city/navigation/airship-reversed.png'
-    : '/assets/city/navigation/airship-new.png'
+    ? '/assets/city/navigation/airship-reversed.webp'
+    : '/assets/city/navigation/airship-new.webp'
 
   return (
     <>
