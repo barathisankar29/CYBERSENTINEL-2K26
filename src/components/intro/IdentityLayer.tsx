@@ -49,7 +49,7 @@ const symposiumStyle = computeReveal(identityReveal.symposium)
 const infoStyle = computeReveal(identityReveal.info)
 const registerCtaStyle = computeReveal(identityReveal.registerCta)
 const countdownStyle = computeReveal(identityReveal.countdown)
-const mascotStyle = computeReveal(identityReveal.symposium)
+const mascotStyle = computeReveal(identityReveal.mascot)
 const taglineStyles = introTaglines.map((tagline) => computeStageReveal(tagline.window))
 
 interface IdentityLayerProps {

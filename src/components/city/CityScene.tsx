@@ -14,7 +14,7 @@ import './CityScene.css'
 const SCROLL_HINT_HIDE_PROGRESS = 0.04
 
 const PARTICLE_Z_INDEX = 8
-const IDENTITY_Z_INDEX = 9
+const IDENTITY_Z_INDEX = 15
 
 /**
  * The hero's own scroll distance, driving its own internal cinematic reveal.
@@ -78,13 +78,13 @@ export function CityScene({ introCompleted = true }: CitySceneProps) {
         {cityLayers.map((layer) => (
           <CityLayer key={layer.id} layer={layer} isMobile={isMobile} />
         ))}
-        {/* Over the city layers (z 1-7), under the logo/identity (z 9). */}
+        {/* Over the city layers (z 1-7), under the logo/identity (z 15). */}
         <RainEffect zIndex={PARTICLE_Z_INDEX} />
         <ParticleField zIndex={PARTICLE_Z_INDEX} reducedMotion={reducedMotion} isMobile={isMobile} />
+        {/* Atmospheric bottom gradient blend seamlessly handing off to Gate Section (behind foreground identity) */}
+        <div className="city-scene__bottom-blend" aria-hidden="true" />
         <IdentityLayer zIndex={IDENTITY_Z_INDEX} ctaInteractive={ctaInteractive} />
         <ScrollIndicator scrolledPast={scrolledPast} visible={introCompleted} />
-        {/* Atmospheric bottom gradient blend seamlessly handing off to Gate Section */}
-        <div className="city-scene__bottom-blend" aria-hidden="true" />
       </div>
     </section>
   )

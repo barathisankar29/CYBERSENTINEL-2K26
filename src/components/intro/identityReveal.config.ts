@@ -54,6 +54,8 @@ export const identityReveal = {
   // Hero Register Now CTA (see IdentityLayer.tsx), right under the countdown
   // — follows it in a beat later so the two don't pop at once.
   registerCta: { start: 0.75, end: 0.8, depthPx: 18 } satisfies RevealWindow,
+  // Mascot companion arrives alongside the CTA and stays 100% bright and visible
+  mascot: { start: 0.74, end: 0.8, depthPx: 14 } satisfies RevealWindow,
 }
 
 /**

@@ -157,8 +157,14 @@
   max-width: 155px;
   max-height: 175px;
   object-fit: contain;
-  filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.5)) drop-shadow(0 0 24px rgba(255, 42, 133, 0.35));
-  image-rendering: auto;
+  filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.45));
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
   pointer-events: none;
   transition: transform 0.2s ease;
 }
@@ -282,7 +288,34 @@
    .identity-layer__mascot in IdentityLayer.css. */
 @media (max-width: 767px) {
   .hero-mascot-companion {
-    filter: drop-shadow(0 8px 22px rgba(0, 240, 255, 0.25));
+    filter: none;
+  }
+
+  .hero-mascot__img {
+    filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.75)) drop-shadow(0 0 16px rgba(255, 42, 133, 0.5));
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+
+  .hero-mascot__avatar-stage {
+    animation-name: mascotLevitateMobile;
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+}
+
+@keyframes mascotLevitateMobile {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
   }
 }
 

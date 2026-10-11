@@ -141,55 +141,7 @@
   }
 }
 
-/*
- * A tall narrow phone has much more vertical distance between "just below
- * the top strip" and "exact vertical center" than a wide desktop screen
- * does, which reads as an oversized empty-sky gap once the branding strip
- * and CyberSentinel logo are both bigger. Pull the centered block up
- * further specifically on mobile to close that gap, rather than just
- * scaling the desktop offset.
- */
-@media (max-width: 767px) {
-  .identity-layer__top {
-    padding: clamp(0.35rem, 1.5vh, 0.75rem) 0.5rem 0.2rem;
-  }
-
-  .identity-layer__center {
-    justify-content: flex-start;
-    padding: 0.25rem 0.75rem 1rem;
-    gap: 0.25rem;
-  }
-
-  /* Tighter rhythm inside the stack so the logo, Register Now and the
-     countdown all sit higher and fit above the fold. */
-  .identity-layer__center .presented-by {
-    margin-top: 0.25rem;
-    margin-bottom: 0.45rem;
-  }
-
-  .identity-layer__center .symposium-identity {
-    margin-top: 0.35rem;
-  }
-
-  .identity-layer__countdown {
-    margin-top: 0.55rem;
-  }
-
-  .identity-layer__cta {
-    margin-top: 0.3rem;
-  }
-}
-
-/* The countdown and Register Now stack above the floating mascot, so
-   wherever they meet on a small phone the mascot tucks behind them instead
-   of covering the digits or the button. */
-.identity-layer__countdown,
-.identity-layer__cta {
-  position: relative;
-  z-index: 50;
-}
-
-/* Floating Hero Mascot Companion Slot */
+/* Floating Hero Mascot Companion Slot (Desktop / Tablet) */
 .identity-layer__mascot {
   position: absolute;
   right: clamp(2rem, 5.5vw, 6.5rem);
@@ -208,51 +160,77 @@
   }
 }
 
-/*
- * Phones: the mascot is the last flex item of the centered column. It takes
- * whatever height is left under Register Now (flex: 1 1 0) and the sprite is
- * sized from that height via container units — big on tall phones, smaller
- * on short ones, and hidden entirely when the gap is too small, so it never
- * overlaps or "spoils" the countdown / CTA above it.
- */
 @media (max-width: 767px) {
+  .identity-layer__top {
+    padding: clamp(0.15rem, 0.8vh, 0.35rem) 0.5rem 0;
+  }
+
+  .identity-layer__center {
+    justify-content: flex-start;
+    padding: 0 0.5rem 0.2rem;
+    gap: 0.15rem;
+  }
+
+  /* Tighter rhythm inside the stack so the logo, Register Now, countdown, and mascot all fit */
+  .identity-layer__center .presented-by {
+    margin-top: 0.05rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .identity-layer__center .symposium-identity {
+    margin-top: 0.1rem;
+  }
+
+  .identity-layer__center .cyber-sentinel-logo-wrap {
+    max-width: min(84vw, 320px);
+  }
+
+  .identity-layer__countdown {
+    margin-top: 0.2rem;
+    zoom: 0.82;
+  }
+
+  .identity-layer__cta {
+    margin-top: 0.15rem;
+    zoom: 0.88;
+  }
+
   .identity-layer__mascot {
     position: relative;
     inset: auto;
-    flex: 1 1 0;
-    min-height: 0;
+    flex: 1 1 auto;
+    min-height: 80px;
     width: 100%;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
-    margin-top: clamp(0.5rem, 1.5vh, 1.2rem);
-    padding-bottom: 0;
-    container-type: size;
-    container-name: hero-mascot-slot;
+    margin-top: 0.15rem;
+    padding-bottom: 0.2rem;
     pointer-events: none;
-    z-index: 1;
+    z-index: 50;
     transform: translate3d(0, 0, 0) !important;
   }
 
   .identity-layer__mascot .hero-mascot-companion {
     pointer-events: auto;
+    display: flex !important;
   }
 
   .identity-layer__mascot .hero-mascot__avatar-stage {
-    /* 8px headroom for the levitate bob. */
-    height: min(175px, calc(100cqh - 8px));
-    width: min(160px, calc((100cqh - 8px) * 0.92));
+    height: 100px;
+    width: 100px;
   }
 
   .identity-layer__mascot .hero-mascot__img {
-    max-width: 92%;
-    max-height: 92%;
-  }
-}
-
-@container hero-mascot-slot (max-height: 76px) {
-  .hero-mascot-companion {
-    display: none !important;
+    max-width: 95px;
+    max-height: 100px;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
   }
 }
 
