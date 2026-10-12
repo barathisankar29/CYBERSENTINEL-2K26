@@ -6,6 +6,7 @@ export interface CatalogEvent {
   time: string
   fee: string
   crew: string
+  isClosed?: boolean
 }
 
 /**
@@ -130,6 +131,7 @@ export const SPECIAL_EVENTS: CatalogEvent[] = [
     time: '10:00 AM - 05:00 PM',
     fee: '₹690 / Entry',
     crew: 'Open to All',
+    isClosed: true,
   },
   {
     id: 'e-sports',

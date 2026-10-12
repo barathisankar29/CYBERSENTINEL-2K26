@@ -26,6 +26,7 @@ export interface RegistrationPack {
   /** Real event names included — sourced from the site's actual event list,
    * never invented. */
   events: string[]
+  isClosed?: boolean
 }
 
 export interface CharacterConfig {

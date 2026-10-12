@@ -120,7 +120,9 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
   // Special events (backend codes) if SPECIAL is selected
   const [selectedSpecialCodes, setSelectedSpecialCodes] = useState<string[]>(
     // One special event per registration (there is no combined special package).
-    initialData?.dayType === 'SPECIAL' ? (initialData.specialEventCodes ?? []).slice(0, 1) : []
+    initialData?.dayType === 'SPECIAL'
+      ? (initialData.specialEventCodes ?? []).filter((code) => code !== 'TC').slice(0, 1)
+      : []
   );
 
   // Day events (rest/v1/events, ACTIVE only) and the participant's picks.
@@ -262,6 +264,7 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
   const feeDisplay = feeAmount === null ? '—' : formatRupees(feeAmount);
 
   const toggleSpecialEvent = (code: string) => {
+    if (code === 'TC') return;
     setSelectedSpecialCodes([code]);
   };
 
@@ -296,8 +299,12 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
       )
     )
       return showError('Please select at least one event for each selected day.');
-    if (selectedDay === 'SPECIAL' && selectedSpecialCodes.length === 0)
-      return showError('Please select at least one special event.');
+    if (selectedDay === 'SPECIAL') {
+      if (selectedSpecialCodes.length === 0)
+        return showError('Please select at least one special event.');
+      if (selectedSpecialCodes.includes('TC'))
+        return showError('Registration for Thiruvizha Corner is closed.');
+    }
 
     setIsSubmitting(true);
     setAlertInfo(null);
@@ -662,12 +669,18 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
                   <p className="text-[11px] font-mono text-gray-400">No special events are available right now.</p>
                 )}
                 {specialEvents.map((event) => {
+                  const isThiruvizha = event.code === 'TC' || event.name.toLowerCase().includes('thiruvizha');
+                  const isClosed = isThiruvizha;
                   const checked = selectedSpecialCodes.includes(event.code);
                   return (
                     <label
                       key={event.code}
-                      className={`flex items-center gap-3 p-2.5 border cursor-pointer ${
-                        checked ? 'bg-[#34d39920] border-[#34d399] text-white' : 'bg-black/40 border-zinc-800 text-gray-400'
+                      className={`flex items-center gap-3 p-2.5 border ${
+                        isClosed
+                          ? 'bg-black/30 border-zinc-900 text-zinc-600 cursor-not-allowed opacity-60'
+                          : checked
+                          ? 'bg-[#34d39920] border-[#34d399] text-white cursor-pointer'
+                          : 'bg-black/40 border-zinc-800 text-gray-400 cursor-pointer'
                       }`}
                     >
                       <input
@@ -675,17 +688,23 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
                         name="special_event"
                         value={event.code}
                         checked={checked}
-                        onChange={() => toggleSpecialEvent(event.code)}
+                        disabled={isClosed}
+                        onChange={() => !isClosed && toggleSpecialEvent(event.code)}
                         className="sr-only"
                       />
-                      <span className="w-4 h-4 border border-zinc-600 flex items-center justify-center font-bold text-xs bg-black" aria-hidden="true">
+                      <span
+                        className={`w-4 h-4 border flex items-center justify-center font-bold text-xs bg-black ${
+                          isClosed ? 'border-zinc-800 text-zinc-700' : 'border-zinc-600'
+                        }`}
+                        aria-hidden="true"
+                      >
                         {checked ? '✓' : ''}
                       </span>
                       <span className="flex flex-col">
                         <span className="font-pixel text-xs text-white uppercase flex items-baseline flex-wrap gap-1">
-                          <span>{event.name}</span>
+                          <span className={isClosed ? 'text-zinc-500' : ''}>{event.name}</span>
                           {(event.code === 'TC' || event.name.toLowerCase().includes('thiruvizha')) && (
-                            <span className="text-[10px] text-zinc-400 font-normal font-mono normal-case">
+                            <span className="text-[10px] text-zinc-500 font-normal font-mono normal-case">
                               (Stalls &amp; Stores)
                             </span>
                           )}
@@ -694,9 +713,14 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
                               (Free-Fire)
                             </span>
                           )}
+                          {isClosed && (
+                            <span className="text-[9px] font-mono font-bold text-red-400 bg-red-950/60 border border-red-900/80 px-1 py-0.5 rounded normal-case ml-1">
+                              CLOSED
+                            </span>
+                          )}
                         </span>
-                        <span className="text-[10px] font-mono text-gray-400">
-                          {event.description || 'Special event'} • {formatRupees(withGst(Number(event.fee)))}
+                        <span className={`text-[10px] font-mono ${isClosed ? 'text-zinc-600' : 'text-gray-400'}`}>
+                          {event.description || 'Special event'} • <span className={isClosed ? 'line-through' : ''}>{formatRupees(withGst(Number(event.fee)))}</span>
                         </span>
                       </span>
                     </label>

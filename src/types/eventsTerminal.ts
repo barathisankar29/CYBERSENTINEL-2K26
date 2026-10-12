@@ -29,6 +29,7 @@ export interface EventSpec {
   protocols: string[];
   coordinators: Coordinator[];
   isSpecial?: boolean;
+  isClosed?: boolean;
   /** Show the team size as a banner above the event protocol (coordinator request). */
   teamSizeInProtocol?: boolean;
   image?: string;

@@ -85,7 +85,11 @@ export const FirmwareScreen: React.FC<FirmwareScreenProps> = ({
             {/* Top badge inside poster */}
             <div className="w-full flex justify-between items-center text-[10px] font-silkscreen text-[#c084fc] border-b border-[#20102b] pb-2 mb-3">
               <span>{event.track === 'technical' ? 'DAY 01 // TECHNICAL TRACK' : 'DAY 02 // NON-TECHNICAL TRACK'}</span>
-              {liveFee && (
+              {event.isClosed ? (
+                <span className="text-red-400 font-bold">
+                  [CLOSED]
+                </span>
+              ) : liveFee && (
                 <span className="text-[#ff007f] font-bold">
                   {liveFee}
                 </span>
@@ -224,19 +228,30 @@ export const FirmwareScreen: React.FC<FirmwareScreenProps> = ({
 
           {/* REGISTER NOW Action Button Container */}
           <div className="pt-1">
-            <button
-              id="btn-register-operator"
-              onClick={() => {
-                sound.playNavClick();
-                setIsRegisterOpen(true);
-              }}
-              className="arcade-cta w-full py-3.5 px-6 font-pixel text-white text-xs sm:text-sm tracking-wider flex items-center justify-center gap-3 transition-transform cursor-pointer"
-              data-purpose="registration-cta-button"
-            >
-              <span>&gt;&gt;</span>
-              <span>REGISTER FOR EVENT</span>
-              <span>&lt;&lt;</span>
-            </button>
+            {event.isClosed ? (
+              <button
+                id="btn-register-operator"
+                disabled
+                className="w-full py-3.5 px-6 font-pixel text-zinc-500 bg-zinc-900 border-2 border-zinc-700 text-xs sm:text-sm tracking-wider flex items-center justify-center gap-3 cursor-not-allowed opacity-70"
+                data-purpose="registration-cta-button"
+              >
+                <span>[ REGISTRATION CLOSED ]</span>
+              </button>
+            ) : (
+              <button
+                id="btn-register-operator"
+                onClick={() => {
+                  sound.playNavClick();
+                  setIsRegisterOpen(true);
+                }}
+                className="arcade-cta w-full py-3.5 px-6 font-pixel text-white text-xs sm:text-sm tracking-wider flex items-center justify-center gap-3 transition-transform cursor-pointer"
+                data-purpose="registration-cta-button"
+              >
+                <span>&gt;&gt;</span>
+                <span>REGISTER FOR EVENT</span>
+                <span>&lt;&lt;</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

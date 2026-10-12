@@ -126,7 +126,7 @@ export const characterProfiles: Record<string, CharacterConfig> = {
     intent: 'Two standalone showcase registrations — each independently selectable, not bundled into a day pack. Group Dance is the mega-stage crew battle; Thiruvizha Corner is the all-day carnival zone.',
     packs: [
       { id: 'dacre-group-dance', label: 'GROUP DANCE', price: 590, events: ['Group Dance'] },
-      { id: 'dacre-thiruvizha', label: 'THIRUVIZHA CORNER', price: 696, events: ['Thiruvizha Corner'] },
+      { id: 'dacre-thiruvizha', label: 'THIRUVIZHA CORNER', price: 696, events: ['Thiruvizha Corner'], isClosed: true },
     ],
   },
   cosma: {

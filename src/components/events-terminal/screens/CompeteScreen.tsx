@@ -224,7 +224,12 @@ export const CompeteScreen: React.FC<CompeteScreenProps> = ({
                   className={`flex justify-between items-center text-[10px] font-silkscreen pb-2 border-b ${headerBorderClass} ${headerTextClass}`}
                 >
                   <span className="flex items-center gap-1.5 font-bold">
-                    {isSpecial ? (
+                    {ev.isClosed ? (
+                      <>
+                        <span className="text-red-400">✖</span>
+                        <span className="text-red-400">REGISTRATION CLOSED</span>
+                      </>
+                    ) : isSpecial ? (
                       <>
                         <span className="text-[#5fa07a]">★</span>
                         <span>SPECIAL EVENT</span>
@@ -236,7 +241,7 @@ export const CompeteScreen: React.FC<CompeteScreenProps> = ({
                     )}
                   </span>
                   {isPaidSpecialFeeEvent(ev) && liveSpecialFeeLabel(liveSpecialEvents, ev.id) && (
-                    <span className="text-[#5fa07a] font-bold">
+                    <span className={ev.isClosed ? 'text-zinc-500 line-through font-bold' : 'text-[#5fa07a] font-bold'}>
                       {liveSpecialFeeLabel(liveSpecialEvents, ev.id)}
                     </span>
                   )}
@@ -266,16 +271,25 @@ export const CompeteScreen: React.FC<CompeteScreenProps> = ({
                 >
                   KNOW MORE
                 </button>
-                <button
-                  onClick={() => {
-                    sound.playNavClick();
-                    onHighlightEvent(ev);
-                    setModalEvent(ev);
-                  }}
-                  className={`flex-1 py-1.5 font-pixel text-xs cursor-pointer transition-all text-center font-bold ${registerClass}`}
-                >
-                  REGISTER
-                </button>
+                {ev.isClosed ? (
+                  <button
+                    disabled
+                    className="flex-1 py-1.5 font-pixel text-xs cursor-not-allowed transition-all text-center font-bold bg-zinc-900 border border-zinc-700 text-zinc-500 opacity-60"
+                  >
+                    CLOSED
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      sound.playNavClick();
+                      onHighlightEvent(ev);
+                      setModalEvent(ev);
+                    }}
+                    className={`flex-1 py-1.5 font-pixel text-xs cursor-pointer transition-all text-center font-bold ${registerClass}`}
+                  >
+                    REGISTER
+                  </button>
+                )}
               </div>
             </div>
           );

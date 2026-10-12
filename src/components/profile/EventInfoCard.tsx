@@ -11,7 +11,14 @@ interface EventInfoCardProps {
 export function EventInfoCard({ event, packTag }: EventInfoCardProps) {
   return (
     <article className="info-card">
-      <span className="info-card__tag">{packTag}</span>
+      <div className="flex items-center justify-between gap-2">
+        <span className="info-card__tag">{packTag}</span>
+        {event.isClosed && (
+          <span className="font-mono text-[10px] tracking-wider text-red-400 bg-red-950/70 border border-red-800/80 px-2 py-0.5 rounded">
+            REGISTRATION CLOSED
+          </span>
+        )}
+      </div>
       <h3 className="info-card__name">{event.name}</h3>
       <p className="info-card__desc">{event.description}</p>
       <div className="info-card__meta">

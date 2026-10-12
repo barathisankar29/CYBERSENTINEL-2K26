@@ -82,6 +82,7 @@ export function EventsDiscovery({ onSelectPack }: EventsDiscoveryProps) {
               name={pack.label}
               description={specialDescriptions[pack.label] ?? ''}
               price={pack.price}
+              isClosed={pack.isClosed}
               onSelect={() => onSelectPack(pack.id)}
             />
           ))}

@@ -27,7 +27,7 @@ export function EventsProfilePage() {
 
   const handleSelectPack = useCallback((packId: string) => {
     const resolved = getCharacterForPack(packId)
-    if (!resolved) return
+    if (!resolved || resolved.pack.isClosed) return
     setFlow({ stage: 'paying', character: resolved.character, pack: resolved.pack })
   }, [])
 

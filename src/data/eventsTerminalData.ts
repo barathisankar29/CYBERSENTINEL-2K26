@@ -474,6 +474,7 @@ export const ALL_EVENTS: EventSpec[] = [
     chipLabel: 'CARNIVAL',
     chipSub: 'FEST-2K26',
     isSpecial: true,
+    isClosed: true,
     protocols: [
       'Max 3 members per stall.',
       'All materials must be brought by participants.',

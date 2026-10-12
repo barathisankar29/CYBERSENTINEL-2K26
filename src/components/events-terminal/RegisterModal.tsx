@@ -21,6 +21,7 @@ interface EventItem {
   day?: string;
   protocol?: string;
   originalEventId?: string;
+  isClosed?: boolean;
 }
 
 interface CharacterConfig {
@@ -89,7 +90,7 @@ const PACK_CONFIGS: Record<string, CharacterConfig> = {
     isPerEventPricing: true,
     events: [
       { id: 'dacre-dance', name: 'Group Dance', protocol: 'PROTOCOL_A', originalEventId: 'group_dance' },
-      { id: 'dacre-thiruvizha', name: 'Thiruvizha Corner', subtitle: '(Stalls & Stores)', protocol: 'PROTOCOL_B', originalEventId: 'thiruvizha_corner' },
+      { id: 'dacre-thiruvizha', name: 'Thiruvizha Corner', subtitle: '(Stalls & Stores)', protocol: 'PROTOCOL_B', originalEventId: 'thiruvizha_corner', isClosed: true },
       { id: 'dacre-esports', name: 'E-Sports', subtitle: '(Free-Fire)', protocol: 'PROTOCOL_C', originalEventId: 'e_sports' }
     ]
   },
@@ -230,6 +231,10 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
         )
       : undefined;
 
+    if (initialEventId && config.events.find((e) => e.id === initialEventId)?.isClosed) {
+      return;
+    }
+
     let initialSelected: string[] = [];
     if (!config.isPerEventPricing) {
       // Day passes charge the day fee; the ticked events become the
@@ -238,15 +243,15 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
         if (isTeamEvent(fromEvent)) {
           // If the defaultly selected event is a team event, select all team events for that day!
           const teamEvents = config.events.filter(
-            (e) => (fromEvent.day ? e.day === fromEvent.day : true) && isTeamEvent(e)
+            (e) => (fromEvent.day ? e.day === fromEvent.day : true) && isTeamEvent(e) && !e.isClosed
           );
           initialSelected = teamEvents.map((e) => e.id);
         } else {
           // Solo event: only that solo event is selected
-          initialSelected = [fromEvent.id];
+          initialSelected = fromEvent.isClosed ? [] : [fromEvent.id];
         }
       } else {
-        initialSelected = config.events.map((e) => e.id);
+        initialSelected = config.events.filter((e) => !e.isClosed).map((e) => e.id);
       }
     } else if (initialEventId) {
       initialSelected = [initialEventId];
@@ -255,12 +260,14 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
       if (event) {
         const matched = config.events.find(
           (e) =>
-            e.originalEventId === event.id ||
-            e.name.toLowerCase() === event.title.toLowerCase()
+            (e.originalEventId === event.id ||
+            e.name.toLowerCase() === event.title.toLowerCase()) && !e.isClosed
         );
-        initialSelected = [matched?.id ?? config.events[0].id];
+        const fallback = config.events.find((e) => !e.isClosed)?.id ?? config.events[0].id;
+        initialSelected = [matched?.id ?? fallback];
       } else {
-        initialSelected = [config.events[0].id];
+        const fallback = config.events.find((e) => !e.isClosed)?.id ?? config.events[0].id;
+        initialSelected = [fallback];
       }
     }
 
@@ -282,10 +289,11 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
   // matched to the backend's active events and submitted as the selection.
   const toggleEvent = (eventId: string) => {
     if (!modalState) return;
+    const config = PACK_CONFIGS[modalState.characterKey];
+    if (config?.events.find((e) => e.id === eventId)?.isClosed) return;
     sound.playBlip();
     setModalState((prev) => {
       if (!prev) return null;
-      const config = PACK_CONFIGS[prev.characterKey];
       const isSelected = prev.selectedEventIds.includes(eventId);
       // Special events are registered one at a time (no combined special package).
       const singleChoice = config?.isPerEventPricing;
@@ -300,7 +308,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
       if (clickedEvent && isTeamEvent(clickedEvent)) {
         // Find all team events in this pack for the same day
         const teamEvents = config.events.filter(
-          (e) => (clickedEvent.day ? e.day === clickedEvent.day : true) && isTeamEvent(e)
+          (e) => (clickedEvent.day ? e.day === clickedEvent.day : true) && isTeamEvent(e) && !e.isClosed
         );
         const teamEventIds = teamEvents.map((e) => e.id);
 
@@ -334,7 +342,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
     if (!modalState) return;
     const config = PACK_CONFIGS[modalState.characterKey];
     if (!config) return;
-    setModalState((prev) => (prev ? { ...prev, selectedEventIds: config.events.map((e) => e.id) } : null));
+    setModalState((prev) => (prev ? { ...prev, selectedEventIds: config.events.filter((e) => !e.isClosed).map((e) => e.id) } : null));
   };
 
   const clearAll = () => {
@@ -670,37 +678,37 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
 
               {/* Sub-Card B: Thiruvizha Corner */}
               <div
-                className="bg-black border p-2 relative flex flex-col justify-between"
+                className="bg-black border p-2 relative flex flex-col justify-between opacity-80"
                 data-purpose="sub-event-thiruvizha"
-                style={{ borderColor: 'rgba(0, 255, 204, 0.5)' }}
+                style={{ borderColor: 'rgba(239, 68, 68, 0.4)' }}
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <span className="text-[9px] font-arcade block" style={{ color: 'rgba(0, 255, 204, 0.7)' }}>
-                      PROTOCOL_B
+                    <span className="text-[9px] font-arcade block text-red-400">
+                      PROTOCOL_B // [CLOSED]
                     </span>
-                    <div className="font-pixel text-xs sm:text-sm text-white font-bold leading-snug">
+                    <div className="font-pixel text-xs sm:text-sm text-zinc-300 font-bold leading-snug">
                       <div>Thiruvizha</div>
                       <div className="flex items-baseline gap-1">
                         <span>Corner</span>
-                        <span className="text-[9px] sm:text-[10px] text-zinc-400 font-normal font-mono whitespace-nowrap">
+                        <span className="text-[9px] sm:text-[10px] text-zinc-500 font-normal font-mono whitespace-nowrap">
                           (Stalls &amp; Stores)
                         </span>
                       </div>
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="font-arcade text-xs" style={{ color: '#00ffcc' }}>
+                    <span className="font-arcade text-xs text-zinc-500 line-through">
                       {cardPrice('DR. DACRE', ['dacre-thiruvizha'])}
                     </span>
                   </div>
                 </div>
                 <button
-                  onClick={() => handleOpenRegister('DR. DACRE', 'THIRUVIZHA CORNER', 'PROTOCOL_B', 'dacre-thiruvizha')}
-                  className="mt-2 w-full py-1.5 px-1 bg-zinc-950 border border-[#00ffcc] text-[#00ffcc] font-arcade text-[8px] sm:text-[9px] transition-none active:translate-y-0.5 cursor-pointer hover:bg-[#00ffcc] hover:text-black"
+                  disabled
+                  className="mt-2 w-full py-1.5 px-1 bg-zinc-900 border border-zinc-700 text-zinc-500 font-arcade text-[8px] sm:text-[9px] cursor-not-allowed opacity-60"
                   type="button"
                 >
-                  &gt;&gt; REGISTER THIRUVIZHA &lt;&lt;
+                  REGISTRATION CLOSED
                 </button>
               </div>
 
@@ -988,39 +996,47 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                 <div className="my-3 space-y-1.5">
                   {activeConfig.events.map((ev, idx) => {
                     const isChecked = modalState.selectedEventIds.includes(ev.id);
+                    const isClosed = ev.isClosed;
                     return (
                       <button
                         type="button"
                         key={ev.id}
-                        onClick={() => toggleEvent(ev.id)}
+                        onClick={() => !isClosed && toggleEvent(ev.id)}
+                        disabled={isClosed}
                         role="checkbox"
                         aria-checked={isChecked}
-                        className={`w-full text-left flex items-center justify-between p-2 border select-none transition-all cursor-pointer ${
-                          isChecked
-                            ? 'bg-zinc-950 text-white'
-                            : 'bg-black/60 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300'
+                        className={`w-full text-left flex items-center justify-between p-2 border select-none transition-all ${
+                          isClosed
+                            ? 'bg-black/40 border-zinc-900 text-zinc-600 cursor-not-allowed opacity-60'
+                            : isChecked
+                            ? 'bg-zinc-950 text-white cursor-pointer'
+                            : 'bg-black/60 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300 cursor-pointer'
                         }`}
                         style={{
-                          borderColor: isChecked ? activeConfig.borderColor : undefined,
-                          boxShadow: isChecked ? `0 0 8px ${activeConfig.accentColor}30` : undefined
+                          borderColor: isClosed ? '#27272a' : isChecked ? activeConfig.borderColor : undefined,
+                          boxShadow: !isClosed && isChecked ? `0 0 8px ${activeConfig.accentColor}30` : undefined
                         }}
                       >
                         <div className="flex items-center gap-2.5">
                           {/* Retro Pixel Checkbox */}
                           <div
                             className={`w-5 h-5 border flex items-center justify-center text-xs font-bold shrink-0 ${
-                              isChecked ? 'text-black' : 'border-zinc-700 bg-black'
+                              isClosed
+                                ? 'border-zinc-800 bg-zinc-950 text-zinc-700'
+                                : isChecked
+                                ? 'text-black'
+                                : 'border-zinc-700 bg-black'
                             }`}
                             style={{
-                              backgroundColor: isChecked ? activeConfig.accentColor : 'transparent',
-                              borderColor: isChecked ? activeConfig.accentColor : '#3f3f46'
+                              backgroundColor: !isClosed && isChecked ? activeConfig.accentColor : 'transparent',
+                              borderColor: !isClosed && isChecked ? activeConfig.accentColor : '#3f3f46'
                             }}
                           >
                             {isChecked ? '✓' : ''}
                           </div>
                           <span
                             className="font-arcade text-[9px]"
-                            style={{ color: isChecked ? activeConfig.accentColor : '#71717a' }}
+                            style={{ color: !isClosed && isChecked ? activeConfig.accentColor : '#71717a' }}
                           >
                             {String(idx + 1).padStart(2, '0')}
                           </span>
@@ -1036,12 +1052,17 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
 
                         {/* Extra tags / price */}
                         <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                          {isClosed && (
+                            <span className="font-arcade text-[8px] px-1 py-0.5 border border-red-900/60 text-red-400 bg-red-950/40">
+                              CLOSED
+                            </span>
+                          )}
                           {ev.protocol && (
                             <span
                               className="font-arcade text-[8px] px-1 py-0.5 border"
                               style={{
-                                color: activeConfig.accentColor,
-                                borderColor: `${activeConfig.accentColor}50`
+                                color: isClosed ? '#71717a' : activeConfig.accentColor,
+                                borderColor: isClosed ? '#27272a' : `${activeConfig.accentColor}50`
                               }}
                             >
                               {ev.protocol}
@@ -1053,7 +1074,10 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                             </span>
                           )}
                           {activeConfig.isPerEventPricing && (
-                            <span className="font-arcade text-[10px]" style={{ color: activeConfig.accentColor }}>
+                            <span
+                              className={`font-arcade text-[10px] ${isClosed ? 'text-zinc-600 line-through' : ''}`}
+                              style={{ color: isClosed ? undefined : activeConfig.accentColor }}
+                            >
                               {cardPrice(modalState.characterKey, [ev.id])}
                             </span>
                           )}
