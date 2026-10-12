@@ -49,7 +49,7 @@ function renderTeamSizeOptions() {
     return;
   }
   const minSize = Math.max(2, ...events.map(event => event.min_team_size));
-  const maxSize = Math.min(3, ...events.map(event => event.max_team_size));
+  const maxSize = Math.min(4, ...events.map(event => event.max_team_size));
   const previousSize = Number(sizeSelect.value);
   sizeSelect.innerHTML = Array.from({ length: maxSize - minSize + 1 }, (_, index) => {
     const size = minSize + index;

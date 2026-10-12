@@ -40,7 +40,7 @@ const packagesForDay = (events: EventRow[], day: string, selectedEventIds: strin
     id: `${day}:${key}`,
     day,
     min_size: Math.max(2, ...group.map(event => event.min_team_size)),
-    max_size: Math.min(3, group[0].max_team_size),
+    max_size: Math.min(4, group[0].max_team_size),
     events: group.map(event => ({ id: event.id, code: event.code, name: event.name, min_team_size: event.min_team_size, max_team_size: event.max_team_size }))
   })).filter(item => item.min_size <= item.max_size);
 };
@@ -82,7 +82,7 @@ Deno.serve(async request => {
       const selectedEvents = selectedPackage.events.filter(event => selectedEventIds.includes(event.id));
       const teamSize = Number(body.team_size);
       const minTeamSize = Math.max(2, ...selectedEvents.map(event => event.min_team_size));
-      const maxTeamSize = Math.min(3, ...selectedEvents.map(event => event.max_team_size));
+      const maxTeamSize = Math.min(4, ...selectedEvents.map(event => event.max_team_size));
       if (!Number.isInteger(teamSize) || teamSize < minTeamSize || teamSize > maxTeamSize) throw new Error(`Choose a team size between ${minTeamSize} and ${maxTeamSize}.`);
       const memberIdentities = Array.isArray(body.members) ? body.members.map((value: unknown) => String(value || "").trim()).filter(Boolean) : [];
       const uniqueIdentities = Array.from(new Set([identity, ...memberIdentities]));

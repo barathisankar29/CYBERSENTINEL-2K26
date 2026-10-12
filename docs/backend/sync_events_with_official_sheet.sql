@@ -6,7 +6,7 @@
 -- Dashboard -> SQL Editor. Frontend: this repo's events terminal.
 --
 -- Read-only snapshot of public.events taken before writing this (6 rows):
---   PP Paper Presentation  DAY_1 TEAM 3-3      <- sheet: max 4 members
+--   PP Paper Presentation  DAY_1 TEAM 3-4      <- 3-4 members
 --   SC Scrambled Code      DAY_1 INDIVIDUAL    <- NOT in the sheet
 --   UX UI/UX               DAY_1 TEAM 2-3      <- NOT in the sheet
 --   FB Find BGM            DAY_2 TEAM 2-3
@@ -50,7 +50,7 @@ begin;
 -- 1. Events already present that are on the sheet --------------------------
 update public.events set
   name = 'Paper Presentation', day = 'DAY_1', event_type = 'TEAM',
-  min_team_size = 2, max_team_size = 4,
+  min_team_size = 3, max_team_size = 4,
   start_time = '10:30', end_time = '14:00',
   description = 'Participants showcase their research, ideas, or innovations through structured presentations, evaluated by experts.',
   status = 'ACTIVE', updated_at = now()

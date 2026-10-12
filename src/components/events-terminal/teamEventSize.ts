@@ -2,7 +2,7 @@ import type { TeamPackage } from '@/services/registration';
 
 export type TeamEvent = TeamPackage['events'][number];
 
-/** Most members a team can have (Paper Presentation teams are 4). */
+/** Most members a team can have (Paper Presentation teams are 3-4). */
 const MAX_TEAM_SIZE = 4;
 
 /** Sizes a team can be for one event: the event's own range, clamped to 2..MAX_TEAM_SIZE. */
