@@ -1,20 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Loader2, ShieldCheck } from 'lucide-react';
-import type { CharacterId } from '@/types/characterProfile';
-import { characterProfiles } from '@/data/characterProfiles';
+
 import {
   checkRegistration,
   getActiveEvents,
   getLastRegistration,
   resolvePaymentAmount,
   type CheckRegistrationResponse,
-  saveLastRegistration,
-  submitRegistration,
   submitToPaymentProcess,
   type ActiveEvent,
   type RegistrationDay
 } from '@/services/registration';
-import { recordBackendRegistration } from '@/utils/eventRegistration';
 import { sound } from './sound';
 import { isTeamEvent } from './teamEvents';
 import {
@@ -48,17 +44,7 @@ interface RegistrationPortalPageProps {
   onNavigateToRegistrations: () => void;
 }
 
-/**
- * Profile character for the day actually submitted — the same mapping as the
- * "Choose your player" packs (NICO = Day 1, RUELLE = Day 2, COSMA = both,
- * DR. DACRE = special events), so direct /register and pack flows agree.
- */
-const DAY_CHARACTER: Record<RegistrationDay, CharacterId> = {
-  DAY_1: 'nico',
-  DAY_2: 'ruelle',
-  BOTH: 'cosma',
-  SPECIAL: 'dacre'
-};
+
 
 const EVENT_DAYS = ['DAY_1', 'DAY_2'] as const;
 
@@ -235,8 +221,9 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
     name: string;
     email: string;
   } | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const isSubmitting = false;
   const [showRulesModal, setShowRulesModal] = useState(false);
+  const [showEventEnded, setShowEventEnded] = useState(false);
 
   const { fees, specialEvents, error: pricingError } = useLiveRegistrationData();
 
@@ -276,107 +263,9 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isSubmitting) return;
     sound.playNavClick();
-
-    // Required fields validation (the Edge Function re-validates everything)
-    if (!fullName.trim()) return showError('Full Name is required.');
-    if (!email.trim() || !email.includes('@')) return showError('A valid Email address is required.');
-    if (!phone.trim()) return showError('Phone Number is required.');
-    if (!college.trim()) return showError('College name is required.');
-    if (!department.trim()) return showError('Department is required.');
-
-    // register2 registration.js checks, in its order.
-    if (selectedDay !== 'SPECIAL' && !eventsReady) return showError('Events are still loading. Please try again.');
-    const submittedEventIds = selectedEventIds.filter((id) => {
-      const event = activeEvents.find((item) => item.id === id);
-      return Boolean(event) && (selectedDay === 'BOTH' || event?.day === selectedDay);
-    });
-    const requiredDays: string[] = selectedDay === 'BOTH' ? [...EVENT_DAYS] : selectedDay === 'SPECIAL' ? [] : [selectedDay];
-    if (
-      requiredDays.some(
-        (day) => !submittedEventIds.some((id) => activeEvents.some((event) => event.id === id && event.day === day))
-      )
-    )
-      return showError('Please select at least one event for each selected day.');
-    if (selectedDay === 'SPECIAL') {
-      if (selectedSpecialCodes.length === 0)
-        return showError('Please select at least one special event.');
-      if (selectedSpecialCodes.includes('TC'))
-        return showError('Registration for Thiruvizha Corner is closed.');
-    }
-
-    setIsSubmitting(true);
-    setAlertInfo(null);
-    dispatchMascotEvent('MASCOT_REGISTRATION_START');
-    try {
-      const result = await submitRegistration({
-        name: fullName,
-        email,
-        phone,
-        college,
-        department,
-        year,
-        selectedDay,
-        selectedEventIds: submittedEventIds,
-        specialEventCodes: selectedDay === 'SPECIAL' ? selectedSpecialCodes : []
-      });
-
-      // Same lookup record the backend team's client keeps (used by My Registrations / Create Team).
-      saveLastRegistration({ code: result.registration_code, email: email.trim(), phone: phone.trim() });
-
-      // Profile: character for the submitted day, recorded against the
-      // backend's real registration code.
-      const characterId = DAY_CHARACTER[selectedDay];
-      const character = characterProfiles[characterId];
-      if (character) {
-        const fromPack = initialData?.dayType === selectedDay;
-        const eventNames =
-          selectedDay === 'SPECIAL'
-            ? specialEvents.filter((ev) => selectedSpecialCodes.includes(ev.code)).map((ev) => ev.name)
-            : activeEvents.filter((ev) => submittedEventIds.includes(ev.id)).map((ev) => ev.name);
-        recordBackendRegistration(
-          characterId,
-          {
-            id: `${characterId}-${selectedDay.toLowerCase()}`,
-            label: (fromPack && initialData?.packLabel) || selectedDay.replace('_', ' '),
-            price: feeAmount ?? withGst(result.registration_fee),
-            events: eventNames
-          },
-          result.registration_code,
-          fullName.trim(),
-          email.trim()
-        );
-      }
-
-      sound.playSuccess();
-      dispatchMascotEvent('MASCOT_REGISTRATION_SUCCESS', {
-        message: `Registration ${result.registration_code} created. Taking you to payment.`,
-      });
-      setAlertInfo({
-        type: 'success',
-        message: `Registration ID: ${result.registration_code}. Redirecting you to the official payment page...`,
-        regId: result.registration_code
-      });
-
-      // Show alert-type popup: database verified user details, redirecting to payment
-      setRedirectingInfo({
-        regCode: result.registration_code,
-        name: fullName.trim(),
-        email: email.trim()
-      });
-
-      // Allow participant to view their verified registration details and redirect notice
-      await new Promise((resolve) => setTimeout(resolve, 2500));
-
-      // Hand off to the college payment process exactly as register2 does.
-      submitToPaymentProcess({ email: email.trim(), day: selectedDay, registrationFee: result.registration_fee });
-    } catch (error) {
-      setRedirectingInfo(null);
-      showError(error instanceof Error ? error.message : 'Registration failed.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    // Registration is closed — show the event ended popup
+    setShowEventEnded(true);
   };
 
   const dayOption = (
@@ -845,6 +734,73 @@ export const RegistrationPortalPage: React.FC<RegistrationPortalPageProps> = ({
 
       {showRulesModal && (
         <RegistrationRulesModal isOpen={showRulesModal} onClose={() => setShowRulesModal(false)} />
+      )}
+
+      {showEventEnded && (
+        <div
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="portal-event-ended-title"
+          className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/90 backdrop-blur-md p-4"
+        >
+          <div className="relative w-full max-w-md bg-[#07010e] border-2 border-[#ff007f] shadow-[0_0_60px_rgba(255,0,127,0.5),inset_0_0_30px_rgba(255,0,127,0.08)] p-6 sm:p-8 text-center overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            {/* Cyber corner accents */}
+            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#ff007f]" />
+            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#ff007f]" />
+            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[#ff007f]" />
+            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#ff007f]" />
+
+            {/* Scanline overlay */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-[0.04]"
+              style={{
+                backgroundImage: 'repeating-linear-gradient(to bottom, transparent 0px, transparent 3px, rgba(255,0,127,0.8) 3px, rgba(255,0,127,0.8) 4px)',
+              }}
+            />
+
+            {/* Status badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#ff007f]/15 border border-[#ff007f]/50 text-[#ff007f] font-silkscreen text-[10px] tracking-widest uppercase mb-5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#ff007f] animate-pulse" />
+              SYSTEM ALERT
+            </div>
+
+            {/* Icon */}
+            <div className="mx-auto mb-4 w-16 h-16 border-2 border-[#ff007f]/60 bg-[#ff007f]/10 flex items-center justify-center text-3xl">
+              🔒
+            </div>
+
+            <h2
+              id="portal-event-ended-title"
+              className="font-pixel text-xl sm:text-2xl text-[#ff007f] tracking-wider uppercase mb-2"
+            >
+              EVENT ENDED
+            </h2>
+            <div className="font-silkscreen text-[11px] text-[#ff007f]/70 tracking-widest uppercase mb-4">
+              // REGISTRATION PORTAL CLOSED //
+            </div>
+
+            <p className="font-body text-sm text-gray-300 leading-relaxed mb-2">
+              CyberSentinel 2K26 has concluded. Registration is no longer accepted.
+            </p>
+            <p className="font-body text-xs text-gray-500 leading-relaxed mb-6">
+              Thank you for your interest. Stay tuned for future events!
+            </p>
+
+            {/* Divider */}
+            <div className="border-t border-[#ff007f]/25 mb-5" />
+
+            <button
+              type="button"
+              onClick={() => {
+                sound.playNavClick();
+                setShowEventEnded(false);
+              }}
+              className="w-full py-2.5 px-4 bg-transparent border-2 border-[#ff007f] text-[#ff007f] font-silkscreen text-xs tracking-wider hover:bg-[#ff007f] hover:text-black transition-colors cursor-pointer shadow-[0_0_12px_rgba(255,0,127,0.35)]"
+            >
+              [✕] CLOSE
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

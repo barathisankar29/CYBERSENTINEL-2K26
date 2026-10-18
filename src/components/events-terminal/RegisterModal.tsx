@@ -9,7 +9,6 @@ import {
   dayDisplayPrice,
   formatRupees,
   specialDisplayPrice,
-  specialEventCodeFor,
   useLiveRegistrationData,
   type LiveRegistrationData
 } from './useLiveRegistrationData';
@@ -158,10 +157,11 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
   event,
   isOpen,
   onClose,
-  onProceedToPortal
+  onProceedToPortal: _onProceedToPortal
 }) => {
   const [modalState, setModalState] = useState<ActiveModalState | null>(null);
   const [showRulesModal, setShowRulesModal] = useState(false);
+  const [showEventEnded, setShowEventEnded] = useState(false);
   const live = useLiveRegistrationData();
   const cardPrice = (key: string, selectedIds?: string[]) =>
     priceLabel(livePackPrice(PACK_CONFIGS[key], live, selectedIds));
@@ -360,21 +360,9 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
     if (!modalState) return;
     const config = PACK_CONFIGS[modalState.characterKey];
     if (!config || modalState.selectedEventIds.length === 0) return;
-
-    const chosenEvents = config.events.filter((e) => modalState.selectedEventIds.includes(e.id));
     sound.playNavClick();
-    onProceedToPortal({
-      dayType: config.dayType,
-      characterKey: modalState.characterKey,
-      packLabel: modalState.plan,
-      specialEventCodes:
-        config.dayType === 'SPECIAL'
-          ? chosenEvents.map((e) => specialEventCodeFor(e.id)).filter((code): code is string => Boolean(code))
-          : [],
-      selectedEvents: chosenEvents.map((e) => ({ id: e.id, name: e.name, day: e.day, protocol: e.protocol }))
-    });
-    setModalState(null);
-    onClose();
+    // Registration is closed — show the event ended popup
+    setShowEventEnded(true);
   };
 
   const activeConfig = modalState ? PACK_CONFIGS[modalState.characterKey] : null;
@@ -1134,6 +1122,73 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                   </button>
                 </div>
               </div>
+          </div>
+        </div>
+      )}
+
+      {showEventEnded && (
+        <div
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="event-ended-title"
+          className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/90 backdrop-blur-md p-4"
+        >
+          <div className="relative w-full max-w-md bg-[#07010e] border-2 border-[#ff007f] shadow-[0_0_60px_rgba(255,0,127,0.5),inset_0_0_30px_rgba(255,0,127,0.08)] p-6 sm:p-8 text-center overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            {/* Cyber corner accents */}
+            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#ff007f]" />
+            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#ff007f]" />
+            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[#ff007f]" />
+            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#ff007f]" />
+
+            {/* Scanline overlay */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-[0.04]"
+              style={{
+                backgroundImage: 'repeating-linear-gradient(to bottom, transparent 0px, transparent 3px, rgba(255,0,127,0.8) 3px, rgba(255,0,127,0.8) 4px)',
+              }}
+            />
+
+            {/* Status badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#ff007f]/15 border border-[#ff007f]/50 text-[#ff007f] font-silkscreen text-[10px] tracking-widest uppercase mb-5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#ff007f] animate-pulse" />
+              SYSTEM ALERT
+            </div>
+
+            {/* Icon */}
+            <div className="mx-auto mb-4 w-16 h-16 border-2 border-[#ff007f]/60 bg-[#ff007f]/10 flex items-center justify-center text-3xl">
+              🔒
+            </div>
+
+            <h2
+              id="event-ended-title"
+              className="font-arcade text-xl sm:text-2xl text-[#ff007f] tracking-wider uppercase mb-2"
+            >
+              EVENT ENDED
+            </h2>
+            <div className="font-silkscreen text-[11px] text-[#ff007f]/70 tracking-widest uppercase mb-4">
+              // REGISTRATION PORTAL CLOSED //
+            </div>
+
+            <p className="font-body text-sm text-gray-300 leading-relaxed mb-2">
+              CyberSentinel 2K26 has concluded. Registration is no longer accepted.
+            </p>
+            <p className="font-body text-xs text-gray-500 leading-relaxed mb-6">
+              Thank you for your interest. Stay tuned for future events!
+            </p>
+
+            {/* Divider */}
+            <div className="border-t border-[#ff007f]/25 mb-5" />
+
+            <button
+              type="button"
+              onClick={() => {
+                sound.playNavClick();
+                setShowEventEnded(false);
+              }}
+              className="w-full py-2.5 px-4 bg-transparent border-2 border-[#ff007f] text-[#ff007f] font-arcade text-xs tracking-wider hover:bg-[#ff007f] hover:text-black transition-colors cursor-pointer shadow-[0_0_12px_rgba(255,0,127,0.35)]"
+            >
+              [✕] CLOSE
+            </button>
           </div>
         </div>
       )}
